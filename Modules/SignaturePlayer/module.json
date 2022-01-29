@@ -1,0 +1,13 @@
+{
+    "name": "SignaturePlayer",
+    "alias": "signatureplayer",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SignaturePlayer\\Providers\\SignaturePlayerServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -24,7 +24,17 @@ use Yajra\DataTables\Services\DataTable;
             ->addIndexColumn()
             ->rawColumns(['action'])
             ->addColumn('action', function ($item) {
-                return view('components.action-burger', compact('item'));
+                return view('components.action-burger', [
+                    'show' => null,
+                    'edit' => [
+                      'gate' => 'administrator.master-data.signature-player.update',
+                      'url' => route('administrator.master-data.signature-player.edit', [$item->id, 'back' => request()->fullUrl()])
+                    ],
+                    'destroy' => [
+                      'gate' => 'administrator.master-data.signature-player.destroy',
+                      'url' => route('administrator.master-data.signature-player.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                    ]
+                  ]);
             });
     }
 

@@ -9,6 +9,8 @@ class SignaturePlayer extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'signature_code',
         'signature_title',
@@ -21,5 +23,10 @@ class SignaturePlayer extends Model
     protected static function newFactory()
     {
         return \Modules\SignaturePlayer\Database\factories\SignaturePlayerFactory::new();
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'signature_player_id', 'product_id');
     }
 }

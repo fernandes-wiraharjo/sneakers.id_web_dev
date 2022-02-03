@@ -1,5 +1,6 @@
 
-<input class="form-control form-control-lg d-flex align-items-center" name="category" value="" id="kt_tagify_category" data-json="{{ $category }}"/>
+<input class="form-control form-control-lg d-flex align-items-center" name="category"
+    value="{{ $edit ? $current_category->toJson() : '' }}" id="kt_tagify_category" data-json="{{ $category }}"/>
 
 @push('scripts')
 <script>

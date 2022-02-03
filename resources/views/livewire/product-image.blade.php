@@ -1,11 +1,14 @@
 <div>
     @for ($i = 0; $i < 5; $i++)
     <!--begin::Image input-->
-<div class="image-input image-input-empty image-input-outline" data-kt-image-input="true"
+<div class="image-input {{ $edit ? (!empty($image[$i]) ? '' : 'image-input-empty') : 'image-input-empty' }} image-input-outline" data-kt-image-input="true"
     style="background-image: url({{ asset('demo1/media/blank/blank-image.png') }}); background-position: center; margin-right: 20px;">
     <!--begin::Image preview wrapper-->
-    <div class="image-input-wrapper w-125px h-125px"></div>
-    <!--end::Image preview wrapper-->
+    <div class="image-input-wrapper w-125px h-125px"
+    @if($edit)
+        style="background-image: url({!! !empty($image[$i]) ? getImage($image[$i]['image_url'], 'products') : '' !!});"
+    @endif></div>
+        <!--end::Image preview wrapper-->
 
     <!--begin::Edit button-->
     <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -27,17 +30,17 @@
        data-kt-image-input-action="cancel"
        data-bs-toggle="tooltip"
        data-bs-dismiss="click"
-       title="Cancel avatar">
+       title="Cancel image">
         <i class="bi bi-x fs-2"></i>
     </span>
     <!--end::Cancel button-->
 
     <!--begin::Remove button-->
     <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-       data-kt-image-input-action="remove"
-       data-bs-toggle="tooltip"
-       data-bs-dismiss="click"
-       title="Remove avatar">
+    data-kt-image-input-action="remove"
+    data-bs-toggle="tooltip"
+    data-bs-dismiss="click"
+    title="Remove image">
         <i class="bi bi-x fs-2"></i>
     </span>
     <!--end::Remove button-->

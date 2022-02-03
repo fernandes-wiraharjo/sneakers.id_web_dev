@@ -1,5 +1,6 @@
 
-<input class="form-control form-control-lg d-flex align-items-center" name="signature" value="" id="kt_tagify_signature" data-json="{{ $signature }}"/>
+<input class="form-control form-control-lg d-flex align-items-center" name="signature"
+    value="{{ $edit ? $current_signature->toJson() : '' }}" id="kt_tagify_signature" data-json="{{ $signature }}"/>
 
 @push('scripts')
 <script>

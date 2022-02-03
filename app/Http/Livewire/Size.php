@@ -7,6 +7,9 @@ use Modules\Size\Repositories\SizeRepository;
 
 class Size extends Component
 {
+    public $current_size;
+    public $edit;
+
     public function render(SizeRepository $size)
     {
         $size = $size->getSizeIdAndNameLivewire()->toJson();

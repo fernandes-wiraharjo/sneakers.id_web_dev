@@ -11,7 +11,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('category::_partials._form', ['category' => $category])
+                @include('category::_partials._form', ['category' => $category, 'edit' => true])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

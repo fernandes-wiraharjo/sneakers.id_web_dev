@@ -11,7 +11,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('tag::_partials._form', ['tag' => $tag])
+                @include('tag::_partials._form', ['tag' => $tag, 'edit' => true])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

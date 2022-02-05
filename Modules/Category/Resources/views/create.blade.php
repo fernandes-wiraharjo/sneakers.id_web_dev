@@ -8,7 +8,7 @@
 	<form action="{{ route('administrator.master-data.category.store') }}" method="post" enctype="multipart/form-data">
 		@csrf
 
-		@include('category::_partials._form', ['category' => $category])
+		@include('category::_partials._form', ['category' => $category, 'edit' => false])
 
 		<div class="text-right">
 		  <button type="submit" class="btn btn-primary">

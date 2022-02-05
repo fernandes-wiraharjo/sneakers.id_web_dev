@@ -7,6 +7,9 @@ use Modules\Tag\Repositories\TagRepository;
 
 class Tag extends Component
 {
+    public $current_tag;
+    public $edit;
+
     public function render(TagRepository $tag)
     {
         $tag = $tag->getTagIdAndNameLivewire()->toJson();

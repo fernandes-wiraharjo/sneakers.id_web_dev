@@ -9,6 +9,8 @@ class Size extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'size_code',
         'size_title',
@@ -20,5 +22,15 @@ class Size extends Model
     protected static function newFactory()
     {
         return \Modules\Size\Database\factories\SizeFactory::new();
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'size_id', 'product_id');
+    }
+
+    public function charts()
+    {
+        return $this->hasMany(SizeChart::class,'size_id', 'id');
     }
 }

@@ -1,5 +1,6 @@
 
-<input class="form-control form-control-lg d-flex align-items-center" name="tag" value="" id="kt_tagify_tag" data-json="{{ $tag }}"/>
+<input class="form-control form-control-lg d-flex align-items-center" name="tag"
+    value="{{ $edit ? $current_tag->toJson() : '' }}" id="kt_tagify_tag" data-json="{{ $tag }}"/>
 
 @push('scripts')
 <script>

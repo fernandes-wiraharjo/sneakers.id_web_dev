@@ -13,7 +13,7 @@
                 <form action="{{ route('administrator.product.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
 
-                    @include('product::_partials._form', ['product' => $product, 'product_code' => $product_code])
+                    @include('product::_partials._form', ['product' => $product, 'product_code' => $product_code, 'edit' => false])
 
             </div>
             <div class="card-footer">

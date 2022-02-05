@@ -11,7 +11,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('size::_partials._form', ['size' => $size])
+                @include('size::_partials._form', ['size' => $size, 'edit' => true])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

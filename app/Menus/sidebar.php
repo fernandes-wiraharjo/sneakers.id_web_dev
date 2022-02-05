@@ -65,7 +65,7 @@ return [
                 'name' => 'Size',
                 'route' => ['administrator.master-data.size.index', []],
                 'isActive' => 'master-data/size*',
-                'icon' => 'maximize-2',
+                'icon' => 'ruler',
                 'id' => '',
                 'gates' => [
                     [
@@ -140,7 +140,7 @@ return [
                 'name' => 'Signature Player',
                 'route' => ['administrator.master-data.signature-player.index', []],
                 'isActive' => 'master-data/signature-player*',
-                'icon' => 'pen-tool',
+                'icon' => 'signature',
                 'id' => '',
                 'gates' => [
                     [
@@ -165,7 +165,7 @@ return [
                 'name' => 'Banner',
                 'route' => ['administrator.master-data.banner.index', []],
                 'isActive' => 'master-data/banner*',
-                'icon' => 'airplay',
+                'icon' => 'images',
                 'id' => '',
                 'gates' => [
                     [
@@ -215,7 +215,7 @@ return [
                 'name' => 'Faq',
                 'route' => ['administrator.master-data.faq.index', []],
                 'isActive' => 'master-data/faq*',
-                'icon' => 'help-circle',
+                'icon' => 'question',
                 'id' => '',
                 'gates' => [
                     [

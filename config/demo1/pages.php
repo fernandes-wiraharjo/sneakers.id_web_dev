@@ -8,7 +8,7 @@ return array(
                 // Aside
                 'aside' => array(
                     'display'  => true, // Display aside
-                    'theme'    => 'light', // Set aside theme(dark|light)
+                    'theme'    => 'dark', // Set aside theme(dark|light)
                     'minimize' => false, // Allow aside minimize toggle
                     'menu'     => 'documentation' // Set aside menu type(main|documentation)
                 ),

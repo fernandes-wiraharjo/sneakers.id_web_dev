@@ -10,6 +10,8 @@ class Category extends Model
 {
     use HasFactory, LadminLogable;
 
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'category_code',
         'category_title',
@@ -17,9 +19,14 @@ class Category extends Model
         'category_description',
         'is_active'
     ];
-    
+
     protected static function newFactory()
     {
         return \Modules\Category\Database\factories\CategoryFactory::new();
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'category_id', 'product_id');
     }
 }

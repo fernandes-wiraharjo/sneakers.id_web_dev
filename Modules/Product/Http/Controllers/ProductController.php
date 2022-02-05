@@ -57,7 +57,17 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $this->service->insertProduct($request->all());
+        try {
+            $stored = $this->service->insertProduct($request->all());
+            session()->flash('success', [
+                'Product has been created sucessfully'
+            ]);
+            return redirect()->back();
+        } catch (LadminException $e) {
+            return redirect()->back()->withErrors([
+                $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -79,6 +89,7 @@ class ProductController extends Controller
     {
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
+        $data['brand'] = $this->brand->getBrandIdAndName();
         return view('product::edit', $data);
     }
 
@@ -90,7 +101,17 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $updated = $this->service->updateProduct($id ,$request->all());
+            session()->flash('success', [
+                'Product has been created sucessfully'
+            ]);
+            return redirect()->back();
+        } catch (LadminException $e) {
+            return redirect()->back()->withErrors([
+                $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -100,6 +121,19 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $deleted = $this->repository->deleteProduct($id);
+
+            if($deleted) {
+                session()->flash('success', [
+                    'Banner has been deleted sucessfully'
+                ]);
+                return redirect()->back();
+            }
+        } catch (LadminException $e) {
+            return redirect()->back()->withErrors([
+                $e->getMessage()
+            ]);
+        }
     }
 }

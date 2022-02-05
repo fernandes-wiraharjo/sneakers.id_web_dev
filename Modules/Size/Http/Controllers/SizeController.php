@@ -94,11 +94,13 @@ class SizeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateSize($request, $id);
-            session()->flash('success', [
-                'Size has been updated sucessfully'
-            ]);
-            return redirect()->back();
+            $updated = $this->repository->updateSize($request, $id);
+            if ($updated) {
+                session()->flash('success', [
+                    'Size has been updated sucessfully'
+                ]);
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
             return redirect()->back()->withErrors([
                 $e->getMessage()

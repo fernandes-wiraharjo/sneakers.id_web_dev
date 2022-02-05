@@ -17,7 +17,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('product::_partials._form', ['product' => $product])
+                @include('product::_partials._form', ['product' => $product, 'product_code' => $product->product_code, 'edit' => true])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

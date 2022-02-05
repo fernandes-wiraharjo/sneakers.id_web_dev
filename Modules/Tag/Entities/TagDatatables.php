@@ -25,7 +25,17 @@ class TagDatatables  extends DataTable
             ->addIndexColumn()
             ->rawColumns(['action'])
             ->addColumn('action', function ($item) {
-                return view('components.action-burger', compact('item'));
+                return view('components.action-burger', [
+                    'show' => null,
+                    'edit' => [
+                      'gate' => 'administrator.master-data.tag.update',
+                      'url' => route('administrator.master-data.tag.edit', [$item->id, 'back' => request()->fullUrl()])
+                    ],
+                    'destroy' => [
+                      'gate' => 'administrator.master-data.tag.destroy',
+                      'url' => route('administrator.master-data.tag.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                    ]
+                  ]);
             });
     }
 

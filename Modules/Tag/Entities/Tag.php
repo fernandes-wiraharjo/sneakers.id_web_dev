@@ -9,6 +9,8 @@ class Tag extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['pivot'];
+
     protected $fillable = [
         'tag_code',
         'tag_title',
@@ -20,5 +22,10 @@ class Tag extends Model
     protected static function newFactory()
     {
         return \Modules\Tag\Database\factories\TagFactory::new();
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'tag_id', 'product_id');
     }
 }

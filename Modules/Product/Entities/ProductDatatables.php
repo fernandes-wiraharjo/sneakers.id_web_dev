@@ -22,17 +22,21 @@ class ProductDatatables extends DataTable
         return datatables()
             ->eloquent($query)
             ->rawColumns(['id', 'action'])
-            ->editColumn('product_code', function (Product $model) {
-                return $model->product_code;
-            })
-            ->editColumn('product_name', function (Product $model) {
-                return $model->product_name;
-            })
             ->editColumn('created_at', function (Product $model) {
                 return $model->created_at->format('d-m-Y');
             })
-            ->addColumn('action', function (Product $model) {
-                return view('components.action-burger', compact('model'));
+            ->addColumn('action', function ($item) {
+                return view('components.action-burger', [
+                    'show' => null,
+                    'edit' => [
+                      'gate' => 'administrator.product.update',
+                      'url' => route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()])
+                    ],
+                    'destroy' => [
+                      'gate' => 'administrator.product.destroy',
+                      'url' => route('administrator.product.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                    ]
+                  ]);
             });
     }
 

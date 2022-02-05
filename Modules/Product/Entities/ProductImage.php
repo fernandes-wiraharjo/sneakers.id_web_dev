@@ -18,4 +18,8 @@ class ProductImage extends Model
     {
         return \Modules\Product\Database\factories\ProductImageFactory::new();
     }
+
+    public function product(){
+        return $this->belongsTo(Product::class, 'id');
+    }
 }

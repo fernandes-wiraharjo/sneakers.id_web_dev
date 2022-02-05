@@ -16,20 +16,40 @@
 
 <hr>
 <h5>Size Charts</h5>
-
+@php
+    //dd($size->charts()->count());
+@endphp
 <!--begin::Repeater-->
 <div style="margin-left: 10%; margin-bottom: 10px" id="size">
     <!--begin::Form group-->
     <div class="form-group">
         <div data-repeater-list="size">
-            @if ($edit)
-                @foreach ($size->charts()->get() as $item)
-
+            @if (!$edit || ($edit && ($size->charts()->count() == 0)))
                 <div data-repeater-item>
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$item->id}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value="" name="size_chart_id">
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" placeholder="Enter Size Chart Name" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Value :</label>
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                        </div>
+                        <div class="col-md-4">
+                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-3 mt-md-8">
+                                <i class="la la-trash-o"></i>Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @elseif ($edit)
+                @foreach ($size->charts()->get() as $item)
+                <div data-repeater-item>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-3">
+                            <label class="form-label">Name :</label>
+                            <input type="hidden" class="form-control" value="{{$item->id ?? ''}}" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name"
                             value="{{ $item->size_name }}" placeholder="Enter Size Chart Name" />
                         </div>
@@ -46,22 +66,6 @@
                     </div>
                 </div>
                 @endforeach
-            @else
-            <div class="form-group row mb-5">
-                <div class="col-md-3">
-                    <label class="form-label">Name :</label>
-                    <input type="text" class="form-control mb-2 mb-md-0" name="size_name" placeholder="Enter Size Chart Name" />
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Value :</label>
-                    <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
-                </div>
-                <div class="col-md-4">
-                    <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-3 mt-md-8">
-                        <i class="la la-trash-o"></i>Delete
-                    </a>
-                </div>
-            </div>
             @endif
 
         </div>

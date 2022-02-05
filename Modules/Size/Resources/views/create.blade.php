@@ -10,7 +10,7 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @include('size::_partials._form', ['size' => $size])
+                @include('size::_partials._form', ['size' => $size, 'edit' => false])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

@@ -28,4 +28,9 @@ class Size extends Model
     {
         return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'size_id', 'product_id');
     }
+
+    public function charts()
+    {
+        return $this->hasMany(SizeChart::class,'size_id', 'id');
+    }
 }

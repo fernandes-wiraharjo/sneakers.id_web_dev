@@ -1,7 +1,6 @@
 {
     "Category": true,
     "Size": true,
-    "EcommerceLink": true,
     "Product": true,
     "Brand": true,
     "SignaturePlayer": true,

@@ -22,7 +22,15 @@ class BannerDatatables  extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action'])
+            ->rawColumns(['action','banner_image', 'status'])
+            ->editColumn('banner_image', function ($item) {
+                return '<div class="text-center px-4">
+                    <img class="mw-75 card-rounded" alt="" src="'.getImage($item->banner_image, 'banner') .'"/>
+                </div>';
+            })
+            ->addColumn('status', function ($item) {
+                return $item->is_active ? "<span class='badge badge-light-dark'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+            })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -46,13 +54,14 @@ class BannerDatatables  extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No')),
-            Column::make('order')->title(__('Order')),
-            Column::make('banner_image'),
+            Column::make('banner_image')->width(150),
+            Column::make('order')->title(__('Order'))->width(50),
             Column::make('banner_url'),
+            Column::computed('status')->width(150),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
+                ->width(100)
                 ->addClass('text-center'),
         ];
     }

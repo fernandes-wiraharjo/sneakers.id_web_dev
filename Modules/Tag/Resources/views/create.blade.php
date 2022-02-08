@@ -10,7 +10,7 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @include('tag::_partials._form', ['tag' => $tag])
+                @include('tag::_partials._form', ['tag' => $tag, 'edit' => false])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

@@ -10,7 +10,7 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @include('signatureplayer::_partials._form', ['signature' => $signature])
+                @include('signatureplayer::_partials._form', ['signature' => $signature, 'edit' => false])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

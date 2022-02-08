@@ -9,7 +9,7 @@
 		@csrf
         @method('PUT')
 
-		@include('brand::_partials._form', ['brand' => $brand])
+		@include('brand::_partials._form', ['brand' => $brand, 'edit' => true])
 
 		<div class="text-right">
 		  <button type="submit" class="btn btn-primary">

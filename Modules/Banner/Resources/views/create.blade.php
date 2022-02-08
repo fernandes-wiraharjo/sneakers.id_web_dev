@@ -10,7 +10,7 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @include('banner::_partials._form', ['banner' => $banner])
+                @include('banner::_partials._form', ['banner' => $banner, 'edit' => false])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

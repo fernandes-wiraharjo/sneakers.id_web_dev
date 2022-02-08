@@ -86,31 +86,6 @@ return [
                 ],
             ],
             [
-                'gate' => 'administrator.master-data.ecommerce-link.index',
-                'name' => 'Ecommerce Link',
-                'route' => ['administrator.master-data.ecommerce-link.index', []],
-                'isActive' => 'master-data/ecommerce-link*',
-                'icon' => 'link',
-                'id' => '',
-                'gates' => [
-                    [
-                        'gate' => 'administrator.master-data.ecommerce-link.create',
-                        'title' => 'Create Ecommerce Link',
-                        'description' => 'User can create new ecommerce-link'
-                    ],
-                    [
-                        'gate' => 'administrator.master-data.ecommerce-link.update',
-                        'title' => 'Update Ecommerce Link',
-                        'description' => 'User can update ecommerce-link'
-                    ],
-                    [
-                        'gate' => 'administrator.master-data.ecommerce-link.destroy',
-                        'title' => 'Delete Ecommerce Link',
-                        'description' => 'User can delete ecommerce-link'
-                    ]
-                ],
-            ],
-            [
                 'gate' => 'administrator.master-data.brand.index',
                 'name' => 'Brand',
                 'route' => ['administrator.master-data.brand.index', []],
@@ -238,10 +213,25 @@ return [
         ]
     ],
     [
+        'gate' => 'administrator.master-data.footer-setting.index',
+        'name' => 'Footer Setting',
+        'route' => ['administrator.master-data.footer-setting.index', []],
+        'isActive' => 'master-data/footer-setting*',
+        'icon' => 'hand-point-down',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.master-data.footer-setting.store',
+                'title' => 'Update setting',
+                'description' => 'User can update footer setting'
+            ],
+        ],
+    ],
+    [
         'gate' => 'administrator.access',
         'name' => 'Access',
         'route' => null,
-        'isActive' => null,
+        'isActive' => 'access*',
         'icon' => 'lock-open',
         'id' => '',
         'gates' => [],

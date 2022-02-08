@@ -10,7 +10,7 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @include('brand::_partials._form', ['brand' => $brand])
+                @include('brand::_partials._form', ['brand' => $brand, 'edit' => false])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">

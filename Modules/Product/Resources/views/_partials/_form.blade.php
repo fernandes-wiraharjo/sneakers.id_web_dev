@@ -30,7 +30,7 @@
 <div class="row">
     <div class="col-sm-6">
         <h5>Quantity & Prices</h5>
-        <div class="pl-2">
+        <div class="pl-2" id="prices">
             <br>
             <x-ladmin-form-group name="qty" label="Product Quantity Stock">
                 <div class="input-group mb-5">
@@ -60,6 +60,12 @@
                     <span class="input-group-text">Rp</span>
                     <input id="discount" type="text" class="form-control" name="after_discount_price"
                      value="{{ old('qty', rupiah_format($product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    <span class="input-group-text">%</span>
+                    <input type="text" class="form-control" id="percent"
+                    @if ($edit)
+                        value="{{100 - round(100 * ($product->detail->after_discount_price / $product->detail->base_price), 0)}}"
+                    @endif
+                    placeholder="Percentage" aria-label="Percent" disabled/>
                 </div>
             </x-ladmin-form-group>
         </div>
@@ -118,18 +124,29 @@
         ClassicEditor
             .create(document.querySelector('#kt_docs_ckeditor_classic'))
             .then(editor => {
-                console.log(editor);
+
             })
             .catch(error => {
-                console.error(error);
+
             });
     </script>
     <script>
         var base = document.getElementById("base");
         var retail = document.getElementById("retail");
         var discount = document.getElementById("discount");
+        var percent = document.getElementById("percent");
+        var prices = document.getElementById("prices");
+
+        var rawPriceBase = base.value.replace(/\D/g,'');
+        var rawPriceDiscount = discount.value.replace(/\D/g,'');
+
+        let result = 0;
 
         base.addEventListener("keyup", function(e) {
+            result = 0;
+            rawPriceBase = base.value.replace(/\D/g,'');
+            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceBase));
+            percent.value = result;
             base.value = formatRupiah(this.value);
         });
 
@@ -138,8 +155,19 @@
         });
 
         discount.addEventListener("keyup", function(e) {
+            result = 0;
+            rawPriceDiscount = discount.value.replace(/\D/g,'');
+            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceBase));
+            percent.value = result;
             discount.value = formatRupiah(this.value);
         });
+
+        // prices.addEventListener("change", function(e) {
+        //     result = 0;
+        //     result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceBase));
+        //     percent.value = result;
+        // });
+
         /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, "").toString(),

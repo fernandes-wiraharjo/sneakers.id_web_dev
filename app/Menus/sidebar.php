@@ -213,10 +213,25 @@ return [
         ]
     ],
     [
+        'gate' => 'administrator.master-data.footer-setting.index',
+        'name' => 'Footer Setting',
+        'route' => ['administrator.master-data.footer-setting.index', []],
+        'isActive' => 'master-data/footer-setting*',
+        'icon' => 'hand-point-down',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.master-data.footer-setting.store',
+                'title' => 'Update setting',
+                'description' => 'User can update footer setting'
+            ],
+        ],
+    ],
+    [
         'gate' => 'administrator.access',
         'name' => 'Access',
         'route' => null,
-        'isActive' => null,
+        'isActive' => 'access*',
         'icon' => 'lock-open',
         'id' => '',
         'gates' => [],

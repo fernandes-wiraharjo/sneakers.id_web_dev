@@ -100,7 +100,7 @@ License: {{ theme()->getOption('product', 'license') }}
     {{-- end::Page Custom Javascript --}}
 @endif
 {{-- end::Javascript --}}
-
+@stack('top-scripts')
 @if (theme()->getViewMode() === 'preview')
     {{ theme()->getView('partials/trackers/_ga-tag-manager-for-body') }}
 @endif

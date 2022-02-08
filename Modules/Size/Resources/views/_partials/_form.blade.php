@@ -16,9 +16,6 @@
 
 <hr>
 <h5>Size Charts</h5>
-@php
-    //dd($size->charts()->count());
-@endphp
 <!--begin::Repeater-->
 <div style="margin-left: 10%; margin-bottom: 10px" id="size">
     <!--begin::Form group-->

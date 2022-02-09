@@ -8,6 +8,7 @@
     "/demo1/plugins/custom/ckeditor/ckeditor-document.bundle.js": "/demo1/plugins/custom/ckeditor/ckeditor-document.bundle.js",
     "/demo1/plugins/custom/ckeditor/ckeditor-inline.bundle.js": "/demo1/plugins/custom/ckeditor/ckeditor-inline.bundle.js",
     "/demo1/plugins/custom/draggable/draggable.bundle.js": "/demo1/plugins/custom/draggable/draggable.bundle.js",
+    "/demo1/plugins/custom/formrepeater/formrepeater.bundle.bundle.js": "/demo1/plugins/custom/formrepeater/formrepeater.bundle.bundle.js",
     "/demo1/plugins/custom/leaflet/leaflet.bundle.js": "/demo1/plugins/custom/leaflet/leaflet.bundle.js",
     "/demo1/plugins/custom/prismjs/prismjs.bundle.js": "/demo1/plugins/custom/prismjs/prismjs.bundle.js",
     "/demo1/plugins/custom/tinymce/tinymce.bundle.js": "/demo1/plugins/custom/tinymce/tinymce.bundle.js",

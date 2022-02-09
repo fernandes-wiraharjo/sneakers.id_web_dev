@@ -1,19 +1,35 @@
 //
 // Separator
 //
-
 .separator {
     display: block;
     height: 0;
     border-bottom: 1px solid $border-color;
-
     &.separator-dotted {
         border-bottom-style: dotted;
         border-bottom-color: $gray-300;
     }
-
     &.separator-dashed {
         border-bottom-style: dashed;
         border-bottom-color: $gray-300;
+    }
+    &.separator-content {
+        display: flex;
+        align-items: center;
+        border-bottom: 0;
+        text-align: center;
+        flex-direction: row;
+        &:after,
+        &:before {
+            content: " ";
+            width: 50%;
+            border-bottom: 1px solid $border-color;
+        }
+        &:before {
+            margin-right: 1.25rem;
+        }
+        &:after {
+            margin-left: 1.25rem
+        }
     }
 }

@@ -78,6 +78,7 @@
             ->minifiedAjax()
             ->dom('Bfrtip')
             ->orderBy(1)
+            ->responsive(true)
             ->parameters([
                 'buttons' => view('vendor.ladmin.role._partials._topButton'),
             ]);

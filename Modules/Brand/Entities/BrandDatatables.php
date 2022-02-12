@@ -75,12 +75,12 @@ use Yajra\DataTables\Services\DataTable;
     public function html()
     {
         return $this->builder()
-                    ->setTableId('product-table')
+                    ->setTableId('brand-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
                     ->orderBy(1)
-                    ->autoWidth(false)
+                    ->responsive(true)
                     ->parameters(['scrollX' => true])
                     ->addTableClass('align-middle table-row-dashed fs-6 gy-5');
     }

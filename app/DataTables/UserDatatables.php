@@ -68,8 +68,9 @@
             ->minifiedAjax()
             ->dom('Bfrtip')
             ->orderBy(1)
+            ->responsive(true)
             ->parameters([
-                'buttons' => ['pdf'],
+                'buttons' => [],
             ]);
     }
 

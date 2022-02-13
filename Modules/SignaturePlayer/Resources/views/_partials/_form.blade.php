@@ -18,4 +18,99 @@
 	<textarea placeholder="Signature Player Description" class="form-control" name="signature_description" id="signature_description">{{ old('signature_description', $signature->signature_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active')
+@include('components.is_active', ['is_active' => $signature->is_active, 'edit' => $edit])
+
+@push('scripts')
+<script>
+    const form = document.getElementById('form');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'signature_code': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Code is required'
+                        },
+                        regexp: {
+                            regexp : /^(\d|\w|-)+$/,
+                            message : "Code should'nt contain spaces"
+                        }
+                    }
+                },
+                'signature_title': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Title is required'
+                        }
+                    }
+                },
+                'signature_player_name': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Player name is required'
+                        }
+                    }
+                },
+                'signature_description': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Description is required'
+                        }
+                    }
+                },
+                'is_active': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Is Active is required'
+                        }
+                    }
+                }
+            },
+
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('form-submit');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (validator) {
+            validator.validate().then(function (status) {
+                console.log('validated!');
+
+                if (status == 'Valid') {
+                    submitButton.setAttribute('data-kt-indicator', 'on');
+                    submitButton.disabled = true;
+
+                    setTimeout(function () {
+                        submitButton.removeAttribute('data-kt-indicator');
+                        submitButton.disabled = false;
+
+                        Swal.fire({
+                            text: "Signature Player has been successfully submitted!",
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+
+                        form.submit(); // Submit form
+                    }, 2000);
+                }
+            });
+        }
+    });
+</script>
+@endpush

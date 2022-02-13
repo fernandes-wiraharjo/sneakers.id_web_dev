@@ -34,7 +34,7 @@
             <br>
             <x-ladmin-form-group name="qty" label="Product Quantity Stock">
                 <div class="input-group mb-5">
-                    <input type="text" class="form-control" name="qty" aria-label="Amount"
+                    <input type="number" min="0" class="form-control" name="qty" aria-label="Amount"
                     value="{{ old('qty', $product->detail->qty ?? 0) }}"/>
                     <span class="input-group-text"> pcs</span>
                 </div>
@@ -47,7 +47,7 @@
                 </div>
             </x-ladmin-form-group>
 
-            <x-ladmin-form-group name="selling_price" label="Retail Price">
+            <x-ladmin-form-group name="retail_price" label="Retail Price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="retail" type="text" class="form-control" name="retail_price"
@@ -55,7 +55,7 @@
                 </div>
             </x-ladmin-form-group>
 
-            <x-ladmin-form-group name="selling_price" label="After discount price">
+            <x-ladmin-form-group name="after_discount_price" label="After discount price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="discount" type="text" class="form-control" name="after_discount_price"
@@ -108,11 +108,18 @@
     </div>
 </div>
 <hr>
-<h5>Product Description</h5>
 <br>
-<textarea name="description" id="kt_docs_ckeditor_classic">
-    {!! old('qty', $product->description) !!}
-</textarea>
+<!--begin::Input group-->
+<div class="fv-row mb-10">
+    <!--begin::Label-->
+    <label class="required fw-bold fs-6 mb-2">Product description</label>
+    <!--end::Label-->
+
+    <!--begin::Input-->
+    <textarea name="description" id="kt_docs_ckeditor_classic">
+        {!! old('qty', $product->description) !!}
+    </textarea>
+</div>
 <hr>
 
 @include('components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
@@ -129,6 +136,180 @@
             .catch(error => {
 
             });
+    </script>
+    <script>
+        let basePriceValidator = 0;
+        let discountPriceValidator = 0;
+
+        document.getElementById('base').addEventListener("change", function(e) {
+            basePriceValidator = this.value.replace(/\D/g,'');
+        });
+
+        document.getElementById('discount').addEventListener("change", function(e) {
+            discountPriceValidator = this.value.replace(/\D/g,'');
+        });
+
+        const form = document.getElementById('form');
+        var validator = FormValidation.formValidation(
+            form,
+            {
+                fields: {
+                    'product_link': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Product Link is required'
+                            },
+                            uri: {
+                                message : "Product link not valid"
+                            }
+                        }
+                    },
+                    'product_name': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Product name is required'
+                            }
+                        }
+                    },
+                    'banner_image': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Image is required'
+                            }
+                        }
+                    },
+                    'brand_id': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Brand is required'
+                            }
+                        }
+                    },
+                    'tag': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Tag is required'
+                            }
+                        }
+                    },
+                    'size': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Size is required'
+                            }
+                        }
+                    },
+                    'category': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Category is required'
+                            }
+                        }
+                    },
+                    'qty': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Quantity is required'
+                            }
+                        }
+                    },
+                    'base_price': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Base Price is required'
+                            }
+                        }
+                    },
+                    'retail_price': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Retail Price is required'
+                            }
+                        }
+                    },
+                    'after_discount_price': {
+                        value: discountPriceValidator,
+                        validators: {
+                            notEmpty: {
+                                message: 'After discount price is required'
+                            }
+                        }
+                    },
+                    'description': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Description is required'
+                            }
+                        }
+                    },
+                    'is_active': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Is Active is required'
+                            }
+                        }
+                    }
+                },
+
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                        rowSelector: '.fv-row',
+                        eleInvalidClass: '',
+                        eleValidClass: ''
+                    })
+                }
+            }
+        );
+
+        $(form.querySelector('[name="brand_id"]')).on('change', function () {
+            validator.revalidateField('brand_id');
+        });
+
+        tags.on("change", function(){
+            validator.revalidateField('tag');
+        });
+
+        sizes.on("change", function(){
+            validator.revalidateField('size');
+        });
+
+        categories.on("change", function(){
+            validator.revalidateField('category');
+        });
+        // Submit button handler
+        const submitButton = document.getElementById('form-submit');
+        submitButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            if (validator) {
+                validator.validate().then(function (status) {
+                    console.log('validated!');
+
+                    if (status == 'Valid') {
+                        submitButton.setAttribute('data-kt-indicator', 'on');
+                        submitButton.disabled = true;
+
+                        setTimeout(function () {
+                            submitButton.removeAttribute('data-kt-indicator');
+                            submitButton.disabled = false;
+
+                            Swal.fire({
+                                text: "Products has been successfully submitted!",
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+
+                            form.submit(); // Submit form
+                        }, 2000);
+                    }
+                });
+            }
+        });
     </script>
     <script>
         var base = document.getElementById("base");
@@ -161,12 +342,6 @@
             percent.value = result;
             discount.value = formatRupiah(this.value);
         });
-
-        // prices.addEventListener("change", function(e) {
-        //     result = 0;
-        //     result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceBase));
-        //     percent.value = result;
-        // });
 
         /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {

@@ -1,4 +1,4 @@
-<div class="form-group {{ $type == 'horizontal' ? 'row' : '' }} ">
+<div class="fv-row form-group {{ $type == 'horizontal' ? 'row' : '' }} ">
     <label for="{{ $name }}" class="{{ $type == 'horizontal' ? 'col-md-' . $colLabel . ' col-form-label' : '' }} font-weight-bold">
         {{ $label }}
         @if ($help)

@@ -6,15 +6,20 @@
     <div class="card">
         <!--begin::Card body-->
         <div class="card-body pt-6">
-            <form action="{{ route('administrator.master-data.size.store') }}" method="post"
+            <form action="{{ route('administrator.master-data.size.store') }}" method="post" id="form"
                 enctype="multipart/form-data">
                 @csrf
 
                 @include('size::_partials._form', ['size' => $size, 'edit' => false])
 
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">
-                        Submit Size
+                    <button type="submit" class="btn btn-primary" id="form-submit">
+                        <span class="indicator-label">
+                            Submit
+                        </span>
+                        <span class="indicator-progress">
+                            Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
                     </button>
                 </div>
             </form>

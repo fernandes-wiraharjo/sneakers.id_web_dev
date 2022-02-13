@@ -9,7 +9,7 @@ var inputElm = document.querySelector('#kt_tagify_tag');
 const tagList = JSON.parse(inputElm.dataset.json);
 
 // Initialize Tagify script on the above inputs
-new Tagify(inputElm, {
+var tags = new Tagify(inputElm, {
     whitelist: tagList,
     maxTags: 10,
     dropdown: {

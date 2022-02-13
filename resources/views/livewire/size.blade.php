@@ -8,7 +8,7 @@ var inputElm = document.querySelector('#kt_tagify_size');
 const sizeList = JSON.parse(inputElm.dataset.json);
 
 // Initialize Tagify script on the above inputs
-new Tagify(inputElm, {
+var sizes = new Tagify(inputElm, {
     whitelist: sizeList,
     maxTags: 10,
     dropdown: {

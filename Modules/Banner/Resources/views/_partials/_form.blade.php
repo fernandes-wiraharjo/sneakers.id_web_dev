@@ -18,15 +18,116 @@
     <div class="form-check col-sm-5 ml-2">
         <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=1 >
         <label class="form-check-label" for="is_headline">
-          Active
+            Active Headline
         </label>
     </div>
     <div class="form-check col-sm-5">
         <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=0 checked>
         <label class="form-check-label" for="is_headline">
-            Not Active
+            Not Active Headline
         </label>
     </div>
 </x-ladmin-form-group>
 
-@include('components.is_active')
+@include('components.is_active', ['is_active' => $banner->is_active, 'edit' => $edit])
+
+@push('scripts')
+<script>
+    const form = document.getElementById('form');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'banner_url': {
+                    validators: {
+                        notEmpty: {
+                            message: 'URL is required'
+                        },
+                        uri: {
+                            message : "URL not valid"
+                        }
+                    }
+                },
+                'banner_image': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Image is required'
+                        }
+                    }
+                },
+                'order': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Order is required'
+                        }
+                    }
+                },
+                'banner_description': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Description is required'
+                        }
+                    }
+                },
+                'is_headline': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Is Active is required'
+                        }
+                    }
+                },
+                'is_active': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Is Active is required'
+                        }
+                    }
+                }
+            },
+
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('form-submit');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (validator) {
+            validator.validate().then(function (status) {
+                console.log('validated!');
+
+                if (status == 'Valid') {
+                    submitButton.setAttribute('data-kt-indicator', 'on');
+                    submitButton.disabled = true;
+
+                    setTimeout(function () {
+                        submitButton.removeAttribute('data-kt-indicator');
+                        submitButton.disabled = false;
+
+                        Swal.fire({
+                            text: "Banner has been successfully submitted!",
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+
+                        form.submit(); // Submit form
+                    }, 2000);
+                }
+            });
+        }
+    });
+</script>
+@endpush

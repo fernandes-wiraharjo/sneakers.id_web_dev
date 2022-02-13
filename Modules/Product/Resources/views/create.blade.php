@@ -10,17 +10,23 @@
         <div class="card">
             <!--begin::Card body-->
             <div class="card-body pt-6">
-                <form action="{{ route('administrator.product.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('administrator.product.store') }}" method="post" id="form"
+                    enctype="multipart/form-data">
                     @csrf
 
                     @include('product::_partials._form', ['product' => $product, 'product_code' => $product_code, 'edit' => false])
 
-            </div>
-            <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">
-                        Submit Product
+
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary" id="form-submit">
+                        <span class="indicator-label">
+                            Submit
+                        </span>
+                        <span class="indicator-progress">
+                            Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
                     </button>
-                </form>
+                </div>
             </div>
             <!--end::Card body-->
         </div>

@@ -81,8 +81,8 @@ class TagDatatables  extends DataTable
             ->minifiedAjax()
             ->dom('Bfrtip')
             ->orderBy(1)
-            ->autoWidth(false)
             ->parameters(['scrollX' => true])
+            ->responsive(true)
             ->addTableClass('align-middle table-row-dashed fs-6 gy-5');
     }
 

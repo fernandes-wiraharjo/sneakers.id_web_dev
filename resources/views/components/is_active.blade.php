@@ -8,7 +8,7 @@
         <!--end::Label-->
 
         <!--begin::Switch-->
-        <label class="form-check form-switch form-check-custom form-check-solid">
+        <label class="form-check form-switch form-check-custom form-check-solid fv-row">
             <input class="form-check-input" type="checkbox" name="is_active" value="1"
                 checked="{{ $edit ? ($is_active ? 'checked' : '') : 'checked' }}" />
             <span class="form-check-label fw-bold text-muted">

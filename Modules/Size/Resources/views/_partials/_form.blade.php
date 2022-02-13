@@ -27,16 +27,76 @@
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
                             <input type="hidden" class="form-control" value="" name="size_chart_id">
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" placeholder="Enter Size Chart Name" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="US – Men's" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
-                        <div class="col-md-4">
-                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-3 mt-md-8">
-                                <i class="la la-trash-o"></i>Delete
-                            </a>
+                    </div>
+                </div>
+                <div data-repeater-item>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-3">
+                            <label class="form-label">Name :</label>
+                            <input type="hidden" class="form-control" value="" name="size_chart_id">
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="US – Women's" readonly/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Value :</label>
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                        </div>
+                    </div>
+                </div>
+                <div data-repeater-item>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-3">
+                            <label class="form-label">Name :</label>
+                            <input type="hidden" class="form-control" value="" name="size_chart_id">
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="US – Kid's" readonly/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Value :</label>
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                        </div>
+                    </div>
+                </div>
+                <div data-repeater-item>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-3">
+                            <label class="form-label">Name :</label>
+                            <input type="hidden" class="form-control" value="" name="size_chart_id">
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="UK" readonly/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Value :</label>
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                        </div>
+                    </div>
+                </div>
+                <div data-repeater-item>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-3">
+                            <label class="form-label">Name :</label>
+                            <input type="hidden" class="form-control" value="" name="size_chart_id">
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="CM" readonly/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Value :</label>
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                        </div>
+                    </div>
+                </div>
+                <div data-repeater-item>
+                    <div class="form-group row mb-5">
+                        <div class="col-md-3">
+                            <label class="form-label">Name :</label>
+                            <input type="hidden" class="form-control" value="" name="size_chart_id">
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="EU" readonly/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Value :</label>
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -48,17 +108,12 @@
                             <label class="form-label">Name :</label>
                             <input type="hidden" class="form-control" value="{{$item->id ?? ''}}" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name"
-                            value="{{ $item->size_name }}" placeholder="Enter Size Chart Name" />
+                            value="{{ $item->size_name }}" placeholder="Enter Size Chart Name" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"
+                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"
                             value="{{ $item->size_value }}" placeholder="Enter Size Chart Value" />
-                        </div>
-                        <div class="col-md-4">
-                            <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-3 mt-md-8">
-                                <i class="la la-trash-o"></i>Delete
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -66,14 +121,6 @@
             @endif
 
         </div>
-    </div>
-    <!--end::Form group-->
-
-    <!--begin::Form group-->
-    <div class="form-group mt-5">
-        <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
-            <i class="la la-plus"></i>Add
-        </a>
     </div>
     <!--end::Form group-->
 </div>
@@ -94,10 +141,91 @@
     show: function () {
         $(this).slideDown();
     },
-
-    hide: function (deleteElement) {
-        $(this).slideUp(deleteElement);
-    }
 });
+</script>
+<script>
+    const form = document.getElementById('form');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'size_code': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Code is required'
+                        },
+                        regexp: {
+                            regexp : /^(\d|\w|-)+$/,
+                            message : "Code should'nt contain spaces"
+                        }
+                    }
+                },
+                'size_title': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Title is required'
+                        }
+                    }
+                },
+                'size_description': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Description is required'
+                        }
+                    }
+                },
+                'is_active': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Is Active is required'
+                        }
+                    }
+                }
+            },
+
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('form-submit');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (validator) {
+            validator.validate().then(function (status) {
+                console.log('validated!');
+
+                if (status == 'Valid') {
+                    submitButton.setAttribute('data-kt-indicator', 'on');
+                    submitButton.disabled = true;
+
+                    setTimeout(function () {
+                        submitButton.removeAttribute('data-kt-indicator');
+                        submitButton.disabled = false;
+
+                        Swal.fire({
+                            text: "Size has been successfully submitted!",
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+
+                        form.submit(); // Submit form
+                    }, 2000);
+                }
+            });
+        }
+    });
 </script>
 @endpush

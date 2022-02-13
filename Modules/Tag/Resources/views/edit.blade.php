@@ -6,7 +6,7 @@
     <div class="card">
         <!--begin::Card body-->
         <div class="card-body pt-6">
-            <form action="{{ route('administrator.master-data.tag.update', $tag->id) }}" method="post"
+            <form action="{{ route('administrator.master-data.tag.update', $tag->id) }}" method="post" id="form"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -14,8 +14,13 @@
                 @include('tag::_partials._form', ['tag' => $tag, 'edit' => true])
 
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">
-                        Update Tag
+                    <button type="submit" class="btn btn-primary" id="form-submit">
+                        <span class="indicator-label">
+                            Update
+                        </span>
+                        <span class="indicator-progress">
+                            Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
                     </button>
                 </div>
             </form>

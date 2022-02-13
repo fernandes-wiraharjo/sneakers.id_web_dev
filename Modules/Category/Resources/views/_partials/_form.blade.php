@@ -14,19 +14,93 @@
 	<textarea placeholder="Category Description" class="form-control" name="category_description" id="category_description">{{ old('category_description', $category->category_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active')
+@include('components.is_active', ['is_active' => $category->is_active, 'edit' => $edit])
 
-{{-- <x-ladmin-form-group name="is_active" label="Active *">
-    <div class="form-check col-sm-5 ml-2">
-        <input class="form-check-input" type="radio" name="is_active" id="is_active" value=1 checked>
-        <label class="form-check-label" for="is_active">
-          Active
-        </label>
-    </div>
-    <div class="form-check col-sm-5">
-        <input class="form-check-input" type="radio" name="is_active" id="is_active" value=0 >
-        <label class="form-check-label" for="is_active">
-            Not Active
-        </label>
-    </div>
-</x-ladmin-form-group> --}}
+
+@push('scripts')
+<script>
+    const form = document.getElementById('form');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'category_code': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Code is required'
+                        },
+                        regexp: {
+                            regexp : /^(\d|\w|-)+$/,
+                            message : "Code should'nt contain spaces"
+                        }
+                    }
+                },
+                'category_title': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Title is required'
+                        }
+                    }
+                },
+                'category_description': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Description is required'
+                        }
+                    }
+                },
+                'is_active': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Is Active is required'
+                        }
+                    }
+                }
+            },
+
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('form-submit');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (validator) {
+            validator.validate().then(function (status) {
+                console.log('validated!');
+
+                if (status == 'Valid') {
+                    submitButton.setAttribute('data-kt-indicator', 'on');
+                    submitButton.disabled = true;
+
+                    setTimeout(function () {
+                        submitButton.removeAttribute('data-kt-indicator');
+                        submitButton.disabled = false;
+
+                        Swal.fire({
+                            text: "Category has been successfully submitted!",
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+
+                        form.submit(); // Submit form
+                    }, 2000);
+                }
+            });
+        }
+    });
+</script>
+@endpush

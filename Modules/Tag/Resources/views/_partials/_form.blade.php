@@ -14,4 +14,92 @@
 	<textarea placeholder="Tag Description" class="form-control" name="tag_description" id="tag_description">{{ old('tag_description', $tag->tag_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active')
+@include('components.is_active', ['is_active' => $tag->is_active, 'edit' => $edit])
+
+@push('scripts')
+<script>
+    const form = document.getElementById('form');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'tag_code': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Code is required'
+                        },
+                        regexp: {
+                            regexp : /^(\d|\w|-)+$/,
+                            message : "Code should'nt contain spaces"
+                        }
+                    }
+                },
+                'tag_title': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Title is required'
+                        }
+                    }
+                },
+                'tag_description': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Description is required'
+                        }
+                    }
+                },
+                'is_active': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Is Active is required'
+                        }
+                    }
+                }
+            },
+
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('form-submit');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (validator) {
+            validator.validate().then(function (status) {
+                console.log('validated!');
+
+                if (status == 'Valid') {
+                    submitButton.setAttribute('data-kt-indicator', 'on');
+                    submitButton.disabled = true;
+
+                    setTimeout(function () {
+                        submitButton.removeAttribute('data-kt-indicator');
+                        submitButton.disabled = false;
+
+                        Swal.fire({
+                            text: "Tag has been successfully submitted!",
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+
+                        form.submit(); // Submit form
+                    }, 2000);
+                }
+            });
+        }
+    });
+</script>
+@endpush

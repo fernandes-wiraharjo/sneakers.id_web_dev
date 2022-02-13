@@ -6,7 +6,7 @@
     <div class="card">
         <!--begin::Card body-->
         <div class="card-body pt-6">
-            <form action="{{ route('administrator.master-data.size.update', $size->id) }}" method="post"
+            <form action="{{ route('administrator.master-data.size.update', $size->id) }}" method="post" id="form"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -14,8 +14,13 @@
                 @include('size::_partials._form', ['size' => $size, 'edit' => true])
 
                 <div class="text-right">
-                    <button type="submit" class="btn btn-primary">
-                        Update Size
+                    <button type="submit" class="btn btn-primary" id="form-submit">
+                        <span class="indicator-label">
+                            Update
+                        </span>
+                        <span class="indicator-progress">
+                            Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
                     </button>
                 </div>
             </form>

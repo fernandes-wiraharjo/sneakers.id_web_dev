@@ -8,6 +8,7 @@ class ProductImage extends Component
 {
     public $image;
     public $edit;
+    public $module;
 
     public function render()
     {

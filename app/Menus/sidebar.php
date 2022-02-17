@@ -228,6 +228,31 @@ return [
         ],
     ],
     [
+                'gate' => 'administrator.master-data.lookbook.index',
+                'name' => 'Look Book',
+                'route' => ['administrator.master-data.lookbook.index', []],
+                'isActive' => 'master-data/lookbook*',
+                'icon' => 'question',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.lookbook.create',
+                        'title' => 'Create Look Book',
+                        'description' => 'User can create new lookbook'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.lookbook.update',
+                        'title' => 'Update Look Book',
+                        'description' => 'User can update lookbook'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.lookbook.destroy',
+                        'title' => 'Delete Look Book',
+                        'description' => 'User can delete lookbook'
+                    ]
+                ],
+            ],
+    [
         'gate' => 'administrator.access',
         'name' => 'Access',
         'route' => null,

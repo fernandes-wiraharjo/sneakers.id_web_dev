@@ -11,12 +11,12 @@ if (!function_exists('imageUpload')) {
      * $type => 'public' / 'storage' / 's3'
      * @return $newfilename
      */
-    function imageUpload($file, $path, $type, $queue = false, $number = 0)
+    function imageUpload($file, $path, $type, $queue = false, $number = 0, $custom_name = '')
     {
         $imageName = time().'.'.$file->extension();
 
         if($queue){
-            $imageName = $number.'_'.$imageName;
+            $imageName = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$imageName;
         }
 
         switch ($type) {

@@ -7,5 +7,6 @@
     "Banner": true,
     "Tag": true,
     "Faq": true,
-    "FooterSetting": true
+    "FooterSetting": true,
+    "LookBook": true
 }

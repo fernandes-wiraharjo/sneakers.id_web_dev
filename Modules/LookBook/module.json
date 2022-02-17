@@ -1,0 +1,13 @@
+{
+    "name": "LookBook",
+    "alias": "lookbook",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\LookBook\\Providers\\LookBookServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

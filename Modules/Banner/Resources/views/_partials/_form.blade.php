@@ -76,13 +76,6 @@
                         }
                     }
                 },
-                'is_active': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Is Active is required'
-                        }
-                    }
-                }
             },
 
             plugins: {

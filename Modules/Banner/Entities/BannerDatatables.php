@@ -22,14 +22,17 @@ class BannerDatatables  extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action','banner_image', 'status'])
+            ->rawColumns(['action','banner_image', 'status', 'headline'])
             ->editColumn('banner_image', function ($item) {
                 return '<div class="text-center px-4">
                     <img class="mw-75 card-rounded" alt="" src="'.getImage($item->banner_image, 'banner') .'"/>
                 </div>';
             })
+            ->addColumn('headline', function ($item) {
+                return $item->is_headline ? "<span class='badge badge-primary'>Headline</span>" : "<span class='badge badge-light-dark'>Not Headline</span>";
+            })
             ->addColumn('status', function ($item) {
-                return $item->is_active ? "<span class='badge badge-light-dark'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+                return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
@@ -57,6 +60,7 @@ class BannerDatatables  extends DataTable
             Column::make('banner_image')->width(150),
             Column::make('order')->title(__('Order'))->width(50),
             Column::make('banner_url'),
+            Column::computed('headline')->width(50),
             Column::computed('status')->width(150),
             Column::computed('action')
                 ->exportable(false)
@@ -73,7 +77,10 @@ class BannerDatatables  extends DataTable
      */
     public function query(Banner $model)
     {
-        return $model->newQuery();
+        return $model->orderBy('order', 'asc')
+            ->orderBy('is_active', 'asc')
+            ->orderBy('is_headline', 'asc')
+            ->newQuery();
     }
 
     /**

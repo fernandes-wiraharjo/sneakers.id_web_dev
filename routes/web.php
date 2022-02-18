@@ -19,6 +19,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/product-detail', function () {
+    return view('product-detail');
+});
+
+Route::get('/all-product', function () {
+    return view('all-product');
+});
+
+Route::get('/lookbook', function () {
+    return view('lookbook');
+});
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

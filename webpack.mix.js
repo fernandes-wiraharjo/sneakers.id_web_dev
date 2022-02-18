@@ -42,7 +42,6 @@ del.sync(['public/css/*', 'public/js/*', 'public/media/*', 'public/plugins/*', ]
 mix.sass(`resources/assets/core/plugins/plugins.scss`, `public/${demo}/plugins/global/plugins.bundle.css`).then(() => {
         // remove unused preprocessed fonts folder
         rimraf(path.resolve('public/fonts'), () => {});
-        rimraf(path.resolve('public/images'), () => {});
     }).sourceMaps(!mix.inProduction())
     // .setResourceRoot('./')
     .options({ processCssUrls: false }).js([`resources/assets/core/plugins/plugins.js`], `public/${demo}/plugins/global/plugins.bundle.js`);

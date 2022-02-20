@@ -77,7 +77,7 @@
                             <a href="/pages/business-address" class="Link Link--primary">BUSINESS ADDRESS</a>
                         </li>
                         <li class="Linklist__Item">
-                            <a href="{{ $footer['maps'] ?? ''}}"
+                            <a href="{{ $footer->maps ?? ''}}"
                                 class="Link Link--primary">
                                 STORE LOCATOR
                             </a>
@@ -90,7 +90,7 @@
                 <div class="Footer__Block Footer__Block--newsletter">
                     <h2 class="Footer__Title Heading u-h6">About Us</h2>
                     <div class="Footer__Content Rte">
-                        <p>{{ $footer['about'] ?? '' }}</p>
+                        <p>{{ $footer->about ?? '' }}</p>
                     </div>
                 </div>
             </div>

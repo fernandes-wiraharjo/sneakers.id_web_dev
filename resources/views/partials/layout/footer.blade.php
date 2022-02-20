@@ -5,7 +5,7 @@
                 <div class="Footer__Block Footer__Block--text">
                     <h2 class="Footer__Title Heading u-h6">Contact Us</h2>
                     <div class="Footer__Content Rte">
-                        <p><strong>Hotline:</strong> {{ $footer->phone_number_1 ?? ''}}{{ $footer->phone_number_2 ?( ' / '.$footer->phone_number_2) : ''}}</p>
+                        <p><strong>Hotline:</strong> {{ $footer->phone_number_1 ?? ''}}{{ $footer->phone_number_2 ?? ''}}</p>
                         <p></p>
                         <p><strong>E-mail: {{ $footer->email ?? ''}}</strong></p>
                         <p>Address : {{ $footer->address ?? ''}}</p>

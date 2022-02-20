@@ -12,7 +12,7 @@
     <meta name="theme-color" content="" />
 
     <title>
-        SNEAKERS
+        SNEAKERS.ID
     </title>
     <link rel="canonical" href="https://www.staycoolsocks.com/collections/all-products?page=2" />
     <link rel="shortcut icon" href="//cdn.shopify.com/s/files/1/2854/1776/files/logogram_black_48x48.png?v=1593586876" type="image/png" />
@@ -93,7 +93,7 @@
                     "https:\/\/bundle.thimatic-apps.com\/theme_files\/only_style.php?shop=staycoolsocks.myshopify.com",
                     "https:\/\/cdn.hextom.com\/js\/ultimatesalesboost.js?shop=staycoolsocks.myshopify.com",
                     "https:\/\/cdn.hextom.com\/js\/freeshippingbar.js?shop=staycoolsocks.myshopify.com",
-                    "https:\/\/js.smile.io\/v1\/smile-shopify.js?shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/js.smile.io\/v1\/smile-shopify.js?shop=staycoolsocks.myshopify.com",
                     "https:\/\/cdn-spurit.com\/shopify-apps\/recurring-invoices\/clear-cart.js?shop=staycoolsocks.myshopify.com",
                     "https:\/\/wheelioapp.azureedge.net\/app\/index.min.js?version=20220210135414679\u0026shop=staycoolsocks.myshopify.com",
                     "https:\/\/static.tabs.tkdigital.dev\/ne_smart_tabs_1a3ba21b0aa76ab7b8af4631a4deb202.js?shop=staycoolsocks.myshopify.com",
@@ -316,7 +316,7 @@
     <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/sca-pp-initial.js?v=5350734348758623751" type="text/javascript"></script>
 
     <!-- Google Tag Manager -->
-    <script>
+    {{-- <script>
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
@@ -327,10 +327,10 @@
             j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
             f.parentNode.insertBefore(j, f);
         })(window, document, "script", "dataLayer", "GTM-5MXL4VF");
-    </script>
+    </script> --}}
     <!-- End Google Tag Manager -->
 
-    <script id="sca_fg_cart_ShowGiftAsProductTemplate" type="text/template">
+    {{-- <script id="sca_fg_cart_ShowGiftAsProductTemplate" type="text/template">
 
         <div class="item not-sca-qv" id="sca-freegift-">
           <a class="close_box" style="display: none;position: absolute;top:5px;right: 10px;font-size: 22px;font-weight: bold;cursor: pointer;text-decoration:none;color: #aaa;">×</a>
@@ -353,7 +353,7 @@
                   <div id="stay-content-sca-freegift-" class="sca-fg-cart-item">
                     <a class="close_box" style="display: none;position: absolute;top:5px;right: 10px;font-size: 22px;font-weight: bold;cursor: pointer;text-decoration:none;color: #aaa;">×</a>
                     <select id="product-select-" name="id" style="display: none">
-                      
+
                     </select>
                   </div>
                 </div>
@@ -367,9 +367,9 @@
 
 
         var selectCallback_=function(t,a){if(t?(t.available?(SECOMAPP.jQuery("#sca-btn-").removeClass("disabled").removeAttr("disabled").html("<span></span>").fadeTo(200,1),SECOMAPP.jQuery("#sca-btn-").unbind("click"),SECOMAPP.jQuery("#sca-btn-").click(SECOMAPP.jQuery.proxy(function(){SECOMAPP.addGiftToCart(t.id,1)},t))):SECOMAPP.jQuery("#sca-btn-").html("<span></span>").addClass("disabled").attr("disabled","disabled").fadeTo(200,.5),t.compare_at_price>t.price?SECOMAPP.jQuery("#price-field-").html("<span class='sca-old-price'>"+SECOMAPP.formatMoney(t.compare_at_price)+"</span>&nbsp;<s class='sca-special-price'>"+SECOMAPP.formatMoney(t.price)+"</s>"):SECOMAPP.jQuery("#price-field-").html("<span class='sca-special-price'>"+SECOMAPP.formatMoney(t.price)+"</span>")):SECOMAPP.jQuery("#sca-btn-").html("<span></span>").addClass("disabled").attr("disabled","disabled").fadeTo(200,.5),t&&t.featured_image){var e=SECOMAPP.jQuery("#sca-freegift- img"),_=t.featured_image,c=e[0];Shopify.Image.switchImage(_,c,function(t,a,e){SECOMAPP.jQuery(e).parents("a").attr("href",t),SECOMAPP.jQuery(e).attr("src",t)})}},onclickSelect_=function(t){SECOMAPP.jQuery.getJSON("/products/.js",{_:(new Date).getTime()},function(t){SECOMAPP.jQuery(".owl-item #sca-freegift- span.sca-product-title").html(t.title);var e=[];SECOMAPP.jQuery.each(t.options,function(t,a){e[t]=a.name}),t.options=e;for(var a=,_=,c=t.variants.length-1;-1<c;c--)a.indexOf(t.variants[c].id)<0&&_.indexOf(t.variants[c].id)<0&&t.variants.splice(c,1);for(var o=_.length-1;-1<o;o--){var i=a[o],r=_[o],n=-1,s=-1;for(c=t.variants.length-1;-1<c;c--)t.variants[c].id==i?n=c:t.variants[c].id==r&&(s=c);-1<n&&-1<s&n!==s?("undefined"!=typeof SECOMAPP&&void 0!==SECOMAPP.fgsettings&&!0===SECOMAPP.fgsettings.sca_sync_gift&&void 0!==SECOMAPP.fgsettings.sca_fg_gift_variant_quantity_format&&"equal_original_inventory"===SECOMAPP.fgsettings.sca_fg_gift_variant_quantity_format&&(t.variants[n].available=t.variants[s].available,t.variants[n].inventory_management=t.variants[s].inventory_management),t.variants[n].option1=t.variants[s].option1,t.variants[n].options[0].name=t.variants[s].options[0].name,t.variants[n].options[1]&&(t.variants[n].options[1].name=t.variants[s].options[1].name,t.variants[n].option2=t.variants[s].option2),t.variants[n].options[2]&&(t.variants[n].options[2].name=t.variants[s].options[2].name,t.variants[n].option3=t.variants[s].option3),t.variants[n].title=t.variants[s].title,t.variants[n].name=t.variants[s].name,t.variants[n].public_title=t.variants[s].public_title,t.variants.splice(s,1)):(t.variants[s].id=i,t.variants[s].compare_at_price||(t.variants[s].compare_at_price=t.variants[s].price),t.variants[s].price=SECOMAPP.fgdata.giftid_price_mapping[i])}SECOMAPP.jQuery("#sca-btn-select-").hide(),SECOMAPP.jQuery("#product-select-").show(),SECOMAPP.jQuery("#sca-btn-").show(),SECOMAPP.jQuery("#stay-content-sca-freegift- .close_box").show(),SECOMAPP.jQuery("#stay-content-sca-freegift- .close_box").click(function(){SECOMAPP.jQuery("#stay-content-sca-freegift-").hide(),SECOMAPP.jQuery("#sca-btn-").hide(),SECOMAPP.jQuery("#sca-btn-select-").show()}),onclickSelect_=function(){SECOMAPP.jQuery("#stay-content-sca-freegift-").show(),SECOMAPP.jQuery("#sca-btn-").show(),SECOMAPP.jQuery("#sca-btn-select-").hide()},1==t.variants.length?(-1!==t.variants[0].title.indexOf("Default")&&SECOMAPP.jQuery("#sca-freegift- .selector-wrapper").hide(),1==t.variants[0].available&&(SECOMAPP.jQuery("#sca-btn-").show(),SECOMAPP.jQuery("#sca-btn-select-").hide(),SECOMAPP.jQuery("#sca-btn-").removeClass("disabled").removeAttr("disabled").html("<span></span>").fadeTo(200,1),SECOMAPP.jQuery("#sca-btn-").unbind("click"),SECOMAPP.jQuery("#sca-btn-").click(SECOMAPP.jQuery.proxy(function(){SECOMAPP.addGiftToCart(t.variants[0].id,1)},t)))):(new Shopify.OptionSelectors("product-select-",{product:t,onVariantSelected:selectCallback_,enableHistoryState:!0}),SECOMAPP.jQuery("#stay-content-sca-freegift-").show(),SECOMAPP.jQuery("#stay-content-sca-freegift-").focus())})};1==.length&&onclickSelect_();
-    </script>
+    </script> --}}
 
-    <script id="sca_fg_cart_ShowGiftAsVariantTemplate" type="text/template">
+    {{-- <script id="sca_fg_cart_ShowGiftAsVariantTemplate" type="text/template">
 
         <div class="item not-sca-qv" id="sca-freegift-">
           <a href="/products/?variant=" target="_blank"><img style="margin-left: auto; margin-right: auto; width: 50%;" class="lazyOwl" data-src=""></a>
@@ -394,17 +394,17 @@
             </div>
           </div>
         </div>
-    </script>
+    </script> --}}
 
-    <script id="sca_fg_prod_GiftList" type="text/template">
+    {{-- <script id="sca_fg_prod_GiftList" type="text/template">
 
         <a style="text-decoration: none !important" id ="" class="product-image freegif-product-image freegift-info-"
            title="" href="/products/">
           <img class="not-sca-qv" src="" alt="" />
         </a>
-    </script>
+    </script> --}}
 
-    <script id="sca_fg_prod_Gift_PopupDetail" type="text/template">
+    {{-- <script id="sca_fg_prod_Gift_PopupDetail" type="text/template">
 
         <div class="sca-fg-item fg-info-" style="display:none;z-index:2147483647;">
           <div class="sca-fg-item-options">
@@ -421,9 +421,9 @@
             </div>
           </div>
         </div>
-    </script>
+    </script> --}}
 
-    <script id="sca_fg_ajax_GiftListPopup" type="text/template">
+    {{-- <script id="sca_fg_ajax_GiftListPopup" type="text/template">
 
         <div id="freegift_popup" class="mfp-hide">
           <div id="sca-fg-owl-carousel">
@@ -438,9 +438,9 @@
             </div>
           </div>
         </div>
-    </script>
+    </script> --}}
 
-    <script id="sca_fg_checkout_confirm_popup" type="text/template">
+    {{-- <script id="sca_fg_checkout_confirm_popup" type="text/template">
 
         <div class='sca-fg-checkout-confirm-popup' style='font-family: "Myriad","Cardo","Big Caslon","Bodoni MT",Georgia,serif; position: relative;background: #FFF;padding: 20px 20px 50px 20px;width: auto;max-width: 500px;margin: 20px auto;'>
             <h1 style='font-family: "Oswald","Cardo","Big Caslon","Bodoni MT",Georgia,serif;'>YOU CAN STILL ADD MORE!</h1>
@@ -450,7 +450,7 @@
                 <a class='btn checkout__button continue-checkout action_button add_to_cart' href='/checkout' style='width: 200px !important;'>CHECKOUT</a>
             </p>
         </div>
-    </script>
+    </script> --}}
 
     <link href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/sca.freegift.css?v=9595201795602399019" rel="stylesheet" type="text/css" media="all" />
     <script src="//cdn.shopify.com/shopifycloud/shopify/assets/themes_support/option_selection-fe6b72c2bbdd3369ac0bfefe8648e3c889efca213baefd4cfb0dd9363563831f.js" type="text/javascript"></script>

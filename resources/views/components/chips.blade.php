@@ -1,1 +1,1 @@
-<span class='badge badge-light-dark'>{{$a}} - {{$b}}</span>
+<span class='badge badge-light-dark m-1'>{{$a}}{{($b != '') || $b ? '- '.$b : ''}}</span>

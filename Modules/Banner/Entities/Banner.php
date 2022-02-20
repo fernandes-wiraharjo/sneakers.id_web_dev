@@ -4,10 +4,11 @@ namespace Modules\Banner\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hexters\Ladmin\LadminLogable;
 
 class Banner extends Model
 {
-    use HasFactory;
+    use HasFactory, LadminLogable;
 
     protected $fillable = [
         'banner_image',

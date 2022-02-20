@@ -1,6 +1,6 @@
 <!-- "snippets/buddha-megamenu-wireframe.liquid" was not rendered, the associated app was uninstalled -->
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5MXL4VF" height="0" width="0" style="display: none; visibility: hidden;"></iframe></noscript>
+{{-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5MXL4VF" height="0" width="0" style="display: none; visibility: hidden;"></iframe></noscript> --}}
 <!-- End Google Tag Manager (noscript) -->
 
 <a class="PageSkipLink u-visually-hidden" href="#main">Skip to content</a>
@@ -288,9 +288,15 @@
     </form>
 </div>
 <div class="PageContainer">
-    <div id="shopify-section-announcement" class="shopify-section" style="text-align: center; background: black; color: white; padding: 10px;">
-        Free ongkir untuk pembelanjaan minimal Rp500000
+    @if (Route::has('login'))
+    <div id="shopify-section-announcement" class="shopify-section" style="text-align: right; background: black; color: white; padding: 10px;">
+        @auth
+            <a href="/login" target="_blank">Halaman Administrator</a>
+        @else
+            <a href="/login" target="_blank">Login</a>
+        @endauth
     </div>
+    @endif
     <div id="shopify-section-header" class="shopify-section shopify-section--header">
         <div id="Search" class="Search" aria-hidden="true">
             <div class="Search__Inner">

@@ -46,13 +46,14 @@ use Yajra\DataTables\Services\DataTable;
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No')),
+            Column::make('DT_RowIndex')->title(__('No'))->searchable(false),
             Column::make('faq_title'),
             Column::make('faq_question'),
             Column::make('faq_answer'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
+                ->width(150)
                 ->addClass('text-center'),
         ];
     }
@@ -64,7 +65,7 @@ use Yajra\DataTables\Services\DataTable;
      */
     public function query(Faq $model)
     {
-        return $model->newQuery();
+        return $model->orderBy('created_at', 'DESC')->newQuery();
     }
 
     /**
@@ -75,10 +76,10 @@ use Yajra\DataTables\Services\DataTable;
     public function html()
     {
         return $this->builder()
-                    ->setTableId('product-table')
+                    ->setTableId('faq-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->dom('Bfrtip')
+                    ->dom('frtip')
                     ->orderBy(1)
                     ->responsive(true)
                     ->parameters(['scrollX' => true])
@@ -92,6 +93,6 @@ use Yajra\DataTables\Services\DataTable;
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'FAQ_' . date('YmdHis');
     }
   }

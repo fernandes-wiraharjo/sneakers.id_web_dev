@@ -232,7 +232,7 @@ return [
                 'name' => 'Look Book',
                 'route' => ['administrator.master-data.lookbook.index', []],
                 'isActive' => 'master-data/lookbook*',
-                'icon' => 'question',
+                'icon' => 'book-open',
                 'id' => '',
                 'gates' => [
                     [

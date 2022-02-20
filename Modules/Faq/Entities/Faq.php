@@ -4,10 +4,11 @@ namespace Modules\Faq\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hexters\Ladmin\LadminLogable;
 
 class Faq extends Model
 {
-    use HasFactory;
+    use HasFactory, LadminLogable;
 
     protected $fillable = [
         'faq_title',

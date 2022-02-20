@@ -11,7 +11,7 @@
 @endphp
 
 <div class="menu-item">
-    <a class="menu-link {{ request()->is(config('ladmin.prefix', 'administrator')) ? 'active' : null }}" 
+    <a class="menu-link {{ request()->is(config('ladmin.prefix', 'administrator')) ? 'active' : null }}"
         href="{{ route('administrator.index') }}">
         <span class="menu-icon">
             <span class="svg-icon svg-icon-2">
@@ -27,3 +27,13 @@
 </div>
 
 {!! $viewMenu($menu->sidebar) !!}
+
+<div class="menu-item">
+    <a class="menu-link" target="_blank" href="/">
+        <span class="menu-icon">
+            <i class="fas fa-eye"></i>
+        </span>
+        <span class="menu-title">View Store
+        </span>
+    </a>
+</div>

@@ -5790,8 +5790,7 @@
         </div>
         <!-- END content_for_index -->
     </main>
-
-    @include('partials.layout.footer')
+    @include('partials.layout.footer', ['footer' => $footer])
 
     @include('partials.layout.script')
 </body>

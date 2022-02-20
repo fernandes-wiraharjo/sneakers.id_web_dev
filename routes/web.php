@@ -16,13 +16,13 @@ use App\Http\Controllers\StoreController;
 |
 */
 
-Route::get('/', 'StoreController@index')->name('store');
+Route::get('/', [StoreController::class, 'index'])->name('store');
 
-Route::get('/product-detail/{id}', 'StoreController@productDetail')->name('product-detail');
+Route::get('/product-detail/{id}', [StoreController::class, 'productDetail'])->name('product-detail');
 
-Route::get('/all-product/{filter}', 'StoreController@allProduct')->name('all-product');
+Route::get('/all-product/{filter}', [StoreController::class, 'allProduct'])->name('all-product');
 
-Route::get('/lookbook/page-{page}', 'StoreController@lookbook')->name('lookbook');
+Route::get('/lookbook/page-{page}', [StoreController::class, 'lookbook'])->name('lookbook');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

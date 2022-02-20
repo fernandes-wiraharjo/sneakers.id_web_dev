@@ -5,11 +5,21 @@
                 <div class="Footer__Block Footer__Block--text">
                     <h2 class="Footer__Title Heading u-h6">Contact Us</h2>
                     <div class="Footer__Content Rte">
-                        <p><strong>Hotline:</strong> 0818-514-333 / 022-20565946</p>
+                        <p><strong>Hotline:</strong> {{ $footer->phone_number_1 ?? ''}}{{ $footer->phone_number_2 ?( ' / '.$footer->phone_number_2) : ''}}</p>
                         <p></p>
-                        <p><strong>E-mail: info@staycoolsocks.com</strong></p>
+                        <p><strong>E-mail: {{ $footer->email ?? ''}}</strong></p>
+                        <p>Address : {{ $footer->address ?? ''}}</p>
                     </div>
                     <ul class="Footer__Social HorizontalList HorizontalList--spacingLoose">
+                        @foreach ($footer->social_media as $item)
+                            <li class="HorizontalList__Item">
+                                <a href="{{ $item->social_link }}" class="Link Link--primary" target="_blank" rel="noopener" aria-label="{{ $item->social_name }}">
+                                    <span class="Icon-Wrapper--clickable">
+                                        <i class="fa fa-{{ $item->social_icon }}"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        @endforeach
                         <li class="HorizontalList__Item">
                             <a href="https://www.facebook.com/staycoolsocks" class="Link Link--primary" target="_blank" rel="noopener" aria-label="Facebook">
                                 <span class="Icon-Wrapper--clickable">
@@ -53,14 +63,7 @@
                 </div>
                 <div class="Footer__Block Footer__Block--links">
                     <h2 class="Footer__Title Heading u-h6">HELP</h2>
-
                     <ul class="Linklist">
-                        <li class="Linklist__Item">
-                            <a href="https://www.staycoolsocks.com/pages/about-us" class="Link Link--primary">ABOUT US</a>
-                        </li>
-                        <li class="Linklist__Item">
-                            <a href="/pages/how-to-order" class="Link Link--primary">HOW TO ORDER</a>
-                        </li>
                         <li class="Linklist__Item">
                             <a href="/pages/terms-and-condition" class="Link Link--primary">TERMS AND CONDITION</a>
                         </li>
@@ -74,18 +77,10 @@
                             <a href="/pages/business-address" class="Link Link--primary">BUSINESS ADDRESS</a>
                         </li>
                         <li class="Linklist__Item">
-                            <a href="/pages/konfirmasi-pembayaran" class="Link Link--primary">KONFIRMASI PEMBAYARAN</a>
-                        </li>
-                        <li class="Linklist__Item">
-                            <a
-                                href="https://www.google.com/maps/place/STAYCOOL+SOCKS+OFFICIAL+STORE/@-6.9102711,107.6163176,17z/data=!3m1!4b1!4m5!3m4!1s0x2e68e70d8b11c945:0xf93926ab313b47d7!8m2!3d-6.9118327!4d107.618176"
-                                class="Link Link--primary"
-                            >
+                            <a href="{{ $footer['maps'] ?? ''}}"
+                                class="Link Link--primary">
                                 STORE LOCATOR
                             </a>
-                        </li>
-                        <li class="Linklist__Item">
-                            <a href="/pages/wholesale" class="Link Link--primary">WHOLESALE &amp; RETAIL</a>
                         </li>
                         <li class="Linklist__Item">
                             <a href="/pages/staycool-satisfaction-guaranteed" class="Link Link--primary">SATISFACTION GUARANTEED</a>
@@ -93,26 +88,15 @@
                     </ul>
                 </div>
                 <div class="Footer__Block Footer__Block--newsletter">
-                    <h2 class="Footer__Title Heading u-h6">Newsletter</h2>
+                    <h2 class="Footer__Title Heading u-h6">About Us</h2>
                     <div class="Footer__Content Rte">
-                        <p>Jadilah orang pertama yang mendapatkan penawaran eksklusif dan produk terbaru StayCool.</p>
+                        <p>{{ $footer['about'] ?? '' }}</p>
                     </div>
-                    <form method="post" action="/contact#footer-newsletter" id="footer-newsletter" accept-charset="UTF-8" class="Footer__Newsletter Form">
-                        <input type="hidden" name="form_type" value="customer" /><input type="hidden" name="utf8" value="✓" /><input type="hidden" name="contact[tags]" value="newsletter" />
-                        <input type="email" name="contact[email]" class="Form__Input" aria-label="Enter your email address" placeholder="Enter your email address" required />
-                        <button type="submit" class="Form__Submit Button Button--primary">Subscribe</button>
-                    </form>
                 </div>
             </div>
             <div class="Footer__Aside">
-                <ul class="Footer__PaymentList HorizontalList">
-                    <li class="HorizontalList__Item">
-                        <img src="https://cdn.shopify.com/s/files/1/2854/1776/files/payment-list-bw.jpg?v=1620472345" class="img-paymentlist-custom" />
-                    </li>
-                </ul>
                 <div class="Footer__Copyright">
                     <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">© Sneakers.id</a>
-                    <!--         <p class="Footer__ThemeAuthor"><a target="_blank" rel="nofollow" href="https://www.shopify.com?utm_campaign=poweredby&amp;utm_medium=shopify&amp;utm_source=onlinestore">Powered by Shopify</a></p> -->
                 </div>
             </div>
         </div>

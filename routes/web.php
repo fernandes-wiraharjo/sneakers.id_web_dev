@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Hexters\Ladmin\Routes\Ladmin;
 use App\Http\Controllers\LadminLogableController;
+use App\Http\Controllers\StoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,21 +16,13 @@ use App\Http\Controllers\LadminLogableController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'StoreController@index')->name('store');
 
-Route::get('/product-detail', function () {
-    return view('product-detail');
-});
+Route::get('/product-detail/{id}', 'StoreController@productDetail')->name('product-detail');
 
-Route::get('/all-product', function () {
-    return view('all-product');
-});
+Route::get('/all-product/{filter}', 'StoreController@allProduct')->name('all-product');
 
-Route::get('/lookbook', function () {
-    return view('lookbook');
-});
+Route::get('/lookbook/page-{page}', 'StoreController@lookbook')->name('lookbook');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

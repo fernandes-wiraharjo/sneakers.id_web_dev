@@ -111,7 +111,7 @@
                     </li>
                 </ul>
                 <div class="Footer__Copyright">
-                    <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">© StayCool Socks</a>
+                    <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">© Sneakers.id</a>
                     <!--         <p class="Footer__ThemeAuthor"><a target="_blank" rel="nofollow" href="https://www.shopify.com?utm_campaign=poweredby&amp;utm_medium=shopify&amp;utm_source=onlinestore">Powered by Shopify</a></p> -->
                 </div>
             </div>

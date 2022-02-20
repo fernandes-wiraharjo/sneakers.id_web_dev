@@ -4,10 +4,11 @@ namespace Modules\LookBook\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hexters\Ladmin\LadminLogable;
 
 class LookBook extends Model
 {
-    use HasFactory;
+    use HasFactory, LadminLogable;
 
     protected $fillable = [
         'look_book_title',

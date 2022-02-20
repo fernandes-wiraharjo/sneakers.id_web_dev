@@ -10,7 +10,7 @@ class ProductSignaturePLayer extends Model
     use HasFactory;
 
     protected $fillable = [];
-    
+
     protected static function newFactory()
     {
         return \Modules\Product\Database\factories\ProductSignaturePLayerFactory::new();

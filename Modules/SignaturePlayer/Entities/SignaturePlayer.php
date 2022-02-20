@@ -4,10 +4,11 @@ namespace Modules\SignaturePlayer\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hexters\Ladmin\LadminLogable;
 
 class SignaturePlayer extends Model
 {
-    use HasFactory;
+    use HasFactory, LadminLogable;
 
     protected $hidden = ['pivot'];
 

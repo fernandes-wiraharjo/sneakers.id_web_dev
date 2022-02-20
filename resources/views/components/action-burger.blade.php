@@ -39,6 +39,22 @@
                             </div>
 
                             <div class="modal-body">
+                                @if (isset($destroy['tag']))
+                                    @if($destroy['tag']['best_seller'] && $destroy['tag']['new_release'])
+                                        Do you really want to delete this
+                                        <span class="badge badge-info">{{ $destroy['tag']['best_seller'] }}</span> and
+                                        <span class="badge badge-info">{{ $destroy['tag']['new_release'] }}</span>
+                                        {{ isset($destroy['type']) ? $destroy['type'] : 'item'}}?
+                                    @elseif($destroy['tag']['best_seller'] && !$destroy['tag']['new_release'])
+                                        Do you really want to delete this
+                                        <span class="badge badge-info">{{ $destroy['tag']['best_seller'] }}</span>
+                                        {{ isset($destroy['type']) ? $destroy['type'] : 'item'}}?
+                                    @elseif(!$destroy['tag']['best_seller'] && $destroy['tag']['new_release'])
+                                        Do you really want to delete this
+                                        <span class="badge badge-info">{{ $destroy['tag']['new_release'] }}</span>
+                                        {{ isset($destroy['type']) ? $destroy['type'] : 'item'}}?
+                                    @endif
+                                @endif
                                 Do you really want to delete this item?
                             </div>
 

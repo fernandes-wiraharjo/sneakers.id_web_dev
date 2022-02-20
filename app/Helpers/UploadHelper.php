@@ -42,7 +42,11 @@ if (!function_exists('imageUpload')) {
 }
 
 if (!function_exists('getImage')) {
-    function getImage($filename, $module){
-        return asset('images/'.$module.'/'.$filename);
+    function getImage($filename, $module = ''){
+        if ($filename && $module) {
+            return asset('images/'.$module.'/'.$filename);
+        } else {
+            return asset('demo1/media/blank/blank-image.png');
+        }
     }
 }

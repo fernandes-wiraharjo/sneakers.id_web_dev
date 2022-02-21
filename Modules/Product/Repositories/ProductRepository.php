@@ -41,6 +41,26 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         return $this->model->orderBy('product_code', 'desc')->pluck('product_code')->first();
     }
 
+    public function getProductNewRelease($limit = 10, $offset = 0) {
+        return $this->model->whereHas('tags', function($q) {
+            $q->where('tag_title', 'NEW RELEASE');
+        })
+        ->where('is_active', 1)
+        ->get();
+    }
+
+    public function getProductBestSeller($limit = 10, $offset = 0) {
+        return $this->model->whereHas('tags', function($q) {
+            $q->where('tag_title', 'BEST SELLER');
+        })
+        ->where('is_active', 1)
+        ->get();
+    }
+
+    public function getProductCustomTagLimit($tag ,$limit = 10, $offset = 0) {
+
+    }
+
     public function getProductById($id){
         return $this->model->findOrFail($id);
     }

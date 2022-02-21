@@ -22,4 +22,8 @@ class ProductDetail extends Model
     {
         return \Modules\Product\Database\factories\ProductDetailFactory::new();
     }
+
+    public function brand(){
+        return $this->hasOne(\Modules\Brand\Entities\Brand::class, 'id', 'brand_id');
+    }
 }

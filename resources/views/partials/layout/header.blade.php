@@ -94,9 +94,9 @@
                     "https:\/\/cdn.hextom.com\/js\/ultimatesalesboost.js?shop=staycoolsocks.myshopify.com",
                     "https:\/\/cdn.hextom.com\/js\/freeshippingbar.js?shop=staycoolsocks.myshopify.com",
                     // "https:\/\/js.smile.io\/v1\/smile-shopify.js?shop=staycoolsocks.myshopify.com",
-                    "https:\/\/cdn-spurit.com\/shopify-apps\/recurring-invoices\/clear-cart.js?shop=staycoolsocks.myshopify.com",
-                    "https:\/\/wheelioapp.azureedge.net\/app\/index.min.js?version=20220210135414679\u0026shop=staycoolsocks.myshopify.com",
-                    "https:\/\/static.tabs.tkdigital.dev\/ne_smart_tabs_1a3ba21b0aa76ab7b8af4631a4deb202.js?shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/cdn-spurit.com\/shopify-apps\/recurring-invoices\/clear-cart.js?shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/wheelioapp.azureedge.net\/app\/index.min.js?version=20220210135414679\u0026shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/static.tabs.tkdigital.dev\/ne_smart_tabs_1a3ba21b0aa76ab7b8af4631a4deb202.js?shop=staycoolsocks.myshopify.com",
                 ];
                 for (var i = 0; i < urls.length; i++) {
                     var s = document.createElement("script");
@@ -175,8 +175,7 @@
     <link rel="stylesheet" href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/theme.scss.css?v=7344590805236375534" />
     <link rel="stylesheet" href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/custom.scss.css?v=1208790817752646728" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-
-    <script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">    <script>
         // This allows to expose several variables to the global scope, to be used in scripts
         window.theme = {
             template: "collection",
@@ -1129,9 +1128,9 @@
                 addListener(window, "load", function () {
                     for (var i = 0; i < document.forms.length; i++) {
                         var action = document.forms[i].getAttribute("action");
-                        if (action && action.indexOf("/cart") >= 0) {
-                            addListener(document.forms[i], "submit", decorate);
-                        }
+                        // if (action && action.indexOf("/cart") >= 0) {
+                        //     addListener(document.forms[i], "submit", decorate);
+                        // }
                     }
                     for (var i = 0; i < document.links.length; i++) {
                         var href = document.links[i].getAttribute("href");

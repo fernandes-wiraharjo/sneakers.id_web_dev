@@ -42,4 +42,12 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
   public function deleteBanner($id){
       return $this->getBannerById($id)->delete();
   }
+
+  public function getBannerOrdered($limit = 5, $offset = 0){
+      return $this->model->where('is_headline', 1)
+        ->offset($offset)
+        ->limit($limit)
+        ->orderBy('order','ASC')
+        ->get();
+  }
 }

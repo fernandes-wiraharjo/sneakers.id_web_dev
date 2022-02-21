@@ -3,7 +3,7 @@
     <!--begin::Form group-->
     <div data-repeater-list="social_media">
         @if(!empty($social_media))
-        @foreach ($social_media as $item)
+        @foreach ($footer->social_media as $item)
             <div data-repeater-item>
                 <div class="form-group row mb-5">
                     <div class="col-md-2">
@@ -72,6 +72,9 @@
 
     show: function () {
         $(this).slideDown();
+
+         // Re-init select2
+        $(this).find('[data-kt-repeater="select2"]').select2();
     },
 
     hide: function (deleteElement) {

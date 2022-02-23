@@ -60,20 +60,20 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'product_image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-            ]);
+            // $validator = Validator::make($request->all(), [
+            //     'product_image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
+            // ]);
 
-            if ($validator->fails()) {
-                Alert::error('Failed', 'Image shoud be filled at least one image');
-            } else {
+            // if ($validator->fails()) {
+            //     Alert::error('Failed', 'Image shoud be filled at least one image');
+            // } else {
                 $stored = $this->service->insertProduct($request->all());
                 if($stored){
                     Alert::success('Success', 'Product already registered!');
                 } else {
                     Alert::error('Failed', 'Check your info data!');
                 }
-            }
+            //}
             return redirect()->back();
         } catch (LadminException $e) {
             return redirect()->back()->withErrors([

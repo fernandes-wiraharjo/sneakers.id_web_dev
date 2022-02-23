@@ -1,11 +1,11 @@
 <head>
-    <meta name="facebook-domain-verification" content="lbpnfll7ffb1osdw7x88foe2m5q4iz" />
+    {{-- <meta name="facebook-domain-verification" content="lbpnfll7ffb1osdw7x88foe2m5q4iz" />
 
     <meta name="p:domain_verify" content="8aca71b0b9f66c72cc276d4058157241" />
     <script>
         window.KiwiSizing = window.KiwiSizing === undefined ? {} : window.KiwiSizing;
         KiwiSizing.shop = "staycoolsocks.myshopify.com";
-    </script>
+    </script> --}}
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0" />
@@ -14,7 +14,7 @@
     <title>
         SNEAKERS.ID
     </title>
-    <link rel="canonical" href="https://www.staycoolsocks.com/collections/all-products?page=2" />
+    {{-- <link rel="canonical" href="https://www.staycoolsocks.com/collections/all-products?page=2" />
     <link rel="shortcut icon" href="//cdn.shopify.com/s/files/1/2854/1776/files/logogram_black_48x48.png?v=1593586876" type="image/png" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="ALL PRODUCTS" />
@@ -25,7 +25,7 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="ALL PRODUCTS" />
     <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://cdn.shopify.com/s/files/1/2854/1776/products/NOAH-A1_600x600_crop_center.jpg?v=1639535483" />
+    <meta name="twitter:image" content="https://cdn.shopify.com/s/files/1/2854/1776/products/NOAH-A1_600x600_crop_center.jpg?v=1639535483" /> --}}
 
     <!-- "snippets/buddha-megamenu-before.liquid" was not rendered, the associated app was uninstalled -->
     <!-- "snippets/buddha-megamenu.liquid" was not rendered, the associated app was uninstalled -->
@@ -36,8 +36,8 @@
     <script>
         window.performance && window.performance.mark && window.performance.mark("shopify.content_for_header.start");
     </script>
-    <meta name="google-site-verification" content="QJ5Qve4gfdWSMpno2wNbO1yK98jSpA20Vm0J7Dnng2o" />
-    <meta id="shopify-digital-wallet" name="shopify-digital-wallet" content="/28541776/digital_wallets/dialog" />
+    {{-- <meta name="google-site-verification" content="QJ5Qve4gfdWSMpno2wNbO1yK98jSpA20Vm0J7Dnng2o" />
+    <meta id="shopify-digital-wallet" name="shopify-digital-wallet" content="/28541776/digital_wallets/dialog" /> --}}
     <link rel="alternate" type="application/atom+xml" title="Feed" href="/collections/all-products.atom" />
     <link rel="prev" href="/collections/all-products?page=1" />
     <link rel="next" href="/collections/all-products?page=3" />
@@ -89,10 +89,10 @@
         (function () {
             function asyncLoad() {
                 var urls = [
-                    "https:\/\/chimpstatic.com\/mcjs-connected\/js\/users\/05717788ea0622877f3875060\/5bdd4dd8f777f099b12c4c956.js?shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/chimpstatic.com\/mcjs-connected\/js\/users\/05717788ea0622877f3875060\/5bdd4dd8f777f099b12c4c956.js?shop=staycoolsocks.myshopify.com",
                     "https:\/\/bundle.thimatic-apps.com\/theme_files\/only_style.php?shop=staycoolsocks.myshopify.com",
-                    "https:\/\/cdn.hextom.com\/js\/ultimatesalesboost.js?shop=staycoolsocks.myshopify.com",
-                    "https:\/\/cdn.hextom.com\/js\/freeshippingbar.js?shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/cdn.hextom.com\/js\/ultimatesalesboost.js?shop=staycoolsocks.myshopify.com",
+                    // "https:\/\/cdn.hextom.com\/js\/freeshippingbar.js?shop=staycoolsocks.myshopify.com",
                     // "https:\/\/js.smile.io\/v1\/smile-shopify.js?shop=staycoolsocks.myshopify.com",
                     // "https:\/\/cdn-spurit.com\/shopify-apps\/recurring-invoices\/clear-cart.js?shop=staycoolsocks.myshopify.com",
                     // "https:\/\/wheelioapp.azureedge.net\/app\/index.min.js?version=20220210135414679\u0026shop=staycoolsocks.myshopify.com",
@@ -117,10 +117,10 @@
     <script id="__st">
         var __st = { a: 28541776, offset: 25200, reqid: "f990730d-a074-4266-b021-77582fba1dc5", pageurl: "www.staycoolsocks.com\/collections\/all-products?page=2", u: "72e2596646f0", p: "collection", rtyp: "collection", rid: 35785572397 };
     </script>
-    <script>
+    {{-- <script>
         window.ShopifyPaypalV4VisibilityTracking = true;
-    </script>
-    <script>
+    </script> --}}
+    {{-- <script>
         !(function (o) {
             o.addEventListener("DOMContentLoaded", function () {
                 (window.Shopify = window.Shopify || {}), (window.Shopify.recaptchaV3 = window.Shopify.recaptchaV3 || { siteKey: "6LcCR2cUAAAAANS1Gpq_mDIJ2pQuJphsSQaUEuc9" });
@@ -152,7 +152,7 @@
                 o.addEventListener("click", n, !0), o.addEventListener("change", n, !0), o.addEventListener("focus", n, !0);
             });
         })(document);
-    </script>
+    </script> --}}
     <script
         integrity="sha256-ZOhDwTA2KHFtI17g9YoGRbRFW1BmGBs6SbBwdZTD/ok="
         data-source-attribution="shopify.loadfeatures"

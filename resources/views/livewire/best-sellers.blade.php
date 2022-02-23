@@ -6,18 +6,18 @@
             <a href="/products/staycool-x-mocca" class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
                 <div class="AspectRatio AspectRatio--withFallback" style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: 1;">
                     {{-- multi image --}}
-                    @foreach ($item->images() as $key => $image)
+                    @foreach ($item->images()->get() as $key => $image)
                     <img class="ProductItem__Image {{$key == 0 ? 'ProductItem__Image--alternate' : ''}} Image--lazyLoad Image--fadeIn"
                     {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                         data-src="{{ getImage($image->image_url, 'products') }}"
                         data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
                         alt='{{$item->product_name}}' data-image-id="{{$image->id}}" />
                     @endforeach
-                    
+
                     <span class="Image__Loader"></span>
 
                     <noscript>
-                        @foreach ($item->images() as $key => $image)
+                        @foreach ($item->images()->get() as $key => $image)
                         {{-- BOX-A2_600x.jpg?v=1644800500 --}}
                         <img class="ProductItem__Image {{$key == 0 ? 'ProductItem__Image--alternate' : ''}}"
                             src="{{ getImage($image->image_url, 'products') }}"

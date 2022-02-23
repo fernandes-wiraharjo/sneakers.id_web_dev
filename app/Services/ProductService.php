@@ -27,10 +27,10 @@ class ProductService {
 
             $path = 'images/products';
 
-            if(isset($request['product_image'])){
+            if(isset($request['products_image'])){
                 $no = 1;
 
-                foreach($request['product_image'] as $image){
+                foreach($request['products_image'] as $image){
 
                     $do_upload = imageUpload($image, $path ,'public', true, $no);
 
@@ -113,23 +113,22 @@ class ProductService {
             'description' => $request['description'],
             'is_active' => $request['is_active']
         ];
-
         $getProduct = $this->productRepository->getProductById($id);
-
         $updatedProduct = $getProduct->update($product);
 
         if($updatedProduct) {
             $path = 'images/products';
+            foreach($request['remove_image'] as $removed_key=>$removed){
+                if(intval($removed)){
+                    $image_name = $request['before_image'][$removed_key];
+                    $deleted = $this->productRepository->deleteProductImageByImageId($image_name, $id);
+                }
+            }
 
-            if(isset($request['product_image'])){
+            if(isset($request['products_image'])){
                 $no = 1;
-
-                $this->productRepository->deleteProductImage($id);
-
-                foreach($request['product_image'] as $image){
-
+                foreach($request['products_image'] as $key=>$image){
                     $do_upload = imageUpload($image, $path ,'public', true, $no);
-
                     if(!$do_upload){
                         abort(500, 'Failed upload image');
                     } else {

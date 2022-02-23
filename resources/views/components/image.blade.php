@@ -7,7 +7,8 @@
     <div class="image-input-wrapper w-125px h-125px"
         @if($edit)
             style="background-image: url({!! !empty($image) ? getImage($image['image_url'], $module) : '' !!});"
-        @endif></div>
+        @endif>
+    </div>
     <!--end::Image preview wrapper-->
 
     <!--begin::Edit button-->

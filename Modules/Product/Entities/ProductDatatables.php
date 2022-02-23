@@ -98,7 +98,7 @@ class ProductDatatables extends DataTable
                 $image_url = $item->images()->first();
                 return '<div class="d-flex align-items-center">'.
                             '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
-                            '<span class="symbol-label" style="background-image:url('.getImage($image_url ? $image_url->image_url : '' , 'product').');"></span>'.
+                            '<span class="symbol-label" style="background-image:url('.getImage($image_url ? $image_url->image_url : '' , 'products').');"></span>'.
                         '</a>'.
                         '<div class="ms-5">'.
                             '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'"'.

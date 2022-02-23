@@ -113,6 +113,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         return $this->model->find($id)->images()->delete();
     }
 
+    public function deleteProductImageByImageId($image_url, $product_id){
+       return $this->productImage->where(['image_url' => $image_url, 'product_id' => $product_id])->delete();
+    }
+
     public function deleteProduct($id){
         $product = $this->model->find($id);
 

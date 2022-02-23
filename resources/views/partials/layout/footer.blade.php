@@ -11,15 +11,17 @@
                         <p>Address : {{ $footer->address ?? ''}}</p>
                     </div>
                     <ul class="Footer__Social HorizontalList HorizontalList--spacingLoose">
-                        @foreach ($footer->social_media as $item)
-                            <li class="HorizontalList__Item">
-                                <a href="{{ $item->social_link }}" class="Link Link--primary" target="_blank" rel="noopener" aria-label="{{ $item->social_name }}">
-                                    <span class="Icon-Wrapper--clickable" style="width: 2rem !important;">
-                                        {{ $item->social_name }}
-                                    </span>
-                                </a>
-                            </li>
-                        @endforeach
+                        @if(isset($footer->social_media))
+                            @foreach ($footer->social_media as $item)
+                                <li class="HorizontalList__Item">
+                                    <a href="{{ $item->social_link ?? '' }}" class="Link Link--primary" target="_blank" rel="noopener" aria-label="{{ $item->social_name ?? '' }}">
+                                        <span class="Icon-Wrapper--clickable" style="width: 2rem !important;">
+                                            {{ $item->social_name ?? '' }}
+                                        </span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        @endif
                     </ul>
                 </div>
                 <div class="Footer__Block Footer__Block--links">

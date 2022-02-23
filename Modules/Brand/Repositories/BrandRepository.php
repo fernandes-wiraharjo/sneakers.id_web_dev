@@ -35,6 +35,10 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
     $this->model->create($brand);
   }
 
+  public function getAllBrand(){
+      return $this->model->get();
+  }
+
   public function getBrandById($id){
       return $this->model->findOrFail($id);
   }

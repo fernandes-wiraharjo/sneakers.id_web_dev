@@ -27,60 +27,13 @@
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">FEATURED<span class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="https://www.staycoolsocks.com/collections/all-products" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
                                     <div class="Collapsible"><a href="/collections/newarrivals" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
                                     <div class="Collapsible"><a href="/collections/best-sellers" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
-                                    <div class="Collapsible">
-                                        <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">COLLABORATIONS<span class="Collapsible__Plus"></span></button>
-                                        <div class="Collapsible__Inner">
-                                            <div class="Collapsible__Content">
-                                                <ul class="Linklist Linklist--bordered Linklist--spacingLoose">
-                                                    <li class="Linklist__Item">
-                                                        <a href="https://www.staycoolsocks.com/collections/collaborations" class="Text--subdued Link Link--primary">ALL</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/pages/stcl-x-not-available" class="Text--subdued Link Link--primary">NOT AVAILABLE</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-hellcrust" class="Text--subdued Link Link--primary">HELLCRUST</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/tom-and-jerry" class="Text--subdued Link Link--primary">WARNER BROS.</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/staycool-x-looney-tunes" class="Text--subdued Link Link--primary">LOONEY TUNES</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/doraemon-vol-1" class="Text--subdued Link Link--primary">DORAEMON</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-lawless" class="Text--subdued Link Link--primary">LAWLESS JAKARTA</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-pickers" class="Text--subdued Link Link--primary">PICKERS STORE</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/pages/stcl-x-adam-ramen" class="Text--subdued Link Link--primary">ADAM RAMEN</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/pages/stcl-x-rosemary" class="Text--subdued Link Link--primary">ROSEMARY</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-certi" class="Text--subdued Link Link--primary">RYAN TYLOR (CERTI)</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-pee-wee-gaskins" class="Text--subdued Link Link--primary">PEE WEE GASKINS</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="Collapsible"><a href="/collections/staycool-set" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">STAYCOOL SET</a></div>
-                                    <div class="Collapsible"><a href="https://www.staycoolsocks.com/pages/staycool-loyalty-program" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">STAYCOOL LOYALTY PROGRAM</a></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="Collapsible">
+                        {{-- <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">MEN<span class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
@@ -171,8 +124,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="Collapsible">
+                        </div> --}}
+                        {{-- <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">WOMEN<span class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
@@ -190,7 +143,7 @@
                                     <div class="Collapsible"><a href="https://www.staycoolsocks.com/collections/staycool-kids/KIDS" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- <div class="Collapsible"><a href="/collections/accessories" class="Collapsible__Button Heading Link Link--primary u-h6">ACCESSORIES</a></div>
                         <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">BLOG<span class="Collapsible__Plus"></span></button>
@@ -260,7 +213,7 @@
         </div>
     </section>
 </div>
-<div
+{{-- <div
     id="sidebar-cart"
     class="Drawer Drawer--fromRight"
     aria-hidden="true"
@@ -283,7 +236,7 @@
         </button>
     </div>
 
-</div>
+</div> --}}
 <div class="PageContainer">
     <div id="shopify-section-header" class="shopify-section shopify-section--header">
         <div id="Search" class="Search" aria-hidden="true">
@@ -354,7 +307,7 @@
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
-                                            <a href="https://www.staycoolsocks.com/collections/all-products" class="Link Link--secondary">ALL </a>
+                                            <a href="{{ route('collections', 'all') }}" class="Link Link--secondary">ALL </a>
                                         </li>
                                         <li class="Linklist__Item">
                                             <a href="/collections/newarrivals" class="Link Link--secondary">NEW RELEASES </a>
@@ -362,64 +315,10 @@
                                         <li class="Linklist__Item">
                                             <a href="/collections/best-sellers" class="Link Link--secondary">BEST SELLERS </a>
                                         </li>
-                                        <li class="Linklist__Item" aria-haspopup="true">
-                                            <a href="/collections/collaborations" class="Link Link--secondary">
-                                                COLLABORATIONS
-                                                <svg class="Icon Icon--select-arrow-right" role="presentation" viewBox="0 0 11 18">
-                                                    <path d="M1.5 1.5l8 7.5-8 7.5" stroke-width="2" stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square"></path>
-                                                </svg>
-                                            </a>
-                                            <div class="DropdownMenu" aria-hidden="true">
-                                                <ul class="Linklist">
-                                                    <li class="Linklist__Item">
-                                                        <a href="https://www.staycoolsocks.com/collections/collaborations" class="Link Link--secondary">ALL</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/pages/stcl-x-not-available" class="Link Link--secondary">NOT AVAILABLE</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-hellcrust" class="Link Link--secondary">HELLCRUST</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/tom-and-jerry" class="Link Link--secondary">WARNER BROS.</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/staycool-x-looney-tunes" class="Link Link--secondary">LOONEY TUNES</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/doraemon-vol-1" class="Link Link--secondary">DORAEMON</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-lawless" class="Link Link--secondary">LAWLESS JAKARTA</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-pickers" class="Link Link--secondary">PICKERS STORE</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/pages/stcl-x-adam-ramen" class="Link Link--secondary">ADAM RAMEN</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/pages/stcl-x-rosemary" class="Link Link--secondary">ROSEMARY</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-certi" class="Link Link--secondary">RYAN TYLOR (CERTI)</a>
-                                                    </li>
-                                                    <li class="Linklist__Item">
-                                                        <a href="/collections/stcl-x-pee-wee-gaskins" class="Link Link--secondary">PEE WEE GASKINS</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="/collections/staycool-set" class="Link Link--secondary">STAYCOOL SET </a>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="https://www.staycoolsocks.com/pages/staycool-loyalty-program" class="Link Link--secondary">STAYCOOL LOYALTY PROGRAM </a>
-                                        </li>
                                     </ul>
                                 </div>
                             </li>
-                            <li class="HorizontalList__Item" aria-haspopup="true">
+                            {{-- <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="/collections/staycool-men" class="Heading u-h6">MEN<span class="Header__LinkSpacer">MEN</span></a>
                                 <div class="MegaMenu" aria-hidden="true">
                                     <div class="MegaMenu__Inner">
@@ -512,8 +411,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="HorizontalList__Item" aria-haspopup="true">
+                            </li>--}}
+                            {{-- <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="/collections/staycool-women" class="Heading u-h6">WOMEN<span class="Header__LinkSpacer">WOMEN</span></a>
                                 <div class="MegaMenu" aria-hidden="true">
                                     <div class="MegaMenu__Inner">
@@ -547,8 +446,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="HorizontalList__Item" aria-haspopup="true">
+                            </li> --}}
+                            {{-- <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="/collections/staycool-kids/KIDS" class="Heading u-h6">KIDS</a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
@@ -557,7 +456,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
+                            </li> --}}
                             {{-- <li class="HorizontalList__Item">
                                 <a href="/collections/accessories" class="Heading u-h6">ACCESSORIES<span class="Header__LinkSpacer">ACCESSORIES</span></a>
                             </li> --}}

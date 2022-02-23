@@ -46,6 +46,8 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             $q->where('tag_title', 'NEW RELEASE');
         })
         ->where('is_active', 1)
+        ->offset($offset)
+        ->limit($limit)
         ->get();
     }
 
@@ -54,6 +56,18 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             $q->where('tag_title', 'BEST SELLER');
         })
         ->where('is_active', 1)
+        ->offset($offset)
+        ->limit($limit)
+        ->get();
+    }
+
+    public function getProductByBrandId($brand_id, $limit = 10, $offset = 0) {
+        return $this->model->with('detail')->whereHas('detail', function($q)  use ($brand_id){
+            $q->where('brand_id', $brand_id);
+        })
+        ->where('is_active', 1)
+        ->offset($offset)
+        ->limit($limit)
         ->get();
     }
 

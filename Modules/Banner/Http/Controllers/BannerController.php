@@ -11,6 +11,7 @@ use Modules\Banner\Entities\BannerDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\Banner\Entities\Banner;
+use Alert;
 
 class BannerController extends Controller
 {
@@ -50,12 +51,27 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createBanner($request);
-            session()->flash('success', [
-                'Banner has been created sucessfully'
+            $validator = $request->validate([
+                'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createBanner($request);
+
+                if($stored){
+                    Alert::success('Banner Created Successfully!');
+                    return redirect(route('administrator.master-data.banner.index'))
+                        ->with('success', 'Banner Created Successfully!');
+                } else {
+                    Alert::error('Failed to created banner, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created banner, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -93,12 +109,17 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateBanner($request, $id);
-            session()->flash('success', [
-                'Banner has been updated sucessfully'
-            ]);
-            return redirect()->back();
+            $updated = $this->repository->updateBanner($request, $id);
+            if($updated){
+                Alert::success('Banner Updated Successfully!');
+                return redirect(route('administrator.master-data.banner.index'))
+                    ->with('success', 'Banner Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated banner, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -115,13 +136,16 @@ class BannerController extends Controller
         try {
             $deleted = $this->repository->deleteBanner($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Banner has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Banner Deleted Successfully!');
+                return redirect(route('administrator.master-data.banner.index'))
+                    ->with('success', 'Banner Deleted Successfully!');
+            } else {
+                Alert::error('Failed to delete banner, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

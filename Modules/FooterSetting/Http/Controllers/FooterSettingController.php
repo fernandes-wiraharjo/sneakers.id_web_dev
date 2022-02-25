@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Services\FooterSettingService;
 use Illuminate\Support\Facades\Storage;
+use Alert;
 
 class FooterSettingController extends Controller
 {
@@ -35,13 +36,16 @@ class FooterSettingController extends Controller
     {
         try {
             $stored = $this->service->insertFooterSetting($request->all());
-            if($stored) {
-                session()->flash('success', [
-                    'Product has been created sucessfully'
-                ]);
+            if($stored){
+                Alert::success('Footer Setting Updated Successfully!');
+                return redirect(route('administrator.master-data.footer-setting.index'))
+                    ->with('success', 'Footer Setting Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated footer setting, check your info!');
+                return redirect()->back();
             }
-            return redirect()->back();
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

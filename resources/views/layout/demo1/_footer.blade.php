@@ -5,7 +5,7 @@
         <!--begin::Copyright-->
         <div class="text-dark order-2 order-md-1">
             <span class="text-muted fw-bold me-1">{{ date("Y") }}&copy;</span>
-            <a href="{{ theme()->getOption('product', 'website') }}" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
+            <a href="{{ route('login') }}" target="_blank" class="text-gray-800 text-hover-primary">Sneakers.id</a>
         </div>
         <!--end::Copyright-->
 

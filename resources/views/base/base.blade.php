@@ -106,13 +106,13 @@ License: {{ theme()->getOption('product', 'license') }}
 @endif
 
 <script src="{{ asset('demo1/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-@include('sweetalert::alert')
 {!! $scripts ?? null !!}
 @stack('modals')
 
 @livewireScripts
 <script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
+@include('sweetalert::alert')
 </body>
 {{-- end::Body --}}
 </html>

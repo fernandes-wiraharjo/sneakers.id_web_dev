@@ -7,10 +7,13 @@
             class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed"
             style="background-image: url({{ asset(theme()->getIllustrationUrl('14.png')) }})">
 
+            <div class="d-flex flex-left flex-column flex-column-auto p-10 pb-lg-5">
+                <a href="/" class="btn btn-icon btn-success"><i class="las la-arrow-left fs-2 me-2"></i></a>
+            </div>
             <!--begin::Content-->
             <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
                 <!--begin::Logo-->
-                <a href="{{ $theme->getPageUrl('index') }}" class="mb-12">
+                <a href="/" class="mb-12">
                     @if (config('ladmin.logo'))
                         <img src="{{ config('ladmin.logo') }}" alt="Logo" class="h-45px">
                     @else
@@ -31,11 +34,11 @@
             <div class="d-flex flex-center flex-column-auto p-10">
                 <!--begin::Links-->
                 <div class="d-flex align-items-center fw-bold fs-6">
-                    <a href="{{ $theme->getOption("general", "about") }}" class="text-muted text-hover-primary px-2">{{ __('About') }}</a>
+                    {{-- <a href="{{ $theme->getOption("general", "about") }}" class="text-muted text-hover-primary px-2">{{ __('About') }}</a>
 
                     <a href="{{ $theme->getOption('general', 'contact') }}" class="text-muted text-hover-primary px-2">{{ __('Contact Us') }}</a>
 
-                    <a href="{{ $theme->getOption('product', 'purchase') }}" class="text-muted text-hover-primary px-2">{{ __('Purchase') }}</a>
+                    <a href="{{ $theme->getOption('product', 'purchase') }}" class="text-muted text-hover-primary px-2">{{ __('Purchase') }}</a> --}}
                 </div>
                 <!--end::Links-->
             </div>

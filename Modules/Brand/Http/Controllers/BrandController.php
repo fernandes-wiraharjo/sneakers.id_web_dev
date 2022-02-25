@@ -10,6 +10,7 @@ use Modules\Brand\Entities\BrandDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\Brand\Entities\Brand;
+use Alert;
 
 class BrandController extends Controller
 {
@@ -50,12 +51,26 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createBrand($request);
-            session()->flash('success', [
-                'Brand has been created sucessfully'
+            $validator = $request->validate([
+                'brand_code' => 'required|unique:brands|max:255',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createBrand($request);
+                if($stored){
+                    Alert::success('Tag Created Successfully!');
+                    return redirect(route('administrator.master-data.tag.index'))
+                        ->with('success', 'Tag Created Successfully!');
+                } else {
+                    Alert::error('Failed to created tag, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created tag, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -93,12 +108,17 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateBrand($request, $id);
-            session()->flash('success', [
-                'Brand has been updated sucessfully'
-            ]);
-            return redirect()->back();
+            $updated = $this->repository->updateBrand($request, $id);
+            if($updated){
+                Alert::success('Brand Updated Successfully!');
+                return redirect(route('administrator.master-data.brand.index'))
+                    ->with('success', 'Brand Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated brand, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -115,13 +135,16 @@ class BrandController extends Controller
         try {
             $deleted = $this->repository->deleteBrand($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Brand has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Brand Deleted Successfully!');
+                return redirect(route('administrator.master-data.brand.index'))
+                    ->with('success', 'Brand Deleted Successfully!');
+            } else {
+                Alert::error('Failed to delete brand, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

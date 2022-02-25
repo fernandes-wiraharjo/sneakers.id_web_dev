@@ -60,22 +60,26 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-            // $validator = Validator::make($request->all(), [
-            //     'product_image' => 'mimes:jpeg,jpg,png,gif|required|max:10000'
-            // ]);
+            $validator = $request->validate([
+                'product_image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+            ]);
 
-            // if ($validator->fails()) {
-            //     Alert::error('Failed', 'Image shoud be filled at least one image');
-            // } else {
+            if($validator) {
                 $stored = $this->service->insertProduct($request->all());
                 if($stored){
-                    Alert::success('Success', 'Product already registered!');
+                    Alert::success('Product Created Successfully!');
+                    return redirect(route('administrator.product.index'))
+                        ->with('success', 'Product Created Successfully!');
                 } else {
-                    Alert::error('Failed', 'Check your info data!');
+                    Alert::error('Failed to created banner, check your info!');
+                    return redirect()->back();
                 }
-            //}
-            return redirect()->back();
+            } else {
+                Alert::error('Failed to created product, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -115,11 +119,16 @@ class ProductController extends Controller
     {
         try {
             $updated = $this->service->updateProduct($id ,$request->all());
-            session()->flash('success', [
-                'Product has been created sucessfully'
-            ]);
-            return redirect()->back();
+            if($updated){
+                Alert::success('Product Updated Successfully!');
+                return redirect(route('administrator.product.index'))
+                    ->with('success', 'Product Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated product, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -136,13 +145,16 @@ class ProductController extends Controller
         try {
             $deleted = $this->repository->deleteProduct($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Banner has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Product Deleted Successfully!');
+                return redirect(route('administrator.product.index'))
+                    ->with('success', 'Product Deleted Successfully!');
+            } else {
+                Alert::error('Failed to delete product, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

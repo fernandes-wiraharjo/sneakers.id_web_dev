@@ -22,4 +22,9 @@ class Brand extends Model
     {
         return \Modules\Brand\Database\factories\BrandFactory::new();
     }
+
+    public function product_details()
+    {
+        return $this->hasMany(\Modules\Product\Entities\ProductDetail::class, 'brand_id');
+    }
 }

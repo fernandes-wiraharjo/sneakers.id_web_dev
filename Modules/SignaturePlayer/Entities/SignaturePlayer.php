@@ -28,6 +28,6 @@ class SignaturePlayer extends Model
 
     public function products()
     {
-        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'signature_player_id', 'product_id');
+        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_signature', 'signature_player_id', 'product_id');
     }
 }

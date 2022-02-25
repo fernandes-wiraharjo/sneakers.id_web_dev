@@ -140,7 +140,7 @@ class TagController extends Controller
                 return redirect(route('administrator.master-data.tag.index'))
                     ->with('success', 'Tag Deleted Successfully!');
             } else {
-                Alert::error('Failed to delete tag, check your info!');
+                Alert::error("Failed to delete tag <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {

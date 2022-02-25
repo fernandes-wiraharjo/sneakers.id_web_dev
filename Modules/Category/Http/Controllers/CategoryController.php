@@ -152,7 +152,7 @@ class CategoryController extends Controller
                 return redirect(route('administrator.master-data.category.index'))
                     ->with('success', 'Category Deleted Successfully!');
             } else {
-                Alert::error('Failed to delete category, check your info!');
+                Alert::error("Failed to delete category <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {

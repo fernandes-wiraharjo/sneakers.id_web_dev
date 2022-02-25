@@ -141,7 +141,7 @@ class SizeController extends Controller
                 return redirect(route('administrator.master-data.size.index'))
                     ->with('success', 'Size Deleted Successfully!');
             } else {
-                Alert::error('Failed to delete size, check your info!');
+                Alert::error("Failed to delete size <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {

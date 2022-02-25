@@ -40,7 +40,13 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function deleteTag($id){
-      return $this->getTagById($id)->delete();
+
+    $delete = $this->getTagById($id);
+    if($delete->products()->count() > 0){
+        return false;
+    } else {
+        return $delete->delete();
+    }
   }
 
   public function getTagIdAndNameLivewire(){

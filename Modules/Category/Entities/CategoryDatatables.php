@@ -55,12 +55,13 @@ use Yajra\DataTables\Services\DataTable;
     {
         return [
             Column::make('DT_RowIndex')
-                    ->title(__('No'))
-                    ->sortable(false)
-                    ->searchable(false),
+                ->title(__('No'))
+                ->sortable(false)
+                ->searchable(false),
             Column::make('category_code'),
             Column::make('category_image')
-                    ->searchable(false),
+                ->sortable(false)
+                ->searchable(false),
             Column::make('category_title'),
             Column::computed('action')
                 ->searchable(false)

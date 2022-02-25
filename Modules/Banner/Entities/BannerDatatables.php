@@ -57,12 +57,17 @@ class BannerDatatables  extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('banner_image')->width(150),
-            Column::make('order')->title(__('Order'))->width(50),
+            Column::make('banner_image')->width(150)
+                ->sortable(false)
+                ->searchable(false),
+            Column::make('order')->title(__('Order'))->width(50)
+                ->searchable(false),
             Column::make('banner_url'),
             Column::computed('headline')->width(50),
             Column::computed('status')->width(150),
             Column::computed('action')
+                ->sortable(false)
+                ->searchable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->width(100)

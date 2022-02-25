@@ -140,7 +140,7 @@ class SignaturePlayerController extends Controller
                 return redirect(route('administrator.master-data.signature-player.index'))
                     ->with('success', 'Signature Player Deleted Successfully!');
             } else {
-                Alert::error('Failed to delete signature player, check your info!');
+                Alert::error("Failed to delete signature player <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {

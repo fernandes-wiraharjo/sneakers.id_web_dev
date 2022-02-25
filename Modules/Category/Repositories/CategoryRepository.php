@@ -40,7 +40,13 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
   }
 
   public function deleteCategory($id){
-      return $this->getCategoryById($id)->delete();
+      $category = $this->getCategoryById($id);
+
+      if($category->products()->count() > 0) {
+        return false;
+      } else {
+        return $category->delete();
+      }
   }
 
   public function getCategoryIdAndNameLivewire(){

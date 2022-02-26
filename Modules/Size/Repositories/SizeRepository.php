@@ -92,8 +92,13 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
 
   public function deleteSize($id){
       $delete = $this->getSizeById($id);
-      $delete->charts()->delete();
-      return $delete->delete();
+
+      if ($delete->products()->count() > 0 || $delete->charts()->count() > 0) {
+        return false;
+      } else {
+        $delete->charts()->delete();
+        return $delete->delete();
+      }
   }
 
   public function getSizeIdAndNameLivewire(){

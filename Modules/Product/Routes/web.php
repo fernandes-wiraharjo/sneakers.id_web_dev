@@ -15,7 +15,7 @@ Route::group(['prefix' => 'administrator/product', 'middleware' => 'auth'], func
     Route::get('/', 'ProductController@index')->name('administrator.product.index');
     Route::get('/create', 'ProductController@create')->name('administrator.product.create');
     Route::get('/show/{id}', 'ProductController@show')->name('administrator.product.show');
-    Route::get('/edit/{id}', 'ProductController@edit')->name('administrator.product.edit');
+    Route::get('/edit-{id}', 'ProductController@edit')->name('administrator.product.edit');
     Route::delete('/destroy/{id}', 'ProductController@destroy')->name('administrator.product.destroy');
     Route::post('/store', 'ProductController@store')->name('administrator.product.store');
     Route::put('/update/{id}', 'ProductController@update')->name('administrator.product.update');

@@ -46,11 +46,15 @@ use Yajra\DataTables\Services\DataTable;
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No'))->searchable(false),
+            Column::make('DT_RowIndex')->title(__('No'))
+                ->sortable(false)
+                ->searchable(false),
             Column::make('faq_title'),
             Column::make('faq_question'),
             Column::make('faq_answer'),
             Column::computed('action')
+                ->sortable(false)
+                ->searchable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->width(150)

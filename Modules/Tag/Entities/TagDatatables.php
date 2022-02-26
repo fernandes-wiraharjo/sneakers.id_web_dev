@@ -47,10 +47,14 @@ class TagDatatables  extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No')),
+            Column::make('DT_RowIndex')->title(__('No'))
+                ->sortable(false)
+                ->searchable(false),
             Column::make('tag_code'),
             Column::make('tag_title'),
             Column::computed('action')
+                ->sortable(false)
+                ->searchable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),

@@ -10,7 +10,8 @@ use Modules\Category\Entities\CategoryDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\Category\Entities\Category;
-
+use Illuminate\Support\Facades\Validator;
+use Alert;
 class CategoryController extends Controller
 {
 
@@ -51,12 +52,27 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createCategory($request);
-            session()->flash('success', [
-                'Category has been created sucessfully'
+            $validator = $request->validate([
+                'category_code' => 'required|unique:categories|max:255',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createCategory($request);
+
+                if($stored){
+                    Alert::success('Category Created Successfully!');
+                    return redirect(route('administrator.master-data.category.index'))
+                        ->with('success', 'Category Created Successfully!');
+                } else {
+                    Alert::error('Failed to created category, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created category, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -94,12 +110,27 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateCategory($request, $id);
-            session()->flash('success', [
-                'Category has been updated sucessfully'
+            $validator = $request->validate([
+                'category_code' => 'exists|max:255',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $updated = $this->repository->updateCategory($request, $id);
+
+                if($updated){
+                    Alert::success('Category Updated Successfully!');
+                    return redirect(route('administrator.master-data.category.index'))
+                        ->with('success', 'Category Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated category, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to updated category, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -116,13 +147,16 @@ class CategoryController extends Controller
         try {
             $deleted = $this->repository->deleteCategory($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Category has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Category Deleted Successfully!');
+                return redirect(route('administrator.master-data.category.index'))
+                    ->with('success', 'Category Deleted Successfully!');
+            } else {
+                Alert::error("Failed to delete category <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

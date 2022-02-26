@@ -40,7 +40,13 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
   }
 
   public function deleteSignaturePlayer($id){
-      return $this->getSignaturePlayerById($id)->delete();
+      $signature = $this->getSignaturePlayerById($id);
+
+    if($signature->products()->count() > 0){
+        return false;
+    } else {
+        return $signature->delete();
+    }
   }
 
   public function getSignatureTag(){

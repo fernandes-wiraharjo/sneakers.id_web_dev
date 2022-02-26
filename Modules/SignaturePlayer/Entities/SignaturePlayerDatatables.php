@@ -22,7 +22,15 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'signature_image'])
+            ->editColumn('signature_image', function($item){
+                $image_url = $item->signature_image;
+                return '<div class="d-flex align-items-center">'.
+                            '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
+                                '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'signature').');"></span>'.
+                            '</a>'.
+                        '</div>';
+            })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -46,12 +54,18 @@ use Yajra\DataTables\Services\DataTable;
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No')),
+            Column::make('DT_RowIndex')->title(__('No'))
+                ->searchable(false)
+                ->sortable(false),
             Column::make('signature_code'),
-            Column::make('signature_image'),
+            Column::make('signature_image')
+                ->searchable(false)
+                ->sortable(false),
             Column::make('signature_title'),
             Column::make('signature_player_name'),
             Column::computed('action')
+                ->searchable(false)
+                ->sortable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),

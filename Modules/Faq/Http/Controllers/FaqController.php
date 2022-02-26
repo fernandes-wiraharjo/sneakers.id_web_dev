@@ -10,6 +10,7 @@ use Modules\Faq\Entities\FaqDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\Faq\Entities\Faq;
+use Alert;
 
 class FaqController extends Controller
 {
@@ -50,12 +51,29 @@ class FaqController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createFaq($request);
-            session()->flash('success', [
-                'Faq has been created sucessfully'
+            $validator = $request->validate([
+                'faq_title' => 'required',
+                'faq_question' => 'required',
+                'faq_answer' => 'required',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createFaq($request);
+
+                if($stored){
+                    Alert::success('Banner Created Successfully!');
+                    return redirect(route('administrator.master-data.banner.index'))
+                        ->with('success', 'Banner Created Successfully!');
+                } else {
+                    Alert::error('Failed to created banner, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created banner, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -93,12 +111,17 @@ class FaqController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateFaq($request, $id);
-            session()->flash('success', [
-                'Faq has been updated sucessfully'
-            ]);
-            return redirect()->back();
+            $updated = $this->repository->updateFaq($request, $id);
+            if($updated){
+                Alert::success('FAQ Updated Successfully!');
+                return redirect(route('administrator.master-data.faq.index'))
+                    ->with('success', 'FAQ Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated faq, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -115,13 +138,16 @@ class FaqController extends Controller
         try {
             $deleted = $this->repository->deleteFaq($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Faq has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('FAQ Deleted Successfully!');
+                return redirect(route('administrator.master-data.faq.index'))
+                    ->with('success', 'FAQ Deleted Successfully!');
+            } else {
+                Alert::error('Failed to delete faq, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

@@ -61,11 +61,17 @@ use Yajra\DataTables\Services\DataTable;
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No')),
+            Column::make('DT_RowIndex')->title(__('No'))
+                ->sortable(false)
+                ->searchable(false),
             Column::make('size_code'),
             Column::make('size_title'),
-            Column::make('size-chart')->title(__('Size Chart'))->width(200),
+            Column::make('size-chart')->title(__('Size Chart'))->width(200)
+                ->sortable(false)
+                ->searchable(false),
             Column::computed('action')
+                ->sortable(false)
+                ->searchable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),
@@ -90,7 +96,7 @@ use Yajra\DataTables\Services\DataTable;
     public function html()
     {
         return $this->builder()
-                    ->setTableId('product-table')
+                    ->setTableId('size-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

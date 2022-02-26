@@ -49,12 +49,17 @@ class LookBookDatatables  extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('Page'))->width(50),
+            Column::make('DT_RowIndex')->title(__('Page'))->width(50)
+                ->sortable(false)
+                ->searchable(false),
             Column::make('look_book_title')->width(150),
             Column::make('look_book_description'),
-            Column::make('look_book_order')->title(__('Order'))->width(50),
+            Column::make('look_book_order')->title(__('Order'))->width(50)
+                ->searchable(false),
             Column::computed('status')->width(75),
             Column::computed('action')
+                ->sortable(false)
+                ->searchable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->width(100)

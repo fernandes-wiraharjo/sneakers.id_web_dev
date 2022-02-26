@@ -10,6 +10,7 @@ use Modules\Tag\Entities\TagDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\Tag\Entities\Tag;
+use Alert;
 
 class TagController extends Controller
 {
@@ -50,12 +51,26 @@ class TagController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createTag($request);
-            session()->flash('success', [
-                'Tag has been created sucessfully'
+            $validator = $request->validate([
+                'tag_code' => 'required|unique:tags|max:255',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createTag($request);
+                if($stored){
+                    Alert::success('Tag Created Successfully!');
+                    return redirect(route('administrator.master-data.tag.index'))
+                        ->with('success', 'Tag Created Successfully!');
+                } else {
+                    Alert::error('Failed to created tag, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created tag, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -93,12 +108,17 @@ class TagController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateTag($request, $id);
-            session()->flash('success', [
-                'Tag has been updated sucessfully'
-            ]);
-            return redirect()->back();
+            $updated = $this->repository->updateTag($request, $id);
+            if($updated){
+                Alert::success('Tag Updated Successfully!');
+                return redirect(route('administrator.master-data.tag.index'))
+                    ->with('success', 'Tag Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated tag, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -115,13 +135,16 @@ class TagController extends Controller
         try {
             $deleted = $this->repository->deleteTag($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Tag has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Tag Deleted Successfully!');
+                return redirect(route('administrator.master-data.tag.index'))
+                    ->with('success', 'Tag Deleted Successfully!');
+            } else {
+                Alert::error("Failed to delete tag <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

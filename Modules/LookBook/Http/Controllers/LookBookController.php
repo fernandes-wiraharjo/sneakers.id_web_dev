@@ -12,6 +12,7 @@ use Modules\LookBook\Entities\LookBookDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\LookBook\Entities\LookBook;
+use Alert;
 
 class LookBookController extends Controller
 {
@@ -53,15 +54,26 @@ class LookBookController extends Controller
     public function store(Request $request)
     {
         try {
-            $stored = $this->service->insertLookBook($request->all());
-            if ($stored) {
-                session()->flash('success', [
-                    'Product has been created sucessfully'
-                ]);
+            $validator = $request->validate([
+                'look_book_title' => 'required',
+            ]);
 
+            if($validator) {
+                $stored = $this->service->insertLookBook($request->all());
+                if($stored){
+                    Alert::success('LookBook Created Successfully!');
+                    return redirect(route('administrator.master-data.lookbook.index'))
+                        ->with('success', 'LookBook Created Successfully!');
+                } else {
+                    Alert::error('Failed to created lookbook, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created banner, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -100,11 +112,16 @@ class LookBookController extends Controller
     {
         try {
             $updated = $this->service->updateLookBook($id ,$request->all());
-            session()->flash('success', [
-                'Product has been created sucessfully'
-            ]);
-            return redirect()->back();
+            if($updated){
+                Alert::success('LookBook Updated Successfully!');
+                return redirect(route('administrator.master-data.lookbook.index'))
+                    ->with('success', 'LookBook Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated lookbook, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -121,13 +138,16 @@ class LookBookController extends Controller
         try {
             $deleted = $this->repository->deleteLookBook($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Banner has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('LookBook Deleted Successfully!');
+                return redirect(route('administrator.master-data.lookbook.index'))
+                    ->with('success', 'LookBook Deleted Successfully!');
+            } else {
+                Alert::error('Failed to delete lookbook, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

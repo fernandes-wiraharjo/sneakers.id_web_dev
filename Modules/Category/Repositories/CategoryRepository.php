@@ -32,7 +32,7 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
   public function createCategory(Request $request) {
     $category = $this->categoryService->insertCategory($request);
 
-    $this->model->create($category);
+    return $this->model->create($category);
   }
 
   public function getCategoryById($id){
@@ -40,7 +40,13 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
   }
 
   public function deleteCategory($id){
-      return $this->getCategoryById($id)->delete();
+      $category = $this->getCategoryById($id);
+
+      if($category->products()->count() > 0) {
+        return false;
+      } else {
+        return $category->delete();
+      }
   }
 
   public function getCategoryIdAndNameLivewire(){

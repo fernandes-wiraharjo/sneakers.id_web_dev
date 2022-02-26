@@ -15,7 +15,7 @@ Route::group(['prefix' => 'administrator/master-data/banner', 'middleware' => 'a
     Route::get('/', 'BannerController@index')->name('administrator.master-data.banner.index');
     Route::get('/create', 'BannerController@create')->name('administrator.master-data.banner.create');
     Route::get('/show/{id}', 'BannerController@show')->name('administrator.master-data.banner.show');
-    Route::get('/edit/{id}', 'BannerController@edit')->name('administrator.master-data.banner.edit');
+    Route::get('/edit-{id}', 'BannerController@edit')->name('administrator.master-data.banner.edit');
     Route::delete('/destroy/{id}', 'BannerController@destroy')->name('administrator.master-data.banner.destroy');
     Route::post('/store', 'BannerController@store')->name('administrator.master-data.banner.store');
     Route::put('/update/{id}', 'BannerController@update')->name('administrator.master-data.banner.update');

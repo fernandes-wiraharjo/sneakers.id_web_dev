@@ -21,7 +21,15 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'brand_image'])
+            ->editColumn('brand_image', function($item){
+                $image_url = $item->brand_image;
+                return '<div class="d-flex align-items-center">'.
+                            '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
+                                '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'brand').');"></span>'.
+                            '</a>'.
+                        '</div>';
+            })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -45,11 +53,17 @@ use Yajra\DataTables\Services\DataTable;
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('No')),
+            Column::make('DT_RowIndex')->title(__('No'))
+                    ->sortable(false)
+                    ->searchable(false),
             Column::make('brand_code'),
-            Column::make('brand_image'),
+            Column::make('brand_image')
+                ->sortable(false)
+                ->searchable(false),
             Column::make('brand_title'),
             Column::computed('action')
+                ->sortable(false)
+                ->searchable(false)
                 ->exportable(false)
                 ->printable(false)
                 ->addClass('text-center'),

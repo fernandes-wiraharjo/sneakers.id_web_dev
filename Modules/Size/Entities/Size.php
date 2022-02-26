@@ -27,7 +27,7 @@ class Size extends Model
 
     public function products()
     {
-        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_tags', 'size_id', 'product_id');
+        return $this->belongsToMany(\Modules\Product\Entities\Product::class, 'product_sizes', 'size_id', 'product_id');
     }
 
     public function charts()

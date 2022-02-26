@@ -10,6 +10,7 @@ use Modules\Size\Entities\SizeDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\Size\Entities\Size;
+use Alert;
 
 class SizeController extends Controller
 {
@@ -51,12 +52,26 @@ class SizeController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createSize($request);
-            session()->flash('success', [
-                'Size has been created sucessfully'
+            $validator = $request->validate([
+                'size_code' => 'required|unique:sizes|max:255',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createSize($request);
+                if($stored){
+                    Alert::success('Size Created Successfully!');
+                    return redirect(route('administrator.master-data.size.index'))
+                        ->with('success', 'Size Created Successfully!');
+                } else {
+                    Alert::error('Failed to created size, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created size, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -95,13 +110,16 @@ class SizeController extends Controller
     {
         try {
             $updated = $this->repository->updateSize($request, $id);
-            if ($updated) {
-                session()->flash('success', [
-                    'Size has been updated sucessfully'
-                ]);
+            if($updated){
+                Alert::success('Size Updated Successfully!');
+                return redirect(route('administrator.master-data.size.index'))
+                    ->with('success', 'Size Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated size, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -118,13 +136,16 @@ class SizeController extends Controller
         try {
             $deleted = $this->repository->deleteSize($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'Size has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Size Deleted Successfully!');
+                return redirect(route('administrator.master-data.size.index'))
+                    ->with('success', 'Size Deleted Successfully!');
+            } else {
+                Alert::error("Failed to delete size <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

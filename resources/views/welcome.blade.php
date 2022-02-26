@@ -95,40 +95,42 @@
             </section>
         </div>
         @foreach ($brand as $item)
-        <div id="shopify-section-1596077408308" class="shopify-section shopify-section--bordered">
-            <section class="Section Section--spacingNormal" data-section-id="1596077408308"
-                data-section-type="featured-collections" data-settings='{
-                      "layout": "carousel"
-                    }'>
-                <header class="SectionHeader SectionHeader--center">
-                    <div class="Container">
-                        <h2 class="SectionHeader__Heading Heading u-h1">{{ strtoupper($item->brand_title) }}</h2>
-                    </div>
-                </header>
-                <div class="TabPanel" id="block-1596077408308-0" aria-hidden="false" role="tabpanel">
-                    <div class="ProductListWrapper">
-                        <div class="ProductList ProductList--carousel Carousel" data-flickity-config='{
-                                "prevNextButtons": true,
-                                "pageDots": false,
-                                "wrapAround": false,
-                                "contain": true,
-                                "cellAlign": "center",
-                                "watchCSS": true,
-                                "dragThreshold": 8,
-                                "groupCells": true,
-                                "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
-                              }'>
-                            @livewire('custom-product-item', ['brand_id' => $item->id])
+            @if ($item->product_details()->count() > 0)
+                <div id="shopify-section-1596077408308" class="shopify-section shopify-section--bordered">
+                    <section class="Section Section--spacingNormal" data-section-id="1596077408308"
+                        data-section-type="featured-collections" data-settings='{
+                            "layout": "carousel"
+                            }'>
+                        <header class="SectionHeader SectionHeader--center">
+                            <div class="Container">
+                                <h2 class="SectionHeader__Heading Heading u-h1">{{ strtoupper($item->brand_title) }}</h2>
+                            </div>
+                        </header>
+                        <div class="TabPanel" id="block-1596077408308-0" aria-hidden="false" role="tabpanel">
+                            <div class="ProductListWrapper">
+                                <div class="ProductList ProductList--carousel Carousel" data-flickity-config='{
+                                        "prevNextButtons": true,
+                                        "pageDots": false,
+                                        "wrapAround": false,
+                                        "contain": true,
+                                        "cellAlign": "center",
+                                        "watchCSS": true,
+                                        "dragThreshold": 8,
+                                        "groupCells": true,
+                                        "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+                                    }'>
+                                    @livewire('custom-product-item', ['brand_id' => $item->id])
+                                </div>
+                            </div>
+                            <div class="Container">
+                                <div class="SectionFooter">
+                                    <a href="/collections/air-jordan" class="Button Button--primary">SEE MORE</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="Container">
-                        <div class="SectionFooter">
-                            <a href="/collections/air-jordan" class="Button Button--primary">SEE MORE</a>
-                        </div>
-                    </div>
+                    </section>
                 </div>
-            </section>
-        </div>
+            @endif
         @endforeach
         <!-- END content_for_index -->
     </main>

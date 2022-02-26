@@ -310,10 +310,10 @@
                                             <a href="{{ route('collections', 'all') }}" class="Link Link--secondary">ALL </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="/collections/newarrivals" class="Link Link--secondary">NEW RELEASES </a>
+                                            <a href="{{ route('collections', 'new-release') }}" class="Link Link--secondary">NEW RELEASES </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="/collections/best-sellers" class="Link Link--secondary">BEST SELLERS </a>
+                                            <a href="{{ route('collections', 'best-seller') }}" class="Link Link--secondary">BEST SELLERS </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -412,25 +412,25 @@
                                     </div>
                                 </div>
                             </li>--}}
-                            {{-- <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="/collections/staycool-women" class="Heading u-h6">WOMEN<span class="Header__LinkSpacer">WOMEN</span></a>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="/collections/staycool-women" class="Heading u-h6">AIR JORDAN<span class="Header__LinkSpacer">AIR JORDAN</span></a>
                                 <div class="MegaMenu" aria-hidden="true">
                                     <div class="MegaMenu__Inner">
                                         <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="https://www.staycoolsocks.com/collections/staycool-women" class="MegaMenu__Title Heading Text--subdued u-h7">ALL</a>
+                                            <a href="{{ route('collections', 'air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">ALL</a>
                                         </div>
                                         <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/collections/women-socks" class="MegaMenu__Title Heading Text--subdued u-h7">WOMEN SOCKS</a>
+                                            <a href="{{ route('collections', 'sportacular') }}" class="MegaMenu__Title Heading Text--subdued u-h7">SPORTACULAR</a>
                                         </div>
                                         <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/collections/cool-mask-women" class="MegaMenu__Title Heading Text--subdued u-h7">WOMEN COOL MASK</a>
+                                            <a href="{{ route('collections', 'best-seller.air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">BEST SELLER</a>
                                         </div>
                                         <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/collections/women-sleeve" class="MegaMenu__Title Heading Text--subdued u-h7">WOMEN COOL SLEEVE</a>
+                                            <a href="{{ route('collections', 'new-arrival.air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">NEW ARRIVAL</a>
                                         </div>
                                         <div class="MegaMenu__Item" style="width: 370px; min-width: 250px;">
                                             <div class="MegaMenu__Push">
-                                                <a class="MegaMenu__PushLink" href="https://www.staycoolsocks.com/collections/low-cut/WOMEN">
+                                                <a class="MegaMenu__PushLink" href="https://www.staycoolsocks.com/collections/air-jordan">
                                                     <div
                                                         class="MegaMenu__PushImageWrapper AspectRatio"
                                                         style="background: url(//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_1x1.jpg?v=1599704394); max-width: 370px; --aspect-ratio: 1.608695652173913;"
@@ -439,24 +439,79 @@
 
                                                         <span class="Image__Loader"></span>
                                                     </div>
-                                                    <p class="MegaMenu__PushHeading Heading u-h6">LOW CUT WOMEN</p>
+                                                    <p class="MegaMenu__PushHeading Heading u-h6">AIR JORDAN</p>
                                                     <p class="MegaMenu__PushSubHeading Heading Text--subdued u-h7">Must Have</p>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </li> --}}
-                            {{-- <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="/collections/staycool-kids/KIDS" class="Heading u-h6">KIDS</a>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="/collections/staycool-women" class="Heading u-h6">NIKE<span class="Header__LinkSpacer">NIKE</span></a>
+                                <div class="MegaMenu" aria-hidden="true">
+                                    <div class="MegaMenu__Inner">
+                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
+                                            <a href="{{ route('collections', 'nike') }}" class="MegaMenu__Title Heading Text--subdued u-h7">ALL</a>
+                                        </div>
+                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
+                                            <a href="{{ route('collections', 'sportacular') }}" class="MegaMenu__Title Heading Text--subdued u-h7">SPORTACULAR</a>
+                                        </div>
+                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
+                                            <a href="{{ route('collections', 'best-seller.nike') }}" class="MegaMenu__Title Heading Text--subdued u-h7">BEST SELLER</a>
+                                        </div>
+                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
+                                            <a href="{{ route('collections', 'new-arrival.nike') }}" class="MegaMenu__Title Heading Text--subdued u-h7">NEW ARRIVAL</a>
+                                        </div>
+                                        <div class="MegaMenu__Item" style="width: 370px; min-width: 250px;">
+                                            <div class="MegaMenu__Push">
+                                                <a class="MegaMenu__PushLink" href="https://www.staycoolsocks.com/collections/air-jordan">
+                                                    <div
+                                                        class="MegaMenu__PushImageWrapper AspectRatio"
+                                                        style="background: url(//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_1x1.jpg?v=1599704394); max-width: 370px; --aspect-ratio: 1.608695652173913;"
+                                                    >
+                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_370x230@2x.jpg?v=1599704394" alt="" />
+
+                                                        <span class="Image__Loader"></span>
+                                                    </div>
+                                                    <p class="MegaMenu__PushHeading Heading u-h6">NIKE</p>
+                                                    <p class="MegaMenu__PushSubHeading Heading Text--subdued u-h7">Must Have</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'men') }}" class="Heading u-h6">MEN</a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
-                                            <a href="https://www.staycoolsocks.com/collections/staycool-kids/KIDS" class="Link Link--secondary">ALL </a>
+                                            <a href="{{ route('collections', 'men') }}" class="Link Link--secondary">ALL </a>
                                         </li>
                                     </ul>
                                 </div>
-                            </li> --}}
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'woman') }}" class="Heading u-h6">WOMAN</a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'woman') }}" class="Link Link--secondary">ALL </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'kids') }}" class="Heading u-h6">KIDS</a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'kids') }}" class="Link Link--secondary">ALL </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                             {{-- <li class="HorizontalList__Item">
                                 <a href="/collections/accessories" class="Heading u-h6">ACCESSORIES<span class="Header__LinkSpacer">ACCESSORIES</span></a>
                             </li> --}}

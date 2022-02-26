@@ -10,6 +10,7 @@ use Modules\SignaturePlayer\Entities\SignaturePlayerDatatables;
 use GuzzleHttp\Psr7\UploadedFile;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Modules\SignaturePlayer\Entities\SignaturePlayer;
+use Alert;
 
 class SignaturePlayerController extends Controller
 {
@@ -50,12 +51,26 @@ class SignaturePlayerController extends Controller
     public function store(Request $request)
     {
         try {
-            $this->repository->createSignaturePlayer($request);
-            session()->flash('success', [
-                'SignaturePlayer has been created sucessfully'
+            $validator = $request->validate([
+                'signature_code' => 'required|unique:signature_players|max:255',
             ]);
-            return redirect()->back();
+
+            if($validator) {
+                $stored = $this->repository->createSignaturePlayer($request);
+                if($stored){
+                    Alert::success('Signature Created Successfully!');
+                    return redirect(route('administrator.master-data.signature-player.index'))
+                        ->with('success', 'Signature Created Successfully!');
+                } else {
+                    Alert::error('Failed to created signature player, check your info!');
+                    return redirect()->back();
+                }
+            } else {
+                Alert::error('Failed to created signature player, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -93,12 +108,17 @@ class SignaturePlayerController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->repository->updateSignaturePlayer($request, $id);
-            session()->flash('success', [
-                'SignaturePlayer has been updated sucessfully'
-            ]);
-            return redirect()->back();
+            $updated = $this->repository->updateSignaturePlayer($request, $id);
+            if($updated){
+                Alert::success('Signature Player Updated Successfully!');
+                return redirect(route('administrator.master-data.signature-player.index'))
+                    ->with('success', 'Signature Player Updated Successfully!');
+            } else {
+                Alert::error('Failed to updated signature player, check your info!');
+                return redirect()->back();
+            }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -115,13 +135,16 @@ class SignaturePlayerController extends Controller
         try {
             $deleted = $this->repository->deleteSignaturePlayer($id);
 
-            if($deleted) {
-                session()->flash('success', [
-                    'SignaturePlayer has been deleted sucessfully'
-                ]);
+            if($deleted){
+                Alert::success('Signature Player Deleted Successfully!');
+                return redirect(route('administrator.master-data.signature-player.index'))
+                    ->with('success', 'Signature Player Deleted Successfully!');
+            } else {
+                Alert::error("Failed to delete signature player <br> can't delete parent data!");
                 return redirect()->back();
             }
         } catch (LadminException $e) {
+            Alert::error($e->getMessage());
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

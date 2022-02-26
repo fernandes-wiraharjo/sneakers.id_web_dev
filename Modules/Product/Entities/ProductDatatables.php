@@ -192,6 +192,7 @@ class ProductDatatables extends DataTable
     {
         return [
             Column::computed('action')
+                ->sortable(false)
                 ->searchable(false)
                 ->width(150)
                 ->exportable(false)

@@ -80,4 +80,12 @@
     <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/theme.min.js?v=5920970342993277604" defer></script>
     <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/custom.js?v=3101674707528230198" defer></script>
     <link rel="stylesheet" type="text/css" href="{{asset('css/custom.css')}}" />
+    <style data-id="bc-sf-filter-style" type="text/css">
+        #bc-sf-filter-options-wrapper .bc-sf-filter-option-block .bc-sf-filter-block-title h3,
+        #bc-sf-filter-tree-h .bc-sf-filter-option-block .bc-sf-filter-block-title a {}
+        #bc-sf-filter-options-wrapper .bc-sf-filter-option-block .bc-sf-filter-block-content ul li a,
+        #bc-sf-filter-tree-h .bc-sf-filter-option-block .bc-sf-filter-block-content ul li a {}
+        #bc-sf-filter-tree-mobile button {font-family: "Futura" !important;}
+      </style>
+      <link href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/bc-sf-filter.scss.css?v=14122405562365021248" rel="stylesheet" type="text/css" media="all">
 </head>

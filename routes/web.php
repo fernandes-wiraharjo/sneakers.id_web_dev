@@ -20,7 +20,7 @@ Route::get('/', [StoreController::class, 'index'])->name('store');
 
 Route::get('/product-detail/{id}', [StoreController::class, 'productDetail'])->name('product-detail');
 
-Route::get('collections/{filter}', [StoreController::class, 'collections'])->name('collections');
+Route::get('/collections/{filter}', [StoreController::class, 'collections'])->name('collections');
 
 Route::get('/lookbook/page-{page}', [StoreController::class, 'lookbook'])->name('lookbook');
 

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Hexters\Ladmin\Routes\Ladmin;
-use App\Http\Controllers\LadminLogableController;
+use Hexters\Ladmin\Http\Controllers\LadminLogableController;
 use App\Http\Controllers\StoreController;
 
 /*
@@ -22,7 +22,9 @@ Route::get('/product-detail/{id}', [StoreController::class, 'productDetail'])->n
 
 Route::get('/collections/{filter}', [StoreController::class, 'collections'])->name('collections');
 
-Route::get('/lookbook/page-{page}', [StoreController::class, 'lookbook'])->name('lookbook');
+Route::get('/lookbook/page/{page}', [StoreController::class, 'lookbook'])->name('lookbook');
+
+Route::get('/size-chart', [StoreController::class, 'sizeChart'])->name('size-chart');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

@@ -34,8 +34,24 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
     return $this->lookbookCard->create($data);
   }
 
+  public function getAllLookBook(){
+      return $this->model->get();
+  }
+
+  public function getNextLookBook($page){
+      return $this->model->where('look_book_order', '>', $page)->min('look_book_order');
+  }
+
+  public function getPrevLookBook($page){
+    return $this->model->where('look_book_order', '<', $page)->max('look_book_order');
+  }
+
   public function getLookBookById($id){
-      return $this->model->findOrFail($id);
+    return $this->model->find($id);
+  }
+
+  public function getLookBookByPageNumber($page){
+    return $this->model->where('look_book_order', $page)->first();
   }
 
   public function deleteLookBookImage($id){

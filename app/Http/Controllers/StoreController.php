@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
 use Modules\Product\Repositories\ProductRepository;
+use Modules\LookBook\Repositories\LookBookRepository;
+use Modules\Size\Repositories\SizeRepository;
 
 class StoreController extends Controller
 {
-    public function __construct(ProductRepository $productRepository) {
+    public function __construct(ProductRepository $productRepository, LookBookRepository $lookBookRepository, SizeRepository $sizeRepository) {
         $this->productRepository = $productRepository;
+        $this->lookBookRepository = $lookBookRepository;
+        $this->sizeRepository = $sizeRepository;
     }
     public function index(BrandRepository $brandRepository) {
         $data['brand'] = $brandRepository->getAllBrand();
@@ -30,7 +34,15 @@ class StoreController extends Controller
     }
 
     public function lookbook($page){
+        $data['next_page'] = $this->lookBookRepository->getNextLookBook($page);
+        $data['prev_page'] = $this->lookBookRepository->getPrevLookBook($page);
+        $data['lookbook'] = $this->lookBookRepository->getLookBookByPageNumber(intval($page));
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('lookbook', $data);
+    }
+
+    public function sizeChart(){
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('size-chart', $data);
     }
 }

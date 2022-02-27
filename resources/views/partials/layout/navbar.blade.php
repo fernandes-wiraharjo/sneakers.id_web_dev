@@ -512,9 +512,12 @@
                                     </ul>
                                 </div>
                             </li>
-                            {{-- <li class="HorizontalList__Item">
-                                <a href="/collections/accessories" class="Heading u-h6">ACCESSORIES<span class="Header__LinkSpacer">ACCESSORIES</span></a>
-                            </li> --}}
+                            <li class="HorizontalList__Item">
+                                <a href="{{ route('lookbook', 1) }}" class="Heading u-h6">LOOKBOOK<span class="Header__LinkSpacer">LOOKBOOK</span></a>
+                            </li>
+                            <li class="HorizontalList__Item">
+                                <a href="{{ route('size-chart') }}" class="Heading u-h6">Size Chart<span class="Header__LinkSpacer">Size Chart</span></a>
+                            </li>
                             {{-- <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="/pages/blog" class="Heading u-h6">BLOG</a>
                                 <div class="DropdownMenu" aria-hidden="true">

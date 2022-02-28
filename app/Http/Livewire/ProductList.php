@@ -23,6 +23,7 @@ class ProductList extends Component
     public $tag;
     public $category;
     public $signature;
+    public $keyword;
 
     protected $updatesQueryString = ['search'];
 
@@ -91,7 +92,7 @@ class ProductList extends Component
             if(empty($this->signature)) $this->signature = null;
         }
 
-        $data['products'] = $productRepository->getProductWhereLike($where_column, $this->search ?? '')
+        $products = $productRepository->getProductWhereLike($where_column, $this->search ?? '')
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){
                                         $q->whereIn('brand_id', $brands);
@@ -116,9 +117,27 @@ class ProductList extends Component
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
                                         $q->whereIn('signature_id', $signatures);
                                     });
-                                })
-                                ->paginate(12);
+                                });
 
+        if($this->keyword != 'all') {
+            $keyword = str_replace('-', ' ', $this->keyword);
+            $brand = $brandRepository->getBrandByName($keyword);
+            $brand_id = $brand ? $brand->id : '';
+            $products = $products->whereHas('tags', function($q) use ($keyword){
+                $q->orWhere('tag_title', 'LIKE', '%'.$keyword.'%');
+            })
+            ->whereHas('categories', function($q) use ($keyword){
+                $q->orWhere('category_title', 'LIKE', '%'.$keyword.'%');
+            })
+            ->whereHas('detail', function($q) use ($brand_id){
+                $q->orWhere('brand_id', $brand_id ?? '');
+            })
+            ->paginate(12);
+        } else {
+            $products = $products->paginate(12);
+        }
+
+        $data['products'] = $products;
         return view('livewire.product-list', $data);
     }
 }

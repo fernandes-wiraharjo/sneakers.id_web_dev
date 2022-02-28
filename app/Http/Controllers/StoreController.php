@@ -30,7 +30,8 @@ class StoreController extends Controller
         return view('product-detail', $data);
     }
 
-    public function collections(){
+    public function collections($keyword){
+        $data['keyword'] = $keyword;
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('collections', $data);
     }

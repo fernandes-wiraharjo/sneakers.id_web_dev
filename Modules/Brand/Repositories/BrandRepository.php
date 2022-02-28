@@ -39,6 +39,10 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
       return $this->model->get();
   }
 
+  public function getBrandByName($name = '') {
+      return $this->model->where('brand_title', 'LIKE', '%'.$name.'%')->first();
+  }
+
   public function getBrandById($id){
       return $this->model->findOrFail($id);
   }

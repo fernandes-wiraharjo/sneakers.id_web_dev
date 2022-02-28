@@ -21,25 +21,10 @@
                         </div>
                     </header>
 
-                    @livewire('product-list')
+                    @livewire('product-list', ['keyword' => $keyword])
 
                 </section>
             </div>
-            {{-- <div id="shopify-section-recently-viewed-products" class="shopify-section shopify-section--bordered shopify-section--hidden">
-                <section
-                    class="Section Section--spacingNormal"
-                    data-section-id="recently-viewed-products"
-                    data-section-type="recently-viewed-products"
-                    data-section-settings='{"productId": null}'
-                >
-                    <header class="SectionHeader SectionHeader--center">
-                        <div class="Container">
-                            <h3 class="SectionHeader__Heading Heading u-h3">Recently viewed</h3>
-                        </div>
-                    </header>
-                </section>
-            </div>
-            <div id="shopify-section-collection-footer" class="shopify-section"></div> --}}
         </main>
 
         @include('partials.layout.footer')

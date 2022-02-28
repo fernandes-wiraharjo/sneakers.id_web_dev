@@ -34,13 +34,12 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
          * Global search product using multi column & search value
          * return collection
          */
-        return $this->model->with('detail')->where(function($q) use ($where_column, $where_value) {
-            if(!empty($where_column)){
-                foreach($where_column as $column){
-                    $q->where($column, 'LIKE', '%'.$where_value.'%');
-                }
-            }
-        })->paginate($pagination);
+
+        return $this->model->query()->whereLike($where_column, $where_value)->paginate($pagination);
+    }
+
+    public function getProductWhereLike($where_column = [], $where_value = '',){
+        return $this->model->query()->whereLike($where_column, $where_value);
     }
 
     public function createProduct($data){

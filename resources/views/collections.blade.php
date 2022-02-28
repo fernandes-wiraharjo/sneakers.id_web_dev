@@ -21,7 +21,6 @@
                         </div>
                     </header>
 
-
                     @livewire('product-list')
 
                 </section>

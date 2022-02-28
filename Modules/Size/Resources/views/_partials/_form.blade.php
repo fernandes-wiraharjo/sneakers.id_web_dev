@@ -173,13 +173,6 @@
                             message: 'Description is required'
                         }
                     }
-                },
-                'is_active': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Is Active is required'
-                        }
-                    }
                 }
             },
 
@@ -210,16 +203,6 @@
                     setTimeout(function () {
                         submitButton.removeAttribute('data-kt-indicator');
                         submitButton.disabled = false;
-
-                        Swal.fire({
-                            text: "Size has been successfully submitted!",
-                            icon: "success",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        });
 
                         form.submit(); // Submit form
                     }, 2000);

@@ -35,6 +35,10 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
     $this->model->create($signaturePlayer);
   }
 
+  public function getAllSignatures() {
+      return $this->model->get();
+  }
+
   public function getSignaturePlayerById($id){
       return $this->model->findOrFail($id);
   }

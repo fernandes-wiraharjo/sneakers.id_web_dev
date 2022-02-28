@@ -25,6 +25,23 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         $this->productDetail = $modelProductDetail;
     }
 
+    public function getAllPagination($pagination = 10){
+        return $this->model->paginate($pagination);
+    }
+
+    public function getSearchByWithPaginate($where_column = [], $where_value = '', $pagination = 10) {
+        /**
+         * Global search product using multi column & search value
+         * return collection
+         */
+
+        return $this->model->query()->whereLike($where_column, $where_value)->paginate($pagination);
+    }
+
+    public function getProductWhereLike($where_column = [], $where_value = '',){
+        return $this->model->query()->whereLike($where_column, $where_value);
+    }
+
     public function createProduct($data){
         return $this->model->create($data);
     }
@@ -73,6 +90,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function getProductCustomTagLimit($tag ,$limit = 10, $offset = 0) {
 
+    }
+
+    public function getProductByIdWithEager($id){
+        return $this->model->with(['detail', 'tags', 'sizes', 'categories', 'signatures', 'images'])->find($id);
     }
 
     public function getProductById($id){

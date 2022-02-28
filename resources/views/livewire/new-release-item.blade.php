@@ -36,7 +36,7 @@
                 {{-- base price if discount and count discount--}}
                 <div class="ProductItem__PriceList Heading">
                     <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                        <span class="money">Rp. {{ rupiah_format($item->detail->base_price) }} </span>
+                        <span class="money">Rp. {{ rupiah_format($item->detail->retail_price ?? 0) }} </span>
                     </span>
                 </div>
             </div>

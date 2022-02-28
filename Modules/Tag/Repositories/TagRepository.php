@@ -35,6 +35,10 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
     $this->model->create($tag);
   }
 
+  public function getAllTags() {
+      return $this->model->get();
+  }
+
   public function getTagById($id){
       return $this->model->findOrFail($id);
   }

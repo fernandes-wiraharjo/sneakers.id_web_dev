@@ -56,6 +56,7 @@ class LookBookController extends Controller
         try {
             $validator = $request->validate([
                 'look_book_title' => 'required',
+                'look_book_oreder' => 'required|unique:look_books,look_book_order'
             ]);
 
             if($validator) {

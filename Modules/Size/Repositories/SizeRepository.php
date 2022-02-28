@@ -86,6 +86,10 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
     return $this->sizeChartModel->find($id);
   }
 
+  public function getAllSizes(){
+      return $this->model->get();
+  }
+
   public function getSizeById($id){
       return $this->model->findOrFail($id);
   }

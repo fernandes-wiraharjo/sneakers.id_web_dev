@@ -49,6 +49,10 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
       }
   }
 
+  public function getAllCategories() {
+      return $this->model->get();
+  }
+
   public function getCategoryIdAndNameLivewire(){
       return $this->model->select('id', 'category_title as value')->get();
   }

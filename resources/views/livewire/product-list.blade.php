@@ -11,7 +11,7 @@
                 </svg>
             </a>
         </div>
-        <div id="collection-sort-popover" class="Popover Popover--positionBottom Popover--alignRight" aria-hidden="true" tabindex="-1" style="top: 233px; right: 0px;">
+        <div id="collection-sort-popover" class="Popover Popover--positionBottom Popover--alignRight" aria-hidden="true" style="top: 233px; right: 0px;">
             <header class="Popover__Header">
                 <a class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
                     <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
@@ -20,24 +20,31 @@
                 <span class="Popover__Title Heading u-h4">Sort</span>
             </header>
             <div class="Popover__Content">
-                <div class="Popover__ValueList" data-scrollable="false">
-                    {{-- <a class="Popover__Value is-selected Heading Link Link--primary u-h6" data-value="manual" data-action="select-value">
-                    Featured
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="best-selling" data-action="select-value">
-                    Best selling
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="title-ascending" data-action="select-value">
+                <div class="Popover__ValueList">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'ASC')">
                     Alphabetically, A-Z
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="title-descending" data-action="select-value">
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'DESC')">
                     Alphabetically, Z-A
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="price-ascending" data-action="select-value">
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'ASC')">
                     Price, low to high
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="price-descending" data-action="select-value">
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
                     Price, high to low
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="created-ascending" data-action="select-value">
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'ASC')">
+                    Discount Price, low to high
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
+                    Disount Price, high to low
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
                     Date, old to new
-                    </a><a class="Popover__Value  Heading Link Link--primary u-h6" data-value="created-descending" data-action="select-value">
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'DESC')">
                     Date, new to old
-                    </a> --}}
+                    </a>
                 </div>
             </div>
         </div>
@@ -111,9 +118,21 @@
                                         <a href="{{ $product->product_link }}">{{ $product->product_name }}</a>
                                     </h2>
                                     <div class="ProductItem__PriceList Heading">
-                                        <span class="ProductItem__Price Price Text--subdued"
-                                            data-money-convertible><span class="money">RP.
-                                                {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}</span></span>
+                                        <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
+                                                @if ($product->after_discount_price > 0)
+                                                    <span class="money">
+                                                        RP.
+                                                        <del>
+                                                            {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                        </del>
+                                                        {{ $product->after_discount_price }}
+                                                    </span>
+                                                @else
+                                                    <span class="money">RP.
+                                                        {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                    </span>
+                                                @endif
+                                        </span>
                                     </div>
                                 </div>
                             </div>

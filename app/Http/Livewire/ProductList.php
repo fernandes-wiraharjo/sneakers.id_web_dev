@@ -24,8 +24,15 @@ class ProductList extends Component
     public $category;
     public $signature;
     public $keyword;
+    public $sort_by = 'ASC';
+    public $sort_column = 'product_name';
 
     protected $updatesQueryString = ['search'];
+
+    public function sort($sort_column = 'product_name', $sort_by = 'ASC'){
+        $this->sort_by = $sort_by;
+        $this->sort_column = $sort_column;
+    }
 
     public function mount(): void
     {
@@ -132,10 +139,13 @@ class ProductList extends Component
             ->whereHas('detail', function($q) use ($brand_id){
                 $q->orWhere('brand_id', $brand_id ?? '');
             })
+            ->orderBy($this->sort_column, $this->sort_by)
             ->paginate(12);
         } else {
-            $products = $products->paginate(12);
+            $products = $products->orderBy($this->sort_column, $this->sort_by)->paginate(12);
         }
+
+        //dd($products);
 
         $data['products'] = $products;
         return view('livewire.product-list', $data);

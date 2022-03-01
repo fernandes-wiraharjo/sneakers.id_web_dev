@@ -15,7 +15,7 @@
     value="{{ old('product_link', $product->product_link) }}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="brand" label="Brand">
-    <select class="form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
+    <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
         <option>------ Select Brand --------</option>
         @foreach ($brand as $name => $id)
             <option value="{{$id}}" {{ $edit ? ( old('product_name', $product->detail->brand_id) == $id ? 'selected' : '' ) : '' }}>
@@ -42,7 +42,7 @@
             <x-ladmin-form-group name="base_price" label="Base Price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="base" type="text" class="form-control" name="base_price"
+                    <input id="base" type="text" class="form-control" name="base_price" min=1
                     value="{{ old('base_price', rupiah_format($product->detail->base_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
@@ -50,7 +50,7 @@
             <x-ladmin-form-group name="retail_price" label="Retail Price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="retail" type="text" class="form-control" name="retail_price"
+                    <input id="retail" type="text" class="form-control" name="retail_price" min=1
                     value="{{ old('qty', rupiah_format($product->detail->retail_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
@@ -63,7 +63,7 @@
                     <span class="input-group-text">%</span>
                     <input type="text" class="form-control" id="percent"
                     @if ($edit)
-                        value="{{100 - round(100 * ($product->detail->after_discount_price / $product->detail->base_price), 0)}}"
+                        value="{{100 - round(100 * ($product->detail->after_discount_price / $product->detail->retail_price), 0)}}"
                     @endif
                     placeholder="Percentage" aria-label="Percent" disabled/>
                 </div>
@@ -138,11 +138,16 @@
             });
     </script>
     <script>
-        let basePriceValidator = 0;
+        let basePriceValidator = 1;
+        let retailPriceValidator = 1;
         let discountPriceValidator = 0;
 
         document.getElementById('base').addEventListener("change", function(e) {
             basePriceValidator = this.value.replace(/\D/g,'');
+        });
+
+        document.getElementById('retail').addEventListener("change", function(e) {
+            retailPriceValidator = this.value.replace(/\D/g,'');
         });
 
         document.getElementById('discount').addEventListener("change", function(e) {
@@ -210,6 +215,10 @@
                         validators: {
                             notEmpty: {
                                 message: 'Base Price is required'
+                            },
+                            graterThan: {
+                                message: 'Base price should grater than 0',
+                                min: 1
                             }
                         }
                     },
@@ -217,6 +226,10 @@
                         validators: {
                             notEmpty: {
                                 message: 'Retail Price is required'
+                            },
+                            graterThan: {
+                                message: 'Retail Price should grater than 0',
+                                min: 1
                             }
                         }
                     },
@@ -295,26 +308,27 @@
         var prices = document.getElementById("prices");
 
         var rawPriceBase = base.value.replace(/\D/g,'');
+        var rawPriceRetail = retail.value.replace(/\D/g,'');
         var rawPriceDiscount = discount.value.replace(/\D/g,'');
 
         let result = 0;
 
-        base.addEventListener("keyup", function(e) {
+        retail.addEventListener("keyup", function(e) {
             result = 0;
-            rawPriceBase = base.value.replace(/\D/g,'');
-            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceBase));
+            rawPriceRetail = base.value.replace(/\D/g,'');
+            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceRetail));
             percent.value = result;
-            base.value = formatRupiah(this.value);
+            retail.value = formatRupiah(this.value);
         });
 
-        retail.addEventListener("keyup", function(e) {
-            retail.value = formatRupiah(this.value);
+        base.addEventListener("keyup", function(e) {
+            base.value = formatRupiah(this.value);
         });
 
         discount.addEventListener("keyup", function(e) {
             result = 0;
             rawPriceDiscount = discount.value.replace(/\D/g,'');
-            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceBase));
+            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceRetail));
             percent.value = result;
             discount.value = formatRupiah(this.value);
         });

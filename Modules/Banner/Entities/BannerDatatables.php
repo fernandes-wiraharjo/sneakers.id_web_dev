@@ -99,7 +99,7 @@ class BannerDatatables  extends DataTable
             ->setTableId('banner-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('Bfrtip')
+            ->dom('frtip')
             ->orderBy(1)
             ->responsive(true)
             ->parameters(['scrollX' => true])

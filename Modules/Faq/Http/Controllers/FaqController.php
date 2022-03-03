@@ -61,15 +61,15 @@ class FaqController extends Controller
                 $stored = $this->repository->createFaq($request);
 
                 if($stored){
-                    Alert::success('Banner Created Successfully!');
-                    return redirect(route('administrator.master-data.banner.index'))
-                        ->with('success', 'Banner Created Successfully!');
+                    Alert::success('FAQ Created Successfully!');
+                    return redirect(route('administrator.master-data.faq.index'))
+                        ->with('success', 'FAQ Created Successfully!');
                 } else {
-                    Alert::error('Failed to created banner, check your info!');
+                    Alert::error('Failed to created faq, check your info!');
                     return redirect()->back();
                 }
             } else {
-                Alert::error('Failed to created banner, check your info!');
+                Alert::error('Failed to created faq, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {

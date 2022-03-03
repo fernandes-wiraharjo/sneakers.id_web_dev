@@ -26,13 +26,13 @@ class FaqRepository extends Repository implements MasterRepositoryInterface {
     $faq = $this->faqService->updateFaq($request);
 
     $get_faq = $this->model->findOrFail($id);
-    $get_faq->update($faq);
+    return $get_faq->update($faq);
   }
 
   public function createFaq(Request $request) {
     $faq = $this->faqService->insertFaq($request);
 
-    $this->model->create($faq);
+    return $this->model->create($faq);
   }
 
   public function getFaqById($id){

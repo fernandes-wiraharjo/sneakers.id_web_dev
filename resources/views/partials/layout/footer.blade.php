@@ -34,7 +34,7 @@
                             <a href="/pages/refund-policy" class="Link Link--primary">REFUND POLICY</a>
                         </li>
                         <li class="Linklist__Item">
-                            <a href="/pages/qna" class="Link Link--primary">FAQ</a>
+                            <a href="{{ route('faq') }}" class="Link Link--primary">FAQ</a>
                         </li>
                         <li class="Linklist__Item">
                             <a href="/pages/business-address" class="Link Link--primary">BUSINESS ADDRESS</a>
@@ -45,13 +45,15 @@
                                 STORE LOCATOR
                             </a>
                         </li>
-                        <li class="Linklist__Item">
+                        {{-- <li class="Linklist__Item">
                             <a href="/pages/staycool-satisfaction-guaranteed" class="Link Link--primary">SATISFACTION GUARANTEED</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <div class="Footer__Block Footer__Block--newsletter">
-                    <h2 class="Footer__Title Heading u-h6">About Us</h2>
+                    <h2 class="Footer__Title Heading u-h6">
+                        <a href="{{ route('about-us') }}" class="Link Link--primary">About us</a>
+                    </h2>
                     <div class="Footer__Content Rte">
                         <p>{{ $footer->about ?? '' }}</p>
                     </div>

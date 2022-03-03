@@ -37,7 +37,20 @@
                     {{-- base price if discount and count discount--}}
                     <div class="ProductItem__PriceList Heading">
                         <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                            <span class="money">Rp. {{ rupiah_format($item->detail->base_price) }} </span>
+                            @if ($item->detail->after_discount_price > 0 && $item->detail->after_discount_price < $item->detail->retail_price)
+                                <span class="money">
+                                    RP.
+                                    <del>
+                                        {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
+                                    </del>
+                                    <span style="position:inherit; font-weight: 800;">
+                                        {{ rupiah_format(intval($item->detail->after_discount_price ?? 0)) }}</span>
+                                </span>
+                            @else
+                                <span class="money" >RP.
+                                    {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
+                                </span>
+                            @endif
                         </span>
                     </div>
                 </div>

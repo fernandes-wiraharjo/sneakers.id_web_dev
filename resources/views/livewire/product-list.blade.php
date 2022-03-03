@@ -119,16 +119,17 @@
                                     </h2>
                                     <div class="ProductItem__PriceList Heading">
                                         <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                                                @if ($product->after_discount_price > 0)
+                                                @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
                                                     <span class="money">
                                                         RP.
                                                         <del>
                                                             {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                                         </del>
-                                                        {{ $product->after_discount_price }}
+                                                        <span style="position:inherit; font-weight: 800;">
+                                                            {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
                                                     </span>
                                                 @else
-                                                    <span class="money">RP.
+                                                    <span class="money" >RP.
                                                         {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                                     </span>
                                                 @endif

@@ -318,100 +318,6 @@
                                     </ul>
                                 </div>
                             </li>
-                            {{-- <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="/collections/staycool-men" class="Heading u-h6">MEN<span class="Header__LinkSpacer">MEN</span></a>
-                                <div class="MegaMenu" aria-hidden="true">
-                                    <div class="MegaMenu__Inner">
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="https://www.staycoolsocks.com/collections/staycool-men" class="MegaMenu__Title Heading Text--subdued u-h7">ALL</a>
-                                        </div>
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/search" class="MegaMenu__Title Heading Text--subdued u-h7">SOCKS BY ACTIVITY</a>
-                                            <ul class="Linklist">
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/daily-1/MEN" class="Link Link--secondary">LIFESTYLE</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/basic" class="Link Link--secondary">BASIC</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/formal/MEN" class="Link Link--secondary">FORMAL</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/sports/MEN" class="Link Link--secondary">PERFORMANCE</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/all" class="Link Link--secondary">SHOW ALL SOCKS</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/search" class="MegaMenu__Title Heading Text--subdued u-h7">SOCKS BY HEIGHT</a>
-                                            <ul class="Linklist">
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/long/MEN" class="Link Link--secondary">LONG</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/crew/MEN" class="Link Link--secondary">CREW</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/ankle/MEN" class="Link Link--secondary">ANKLE</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/low-cut-1" class="Link Link--secondary">LOWCUT</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="https://www.staycoolsocks.com/collections/invisible-1" class="Link Link--secondary">INVISIBLE</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/collections/cool-masks/MEN-MASK" class="MegaMenu__Title Heading Text--subdued u-h7">COOL MASK</a>
-                                            <ul class="Linklist">
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/mask-new-arrival" class="Link Link--secondary">NEW ARRIVAL</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/mask-best-seller" class="Link Link--secondary">BEST SELLER</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/cool-masks/MEN-MASK" class="Link Link--secondary">SHOW ALL MASKS</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="/collections/cool-sleeve" class="MegaMenu__Title Heading Text--subdued u-h7">COOL SLEEVE</a>
-                                            <ul class="Linklist">
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/new-men-sleeve" class="Link Link--secondary">NEW ARRIVAL</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/best-seller-men-sleeve" class="Link Link--secondary">BEST SELLER</a>
-                                                </li>
-                                                <li class="Linklist__Item">
-                                                    <a href="/collections/cool-sleeve/men-sleeve" class="Link Link--secondary">SHOW ALL SLEEVE</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="MegaMenu__Item" style="width: 370px; min-width: 250px;">
-                                            <div class="MegaMenu__Push">
-                                                <a class="MegaMenu__PushLink" href="/collections/stripes">
-                                                    <div
-                                                        class="MegaMenu__PushImageWrapper AspectRatio"
-                                                        style="background: url(//cdn.shopify.com/s/files/1/2854/1776/files/STRPMEGAMENU_1x1.jpg?v=1597284248); max-width: 370px; --aspect-ratio: 1.608695652173913;"
-                                                    >
-                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="//cdn.shopify.com/s/files/1/2854/1776/files/STRPMEGAMENU_370x230@2x.jpg?v=1597284248" alt="" />
-
-                                                        <span class="Image__Loader"></span>
-                                                    </div>
-                                                    <p class="MegaMenu__PushHeading Heading u-h6">STRIPE PATTERN</p>
-                                                    <p class="MegaMenu__PushSubHeading Heading Text--subdued u-h7">Most Wanted</p>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>--}}
                             <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="/collections/staycool-women" class="Heading u-h6">AIR JORDAN<span class="Header__LinkSpacer">AIR JORDAN</span></a>
                                 <div class="MegaMenu" aria-hidden="true">
@@ -428,22 +334,27 @@
                                         <div class="MegaMenu__Item MegaMenu__Item--fit">
                                             <a href="{{ route('collections', 'new-arrival.air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">NEW ARRIVAL</a>
                                         </div>
+                                        @if($featured_air_jordan)
+                                        @php
+                                            $image = $featured_air_jordan->images()->first();
+                                        @endphp
                                         <div class="MegaMenu__Item" style="width: 370px; min-width: 250px;">
                                             <div class="MegaMenu__Push">
-                                                <a class="MegaMenu__PushLink" href="https://www.staycoolsocks.com/collections/air-jordan">
+                                                <a class="MegaMenu__PushLink" href="{{ route('product-detail', $featured_air_jordan->id) }}">
                                                     <div
                                                         class="MegaMenu__PushImageWrapper AspectRatio"
-                                                        style="background: url(//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_1x1.jpg?v=1599704394); max-width: 370px; --aspect-ratio: 1.608695652173913;"
+                                                        style="background: url({{ getImage($image->image_url, 'products') }}); max-width: 200px; --aspect-ratio: 1;"
                                                     >
-                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_370x230@2x.jpg?v=1599704394" alt="" />
+                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="{{ getImage($image->image_url, 'products') }}" alt="" />
 
                                                         <span class="Image__Loader"></span>
                                                     </div>
-                                                    <p class="MegaMenu__PushHeading Heading u-h6">AIR JORDAN</p>
+                                                    <p class="MegaMenu__PushHeading Heading u-h6">{{ $featured_air_jordan->product_name }}</p>
                                                     <p class="MegaMenu__PushSubHeading Heading Text--subdued u-h7">Must Have</p>
                                                 </a>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </li>
@@ -463,22 +374,27 @@
                                         <div class="MegaMenu__Item MegaMenu__Item--fit">
                                             <a href="{{ route('collections', 'new-arrival.nike') }}" class="MegaMenu__Title Heading Text--subdued u-h7">NEW ARRIVAL</a>
                                         </div>
+                                        @if($featured_nike)
+                                        @php
+                                            $image = $featured_nike->images()->first();
+                                        @endphp
                                         <div class="MegaMenu__Item" style="width: 370px; min-width: 250px;">
                                             <div class="MegaMenu__Push">
-                                                <a class="MegaMenu__PushLink" href="https://www.staycoolsocks.com/collections/air-jordan">
+                                                <a class="MegaMenu__PushLink" href="{{ route('product-detail', $featured_nike->id) }}">
                                                     <div
                                                         class="MegaMenu__PushImageWrapper AspectRatio"
-                                                        style="background: url(//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_1x1.jpg?v=1599704394); max-width: 370px; --aspect-ratio: 1.608695652173913;"
+                                                        style="background: url({{ getImage($image->image_url, 'products') }}); max-width: 200px; --aspect-ratio: 1;"
                                                     >
-                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="//cdn.shopify.com/s/files/1/2854/1776/files/LOWCUTWOMEN_370x230@2x.jpg?v=1599704394" alt="" />
+                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="{{ getImage($image->image_url, 'products') }}" alt="" />
 
                                                         <span class="Image__Loader"></span>
                                                     </div>
-                                                    <p class="MegaMenu__PushHeading Heading u-h6">NIKE</p>
+                                                    <p class="MegaMenu__PushHeading Heading u-h6">{{ $featured_nike->product_name }}</p>
                                                     <p class="MegaMenu__PushSubHeading Heading Text--subdued u-h7">Must Have</p>
                                                 </a>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </li>

@@ -26,6 +26,10 @@ Route::get('/lookbook/page/{page}', [StoreController::class, 'lookbook'])->name(
 
 Route::get('/size-chart', [StoreController::class, 'sizeChart'])->name('size-chart');
 
+Route::get('/faq', [StoreController::class, 'faq'])->name('faq');
+
+Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $role = \App\Models\Role::first();
-        \App\Models\User::factory(10)->create()
+        \App\Models\User::factory(1)->create()
             ->each(function($user) use ($role) {
             $user->roles()->sync([$role->id]);
             });

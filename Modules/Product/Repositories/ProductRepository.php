@@ -46,6 +46,22 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             ->whereLike($where_column, $where_value);
     }
 
+    public function getProductOneFeaturedAirJordan(){
+        return $this->model->whereHas('tags', function($q) {
+            $q->where('tag_title', 'FEATURED');
+        })
+        ->where('product_name', 'LIKE', '%AIR JORDAN%')
+        ->first();
+    }
+
+    public function getProductOneFeaturedNike(){
+        return $this->model->whereHas('tags', function($q) {
+            $q->where('tag_title', 'FEATURED');
+        })
+        ->where('product_name', 'LIKE', '%NIKE%')
+        ->first();
+    }
+
     public function createProduct($data){
         return $this->model->create($data);
     }

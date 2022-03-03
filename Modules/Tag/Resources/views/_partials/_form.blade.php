@@ -6,9 +6,9 @@
 	<input type="text" placeholder="Tag Title" class="form-control" name="tag_title" id="tag_title" required value="{{ old('tag_title', $tag->tag_title) }}">
 </x-ladmin-form-group>
 
-<x-ladmin-form-group name="tag_image" label="Image">
+{{-- <x-ladmin-form-group name="tag_image" label="Image">
 	<input type="file" class="form-control" name="image" id="image" value="{{ old('tag_image', $tag->tag_image) }}">
-</x-ladmin-form-group>
+</x-ladmin-form-group> --}}
 
 <x-ladmin-form-group name="tag_description" label="Description *">
 	<textarea placeholder="Tag Description" class="form-control" name="tag_description" id="tag_description">{{ old('tag_description', $tag->tag_description) }}</textarea>

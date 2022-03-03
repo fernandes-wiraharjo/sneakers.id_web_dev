@@ -22,15 +22,7 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'signature_image'])
-            ->editColumn('signature_image', function($item){
-                $image_url = $item->signature_image;
-                return '<div class="d-flex align-items-center">'.
-                            '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
-                                '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'signature').');"></span>'.
-                            '</a>'.
-                        '</div>';
-            })
+            ->rawColumns(['action'])
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -58,9 +50,6 @@ use Yajra\DataTables\Services\DataTable;
                 ->searchable(false)
                 ->sortable(false),
             Column::make('signature_code'),
-            Column::make('signature_image')
-                ->searchable(false)
-                ->sortable(false),
             Column::make('signature_title'),
             Column::make('signature_player_name'),
             Column::computed('action')
@@ -90,10 +79,10 @@ use Yajra\DataTables\Services\DataTable;
     public function html()
     {
         return $this->builder()
-                    ->setTableId('product-table')
+                    ->setTableId('signature-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->dom('Bfrtip')
+                    ->dom('frtip')
                     ->orderBy(1)
                     ->responsive(true)
                     ->parameters(['scrollX' => true])
@@ -107,6 +96,6 @@ use Yajra\DataTables\Services\DataTable;
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'Signature_' . date('YmdHis');
     }
   }

@@ -140,12 +140,10 @@ class ProductList extends Component
                 $q->orWhere('brand_id', $brand_id ?? '');
             })
             ->orderBy($this->sort_column, $this->sort_by)
-            ->paginate(12);
+            ->paginate(40);
         } else {
-            $products = $products->orderBy($this->sort_column, $this->sort_by)->paginate(12);
+            $products = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         }
-
-        //dd($products);
 
         $data['products'] = $products;
         return view('livewire.product-list', $data);

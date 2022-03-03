@@ -1,9 +1,9 @@
 <?php
 
-  namespace Modules\Brand\Entities;
+namespace Modules\Brand\Entities;
 
-  use Modules\Brand\Entities\Brand;
-  use Yajra\DataTables\Html\Button;
+use Modules\Brand\Entities\Brand;
+use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
@@ -21,15 +21,7 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'brand_image'])
-            ->editColumn('brand_image', function($item){
-                $image_url = $item->brand_image;
-                return '<div class="d-flex align-items-center">'.
-                            '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
-                                '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'brand').');"></span>'.
-                            '</a>'.
-                        '</div>';
-            })
+            ->rawColumns(['action'])
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -57,9 +49,6 @@ use Yajra\DataTables\Services\DataTable;
                     ->sortable(false)
                     ->searchable(false),
             Column::make('brand_code'),
-            Column::make('brand_image')
-                ->sortable(false)
-                ->searchable(false),
             Column::make('brand_title'),
             Column::computed('action')
                 ->sortable(false)
@@ -92,7 +81,7 @@ use Yajra\DataTables\Services\DataTable;
                     ->setTableId('brand-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->dom('Bfrtip')
+                    ->dom('frtip')
                     ->orderBy(1)
                     ->responsive(true)
                     ->parameters(['scrollX' => true])
@@ -106,6 +95,6 @@ use Yajra\DataTables\Services\DataTable;
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'Brand_' . date('YmdHis');
     }
   }

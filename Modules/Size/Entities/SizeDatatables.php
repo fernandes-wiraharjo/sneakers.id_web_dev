@@ -99,7 +99,7 @@ use Yajra\DataTables\Services\DataTable;
                     ->setTableId('size-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->dom('Bfrtip')
+                    ->dom('frtip')
                     ->orderBy(1)
                     ->responsive(true)
                     ->parameters(['scrollX' => true])

@@ -17,7 +17,7 @@ class CreateSize extends Migration
             $table->id();
             $table->string('size_code');
             $table->string('size_title');
-            $table->string('size_image')->nullable();
+            //$table->string('size_image')->nullable();
             $table->text('size_description');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

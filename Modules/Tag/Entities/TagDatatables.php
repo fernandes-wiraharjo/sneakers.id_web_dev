@@ -83,7 +83,7 @@ class TagDatatables  extends DataTable
             ->setTableId('product-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('Bfrtip')
+            ->dom('frtip')
             ->orderBy(1)
             ->parameters(['scrollX' => true])
             ->responsive(true)

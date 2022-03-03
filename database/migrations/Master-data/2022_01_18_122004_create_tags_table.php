@@ -17,7 +17,7 @@ class CreateTagsTable extends Migration
             $table->id();
             $table->string('tag_code');
             $table->string('tag_title');
-            $table->string('tag_image')->nullable();
+            //$table->string('tag_image')->nullable();
             $table->text('tag_description');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

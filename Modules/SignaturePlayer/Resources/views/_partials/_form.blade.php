@@ -6,13 +6,13 @@
 	<input type="text" placeholder="Signature Player Title" class="form-control" name="signature_title" id="signature_title" required value="{{ old('signature_title', $signature->signature_title) }}">
 </x-ladmin-form-group>
 
-<x-ladmin-form-group name="signature_player_name" label="PLayer Name *">
+<x-ladmin-form-group name="signature_player_name" label="Player Name *">
 	<input type="text" placeholder="Signature Player Name" class="form-control" name="signature_player_name" id="signature_player_name" required value="{{ old('signature_player_name', $signature->signature_player_name) }}">
 </x-ladmin-form-group>
 
-<x-ladmin-form-group name="signature_image" label="Image">
+{{-- <x-ladmin-form-group name="signature_image" label="Image">
 	<input type="file" class="form-control" name="image" id="image" value="{{ old('signature_image', $signature->signature_image) }}">
-</x-ladmin-form-group>
+</x-ladmin-form-group> --}}
 
 <x-ladmin-form-group name="signature_description" label="Description *">
 	<textarea placeholder="Signature Player Description" class="form-control" name="signature_description" id="signature_description">{{ old('signature_description', $signature->signature_description) }}</textarea>

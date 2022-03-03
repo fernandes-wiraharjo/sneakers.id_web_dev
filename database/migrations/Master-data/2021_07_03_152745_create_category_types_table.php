@@ -17,7 +17,7 @@ class CreateCategoryTypesTable extends Migration
             $table->id();
             $table->string('category_code');
             $table->string('category_title');
-            $table->string('category_image')->nullable();
+            //$table->string('category_image')->nullable();
             $table->text('category_description');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

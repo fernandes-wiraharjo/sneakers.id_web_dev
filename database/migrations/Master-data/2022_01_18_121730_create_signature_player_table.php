@@ -18,7 +18,7 @@ class CreateSignaturePlayerTable extends Migration
             $table->string('signature_code');
             $table->string('signature_title');
             $table->string('signature_player_name');
-            $table->string('signature_image')->nullable();
+            //$table->string('signature_image')->nullable();
             $table->text('signature_description');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

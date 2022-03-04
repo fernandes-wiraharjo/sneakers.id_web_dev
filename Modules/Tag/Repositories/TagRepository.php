@@ -26,13 +26,13 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
     $tag = $this->tagService->updateTag($request);
 
     $get_tag = $this->model->findOrFail($id);
-    $get_tag->update($tag);
+    return $get_tag->update($tag);
   }
 
   public function createTag(Request $request) {
     $tag = $this->tagService->insertTag($request);
 
-    $this->model->create($tag);
+    return $this->model->create($tag);
   }
 
   public function getAllTags() {

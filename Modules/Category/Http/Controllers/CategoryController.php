@@ -111,7 +111,7 @@ class CategoryController extends Controller
     {
         try {
             $validator = $request->validate([
-                'category_code' => 'exists|max:255',
+                'category_code' => 'required|max:255',
             ]);
 
             if($validator) {

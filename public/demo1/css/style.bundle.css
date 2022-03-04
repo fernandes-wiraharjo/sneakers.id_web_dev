@@ -652,9 +652,9 @@ progress {
   --bs-gutter-y: 0;
   display: flex;
   flex-wrap: wrap;
-  margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-.5 * var(--bs-gutter-x));
-  margin-left: calc(-.5 * var(--bs-gutter-x));
+  margin-top: calc(var(--bs-gutter-y) * -1);
+  margin-right: calc(var(--bs-gutter-x) * -.5);
+  margin-left: calc(var(--bs-gutter-x) * -.5);
 }
 .row > * {
   flex-shrink: 0;
@@ -2265,8 +2265,8 @@ progress {
 .table > thead {
   vertical-align: bottom;
 }
-.table > :not(:first-child) {
-  border-top: 2px solid currentColor;
+.table > :not(:last-child) > :last-child > * {
+  border-bottom-color: currentColor;
 }
 
 .caption-top {
@@ -2287,11 +2287,8 @@ progress {
 .table-borderless > :not(caption) > * > * {
   border-bottom-width: 0;
 }
-.table-borderless > :not(:first-child) {
-  border-top-width: 0;
-}
 
-.table-striped > tbody > tr:nth-of-type(odd) > * {
+.table-striped > tbody > tr:nth-of-type(odd) {
   --bs-table-accent-bg: var(--bs-table-striped-bg);
   color: var(--bs-table-striped-color);
 }
@@ -2301,7 +2298,7 @@ progress {
   color: var(--bs-table-active-color);
 }
 
-.table-hover > tbody > tr:hover > * {
+.table-hover > tbody > tr:hover {
   --bs-table-accent-bg: var(--bs-table-hover-bg);
   color: var(--bs-table-hover-color);
 }
@@ -2741,7 +2738,6 @@ textarea.form-control-lg {
   padding-bottom: 0.55rem;
   padding-left: 0.75rem;
   font-size: 0.925rem;
-  border-radius: 0.475rem;
 }
 
 .form-select-lg {
@@ -2749,7 +2745,6 @@ textarea.form-control-lg {
   padding-bottom: 0.825rem;
   padding-left: 1.5rem;
   font-size: 1.15rem;
-  border-radius: 0.475rem;
 }
 
 .form-check {

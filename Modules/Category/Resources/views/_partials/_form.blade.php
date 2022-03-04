@@ -1,5 +1,5 @@
 <x-ladmin-form-group name="category_code" label="Code *">
-	<input type="text" placeholder="Category Code" class="form-control" name="category_code" id="category_code" required value="{{ old('category_code', $category->category_code) }}" {{$edit ? 'disabled' : ''}}>
+	<input type="text" placeholder="Category Code" class="form-control" name="category_code" id="category_code" required value="{{ old('category_code', $category->category_code) }}">
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="category_title" label="Title *">

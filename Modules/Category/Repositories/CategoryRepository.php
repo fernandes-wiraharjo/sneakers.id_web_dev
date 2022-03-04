@@ -26,7 +26,7 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
     $category = $this->categoryService->updateCategory($request);
 
     $get_category = $this->model->findOrFail($id);
-    $get_category->update($category);
+    return $get_category->update($category);
   }
 
   public function createCategory(Request $request) {

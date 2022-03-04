@@ -26,13 +26,13 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
     $brand = $this->brandService->updateBrand($request);
 
     $get_brand = $this->model->findOrFail($id);
-    $get_brand->update($brand);
+    return $get_brand->update($brand);
   }
 
   public function createBrand(Request $request) {
     $brand = $this->brandService->insertBrand($request);
 
-    $this->model->create($brand);
+    return $this->model->create($brand);
   }
 
   public function getAllBrand(){

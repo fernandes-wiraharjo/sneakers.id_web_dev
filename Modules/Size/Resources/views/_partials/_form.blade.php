@@ -31,7 +31,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" />
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="number" min="0" class="form-control mb-2 mb-md-0" name="size_value"
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"
                             value="{{ $item->size_value }}" placeholder="Enter Size Chart Value" />
                         </div>
                     </div>

@@ -21,7 +21,10 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'status'])
+            ->addColumn('status', function ($item) {
+              return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+            })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -50,6 +53,8 @@ use Yajra\DataTables\Services\DataTable;
                     ->searchable(false),
             Column::make('brand_code'),
             Column::make('brand_title'),
+            Column::make('status')
+                ->searchable(false),
             Column::computed('action')
                 ->sortable(false)
                 ->searchable(false)

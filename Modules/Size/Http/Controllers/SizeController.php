@@ -109,12 +109,22 @@ class SizeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->repository->updateSize($request, $id);
-            if($updated){
-                Alert::success('Size Updated Successfully!');
-                return redirect(route('administrator.master-data.size.index'))
-                    ->with('success', 'Size Updated Successfully!');
-            } else {
+            $validator = $request->validate([
+                'size_code' => 'required|max:255',
+            ]);
+
+            if($validator) {
+                $updated = $this->repository->updateSize($request, $id);
+                if($updated){
+                    Alert::success('Size Updated Successfully!');
+                    return redirect(route('administrator.master-data.size.index'))
+                        ->with('success', 'Size Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated size, check your info!');
+                    return redirect()->back();
+                }
+            }
+            else {
                 Alert::error('Failed to updated size, check your info!');
                 return redirect()->back();
             }

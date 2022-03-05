@@ -22,7 +22,10 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'size-chart'])
+            ->rawColumns(['action', 'size-chart', 'status'])
+            ->addColumn('status', function ($item) {
+                return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+            })
             ->addColumn('size-chart', function ($item) {
                 if ($item->charts()->count() > 0) {
                     $result = "";
@@ -39,16 +42,21 @@ use Yajra\DataTables\Services\DataTable;
 
             })
             ->addColumn('action', function ($item) {
+                if ($item->charts()->count() > 0){
+                    $destroy_button = null;
+                } else {
+                    $destroy_button =  [
+                        'gate' => 'administrator.master-data.size.destroy',
+                        'url' => route('administrator.master-data.size.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                    ];
+                }
                 return view('components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.size.update',
                       'url' => route('administrator.master-data.size.edit', [$item->id, 'back' => request()->fullUrl()])
                     ],
-                    'destroy' => [
-                      'gate' => 'administrator.master-data.size.destroy',
-                      'url' => route('administrator.master-data.size.destroy', [$item->id, 'back' => request()->fullUrl()]),
-                    ]
+                    'destroy' => $destroy_button
                   ]);
             });
     }
@@ -62,14 +70,20 @@ use Yajra\DataTables\Services\DataTable;
     {
         return [
             Column::make('DT_RowIndex')->title(__('No'))
+                ->width(50)
                 ->sortable(false)
                 ->searchable(false),
-            Column::make('size_code'),
-            Column::make('size_title'),
-            Column::make('size-chart')->title(__('Size Chart'))->width(200)
+            Column::make('size_code')->width(150),
+            Column::make('size_title')->width(150),
+            Column::make('size-chart')->title(__('Size Chart'))
+                ->sortable(false)
+                ->searchable(false),
+            Column::make('status')
+                ->width(10)
                 ->sortable(false)
                 ->searchable(false),
             Column::computed('action')
+                ->width(150)
                 ->sortable(false)
                 ->searchable(false)
                 ->exportable(false)

@@ -16,8 +16,8 @@ class CreateSizeChartsTable extends Migration
         Schema::create('size_charts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('size_id')->constrained();
-            $table->string('size_name');
-            $table->string('size_value');
+            $table->string('size_name')->nullable();
+            $table->string('size_value')->nullable();
             $table->timestamps();
         });
     }

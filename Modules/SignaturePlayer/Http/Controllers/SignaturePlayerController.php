@@ -108,12 +108,22 @@ class SignaturePlayerController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $validator = $request->validate([
+                'signature_code' => 'required|max:255',
+            ]);
+
+            if($validator) {
             $updated = $this->repository->updateSignaturePlayer($request, $id);
-            if($updated){
-                Alert::success('Signature Player Updated Successfully!');
-                return redirect(route('administrator.master-data.signature-player.index'))
-                    ->with('success', 'Signature Player Updated Successfully!');
-            } else {
+                if($updated){
+                    Alert::success('Signature Player Updated Successfully!');
+                    return redirect(route('administrator.master-data.signature-player.index'))
+                        ->with('success', 'Signature Player Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated signature player, check your info!');
+                    return redirect()->back();
+                }
+            }
+            else {
                 Alert::error('Failed to updated signature player, check your info!');
                 return redirect()->back();
             }

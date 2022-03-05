@@ -355,7 +355,7 @@ class ProductService {
                     $this->productRepository->syncProductTags($id, $tags_id);
                 }
 
-                if(isset($sizes)){
+                if(isset($signatures)){
                     foreach($signatures as $item){
                         $signatures_id[] = intval($item->value);
                     }

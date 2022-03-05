@@ -14,9 +14,9 @@
     <input type="text" placeholder="Product Link" class="form-control" name="product_link" id="product_link" required
     value="{{ old('product_link', $product->product_link) }}">
 </x-ladmin-form-group>
-<x-ladmin-form-group name="brand" label="Brand">
+<x-ladmin-form-group name="brand" label="Brand *">
     <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
-        <option>------ Select Brand --------</option>
+        <option value=""></option>
         @foreach ($brand as $name => $id)
             <option value="{{$id}}" {{ $edit ? ( old('brand_id', $product->detail->brand_id) == $id ? 'selected' : '' ) : ((old('brand_id') == $id) ? 'selected' : '') }}>
                 {{__($name)}}
@@ -115,7 +115,7 @@
     <!--end::Label-->
 
     <!--begin::Input-->
-    <textarea name="description" id="kt_docs_ckeditor_classic">
+    <textarea name="description" id="kt_docs_tinymce_basic" class="tox-target">
         {!! old('description', $product->description) !!}
     </textarea>
 </div>
@@ -125,21 +125,16 @@
 
 @push('scripts')
     <!--CKEditor Build Bundles:: Only include the relevant bundles accordingly-->
-    <script src="{{asset('demo1/plugins/custom/ckeditor/ckeditor-classic.bundle.js')}}"></script>
+    <script src="{{asset('demo1/plugins/custom/tinymce/tinymce.bundle.js')}}"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('#kt_docs_ckeditor_classic'))
-            .then(editor => {
+        var options = {selector: "#kt_docs_tinymce_basic"};
 
-            })
-            .catch(error => {
-
-            });
+        tinymce.init(options);
     </script>
     <script>
-        let basePriceValidator = 1;
-        let retailPriceValidator = 1;
-        let discountPriceValidator = 0;
+        var basePriceValidator = 1;
+        var retailPriceValidator = 1;
+        var discountPriceValidator = 0;
 
         document.getElementById('base').addEventListener("change", function(e) {
             basePriceValidator = this.value.replace(/\D/g,'');
@@ -189,7 +184,7 @@
                     'brand_id': {
                         validators: {
                             notEmpty: {
-                                message: 'Brand is required'
+                                message: 'Brand must be selected'
                             }
                         }
                     },
@@ -244,7 +239,6 @@
                         }
                     },
                     'after_discount_price': {
-                        value: discountPriceValidator,
                         validators: {
                             notEmpty: {
                                 message: 'After discount price is required'
@@ -253,10 +247,18 @@
                     },
                     'description': {
                         validators: {
-                            notEmpty: {
-                                message: 'Description is required'
-                            }
-                        }
+                            callback: {
+                                message: 'The comment must be more than 5 characters long',
+                                callback: function (value) {
+                                    // Get the plain text without HTML
+                                    const text = tinyMCE.activeEditor.getContent({
+                                        format: 'text',
+                                    });
+
+                                    return text.length >= 5;
+                                },
+                            },
+                        },
                     },
                 },
 
@@ -271,12 +273,15 @@
             }
         );
 
+            console.log(retailPriceValidator);
+            console.log(discountPriceValidator);
+
         $(form.querySelector('[name="brand_id"]')).on('change', function () {
             validator.revalidateField('brand_id');
         });
 
-        tags.on("change", function(){
-            validator.revalidateField('tag');
+        $(form.querySelector('[name="description"]')).on('change', function () {
+            validator.revalidateField('description');
         });
 
         sizes.on("change", function(){
@@ -342,6 +347,9 @@
             result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceRetail));
             percent.value = result;
             discount.value = formatRupiah(this.value);
+            if(rawPriceDiscount > rawPriceRetail) {
+                percent.value = 0;
+            }
         });
 
         /* Fungsi formatRupiah */

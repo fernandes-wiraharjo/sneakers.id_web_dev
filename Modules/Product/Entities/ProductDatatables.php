@@ -26,7 +26,7 @@ class ProductDatatables extends DataTable
             // ->filter(function($q) {
 
             // })
-            ->rawColumns(['id', 'product_name', 'tag', 'size', 'category', 'signature', 'status', 'action'])
+            ->rawColumns(['action', 'id', 'product_name', 'tag', 'size', 'category', 'signature', 'status'])
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
               })
@@ -106,9 +106,9 @@ class ProductDatatables extends DataTable
                     '</div>';
             })
             ->editColumn('created_at', function (Product $model) {
-                return $model->created_at->format('d-m-Y');
+                return $model->created_at->format('d-m-Y H:i');
             })
-            ->addColumn('action', function ($item) {
+            ->editColumn('action', function ($item) {
                 $item_tag_best_seller = ProductTag::with('tag')->where('product_id', $item->id)->whereHas('tag', function($q){
                     $q->where('tag_title', 'BEST SELLER');
                 })->first();
@@ -191,11 +191,11 @@ class ProductDatatables extends DataTable
     {
         return [
             Column::computed('action')
+                ->exportable(false)
+                ->printable(false)
                 ->sortable(false)
                 ->searchable(false)
                 ->width(150)
-                ->exportable(false)
-                ->printable(false)
                 ->addClass('text-center'),
             Column::make('product_code')
                 ->title(__('Code')),
@@ -225,7 +225,8 @@ class ProductDatatables extends DataTable
                 ->width(10)
                 ->sortable(false)
                 ->searchable(false),
-            Column::make('created_at'),
+            Column::make('created_at')
+                ->searchable(false),
 
         ];
     }

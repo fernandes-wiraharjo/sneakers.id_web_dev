@@ -4,7 +4,7 @@
 2. ``` php artisan key:generate ```
 3. SETUP your `.env`
 4. ``` php artisan migrate --path=database/migrations/*/* ```
-5. ``` npm install && npm ci && npm run dev ```
+5. ``` npm install ```
 
 Updating `migrations`
 ``` php artisan migrate:fresh --seed```

@@ -58,15 +58,15 @@ class BrandController extends Controller
             if($validator) {
                 $stored = $this->repository->createBrand($request);
                 if($stored){
-                    Alert::success('Tag Created Successfully!');
-                    return redirect(route('administrator.master-data.tag.index'))
-                        ->with('success', 'Tag Created Successfully!');
+                    Alert::success('Brand Created Successfully!');
+                    return redirect(route('administrator.master-data.brand.index'))
+                        ->with('success', 'Brand Created Successfully!');
                 } else {
-                    Alert::error('Failed to created tag, check your info!');
+                    Alert::error('Failed to created brand, check your info!');
                     return redirect()->back();
                 }
             } else {
-                Alert::error('Failed to created tag, check your info!');
+                Alert::error('Failed to created brand, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
@@ -108,14 +108,20 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->repository->updateBrand($request, $id);
-            if($updated){
-                Alert::success('Brand Updated Successfully!');
-                return redirect(route('administrator.master-data.brand.index'))
-                    ->with('success', 'Brand Updated Successfully!');
-            } else {
-                Alert::error('Failed to updated brand, check your info!');
-                return redirect()->back();
+            $validator = $request->validate([
+                'brand_code' => 'required|max:255',
+            ]);
+
+            if($validator) {
+                $updated = $this->repository->updateBrand($request, $id);
+                if($updated){
+                    Alert::success('Brand Updated Successfully!');
+                    return redirect(route('administrator.master-data.brand.index'))
+                        ->with('success', 'Brand Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated brand, check your info!');
+                    return redirect()->back();
+                }
             }
         } catch (LadminException $e) {
             Alert::error($e->getMessage());

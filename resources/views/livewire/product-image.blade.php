@@ -45,6 +45,13 @@
         title="Remove image">
             <i class="bi bi-x fs-2"></i>
         </span>
+        <span class="form-check form-check-custom form-check-solid form-check-sm m-2">
+                <input class="form-check-input main-image" type="checkbox" value="1" name="is_main[{{$i}}]" id="mainImage{{$i}}"
+                    {{ $main_image ? ($main_image == (!empty($image[$i]) ? $image[$i]['image_url'] : '') ? 'checked' : '') : '' }} />
+                <label class="form-check-label" for="mainImage{{$i}}">
+                    Main image
+                </label>
+        </span>
         <!--end::Remove button-->
     </div>
 <!--end::Image input-->

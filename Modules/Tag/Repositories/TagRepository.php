@@ -67,6 +67,6 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getTagIdAndNameLivewire(){
-      return $this->model->select('id', 'tag_title as value')->get();
+      return $this->model->where('is_active', 1)->select('id', 'tag_title as value')->get();
   }
 }

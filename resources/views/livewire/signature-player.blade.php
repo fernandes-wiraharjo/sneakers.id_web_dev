@@ -1,11 +1,10 @@
 
 <input class="form-control form-control-lg d-flex align-items-center" name="signature"
-    value="{{ $edit ? $current_signature->toJson() : '' }}" id="kt_tagify_signature" data-json="{{ $signature }}"/>
+    value="{{ old('signature', $edit ? $current_signature->toJson() : '') }}" id="kt_tagify_signature" data-json="{{ $signature }}"/>
 
 @push('scripts')
 <script>
 var input = document.querySelector('#kt_tagify_signature');
-var image_url = "{{ asset('images/signature/') }}";
 
 const signatureList = JSON.parse(input.dataset.json);
 
@@ -19,9 +18,6 @@ function tagTemplate(tagData) {
                 ${this.getAttributes(tagData)}>
             <x title='' class='tagify__tag__removeBtn' role='button' aria-label='remove tag'></x>
             <div class="d-flex align-items-center">
-                <div class='tagify__tag__avatar-wrap ps-0'>
-                    <img onerror="this.style.visibility='hidden'" class="rounded-circle w-25px me-2" src="${image_url}/${tagData.image}">
-                </div>
                 <span class='tagify__tag-text'>${tagData.title}</span>
             </div>
         </tag>
@@ -34,12 +30,6 @@ function suggestionItemTemplate(tagData) {
             class='tagify__dropdown__item d-flex align-items-center ${tagData.class ? tagData.class : ""}'
             tabindex="0"
             role="option">
-
-            ${tagData.image ? `
-                    <div class='tagify__dropdown__item__avatar-wrap me-2'>
-                        <img onerror="this.style.visibility='hidden'"  class="rounded-circle w-50px me-2" src="${image_url}/${tagData.image}">
-                    </div>` : ''
-                }
 
             <div class="d-flex flex-column">
                 <strong>${tagData.title}</strong>

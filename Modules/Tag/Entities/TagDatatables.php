@@ -23,7 +23,10 @@ class TagDatatables  extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'status'])
+            ->addColumn('status', function ($item) {
+                return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+              })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [
                     'show' => null,
@@ -52,6 +55,10 @@ class TagDatatables  extends DataTable
                 ->searchable(false),
             Column::make('tag_code'),
             Column::make('tag_title'),
+            Column::make('status')
+                ->width(10)
+                ->sortable(false)
+                ->searchable(false),
             Column::computed('action')
                 ->sortable(false)
                 ->searchable(false)

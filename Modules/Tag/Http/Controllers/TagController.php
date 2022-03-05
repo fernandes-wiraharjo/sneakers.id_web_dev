@@ -108,11 +108,20 @@ class TagController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->repository->updateTag($request, $id);
-            if($updated){
-                Alert::success('Tag Updated Successfully!');
-                return redirect(route('administrator.master-data.tag.index'))
-                    ->with('success', 'Tag Updated Successfully!');
+            $validator = $request->validate([
+                'tag_code' => 'required|max:255',
+            ]);
+
+            if($validator) {
+                $updated = $this->repository->updateTag($request, $id);
+                if($updated){
+                    Alert::success('Tag Updated Successfully!');
+                    return redirect(route('administrator.master-data.tag.index'))
+                        ->with('success', 'Tag Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated tag, check your info!');
+                    return redirect()->back();
+                }
             } else {
                 Alert::error('Failed to updated tag, check your info!');
                 return redirect()->back();

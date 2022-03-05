@@ -49,7 +49,7 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getAllBrand(){
-      return $this->model->get();
+      return $this->model->where('is_active', 1)->get();
   }
 
   public function getBrandByName($name = '') {

@@ -38,7 +38,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         return $this->model->query()->whereLike($where_column, $where_value)->paginate($pagination);
     }
 
-    public function getProductWhereLike($where_column = [], $where_value = '',){
+    public function getProductWhereLike($where_column = [], $where_value = ''){
         return $this->model->query()
             ->with(['detail', 'images'])
             ->join('product_details as pd', 'pd.product_id', '=', 'products.id')

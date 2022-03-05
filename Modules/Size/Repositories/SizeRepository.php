@@ -123,7 +123,7 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getSizeIdAndNameLivewire(){
-    return $this->model->select('id', 'size_title as value')->get();
+    return $this->model->where('is_active', 1)->select('id', 'size_title as value')->get();
   }
 
   public function getSizeIdAndName(){

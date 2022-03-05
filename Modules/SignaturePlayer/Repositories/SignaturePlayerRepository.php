@@ -67,11 +67,10 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
   }
 
   public function getSignatureTag(){
-      return $this->model->select(
+      return $this->model->where('is_active', 1)->select(
           'id as value',
           'signature_code as code',
-          'signature_player_name as title',
-          'signature_image as image'
+          'signature_player_name as title'
           )->get();
   }
 }

@@ -1,10 +1,10 @@
 <div class="mr-5 ml-5 mt-3 p-2 mb-2 text-center">
-    @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products', 'edit' => $edit])
+    @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products', 'edit' => $edit, 'main_image' => $product->image ?? ''])
 </div>
 <hr>
 <x-ladmin-form-group name="product_code" label="Code *">
     <input type="text" placeholder="Product Code" class="form-control" name="product_code" id="product_code" required
-        value="{{ $product_code }}" readonly>
+        value="{{ old('product_code', $product->product_code) ?? $product_code}}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="product_name" label="Name *">
     <input type="text" placeholder="Product Name" class="form-control" name="product_name" id="product_name" required
@@ -18,7 +18,7 @@
     <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
         <option>------ Select Brand --------</option>
         @foreach ($brand as $name => $id)
-            <option value="{{$id}}" {{ $edit ? ( old('product_name', $product->detail->brand_id) == $id ? 'selected' : '' ) : '' }}>
+            <option value="{{$id}}" {{ $edit ? ( old('brand_id', $product->detail->brand_id) == $id ? 'selected' : '' ) : ((old('brand_id') == $id) ? 'selected' : '') }}>
                 {{__($name)}}
             </option>
         @endforeach
@@ -43,7 +43,7 @@
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="base" type="text" class="form-control" name="base_price" min=1
-                    value="{{ old('base_price', rupiah_format($product->detail->base_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    value="{{ old('base_price', rupiah_format($product->detail->base_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
 
@@ -51,7 +51,7 @@
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="retail" type="text" class="form-control" name="retail_price" min=1
-                    value="{{ old('qty', rupiah_format($product->detail->retail_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    value="{{ old('retail_price', rupiah_format($product->detail->retail_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
 
@@ -59,7 +59,7 @@
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="discount" type="text" class="form-control" name="after_discount_price"
-                     value="{{ old('qty', rupiah_format($product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                     value="{{ old('after_discount_price', rupiah_format($product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                     <span class="input-group-text">%</span>
                     <input type="text" class="form-control" id="percent"
                     @if ($edit)
@@ -100,8 +100,7 @@
                     ->select(
                         'signature_player_id as value',
                         'signature_code as code',
-                        'signature_player_name as title',
-                        'signature_image as image'
+                        'signature_player_name as title'
                     )->get(),
                 'edit' => $edit ])
         </x-ladmin-form-group>
@@ -117,7 +116,7 @@
 
     <!--begin::Input-->
     <textarea name="description" id="kt_docs_ckeditor_classic">
-        {!! old('qty', $product->description) !!}
+        {!! old('description', $product->description) !!}
     </textarea>
 </div>
 <hr>
@@ -159,6 +158,17 @@
             form,
             {
                 fields: {
+                    'product_code': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Code is required'
+                            },
+                            regexp: {
+                                regexp : /^(\d|\w|-)+$/,
+                                message : "Code should'nt contain spaces"
+                            }
+                        }
+                    },
                     'product_link': {
                         validators: {
                             notEmpty: {
@@ -276,6 +286,7 @@
         categories.on("change", function(){
             validator.revalidateField('category');
         });
+
         // Submit button handler
         const submitButton = document.getElementById('form-submit');
         submitButton.addEventListener('click', function (e) {
@@ -315,7 +326,7 @@
 
         retail.addEventListener("keyup", function(e) {
             result = 0;
-            rawPriceRetail = base.value.replace(/\D/g,'');
+            rawPriceRetail = retail.value.replace(/\D/g,'');
             result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceRetail));
             percent.value = result;
             retail.value = formatRupiah(this.value);
@@ -350,5 +361,17 @@
             rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
             return prefix == undefined ? rupiah : rupiah ? rupiah : "";
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.main-image').click(function() {
+                checked = $(".main-image:checkbox:checked").length;
+
+                if(checked > 1) {
+                    $(".main-image:checkbox:checked").prop('checked', false);
+                    $(this).prop('checked', true);
+                }
+            });
+        });
     </script>
 @endpush

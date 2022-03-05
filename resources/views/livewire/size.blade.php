@@ -1,5 +1,5 @@
 <input class="form-control form-control-lg d-flex align-items-center" name="size"
-    value="{{ $edit ? $current_size->toJson() : '' }}" id="kt_tagify_size" data-json="{{ $size }}"/>
+    value="{{ old('size', $edit ? $current_size->toJson() : '')}}" id="kt_tagify_size" data-json="{{ $size }}"/>
 
 @push('scripts')
 <script>

@@ -26,7 +26,10 @@ class ProductDatatables extends DataTable
             // ->filter(function($q) {
 
             // })
-            ->rawColumns(['id', 'product_name', 'tag', 'size','category','signature','action'])
+            ->rawColumns(['id', 'product_name', 'tag', 'size', 'category', 'signature', 'status', 'action'])
+            ->addColumn('status', function ($item) {
+                return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+              })
             ->addColumn('tag', function ($item) {
                 if ($item->tags()->count() > 0) {
                     $result = "";
@@ -87,18 +90,14 @@ class ProductDatatables extends DataTable
                 }
 
             })
-            // ->editColumn('qty', function($item) {
-            //     $qty = $item->detail()->pluck('qty')->first();
-            //     return $qty ?? 0;
-            // })
             ->editColumn('base_price', function($item) {
                 return 'Rp.' .rupiah_format($item->base_price ?? 0);
             })
             ->editColumn('product_name', function ($item) {
-                $image_url = $item->images()->first();
+                $image_url = $item->image;
                 return '<div class="d-flex align-items-center">'.
                             '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
-                            '<span class="symbol-label" style="background-image:url('.getImage($image_url ? $image_url->image_url : '' , 'products').');"></span>'.
+                            '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'products').');"></span>'.
                         '</a>'.
                         '<div class="ms-5">'.
                             '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'"'.
@@ -222,6 +221,10 @@ class ProductDatatables extends DataTable
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),
+            Column::make('status')
+                ->width(10)
+                ->sortable(false)
+                ->searchable(false),
             Column::make('created_at'),
 
         ];

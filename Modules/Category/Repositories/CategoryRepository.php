@@ -67,6 +67,6 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
   }
 
   public function getCategoryIdAndNameLivewire(){
-      return $this->model->select('id', 'category_title as value')->get();
+      return $this->model->where('is_active', 1)->select('id', 'category_title as value')->get();
   }
 }

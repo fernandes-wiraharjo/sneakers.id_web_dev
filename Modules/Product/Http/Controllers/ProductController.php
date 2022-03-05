@@ -61,7 +61,8 @@ class ProductController extends Controller
     {
         try {
             $validator = $request->validate([
-                'product_image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+                'product_code' => 'required|unique:products',
+                'products_image' => 'required|max:10000',
             ]);
 
             if($validator) {
@@ -71,7 +72,7 @@ class ProductController extends Controller
                     return redirect(route('administrator.product.index'))
                         ->with('success', 'Product Created Successfully!');
                 } else {
-                    Alert::error('Failed to created banner, check your info!');
+                    Alert::error('Failed to created product, data not matched!');
                     return redirect()->back();
                 }
             } else {

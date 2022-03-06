@@ -9,7 +9,7 @@ class BestSellers extends Component
 {
     public function render(ProductRepository $productRepository)
     {
-        $data['products'] = $productRepository->getProductBestSeller();
+        $data['products'] = $productRepository->getProductBestSeller(4);
         return view('livewire.best-sellers', $data);
     }
 }

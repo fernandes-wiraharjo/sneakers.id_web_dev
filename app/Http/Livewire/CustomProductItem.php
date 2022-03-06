@@ -11,7 +11,7 @@ class CustomProductItem extends Component
 
     public function render(ProductRepository $productRepository)
     {
-        $data['products'] = $productRepository->getProductByBrandId($this->brand_id);
+        $data['products'] = $productRepository->getProductByBrandId($this->brand_id, 4);
         return view('livewire.custom-product-item', $data);
     }
 }

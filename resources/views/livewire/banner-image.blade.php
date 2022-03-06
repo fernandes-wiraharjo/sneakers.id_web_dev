@@ -4,7 +4,7 @@
     <div class="Slideshow__ImageContainer Image--contrast AspectRatio hidden-tablet-and-up"
             {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
         style="--aspect-ratio: 0.6521739130434783; background-image: url({{ getImage($item->banner_image, 'banner') }});">
-        <img class="Slideshow__Image Image--lazyLoad"
+        <img class="Slideshow__Image Image--lazyLoad" style="max-width: 100% !important; height: auto !important;"
             {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
             src="{{ getImage($item->banner_image, 'banner') }}"
             {{-- x800  Mobile_Banner_mocca_x800.jpg?v=1644823129--}}
@@ -23,7 +23,7 @@
     <div class="Slideshow__ImageContainer Image--contrast AspectRatio AspectRatio--withFallback hidden-phone"
             {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
         style="padding-bottom: 66.66666666666667%; --aspect-ratio: 1.5; background-image: url({{ getImage($item->banner_image, 'banner') }});">
-        <img class="Slideshow__Image Image--lazyLoad hide-no-js"
+        <img class="Slideshow__Image Image--lazyLoad hide-no-js" style="max-width: 100% !important; height: auto !important;"
             {{-- WEB_Banner_mocca_{width}x.jpg --}}
             data-src="{{ getImage($item->banner_image, 'banner') }}"
             data-optimumx="1.2"

@@ -26,17 +26,21 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
     $banner = $this->bannerService->updateBanner($request);
 
     $get_banner = $this->model->findOrFail($id);
-    $get_banner->update($banner);
+    return $get_banner->update($banner);
   }
 
   public function createBanner(Request $request) {
     $banner = $this->bannerService->insertBanner($request);
 
-    $this->model->create($banner);
+    return $this->model->create($banner);
   }
 
   public function getBannerById($id){
       return $this->model->findOrFail($id);
+  }
+
+  public function getOrderBannerByOrderByLatest(){
+      return $this->model->orderBy('order', 'DESC')->pluck('order')->first();
   }
 
   public function deleteBanner($id){
@@ -44,7 +48,7 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getBannerOrdered($limit = 5, $offset = 0){
-      return $this->model->where('is_headline', 1)
+      return $this->model->where(['is_headline'=> 1, 'is_active' => 1])
         ->offset($offset)
         ->limit($limit)
         ->orderBy('order','ASC')

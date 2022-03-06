@@ -3,11 +3,21 @@
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="order" label="Order *">
-	<input type="number" min="0" placeholder="Banner Order" class="form-control" name="order" id="order" required value="{{ old('order', $banner->order) }}">
+	<input type="number" min="1" placeholder="Banner Order" class="form-control" name="order" id="order" required value="{{ old('order', $banner->order) ?? ($latest_order ?? 0) }}">
+    <div class="col-sm-12">
+        <span class="text-muted fw-bold fs-6">
+            Order Banner only show 5 ordered banners.
+        </span>
+    </div>
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="banner_image" label="Image">
 	<input type="file" class="form-control" name="image" id="image" value="{{ old('banner_image', $banner->banner_image) }}">
+    <div class="col-sm-12">
+        <span class="text-muted fw-bold fs-6">
+            recommended banner resolution is 720p or 1080p. make sure the image not below this resolution.
+        </span>
+    </div>
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="banner_description" label="Description *">
@@ -16,17 +26,20 @@
 
 <x-ladmin-form-group name="is_headline" label="Banner Headline *">
     <div class="form-check col-sm-5 ml-2">
-        <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=1 >
+        <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=1 {{ old('is_headline', $banner->is_headline ? 'checked' : '') ? 'checked' : '' }}>
         <label class="form-check-label" for="is_headline">
             Active Headline
         </label>
     </div>
     <div class="form-check col-sm-5">
-        <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=0 checked>
+        <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=0 {{ old('is_headline', $banner->is_headline ? '' : 'checked') ? '' : 'checked'}}>
         <label class="form-check-label" for="is_headline">
             Not Active Headline
         </label>
     </div>
+    <span class="text-muted fw-bold fs-6">
+        Only active headline can be shown into front page!.
+    </span>
 </x-ladmin-form-group>
 
 @include('components.is_active', ['is_active' => $banner->is_active, 'edit' => $edit])
@@ -48,11 +61,17 @@
                         }
                     }
                 },
-                'banner_image': {
+                'image': {
                     validators: {
-                        notEmpty: {
-                            message: 'Image is required'
-                        }
+                        // notEmpty: {
+                        //     message: 'Image is required'
+                        // },
+                        file: {
+                            extension: 'jpeg,jpg,png',
+                            type: 'image/jpeg,image/png',
+                            maxSize: 2097152, // 2048 * 1024
+                            message: 'The selected file is not valid',
+                        },
                     }
                 },
                 'order': {

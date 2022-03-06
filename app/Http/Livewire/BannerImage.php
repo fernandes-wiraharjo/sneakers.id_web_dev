@@ -9,7 +9,7 @@ class BannerImage extends Component
 {
     public function render(BannerRepository $bannerRepository)
     {
-        $data['banner'] = $bannerRepository->getBannerOrdered(2);
+        $data['banner'] = $bannerRepository->getBannerOrdered(5);
         return view('livewire.banner-image', $data);
     }
 }

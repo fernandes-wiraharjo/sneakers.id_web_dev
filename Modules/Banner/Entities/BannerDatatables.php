@@ -60,8 +60,7 @@ class BannerDatatables  extends DataTable
             Column::make('banner_image')->width(150)
                 ->sortable(false)
                 ->searchable(false),
-            Column::make('order')->title(__('Order'))->width(50)
-                ->searchable(false),
+            Column::make('order')->title(__('Order'))->width(50),
             Column::make('banner_url'),
             Column::computed('headline')->width(50),
             Column::computed('status')->width(150),
@@ -82,10 +81,7 @@ class BannerDatatables  extends DataTable
      */
     public function query(Banner $model)
     {
-        return $model->orderBy('order', 'asc')
-            ->orderBy('is_active', 'asc')
-            ->orderBy('is_headline', 'asc')
-            ->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -113,6 +109,6 @@ class BannerDatatables  extends DataTable
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'Banner_' . date('YmdHis');
     }
 }

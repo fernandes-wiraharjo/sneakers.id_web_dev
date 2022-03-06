@@ -38,6 +38,7 @@ class BannerController extends Controller
     public function create()
     {
         ladmin()->allow('administrator.master-data.banner.create');
+        $data['latest_order'] = $this->repository->getOrderBannerByOrderByLatest() + 1;
         $data['banner'] = new Banner();
 
         return view('banner::create', $data);
@@ -52,6 +53,7 @@ class BannerController extends Controller
     {
         try {
             $validator = $request->validate([
+                'order' => 'required|unique:banners,order',
                 'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             ]);
 

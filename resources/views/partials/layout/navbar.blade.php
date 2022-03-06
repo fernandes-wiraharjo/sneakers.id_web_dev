@@ -467,7 +467,9 @@
                                 class="Header__LogoImage Header__LogoImage--primary"
                                 src="{{ config('ladmin.logo') }}"
                                 srcset="{{ config('ladmin.logo') }} 1x, {{ config('ladmin.logo') }} 2x"
-                                width="220"
+                                height="100px"
+                                width="auto"
+                                style="max-height: 90px !important;"
                                 alt="{{ config('app.name') }}"
                             />
                             @endif

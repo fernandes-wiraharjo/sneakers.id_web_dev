@@ -12,6 +12,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "hexters/ladmin": "^1.8",
+        "intervention/image": "^2.7",
         "jackiedo/log-reader": "^2.1",
         "laravel/framework": "^8.54",
         "laravel/jetstream": "^2.3",

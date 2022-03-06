@@ -31,7 +31,7 @@ class ProductService {
 
                 foreach($request['products_image'] as $key=>$image){
 
-                    $do_upload = imageUpload($image, $path ,'public', true, $no);
+                    $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
 
                     if(!$do_upload){
                         abort(500, 'Failed upload image');
@@ -149,7 +149,7 @@ class ProductService {
 
                         foreach($request['products_image'] as $key=>$image){
 
-                            $do_upload = imageUpload($image, $path ,'public', true, $no);
+                            $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
 
                             if(!$do_upload){
                                 abort(500, 'Failed upload image');
@@ -272,7 +272,7 @@ class ProductService {
                 if(isset($request['products_image'])){
                     $no = 1;
                     foreach($request['products_image'] as $key=>$image){
-                        $do_upload = imageUpload($image, $path ,'public', true, $no);
+                        $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                         if(!$do_upload){
                             abort(500, 'Failed upload image');
                         } else {

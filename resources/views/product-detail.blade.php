@@ -87,11 +87,17 @@
                         <div>
                             @foreach ($product->signatures as $item)
                                 <div style="height: 50px; width: 90%; text-align: left; align-items: center; margin: 5px;">
-                                    <span>
-                                        <img src="{{ getImage($item->signature_image, 'signature') }}" style="max-height: 100% !important; max-width: 100% !important; "/>
-                                    </span>
                                     {{ $item->signature_title }} - {{ $item->signature_player_name }}
                                 </div>
+                            @endforeach
+                        </div>
+
+                        <p data-mce-fragment="1"><strong>Category:</strong></p>
+                        <div>
+                            @foreach ($product->categories as $item)
+                                <span style="margin: 5px;">
+                                    <a href="{{ route('collections', $item->category_title)}}">{{ $item->category_title }}</a>
+                                </span>
                             @endforeach
                         </div>
                         <div class="Product__InfoWrapper">
@@ -101,15 +107,32 @@
                                         <h2 class="ProductMeta__Vendor Heading u-h6">{{ $product->detail->brand->brand_title }}</h2>
                                         <h1 class="ProductMeta__Title Heading u-h2">{{ $product->product_name }}</h1>
                                         <div class="ProductMeta__PriceList Heading">
-                                            <span class="ProductMeta__Price Price Text--subdued u-h4" data-money-convertible><span class="money">RP.
-                                                {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}</span></span>
+                                            <span class="ProductMeta__Price Price Text--subdued u-h4" data-money-convertible>
+                                                @if ($product->detail->after_discount_price > 0 && ( $product->detail->retail_price > $product->detail->after_discount_price))
+                                                    <span class="money">
+                                                        RP.
+                                                        <del>
+                                                            {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                        </del>
+                                                        <span style="position:inherit; font-weight: 800;">
+                                                            {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}</span>
+                                                    </span>
+                                                    <div style="color: red; font-size: 20px; font-weight: bold;">
+                                                        {{100 - round(100 * ($product->detail->after_discount_price / $product->detail->retail_price), 0)}}% OFF
+                                                    </div>
+                                                @else
+                                                    <span class="money" >RP.
+                                                        {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                    </span>
+                                                @endif
+                                            </span>
                                         </div>
                                     </div>
                                     <div style="margin: 50px;"></div>
                                         <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                             href="{{ $product->product_link }}" target="_blank"
                                             class="ProductForm__AddToCart Button Button--primary Button--full">
-                                            <span>See at Tokopedia</span>
+                                            <span>BUY NOW</span>
                                         </a>
 
                                         <style>
@@ -496,7 +519,7 @@
                 </div>
             </div>
 
-            <div id="shopify-section-1596077408308" class="shopify-section shopify-section--bordered">
+            {{-- <div id="shopify-section-1596077408308" class="shopify-section shopify-section--bordered">
                 <section
                     class="Section Section--spacingNormal"
                     data-section-id="1596077408308"
@@ -534,9 +557,9 @@
                         </div>
                     </div>
                 </section>
-            </div>
+            </div> --}}
 
-            <div id="shopify-section-recently-viewed-products" class="shopify-section shopify-section--bordered shopify-section--hidden">
+            {{-- <div id="shopify-section-recently-viewed-products" class="shopify-section shopify-section--bordered shopify-section--hidden">
                 <section
                     class="Section Section--spacingNormal"
                     data-section-id="recently-viewed-products"
@@ -551,7 +574,7 @@
                         </div>
                     </header>
                 </section>
-            </div>
+            </div> --}}
         </main>
 
         @include('partials.layout.footer')

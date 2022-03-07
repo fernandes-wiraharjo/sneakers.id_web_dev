@@ -27,6 +27,9 @@ use Yajra\DataTables\Services\DataTable;
               return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
             ->addColumn('action', function ($item) {
+                if($item->products()->count() > 0){
+                    $type = 'restrict';
+                }
                 return view('components.action-burger', [
                     'show' => null,
                     'edit' => [
@@ -36,6 +39,7 @@ use Yajra\DataTables\Services\DataTable;
                     'destroy' => [
                       'gate' => 'administrator.master-data.category.destroy',
                       'url' => route('administrator.master-data.category.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                      'type' => $type ?? null
                     ]
                   ]);
             });

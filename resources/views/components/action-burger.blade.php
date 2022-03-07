@@ -54,13 +54,20 @@
                                         <span class="badge badge-info">{{ $destroy['tag']['new_release'] }}</span>
                                         {{ isset($destroy['type']) ? $destroy['type'] : 'item'}}?
                                     @endif
+                                @else
+                                    @if (isset($destroy['type']))
+                                        @if ($destroy['type'] == 'restrict')
+                                            Data cannot be deleted, this data attached to other data!
+                                        @endif
+                                    @else
+                                        Do you really want to delete this item?
+                                    @endif
                                 @endif
-                                Do you really want to delete this item?
                             </div>
 
                             <div class="modal-footer border-0">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-danger">Yes, Do it!</button>
+                                <button type="submit" class="btn btn-danger" {{ (isset($destroy['type']) ? $destroy['type'] : '') == 'restrict' ? 'disabled' : ''}}>Yes, Do it!</button>
                             </div>
                         </form>
                     </div>

@@ -28,6 +28,9 @@ class TagDatatables  extends DataTable
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
               })
             ->addColumn('action', function ($item) {
+                if($item->products()->count() > 0){
+                    $type = 'restrict';
+                }
                 return view('components.action-burger', [
                     'show' => null,
                     'edit' => [
@@ -37,6 +40,7 @@ class TagDatatables  extends DataTable
                     'destroy' => [
                       'gate' => 'administrator.master-data.tag.destroy',
                       'url' => route('administrator.master-data.tag.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                      'type' => $type ?? null
                     ]
                   ]);
             });

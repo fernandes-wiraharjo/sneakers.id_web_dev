@@ -7,16 +7,19 @@ use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\LookBook\Repositories\LookBookRepository;
+use Modules\Size\Repositories\SizeRepository;
 
 class StoreController extends Controller
 {
     public function __construct(
         BrandRepository $brandRepository,
         ProductRepository $productRepository,
-        LookBookRepository $lookBookRepository) {
+        LookBookRepository $lookBookRepository,
+        SizeRepository $sizeRepository) {
             $this->brandRepository = $brandRepository;
             $this->productRepository = $productRepository;
             $this->lookBookRepository = $lookBookRepository;
+            $this->sizeRepository = $sizeRepository;
     }
     public function index() {
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
@@ -53,6 +56,7 @@ class StoreController extends Controller
     }
 
     public function sizeChart(){
+        $data['sizes'] = $this->sizeRepository->getAllSizes();
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];

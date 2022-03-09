@@ -16,7 +16,8 @@
                                 <li class="HorizontalList__Item">
                                     <a href="{{ $item->social_link ?? '' }}" class="Link Link--primary" target="_blank" rel="noopener" aria-label="{{ $item->social_name ?? '' }}">
                                         <span class="Icon-Wrapper--clickable" style="width: 2rem !important;">
-                                            {{ $item->social_name ?? '' }}
+                                            {{-- {{ $item->social_name ?? '' }} --}}
+                                            <i class="fa fa-{{$item->social_icon ?? 'circle'}}"></i>
                                         </span>
                                     </a>
                                 </li>

@@ -13,16 +13,16 @@ class CreateLookBookCardTable extends Migration
      */
     public function up()
     {
-        Schema::create('look_book_cards', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('look_book_id')->constrained();
-            $table->string('look_book_card_title');
-            $table->string('look_book_card_description')->nullable();
-            $table->string('look_book_card_url')->nullable();
-            $table->text('image_url')->nullable();
-            $table->boolean('is_active')->default(0);
-            $table->timestamps();
-        });
+        // Schema::create('look_book_cards', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('look_book_id')->constrained();
+        //     $table->string('look_book_card_title');
+        //     $table->string('look_book_card_description')->nullable();
+        //     $table->string('look_book_card_url')->nullable();
+        //     $table->text('image_url')->nullable();
+        //     $table->boolean('is_active')->default(0);
+        //     $table->timestamps();
+        // });
     }
 
     /**

@@ -50,7 +50,7 @@ class StoreController extends Controller
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['next_page'] = $this->lookBookRepository->getNextLookBook($page);
         $data['prev_page'] = $this->lookBookRepository->getPrevLookBook($page);
-        $data['lookbook'] = $this->lookBookRepository->getLookBookByPageNumber(intval($page));
+        $data['lookbook'] = $this->lookBookRepository->getAllLookBook();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('lookbook', $data);
     }

@@ -13,13 +13,13 @@ class CreateLookBookImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('look_book_images', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('look_book_id')->constrained();
-            $table->text('image_url')->nullable();
-            $table->boolean('is_active')->default(1);
-            $table->timestamps();
-        });
+        // Schema::create('look_book_images', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('look_book_id')->constrained();
+        //     $table->text('image_url')->nullable();
+        //     $table->boolean('is_active')->default(1);
+        //     $table->timestamps();
+        // });
     }
 
     /**

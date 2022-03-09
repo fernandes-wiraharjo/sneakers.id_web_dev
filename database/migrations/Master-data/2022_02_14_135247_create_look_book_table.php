@@ -16,8 +16,9 @@ class CreateLookBookTable extends Migration
         Schema::create('look_books', function (Blueprint $table) {
             $table->id();
             $table->string('look_book_title');
-            $table->string('look_book_description')->nullable();
-            $table->text('look_book_content')->nullable();
+            $table->string('look_book_image')->nullable();
+            // $table->string('look_book_description')->nullable();
+            // $table->text('look_book_content')->nullable();
             $table->integer('look_book_order');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

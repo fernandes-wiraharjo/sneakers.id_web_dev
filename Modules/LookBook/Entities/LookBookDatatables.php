@@ -22,7 +22,19 @@ class LookBookDatatables  extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action','status'])
+            ->rawColumns(['action','status', 'look_book_title'])
+            ->editColumn('look_book_title', function ($item) {
+                $image_url = $item->look_book_image;
+                return '<div class="d-flex align-items-center">'.
+                            '<a href="'.route('administrator.master-data.lookbook.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
+                            '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'lookbook').');"></span>'.
+                        '</a>'.
+                        '<div class="ms-5">'.
+                            '<a href="'.route('administrator.master-data.lookbook.edit', [$item->id, 'back' => request()->fullUrl()]).'"'.
+                            ' class="text-gray-800 text-hover-primary fs-5 fw-bolder" data-kt-ecommerce-product-filter="look_book_title">'.$item->look_book_title.'</a>'.
+                        '</div>'.
+                    '</div>';
+            })
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-light-dark'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
@@ -49,11 +61,10 @@ class LookBookDatatables  extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('DT_RowIndex')->title(__('Page'))->width(50)
+            Column::make('DT_RowIndex')->title(__('#'))->width(50)
                 ->sortable(false)
                 ->searchable(false),
             Column::make('look_book_title')->width(150),
-            Column::make('look_book_description'),
             Column::make('look_book_order')->title(__('Order'))->width(50)
                 ->searchable(false),
             Column::computed('status')->width(75),
@@ -88,7 +99,7 @@ class LookBookDatatables  extends DataTable
             ->setTableId('lookbook-table')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->dom('Bfrtip')
+            ->dom('frtip')
             ->orderBy(1)
             ->responsive(true)
             ->parameters(['scrollX' => true])

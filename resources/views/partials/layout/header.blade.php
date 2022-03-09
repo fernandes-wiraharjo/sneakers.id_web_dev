@@ -111,5 +111,6 @@
     </style>
     <link href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/bc-sf-filter.scss.css?v=14122405562365021248"
         rel="stylesheet" type="text/css" media="all">
+    <link data-instant-track rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" class="gf-style" />
     @livewireStyles
 </head>

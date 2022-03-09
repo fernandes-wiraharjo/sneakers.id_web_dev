@@ -41,6 +41,7 @@ class LookBookController extends Controller
     public function create()
     {
         ladmin()->allow('administrator.master-data.lookbook.create');
+        $data['latest_order'] = $this->repository->getOrderLookBookByOrderByLatest() + 1;
         $data['lookbook'] = new LookBook();
 
         return view('lookbook::create', $data);
@@ -56,11 +57,12 @@ class LookBookController extends Controller
         try {
             $validator = $request->validate([
                 'look_book_title' => 'required',
-                'look_book_oreder' => 'required|unique:look_books,look_book_order'
+                'image' => 'required|max:10000',
+                'look_book_order' => 'required|unique:look_books,look_book_order'
             ]);
 
             if($validator) {
-                $stored = $this->service->insertLookBook($request->all());
+                $stored = $this->repository->createLookBook($request);
                 if($stored){
                     Alert::success('LookBook Created Successfully!');
                     return redirect(route('administrator.master-data.lookbook.index'))
@@ -70,7 +72,7 @@ class LookBookController extends Controller
                     return redirect()->back();
                 }
             } else {
-                Alert::error('Failed to created banner, check your info!');
+                Alert::error('Failed to created look book, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
@@ -112,7 +114,7 @@ class LookBookController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->service->updateLookBook($id ,$request->all());
+            $updated = $this->repository->updateLookBook($id ,$request);
             if($updated){
                 Alert::success('LookBook Updated Successfully!');
                 return redirect(route('administrator.master-data.lookbook.index'))

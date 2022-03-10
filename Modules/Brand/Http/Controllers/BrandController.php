@@ -108,9 +108,20 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validator = $request->validate([
-                'brand_code' => 'required|max:255',
-            ]);
+            $old_data = $this->repository->getBrandById($id);
+            $data = $request->all();
+
+            if($old_data->brand_code == $data['brand_code']){
+                $validation = [
+                    'brand_code' => 'required|exists:brands,brand_code|max:255',
+                ];
+            } else {
+                $validation = [
+                    'brand_code' => 'required|unique:brands,brand_code|max:255',
+                ];
+            }
+
+            $validator = $request->validate($validation);
 
             if($validator) {
                 $updated = $this->repository->updateBrand($request, $id);

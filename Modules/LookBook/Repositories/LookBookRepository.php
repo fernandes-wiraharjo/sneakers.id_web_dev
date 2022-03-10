@@ -24,8 +24,17 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
    */
   public function updateLookBook($id, Request $request) {
     $lookbook = $this->lookbookService->updateLookBook($id, $request);
+    $data = $request->all();
 
     $get_lookbook = $this->model->find($id);
+    if($get_lookbook->look_book_order != $data['look_book_order']){
+        $existing_lookbook_order = $this->getLookBookByPageNumber($data['look_book_order']);
+
+        if($existing_lookbook_order){
+            $existing_lookbook_order->update(['is_active' => 0]);
+        }
+    }
+
     return $get_lookbook->update($lookbook);
   }
 

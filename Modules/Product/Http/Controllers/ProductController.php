@@ -119,11 +119,31 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->service->updateProduct($id ,$request->all());
-            if($updated){
-                Alert::success('Product Updated Successfully!');
-                return redirect(route('administrator.product.index'))
-                    ->with('success', 'Product Updated Successfully!');
+            $old_data = $this->repository->getProductById($id);
+            $data = $request->all();
+
+            if($old_data->product_code == $data['product_code']){
+                $validation = [
+                    'product_code' => 'required|exists:products,product_code|max:255',
+                ];
+            } else {
+                $validation = [
+                    'product_code' => 'required|unique:products,product_code|max:255',
+                ];
+            }
+
+            $validator = $request->validate($validation);
+
+            if($validator) {
+                $updated = $this->service->updateProduct($id ,$request->all());
+                if($updated){
+                    Alert::success('Product Updated Successfully!');
+                    return redirect(route('administrator.product.index'))
+                        ->with('success', 'Product Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated product, check your info!');
+                    return redirect()->back();
+                }
             } else {
                 Alert::error('Failed to updated product, check your info!');
                 return redirect()->back();

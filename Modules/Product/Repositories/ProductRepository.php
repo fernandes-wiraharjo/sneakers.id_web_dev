@@ -117,7 +117,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductById($id){
-        return $this->model->findOrFail($id);
+        return $this->model->find($id);
     }
 
     public function getProductImageByIdProduct($id){

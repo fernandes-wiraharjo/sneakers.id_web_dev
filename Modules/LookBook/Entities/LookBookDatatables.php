@@ -36,7 +36,7 @@ class LookBookDatatables  extends DataTable
                     '</div>';
             })
             ->addColumn('status', function ($item) {
-                return $item->is_active ? "<span class='badge badge-light-dark'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+                return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
             ->addColumn('action', function ($item) {
                 return view('components.action-burger', [

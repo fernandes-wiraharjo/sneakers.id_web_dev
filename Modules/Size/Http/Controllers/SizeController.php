@@ -109,10 +109,20 @@ class SizeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validator = $request->validate([
-                'size_code' => 'required|max:255',
-            ]);
+            $old_data = $this->repository->getSizeById($id);
+            $data = $request->all();
 
+            if($old_data->size_code == $data['size_code']){
+                $validation = [
+                    'size_code' => 'required|exists:sizes,size_code|max:255',
+                ];
+            } else {
+                $validation = [
+                    'size_code' => 'required|unique:sizes,size_code|max:255',
+                ];
+            }
+
+            $validator = $request->validate($validation);
             if($validator) {
                 $updated = $this->repository->updateSize($request, $id);
                 if($updated){

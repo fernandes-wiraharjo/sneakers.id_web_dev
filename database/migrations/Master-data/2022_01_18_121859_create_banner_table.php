@@ -19,7 +19,7 @@ class CreateBannerTable extends Migration
             $table->integer('order');
             $table->text('banner_description');
             $table->text('banner_url');
-            $table->tinyInteger('is_headline')->default(1);
+            //$table->tinyInteger('is_headline')->default(1);
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
         });

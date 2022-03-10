@@ -24,24 +24,6 @@
 	<textarea placeholder="Banner Description" class="form-control" name="banner_description" id="banner_description">{{ old('banner_description', $banner->banner_description) }}</textarea>
 </x-ladmin-form-group>
 
-<x-ladmin-form-group name="is_headline" label="Banner Headline *">
-    <div class="form-check col-sm-5 ml-2">
-        <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=1 {{ old('is_headline', $banner->is_headline ? 'checked' : '') ? 'checked' : '' }}>
-        <label class="form-check-label" for="is_headline">
-            Active Headline
-        </label>
-    </div>
-    <div class="form-check col-sm-5">
-        <input class="form-check-input" type="radio" name="is_headline" id="is_headline" value=0 {{ old('is_headline', $banner->is_headline ? '' : 'checked') ? '' : 'checked'}}>
-        <label class="form-check-label" for="is_headline">
-            Not Active Headline
-        </label>
-    </div>
-    <span class="text-muted fw-bold fs-6">
-        Only active headline can be shown into front page!.
-    </span>
-</x-ladmin-form-group>
-
 @include('components.is_active', ['is_active' => $banner->is_active, 'edit' => $edit])
 
 @push('scripts')
@@ -87,14 +69,7 @@
                             message: 'Description is required'
                         }
                     }
-                },
-                'is_headline': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Is Active is required'
-                        }
-                    }
-                },
+                }
             },
 
             plugins: {

@@ -11,7 +11,7 @@
         <label class="form-check form-switch form-check-custom form-check-solid fv-row">
             <input type="hidden" name="is_active" value="0"/>
             <input class="form-check-input" type="checkbox" name="is_active" value="1"
-                checked="{{ $edit ? ($is_active ? 'checked' : '') : 'checked' }}" />
+                {{ $edit ? (intval($is_active) ? 'checked' : '') : 'checked' }} />
             <span class="form-check-label fw-bold text-muted">
                 Active
             </span>

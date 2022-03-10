@@ -53,7 +53,6 @@ class BannerController extends Controller
     {
         try {
             $validator = $request->validate([
-                'order' => 'required|unique:banners,order',
                 'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
             ]);
 
@@ -111,14 +110,32 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->repository->updateBanner($request, $id);
-            if($updated){
-                Alert::success('Banner Updated Successfully!');
-                return redirect(route('administrator.master-data.banner.index'))
-                    ->with('success', 'Banner Updated Successfully!');
+            $old_data = $this->repository->getBannerById($id);
+            $data = $request->all();
+            if($old_data->order == $data['order']){
+                $validator = $request->validate([
+                    'order' => 'required|unique:banners,order',
+                    'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+                ]);
+            } else {
+                $validator = $request->validate([
+                    'order' => 'required|exists:banners,order',
+                ]);
+            }
+
+            if($validator) {
+                $updated = $this->repository->updateBanner($request, $id);
+                if($updated){
+                    Alert::success('Banner Updated Successfully!');
+                    return redirect(route('administrator.master-data.banner.index'))
+                        ->with('success', 'Banner Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated banner, check your info!');
+                    return redirect()->back();
+                }
             } else {
                 Alert::error('Failed to updated banner, check your info!');
-                return redirect()->back();
+                    return redirect()->back();
             }
         } catch (LadminException $e) {
             Alert::error($e->getMessage());

@@ -28,9 +28,6 @@ class BannerDatatables  extends DataTable
                     <img class="mw-75 card-rounded" alt="" src="'.getImage($item->banner_image, 'banner') .'"/>
                 </div>';
             })
-            ->addColumn('headline', function ($item) {
-                return $item->is_headline ? "<span class='badge badge-primary'>Headline</span>" : "<span class='badge badge-light-dark'>Not Headline</span>";
-            })
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
@@ -62,8 +59,9 @@ class BannerDatatables  extends DataTable
                 ->searchable(false),
             Column::make('order')->title(__('Order'))->width(50),
             Column::make('banner_url'),
-            Column::computed('headline')->width(50),
-            Column::computed('status')->width(150),
+            Column::make('banner_description')->title(__('Description')),
+            Column::computed('status')->width(150)
+                ->searchable(false),
             Column::computed('action')
                 ->sortable(false)
                 ->searchable(false)

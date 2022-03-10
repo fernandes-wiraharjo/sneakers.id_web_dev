@@ -24,19 +24,38 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
    */
   public function updateBanner(Request $request, $id) {
     $banner = $this->bannerService->updateBanner($request);
-
+    $data = $request->all();
     $get_banner = $this->model->findOrFail($id);
+
+    if($get_banner->order != $data['order']){
+        $existing_banner_order = $this->getBannerByOrderNumber($data['order']);
+
+        if($existing_banner_order){
+            $existing_banner_order->update(['is_active' => 0]);
+        }
+    }
+
     return $get_banner->update($banner);
   }
 
   public function createBanner(Request $request) {
     $banner = $this->bannerService->insertBanner($request);
+    $data = $request->all();
+    $existing_banner_order = $this->getBannerByOrderNumber($data['order']);
+
+    if($existing_banner_order){
+        $existing_banner_order->update(['is_active' => 0]);
+    }
 
     return $this->model->create($banner);
   }
 
   public function getBannerById($id){
       return $this->model->findOrFail($id);
+  }
+
+  public function getBannerByOrderNumber($number){
+      return $this->model->where('order', $number)->first();
   }
 
   public function getOrderBannerByOrderByLatest(){
@@ -48,7 +67,7 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getBannerOrdered($limit = 5, $offset = 0){
-      return $this->model->where(['is_headline'=> 1, 'is_active' => 1])
+      return $this->model->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
         ->orderBy('order','ASC')

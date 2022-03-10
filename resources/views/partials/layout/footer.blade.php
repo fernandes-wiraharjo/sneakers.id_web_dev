@@ -9,6 +9,8 @@
                         <p></p>
                         <p><strong>E-mail:</strong> {{ $footer->email ?? ''}}</p>
                         <p><strong>Address:</strong> {{ $footer->address ?? ''}}</p>
+                        <p><strong>Whatsapp:</strong> {{ $footer->wa ?? ''}}</p>
+                        <p><strong>Line:</strong> {{ $footer->line ?? ''}}</p>
                     </div>
                     <ul class="Footer__Social HorizontalList HorizontalList--spacingLoose">
                         @if(isset($footer->social_media))

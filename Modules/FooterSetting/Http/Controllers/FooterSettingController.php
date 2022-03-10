@@ -35,11 +35,22 @@ class FooterSettingController extends Controller
     public function store(Request $request)
     {
         try {
-            $stored = $this->service->insertFooterSetting($request->all());
-            if($stored){
-                Alert::success('Footer Setting Updated Successfully!');
-                return redirect(route('administrator.master-data.footer-setting.index'))
-                    ->with('success', 'Footer Setting Updated Successfully!');
+            $validator = $request->validate([
+                'social.media.*' => 'required',
+                'social_media.*.social_link' => 'required|url',
+                'maps' => 'url'
+            ]);
+
+            if($validator) {
+                $stored = $this->service->insertFooterSetting($request->all());
+                if($stored){
+                    Alert::success('Footer Setting Updated Successfully!');
+                    return redirect(route('administrator.master-data.footer-setting.index'))
+                        ->with('success', 'Footer Setting Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated footer setting, check your info!');
+                    return redirect()->back();
+                }
             } else {
                 Alert::error('Failed to updated footer setting, check your info!');
                 return redirect()->back();

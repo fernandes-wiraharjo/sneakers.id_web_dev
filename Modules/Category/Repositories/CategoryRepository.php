@@ -49,7 +49,7 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
   }
 
   public function getCategoryById($id){
-      return $this->model->findOrFail($id);
+      return $this->model->find($id);
   }
 
   public function deleteCategory($id){

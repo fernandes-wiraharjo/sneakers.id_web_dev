@@ -57,7 +57,7 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getBrandById($id){
-      return $this->model->findOrFail($id);
+      return $this->model->find($id);
   }
 
   public function deleteBrand($id){

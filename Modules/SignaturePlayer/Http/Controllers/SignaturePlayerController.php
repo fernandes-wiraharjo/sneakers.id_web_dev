@@ -108,9 +108,20 @@ class SignaturePlayerController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validator = $request->validate([
-                'signature_code' => 'required|max:255',
-            ]);
+            $old_data = $this->repository->getSignaturePlayerById($id);
+            $data = $request->all();
+
+            if($old_data->signature_code == $data['signature_code']){
+                $validation = [
+                    'signature_code' => 'required|exists:signature_players,signature_code|max:255',
+                ];
+            } else {
+                $validation = [
+                    'signature_code' => 'required|unique:signature_players,signature_code|max:255',
+                ];
+            }
+
+            $validator = $request->validate($validation);
 
             if($validator) {
             $updated = $this->repository->updateSignaturePlayer($request, $id);

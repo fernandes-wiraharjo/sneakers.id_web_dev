@@ -114,11 +114,30 @@ class LookBookController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $updated = $this->repository->updateLookBook($id ,$request);
-            if($updated){
-                Alert::success('LookBook Updated Successfully!');
-                return redirect(route('administrator.master-data.lookbook.index'))
-                    ->with('success', 'LookBook Updated Successfully!');
+            $old_data = $this->repository->getLookBookById($id);
+            $data = $request->all();
+            if($old_data->look_book_order == $data['look_book_order']){
+                $validation = [
+                    'look_book_order' => 'required|exists:look_books,look_book_order'
+                ];
+            } else {
+                $validation = [
+                    'look_book_order' => 'required|unique:look_books,look_book_order'
+                ];
+            }
+
+            $validator = $request->validate($validation);
+
+            if($validator) {
+                $updated = $this->repository->updateLookBook($id ,$request);
+                if($updated){
+                    Alert::success('LookBook Updated Successfully!');
+                    return redirect(route('administrator.master-data.lookbook.index'))
+                        ->with('success', 'LookBook Updated Successfully!');
+                } else {
+                    Alert::error('Failed to updated lookbook, check your info!');
+                    return redirect()->back();
+                }
             } else {
                 Alert::error('Failed to updated lookbook, check your info!');
                 return redirect()->back();

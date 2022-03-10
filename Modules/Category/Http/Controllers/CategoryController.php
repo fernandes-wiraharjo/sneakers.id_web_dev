@@ -110,9 +110,20 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validator = $request->validate([
-                'category_code' => 'required|max:255',
-            ]);
+            $old_data = $this->repository->getCategoryById($id);
+            $data = $request->all();
+
+            if($old_data->category_code == $data['category_code']){
+                $validation = [
+                    'category_code' => 'required|exists:categories,category_code|max:255',
+                ];
+            } else {
+                $validation = [
+                    'category_code' => 'required|unique:categories,category_code|max:255',
+                ];
+            }
+
+            $validator = $request->validate($validation);
 
             if($validator) {
                 $updated = $this->repository->updateCategory($request, $id);

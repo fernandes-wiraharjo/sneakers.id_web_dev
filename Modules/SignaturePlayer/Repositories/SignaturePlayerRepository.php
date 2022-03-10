@@ -53,7 +53,7 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
   }
 
   public function getSignaturePlayerById($id){
-      return $this->model->findOrFail($id);
+      return $this->model->find($id);
   }
 
   public function deleteSignaturePlayer($id){

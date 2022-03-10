@@ -108,9 +108,20 @@ class TagController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validator = $request->validate([
-                'tag_code' => 'required|max:255',
-            ]);
+            $old_data = $this->repository->getTagById($id);
+            $data = $request->all();
+
+            if($old_data->tag_code == $data['tag_code']){
+                $validation = [
+                    'tag_code' => 'required|exists:products,tag_code|max:255',
+                ];
+            } else {
+                $validation = [
+                    'tag_code' => 'required|unique:products,tag_code|max:255',
+                ];
+            }
+
+            $validator = $request->validate($validation);
 
             if($validator) {
                 $updated = $this->repository->updateTag($request, $id);

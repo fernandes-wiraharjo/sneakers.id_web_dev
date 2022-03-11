@@ -8,6 +8,7 @@ use Modules\Brand\Repositories\BrandRepository;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\LookBook\Repositories\LookBookRepository;
 use Modules\Size\Repositories\SizeRepository;
+use Modules\Faq\Repositories\FaqRepository;
 
 class StoreController extends Controller
 {
@@ -15,11 +16,13 @@ class StoreController extends Controller
         BrandRepository $brandRepository,
         ProductRepository $productRepository,
         LookBookRepository $lookBookRepository,
-        SizeRepository $sizeRepository) {
+        SizeRepository $sizeRepository,
+        FaqRepository $faqRepository) {
             $this->brandRepository = $brandRepository;
             $this->productRepository = $productRepository;
             $this->lookBookRepository = $lookBookRepository;
             $this->sizeRepository = $sizeRepository;
+            $this->faqRepository = $faqRepository;
     }
     public function index() {
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
@@ -73,6 +76,7 @@ class StoreController extends Controller
     public function faq(){
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
+        $data['faq'] = $this->faqRepository->getAllFaq();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('qna', $data);
     }

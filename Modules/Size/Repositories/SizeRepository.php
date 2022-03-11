@@ -107,6 +107,10 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
       return $this->model->get();
   }
 
+  public function getAllActiveSizes(){
+      return $this->model->where('is_active', 1)->get();
+  }
+
   public function getSizeById($id){
       return $this->model->findOrFail($id);
   }

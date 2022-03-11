@@ -59,7 +59,7 @@ class StoreController extends Controller
     }
 
     public function sizeChart(){
-        $data['sizes'] = $this->sizeRepository->getAllSizes();
+        $data['sizes'] = $this->sizeRepository->getAllActiveSizes();
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];

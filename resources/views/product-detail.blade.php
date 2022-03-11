@@ -1,5 +1,76 @@
 <html class="no-js" lang="en">
 @include('partials.layout.header')
+<style>
+    $base-spacing-unit: 24px;
+    $half-spacing-unit: $base-spacing-unit - 4;
+
+    $color-alpha: #1772FF;
+    $color-form-highlight: #EEEEEE;
+
+    *, *:before, *:after {
+        box-sizing:border-box;
+    }
+
+    .table-container {
+        max-width: 1000px;
+        margin-right:auto;
+        margin-left:auto;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .table {
+        width:100%;
+        border:1px solid $color-form-highlight;
+    }
+
+    .table-header {
+        display:flex;
+        width:100%;
+        background:#000;
+        padding:($half-spacing-unit * 1.5) 0;
+    }
+
+    .table-row {
+        display:flex;
+        width:100%;
+        padding:($half-spacing-unit * 1.5) 0;
+
+        &:nth-of-type(odd) {
+            background:$color-form-highlight;
+        }
+    }
+
+    .table-data, .header__item {
+        flex: 1 1 20%;
+        text-align:center;
+        padding: 10px 10px;
+    }
+
+    .header__item {
+        text-transform:uppercase;
+    }
+
+    .filter__link {
+        color:white;
+        text-decoration: none;
+        position:relative;
+        display:inline-block;
+        padding-left:$base-spacing-unit;
+        padding-right:$base-spacing-unit;
+
+        &::after {
+            content:'';
+            position:absolute;
+            right:-($half-spacing-unit * 1.5);
+            color:white;
+            font-size:24px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+</style>
     <body class="prestige--v4 template-collection">
         @include('partials.layout.navbar')
         <main id="main" role="main">
@@ -50,36 +121,111 @@
                                 "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
                               }'
                             >
-                                @foreach ($product->images as $item)
-                                <div id="image-{{$item->id}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$item->id}}">
-                                    <div class="AspectRatio AspectRatio--withFallback" style="padding-bottom: 100%; --aspect-ratio: 1;">
+                                <div id="image-{{$product->id}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$product->id}}">
+                                    @php
+                                        $image_size = getimagesize(getImage($product->image, 'products'));
+                                        $ratio_main_image = $image_size[0] / $image_size[1];
+                                    @endphp
+                                    <div class="AspectRatio AspectRatio--withFallback" style="padding-bottom: 100%; --aspect-ratio: {{$ratio_main_image}};">
                                         <img
                                             class="Image--lazyLoad Image--fadeIn"
-                                            data-src="{{ getImage($item->image_url, 'products') }}"
+                                            data-src="{{ getImage($product->image, 'products') }}"
                                             data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]"
                                             data-sizes="auto"
                                             data-expand="-100"
                                             alt='{{ $product->product_name }}'
                                             data-max-width="2000"
                                             data-max-height="2000"
-                                            data-original-src="{{ getImage($item->image_url, 'products') }}"
+                                            data-original-src="{{ getImage($product->image, 'products') }}"
                                         />
 
                                         <span class="Image__Loader"></span>
                                         <noscript>
-                                            <img src="/{{ getImage($item->image_url, 'products') }}" alt='{{ $product->product_name }}' />
+                                            <img src="{{ getImage($product->image, 'products') }}" alt='{{ $product->product_name }}' />
                                         </noscript>
                                     </div>
                                 </div>
+                                @foreach ($product->images as $item)
+                                    @if ($product->image != $item->image_url)
+                                        <div id="image-{{$item->id}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$item->id}}">
+                                            @php
+                                                $image_size = getimagesize(getImage($item->image_url, 'products'));
+                                                $ratio = $image_size[0] / $image_size[1];
+                                            @endphp
+                                            <div class="AspectRatio AspectRatio--withFallback" style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
+                                                <img
+                                                    class="Image--lazyLoad Image--fadeIn"
+                                                    data-src="{{ getImage($item->image_url, 'products') }}"
+                                                    data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]"
+                                                    data-sizes="auto"
+                                                    data-expand="-100"
+                                                    alt='{{ $product->product_name }}'
+                                                    data-max-width="2000"
+                                                    data-max-height="2000"
+                                                    data-original-src="{{ getImage($item->image_url, 'products') }}"
+                                                />
+
+                                                <span class="Image__Loader"></span>
+                                                <noscript>
+                                                    <img src="/{{ getImage($item->image_url, 'products') }}" alt='{{ $product->product_name }}' />
+                                                </noscript>
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endforeach
                             </div>
                             <div class="Product__SlideshowNav Product__SlideshowNav--thumbnails">
                                 <div class="Product__SlideshowNavScroller">
+                                    <span data-index="{{$product->id}}" data-image-id="{{$product->id}}" class="Product__SlideshowNavImage AspectRatio {{ $product->id == 0 ? 'is-selected' : ''}}" style="--aspect-ratio: {{ $ratio_main_image }};">
+                                        <img src="{{ getImage($product->image, 'products') }}" />
+                                    </span>
                                     @foreach ($product->images as $key => $item)
-                                        <span data-index="{{$key}}" data-image-id="{{$item->id}}" class="Product__SlideshowNavImage AspectRatio {{ $key == 0 ? 'is-selected' : ''}}" style="--aspect-ratio: 1;">
-                                            <img src="{{ getImage($item->image_url, 'products') }}" />
-                                        </span>
+                                        @if ($product->image != $item->image_url)
+                                        @php
+                                            $image_size = getimagesize(getImage($item->image_url, 'products'));
+                                            $ratio_image = $image_size[0] / $image_size[1];
+                                        @endphp
+                                            <span data-index="{{$key}}" data-image-id="{{$item->id}}" class="Product__SlideshowNavImage AspectRatio {{ $key == 0 ? 'is-selected' : ''}}" style="--aspect-ratio: {{ $ratio_image }};">
+                                                <img src="{{ getImage($item->image_url, 'products') }}" />
+                                            </span>
+                                        @endif
                                     @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <h5 data-mce-fragment="1">Detail</h5>
+                        <p data-mce-fragment="1"><strong>Size Chart :</strong></p>
+                        <div style="margin: 5% 5%;">
+                            <div class="table-container">
+                                <div class="table">
+                                    <div class="table-header">
+                                        <div class="header__item"><a id="size" class="filter__link" href="#">Size</a></div>
+                                        <div class="header__item"><a id="men" class="filter__link filter__link--number" href="#">US - Men's</a></div>
+                                        <div class="header__item"><a id="woman" class="filter__link filter__link--number" href="#">US - Women's</a></div>
+                                        <div class="header__item"><a id="kids" class="filter__link filter__link--number" href="#">US - Kid's</a></div>
+                                        <div class="header__item"><a id="uk" class="filter__link filter__link--number" href="#">UK</a></div>
+                                        <div class="header__item"><a id="cm" class="filter__link filter__link--number" href="#">CM</a></div>
+                                        <div class="header__item"><a id="eu" class="filter__link filter__link--number" href="#">EU</a></div>
+                                    </div>
+                                    <div class="table-content">
+                                    @foreach ($product->sizes as $item)
+                                    <div class="table-row">
+                                        <div class="table-data">{{ $item->size_title }}</div>
+                                            @if ($item->charts->count() > 0)
+                                                @foreach ($item->charts as $item_chart)
+                                                    <div class="table-data">{{ $item_chart->size_value }}</div>
+                                                @endforeach
+                                            @else
+                                                <div class="table-data">-</div>
+                                                <div class="table-data">-</div>
+                                                <div class="table-data">-</div>
+                                                <div class="table-data">-</div>
+                                                <div class="table-data">-</div>
+                                                <div class="table-data">-</div>
+                                            @endif
+                                    </div>
+                                    @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,6 +250,7 @@
                             <div class="Product__Info">
                                 <div class="Container">
                                     <div class="ProductMeta">
+                                        <div class="ProductMeta__PriceList Heading">{{ $product->product_code }}</div>
                                         <h2 class="ProductMeta__Vendor Heading u-h6">{{ $product->detail->brand->brand_title }}</h2>
                                         <h1 class="ProductMeta__Title Heading u-h2">{{ $product->product_name }}</h1>
                                         <div class="ProductMeta__PriceList Heading">
@@ -415,42 +562,6 @@
                                         <div class="Rte">
                                             <div>
                                                 {!! $product->description !!}
-                                            </div>
-                                            <h5 data-mce-fragment="1">Detail</h5>
-                                            <p data-mce-fragment="1"><strong>Size Chart :</strong></p>
-                                            <div style="margin: 5% 5%;">
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Size</th>
-                                                            <th>US – Men's</th>
-                                                            <th>US – Women's</th>
-                                                            <th>US – Kids's</th>
-                                                            <th>UK</th>
-                                                            <th>CM</th>
-                                                            <th>EU</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($product->sizes as $item)
-                                                            <tr>
-                                                                <th>{{ $item->size_title }}</th>
-                                                                @if ($item->charts->count() > 0)
-                                                                    @foreach ($item->charts as $item_chart)
-                                                                        <th>{{ $item_chart->size_value }}</th>
-                                                                    @endforeach
-                                                                @else
-                                                                    <th>-</th>
-                                                                    <th>-</th>
-                                                                    <th>-</th>
-                                                                    <th>-</th>
-                                                                    <th>-</th>
-                                                                    <th>-</th>
-                                                                @endif
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
                                             </div>
                                         </div>
                                     </div>

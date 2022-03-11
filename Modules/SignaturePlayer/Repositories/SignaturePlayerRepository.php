@@ -49,7 +49,7 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
   }
 
   public function getAllSignatures() {
-      return $this->model->get();
+      return $this->model->where('is_active', 1)->get();
   }
 
   public function getSignaturePlayerById($id){

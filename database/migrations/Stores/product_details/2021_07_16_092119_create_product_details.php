@@ -18,9 +18,9 @@ class CreateProductDetails extends Migration
             $table->foreignId('product_id')->constrained();
             $table->foreignId('brand_id')->constrained();
             $table->integer('qty');
-            $table->double('base_price', 8, 2);
-            $table->double('retail_price', 8, 2);
-            $table->double('after_discount_price', 8, 2);
+            $table->double('base_price', 20, 2);
+            $table->double('retail_price', 20, 2);
+            $table->double('after_discount_price', 20, 2);
             //$table->text('description')->nullable();
             $table->timestamps();
         });

@@ -2,8 +2,8 @@
     @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products', 'edit' => $edit, 'main_image' => $product->image ?? ''])
 </div>
 <hr>
-<x-ladmin-form-group name="product_code" label="Code *">
-    <input type="text" placeholder="Product Code" class="form-control" name="product_code" id="product_code" required
+<x-ladmin-form-group name="product_code" label="Article Number *">
+    <input type="text" placeholder="Article Number" class="form-control" name="product_code" id="product_code" required
         value="{{ old('product_code', $product->product_code) ?? $product_code}}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="product_name" label="Name *">

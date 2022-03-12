@@ -114,12 +114,11 @@ class BannerController extends Controller
             $data = $request->all();
             if($old_data->order == $data['order']){
                 $validator = $request->validate([
-                    'order' => 'required|unique:banners,order',
-                    'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+                    'order' => 'required|exists:banners,order',
                 ]);
             } else {
                 $validator = $request->validate([
-                    'order' => 'required|exists:banners,order',
+                    'order' => 'required|unique:banners,order',
                 ]);
             }
 

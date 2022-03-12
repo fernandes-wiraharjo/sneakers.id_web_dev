@@ -85,30 +85,48 @@
                 <div class="ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="2"
                     data-desktop-count="4">
                     @foreach ($products as $product)
+                    @php
+                        $image_size = getimagesize(getImage($product->image, 'products'));
+                        $ratio = $image_size[0] / $image_size[1];
+                    @endphp
                         <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
                             <div class="ProductItem" style="visibility: visible;">
                                 <a href="{{ route('product-detail', $product->id) }}"
                                     class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
                                     <div class="AspectRatio AspectRatio--withFallback"
-                                        style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: 1;">
+                                        style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
+
                                         {{-- multi image --}}
-                                        @foreach ($product->images()->get() as $key => $image)
-                                            <img class="ProductItem__Image {{ $key == 0 ? 'ProductItem__Image--alternate' : '' }} Image--lazyLoad Image--fadeIn"
+                                        @foreach ($product->images()->limit(2)->get() as $key => $image)
+                                            @if($product->image != $image->image_url)
+                                                <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
                                                 {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                                data-src="{{ getImage($image->image_url, 'products') }}"
-                                                data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
-                                                alt='{{ $product->product_name }}'
-                                                data-image-id="{{ $image->id }}" />
+                                                    data-src="{{ getImage($image->image_url, 'products') }}"
+                                                    data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                    alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
+                                            @endif
                                         @endforeach
+
+                                        <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
+                                        {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
+                                            data-src="{{ getImage($product->image, 'products') }}"
+                                            data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                            alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
 
                                         <span class="Image__Loader"></span>
 
                                         <noscript>
+                                            <img class="ProductItem__Image ProductItem__Image--alternate"
+                                                src="{{ getImage($product->image, 'products') }}"
+                                                alt='{{$product->product_name}}' />
+
                                             @foreach ($product->images()->get() as $key => $image)
-                                                {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                <img class="ProductItem__Image {{ $key == 0 ? 'ProductItem__Image--alternate' : '' }}"
-                                                    src="{{ getImage($image->image_url, 'products') }}"
-                                                    alt='{{ $product->product_name }}' />
+                                            {{-- BOX-A2_600x.jpg?v=1644800500 --}}
+                                                @if($product->image != $image->image_url)
+                                                    <img class="ProductItem__Image"
+                                                        src="{{ getImage($image->image_url, 'products') }}"
+                                                        alt='{{$product->product_name}}' />
+                                                @endif
                                             @endforeach
                                         </noscript>
                                     </div>

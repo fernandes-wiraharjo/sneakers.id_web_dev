@@ -6,7 +6,9 @@ use App\Core\Adapters\Theme;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Modules\Product\Repositories\ProductRepository;
+use Modules\Brand\Repositories\BrandRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(BrandRepository $brandRepository)
     {
         $theme = theme();
 
@@ -72,6 +74,14 @@ class AppServiceProvider extends ServiceProvider
             });
 
             return $this;
+        });
+
+        Validator::extend('brandmenu', function($attribute, $value, $parameters) use ($brandRepository) {
+            $brand_is_menu =  $brandRepository->getBrandMenu()->count();
+            if($value){
+                $brand_is_menu++;
+            }
+            return $brand_is_menu <= 3;
         });
     }
 }

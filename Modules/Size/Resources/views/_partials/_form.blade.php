@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" 
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
                                 value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[0]->size_value : '') : '' }}"/>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" 
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
                                 value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[1]->size_value : '') : '' }}"/>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" 
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
                                 value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[2]->size_value : '') : '' }}" />
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" 
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
                                 value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[3]->size_value : '') : '' }}"/>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" 
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
                                 value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[4]->size_value : '') : '' }}"/>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
-                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value" 
+                            <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
                             value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[5]->size_value : '') : '' }}"/>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                             message: 'Code is required'
                         },
                         regexp: {
-                            regexp : /^(\d|\w|-)+$/,
+                            regexp : /^(\d|\w|.|-)+$/,
                             message : "Code should'nt contain spaces"
                         }
                     }

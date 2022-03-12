@@ -64,6 +64,10 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
       return $this->model->where('is_active', 1)->orderBy('look_book_order', 'ASC')->get();
   }
 
+  public function getAllLookBookPaginate($count = 20){
+    return $this->model->where('is_active', 1)->orderBy('look_book_order', 'ASC')->paginate($count);
+}
+
   public function getLookBookById($id){
       return $this->model->find($id);
   }

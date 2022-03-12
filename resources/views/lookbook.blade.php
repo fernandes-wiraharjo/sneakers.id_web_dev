@@ -55,6 +55,40 @@ stylize any heading tags withing white-panel below
         transition: all 0.3s ease-in-out;
     }
 
+    .modal {
+        height: -webkit-fill-available;
+        width: -webkit-fill-available;
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .Modal {
+        background-color: rgba(0, 0, 0, 0.322) !important;
+    }
+
+    .modal-content {
+        border: none;
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        background-color: unset !important;
+    }
+
+    .modal-body img {
+        border-radius: 10px;
+    }
+
+    .modal-header {
+        border-bottom: none;
+    }
+
+    .close {
+        color: white !important;
+        opacity: unset !important;
+    }
+
 </style>
 
 <body class="prestige--v4 template-collection">
@@ -63,9 +97,38 @@ stylize any heading tags withing white-panel below
     <main id="main" role="main">
         <section id="pinBoot">
             @foreach ($lookbook as $item)
-                <article class="white-panel"><img src="{{ getImage($item->look_book_image, 'lookbook')}}" alt="{{$item->look_book_title}}"></article>
+                    <article class="white-panel">
+                        <p>
+                            <span>
+                                {{$item->look_book_title}}
+                            </span>
+                        </p>
+                        <a  class="pop" href="#" data-id="{{$item->id}}">
+                            <img id="imageresource{{$item->id}}" src="{{ getImage($item->look_book_image, 'lookbook')}}" alt="{{$item->look_book_title}}">
+                        </a>
+                    </article>
             @endforeach
         </section>
+
+        @foreach ($lookbook as $item)
+        <!-- Creates the bootstrap modal where the image will appear -->
+        <div class="modal fade" id="imagemodal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <a class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </a>
+                        <img src="" id="imagepreview{{$item->id}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+
+        <div class="text-center">
+            {{$lookbook->links()}}
+        </div>
     </main>
 
     <script>
@@ -219,6 +282,12 @@ stylize any heading tags withing white-panel below
             }
 
         })(jQuery, window, document);
+
+        $(".pop").on("click", function() {
+            var id = $(this).attr('data-id');
+            $('#imagemodal'+id+' #imagepreview'+id).attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
+            $('#imagemodal'+id).modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+        });
     </script>
 
     @include('partials.layout.footer')

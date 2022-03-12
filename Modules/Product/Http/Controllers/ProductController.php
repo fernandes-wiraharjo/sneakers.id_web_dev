@@ -60,17 +60,25 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+            $request['base_price'] = intval(str_replace('.','', $request['base_price']));
+            $request['retail_price'] = intval(str_replace('.','', $request['retail_price']));
+            $request['after_discount_price'] = intval(str_replace('.','', $request['after_discount_price']));
+
             $validator = $request->validate([
                 'product_code' => 'required|unique:products',
                 'products_image' => 'array|min:1|max:5',
                 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
-                'is_main' => 'required'
+                'is_main' => 'required',
+                'base_price' => 'gte:1',
+                'retail_price' => 'gte:1'
             ],[
                 'is_main.required' => 'Main image should be chosen!',
                 'products_image.0.required' => 'Image must be chosen!, at least one image'
             ]);
 
+
+            dd($request->all());
             if($validator) {
                 $stored = $this->service->insertProduct($request->all());
                 if($stored){

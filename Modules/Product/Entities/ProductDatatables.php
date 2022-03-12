@@ -170,7 +170,7 @@ class ProductDatatables extends DataTable
                     ->setTableId('product-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
-                    ->dom('Bfrtip')
+                    ->dom('frtip')
                     ->orderBy(1)
                     ->responsive(true)
                     ->parameters([
@@ -198,7 +198,7 @@ class ProductDatatables extends DataTable
                 ->width(150)
                 ->addClass('text-center'),
             Column::make('product_code')
-                ->title(__('Code')),
+                ->title(__('Article Number')),
             Column::make('product_name')
                 ->width(150),
             Column::make('qty')->width(50)

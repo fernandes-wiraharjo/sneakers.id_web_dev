@@ -28,6 +28,7 @@ class StoreController extends Controller
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['brand'] = $this->brandRepository->getAllBrand();
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('welcome', $data);
     }
@@ -36,6 +37,7 @@ class StoreController extends Controller
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('product-detail', $data);
     }
@@ -44,6 +46,7 @@ class StoreController extends Controller
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['keyword'] = $keyword;
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('collections', $data);
     }
@@ -54,6 +57,7 @@ class StoreController extends Controller
         $data['next_page'] = $this->lookBookRepository->getNextLookBook($page);
         $data['prev_page'] = $this->lookBookRepository->getPrevLookBook($page);
         $data['lookbook'] = $this->lookBookRepository->getAllLookBookPaginate(20);
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('lookbook', $data);
     }
@@ -62,6 +66,7 @@ class StoreController extends Controller
         $data['sizes'] = $this->sizeRepository->getAllActiveSizes();
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('size-chart', $data);
     }
@@ -69,6 +74,7 @@ class StoreController extends Controller
     public function aboutUs(){
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('about-us', $data);
     }
@@ -77,6 +83,7 @@ class StoreController extends Controller
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['faq'] = $this->faqRepository->getAllFaq();
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('qna', $data);
     }

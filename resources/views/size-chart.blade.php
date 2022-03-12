@@ -12,6 +12,8 @@
         }
 
         .table-container {
+            margin-top: 15%;
+            margin-bottom: 5%;
             max-width: 1000px;
             margin-right:auto;
             margin-left:auto;
@@ -19,6 +21,8 @@
             justify-content:center;
             align-items:center;
             min-height:50vh;
+            max-height: 100vh;
+            overflow-y: scroll;
         }
 
         .table {

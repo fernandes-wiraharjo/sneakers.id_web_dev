@@ -53,15 +53,10 @@ class BrandController extends Controller
         try {
             $validator = $request->validate([
                 'brand_code' => 'required|unique:brands|max:255',
+                'is_menu' => 'brandmenu'
+            ], [
+                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!'
             ]);
-
-            $check_count_data = $this->repository->checkActiveMenuBrand();
-
-            if ($check_count_data >= 3){
-                Alert::error('Failed to created brand, brand cannot be menu more than 3 data!<br> must deactive is menu data.');
-                return back()->withInput();
-                //return redirect()->back()->withErrors(['msg' => 'Brand cannot be menu more than 3 data!']);
-            }
 
             if($validator) {
                 $stored = $this->repository->createBrand($request);
@@ -122,14 +117,20 @@ class BrandController extends Controller
             if($old_data->brand_code == $data['brand_code']){
                 $validation = [
                     'brand_code' => 'required|exists:brands,brand_code|max:255',
+                    'is_menu' => 'brandmenu'
                 ];
             } else {
                 $validation = [
                     'brand_code' => 'required|unique:brands,brand_code|max:255',
+                    'is_menu' => 'brandmenu'
                 ];
             }
 
-            $validator = $request->validate($validation);
+            $message = [
+                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!'
+            ];
+
+            $validator = $request->validate($validation, $message);
 
             if($validator) {
                 $updated = $this->repository->updateBrand($request, $id);

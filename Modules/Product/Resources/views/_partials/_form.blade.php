@@ -42,7 +42,7 @@
             <x-ladmin-form-group name="base_price" label="Base Price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="base" type="text" class="form-control" name="base_price" min=1
+                    <input id="base" type="number" class="form-control" name="base_price" min=1
                     value="{{ old('base_price', rupiah_format($product->detail->base_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
@@ -50,7 +50,7 @@
             <x-ladmin-form-group name="retail_price" label="Retail Price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="retail" type="text" class="form-control" name="retail_price" min=1
+                    <input id="retail" type="number" class="form-control" name="retail_price" min=1
                     value="{{ old('retail_price', rupiah_format($product->detail->retail_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
@@ -58,7 +58,7 @@
             <x-ladmin-form-group name="after_discount_price" label="After discount price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="discount" type="text" class="form-control" name="after_discount_price"
+                    <input id="discount" type="number" class="form-control" name="after_discount_price"
                      value="{{ old('after_discount_price', rupiah_format($product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                     <span class="input-group-text">%</span>
                     <input type="text" class="form-control" id="percent"
@@ -185,13 +185,6 @@
                         validators: {
                             notEmpty: {
                                 message: 'Brand must be selected'
-                            }
-                        }
-                    },
-                    'tag': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Tag is required'
                             }
                         }
                     },

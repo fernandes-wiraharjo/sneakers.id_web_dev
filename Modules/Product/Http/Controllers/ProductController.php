@@ -62,7 +62,13 @@ class ProductController extends Controller
         try {
             $validator = $request->validate([
                 'product_code' => 'required|unique:products',
-                'products_image' => 'required|max:10000',
+                'products_image' => 'array|min:1|max:5',
+                'products_image.*' => 'image|max:2048',
+                'products_image.0' => 'required',
+                'is_main' => 'required'
+            ],[
+                'is_main.required' => 'Main image should be chosen!',
+                'products_image.0.required' => 'Image must be chosen!, at least one image'
             ]);
 
             if($validator) {

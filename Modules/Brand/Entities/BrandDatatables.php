@@ -21,10 +21,13 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'status'])
+            ->rawColumns(['action', 'status', 'menu'])
             ->addColumn('status', function ($item) {
               return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
+            ->addColumn('menu', function ($item) {
+                return $item->is_menu ? "<span class='badge badge-primary'>Menu Active</span>" : "<span class='badge badge-light-dark'>Menu Not Active</span>";
+              })
             ->addColumn('action', function ($item) {
                 if($item->product_details()->count() > 0){
                     $type = 'restrict';
@@ -57,7 +60,12 @@ use Yajra\DataTables\Services\DataTable;
                     ->searchable(false),
             Column::make('brand_code'),
             Column::make('brand_title'),
+            Column::make('menu')
+                ->title(__('Menu'))
+                ->searchable(false)
+                ->sortable(false),
             Column::make('status')
+                ->sortable(false)
                 ->searchable(false),
             Column::computed('action')
                 ->sortable(false)

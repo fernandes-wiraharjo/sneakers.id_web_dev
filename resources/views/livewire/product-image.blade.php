@@ -21,6 +21,7 @@
 
             <!--begin::Inputs-->
             <input type="file" name="{{ $module }}_image[]" accept=".png, .jpg, .jpeg" />
+            {{-- <input type="hidden" name="{{ $module }}_image[]" /> --}}
             <input type="hidden" name="remove_image[]" />
             <input type="hidden" name="before_image[]" value="{{!empty($image[$i]) ? $image[$i]['image_url'] : ''}}" />
             <!--end::Inputs-->

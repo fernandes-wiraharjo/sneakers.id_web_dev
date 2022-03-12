@@ -122,7 +122,7 @@ class ProductList extends Component
                                 })
                                 ->when($this->signature, function ($query, $signatures){
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
-                                        $q->whereIn('signature_id', $signatures);
+                                        $q->whereIn('signature_player_id', $signatures);
                                     });
                                 });
 

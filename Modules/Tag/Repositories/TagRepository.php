@@ -49,7 +49,7 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getAllTags() {
-      return $this->model->get();
+      return $this->model->where('is_active', 1)->get();
   }
 
   public function getTagById($id){

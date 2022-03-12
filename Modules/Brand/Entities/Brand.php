@@ -15,7 +15,8 @@ class Brand extends Model
         'brand_title',
         'brand_image',
         'brand_description',
-        'is_active'
+        'is_active',
+        'is_menu'
     ];
 
     protected static function newFactory()

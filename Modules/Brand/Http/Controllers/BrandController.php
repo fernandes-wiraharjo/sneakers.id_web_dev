@@ -55,6 +55,14 @@ class BrandController extends Controller
                 'brand_code' => 'required|unique:brands|max:255',
             ]);
 
+            $check_count_data = $this->repository->checkActiveMenuBrand();
+
+            if ($check_count_data >= 3){
+                Alert::error('Failed to created brand, brand cannot be menu more than 3 data!<br> must deactive is menu data.');
+                return back()->withInput();
+                //return redirect()->back()->withErrors(['msg' => 'Brand cannot be menu more than 3 data!']);
+            }
+
             if($validator) {
                 $stored = $this->repository->createBrand($request);
                 if($stored){

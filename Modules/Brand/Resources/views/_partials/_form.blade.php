@@ -14,6 +14,27 @@
 	<textarea placeholder="Brand Description" class="form-control" name="brand_description" id="brand_description">{{ old('brand_description', $brand->brand_description) }}</textarea>
 </x-ladmin-form-group>
 
+<!--begin::Input group-->
+<div class="d-flex flex-stack w-lg-50 mb-5">
+    <!--begin::Label-->
+    <div class="me-5">
+        <label class="fs-6 fw-bold form-label">Is menu?</label>
+    </div>
+    <!--end::Label-->
+
+    <!--begin::Switch-->
+    <label class="form-check form-switch form-check-custom form-check-solid fv-row">
+        <input type="hidden" name="is_menu" value="0"/>
+        <input class="form-check-input" type="checkbox" name="is_menu" value="1"
+            {{ $edit ? (intval($brand->is_menu) ? 'checked' : '') : 'checked' }} />
+        <span class="form-check-label fw-bold text-muted">
+            Active
+        </span>
+    </label>
+    <!--end::Switch-->
+</div>
+<!--end::Input group-->
+
 @include('components.is_active', ['is_active' => $brand->is_active, 'edit' => $edit])
 
 @push('scripts')

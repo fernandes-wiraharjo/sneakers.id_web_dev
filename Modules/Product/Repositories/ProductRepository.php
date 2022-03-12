@@ -40,10 +40,11 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function getProductWhereLike($where_column = [], $where_value = ''){
         return $this->model->query()
-            ->with(['detail', 'images'])
+            ->with(['detail', 'images', 'signatures'])
             ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
             ->select('products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-            ->whereLike($where_column, $where_value);
+            ->whereLike($where_column, $where_value)
+            ->where('is_active', 1);
     }
 
     public function getProductOneFeaturedAirJordan(){
@@ -51,6 +52,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             $q->where('tag_title', 'FEATURED');
         })
         ->where('product_name', 'LIKE', '%AIR JORDAN%')
+        ->where('is_active', 1)
         ->first();
     }
 
@@ -59,6 +61,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             $q->where('tag_title', 'FEATURED');
         })
         ->where('product_name', 'LIKE', '%NIKE%')
+        ->where('is_active', 1)
         ->first();
     }
 

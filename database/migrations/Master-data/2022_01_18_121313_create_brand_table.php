@@ -20,6 +20,7 @@ class CreateBrandTable extends Migration
             //$table->string('brand_image')->nullable();
             $table->text('brand_description');
             $table->tinyInteger('is_active')->default(1);
+            $table->tinyInteger('is_menu')->default(0);
             $table->timestamps();
         });
     }

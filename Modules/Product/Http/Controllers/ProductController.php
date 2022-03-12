@@ -77,8 +77,6 @@ class ProductController extends Controller
                 'products_image.0.required' => 'Image must be chosen!, at least one image'
             ]);
 
-
-            dd($request->all());
             if($validator) {
                 $stored = $this->service->insertProduct($request->all());
                 if($stored){

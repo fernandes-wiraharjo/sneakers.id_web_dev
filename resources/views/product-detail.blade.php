@@ -121,7 +121,10 @@
                                 "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
                               }'
                             >
-                                <div id="image-{{$product->id}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$product->id}}">
+                                @php
+                                    $index = 1;
+                                @endphp
+                                <div id="image-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="0">
                                     @php
                                         $image_size = getimagesize(getImage($product->image, 'products'));
                                         $ratio_main_image = $image_size[0] / $image_size[1];
@@ -147,7 +150,7 @@
                                 </div>
                                 @foreach ($product->images as $item)
                                     @if ($product->image != $item->image_url)
-                                        <div id="image-{{$item->id}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$item->id}}">
+                                        <div id="image-{{$index}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$index}}">
                                             @php
                                                 $image_size = getimagesize(getImage($item->image_url, 'products'));
                                                 $ratio = $image_size[0] / $image_size[1];
@@ -171,12 +174,18 @@
                                                 </noscript>
                                             </div>
                                         </div>
+                                        @php
+                                            $index++;
+                                        @endphp
                                     @endif
                                 @endforeach
                             </div>
                             <div class="Product__SlideshowNav Product__SlideshowNav--thumbnails">
                                 <div class="Product__SlideshowNavScroller">
-                                    <span data-index="{{$product->id}}" data-image-id="{{$product->id}}" class="Product__SlideshowNavImage AspectRatio {{ $product->id == 0 ? 'is-selected' : ''}}" style="--aspect-ratio: {{ $ratio_main_image }};">
+                                    @php
+                                        $index = 1;
+                                    @endphp
+                                    <span data-index="0" data-image-id="0" class="Product__SlideshowNavImage AspectRatio is-selected" style="--aspect-ratio: {{ $ratio_main_image }};">
                                         <img src="{{ getImage($product->image, 'products') }}" />
                                     </span>
                                     @foreach ($product->images as $key => $item)
@@ -185,9 +194,12 @@
                                             $image_size = getimagesize(getImage($item->image_url, 'products'));
                                             $ratio_image = $image_size[0] / $image_size[1];
                                         @endphp
-                                            <span data-index="{{$key}}" data-image-id="{{$item->id}}" class="Product__SlideshowNavImage AspectRatio {{ $key == 0 ? 'is-selected' : ''}}" style="--aspect-ratio: {{ $ratio_image }};">
+                                            <span data-index="{{$index}}" data-image-id="{{$index}}" class="Product__SlideshowNavImage AspectRatio" style="--aspect-ratio: {{ $ratio_image }};">
                                                 <img src="{{ getImage($item->image_url, 'products') }}" />
                                             </span>
+                                            @php
+                                                $index++;
+                                            @endphp
                                         @endif
                                     @endforeach
                                 </div>
@@ -319,7 +331,7 @@
                                                 "id": {{ $product->id }},
                                                 "title": "{{ $product->product_name }}",
                                                 "handle": "-",
-                                                "description": "{!! $product->description !!}",
+                                                "description": "{{ ($product->description) }}",
                                                 "published_at": "2022-02-14T13:24:07+07:00",
                                                 "created_at": "2022-02-14T07:43:19+07:00",
                                                 "vendor": "{{ $product->detail->brand->brand_title }}",
@@ -603,6 +615,8 @@
                     <div class="pswp__scroll-wrap">
                         <!-- Container that holds slides. Do not remove as content is dynamically added -->
                         <div class="pswp__container">
+                            <div class="pswp__item"></div>
+                            <div class="pswp__item"></div>
                             <div class="pswp__item"></div>
                             <div class="pswp__item"></div>
                             <div class="pswp__item"></div>

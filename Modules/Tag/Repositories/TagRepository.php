@@ -56,6 +56,13 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
       return $this->model->findOrFail($id);
   }
 
+  public function getTagByName($keyword){
+      return $this->model
+        ->where('tag_title', 'LIKE', '%'.$keyword.'%')
+        ->where('tag_description', 'LIKE', '%'.$keyword.'%')
+        ->first();
+  }
+
   public function deleteTag($id){
 
     $delete = $this->getTagById($id);

@@ -99,6 +99,28 @@ class ProductList extends Component
             if(empty($this->signature)) $this->signature = null;
         }
 
+        if($this->keyword != 'all') {
+            $keyword = str_replace('-', ' ', $this->keyword);
+            $keyword_array = explode('.', $keyword);
+            if(count($keyword_array) >= 2){
+                $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
+                $brand = $brandRepository->getBrandByName($keyword_array[1]);
+                $brand_id = $brand ? $brand->id : null;
+                $this->brand[] = $brand_id;
+                if($keyword_array[0] != 'all'){
+                    $tag = $tagRepository->getTagByName($keyword_array[0]);
+                    $tag_id = $tag ? $tag->id : null;
+                    $this->tag[] = $tag_id;
+                }
+            } else {
+                $tag = $tagRepository->getTagByName($keyword);
+                $tag_id = $tag ? $tag->id : null;
+                $this->tag[] = $tag_id;
+            }
+        } else {
+            $this->search = null;
+        }
+
         $products = $productRepository->getProductWhereLike($where_column, $this->search ?? '')
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){
@@ -110,7 +132,7 @@ class ProductList extends Component
                                         $q->whereIn('size_id', $sizes);
                                     });
                                 })
-                                ->when($this->tag, function ($query, $tags){
+                                ->when($this->tag, function ($query, $tags) {
                                     return $query->whereHas('tags', function ($q) use ($tags){
                                         $q->whereIn('tag_id', $tags);
                                     });
@@ -124,26 +146,8 @@ class ProductList extends Component
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
                                         $q->whereIn('signature_player_id', $signatures);
                                     });
-                                });
-
-        if($this->keyword != 'all') {
-            $keyword = str_replace('-', ' ', $this->keyword);
-            $brand = $brandRepository->getBrandByName($keyword);
-            $brand_id = $brand ? $brand->id : '';
-            $products = $products->whereHas('tags', function($q) use ($keyword){
-                $q->orWhere('tag_title', 'LIKE', '%'.$keyword.'%');
-            })
-            ->whereHas('categories', function($q) use ($keyword){
-                $q->orWhere('category_title', 'LIKE', '%'.$keyword.'%');
-            })
-            ->whereHas('detail', function($q) use ($brand_id){
-                $q->orWhere('brand_id', $brand_id ?? '');
-            })
-            ->orderBy($this->sort_column, $this->sort_by)
-            ->paginate(40);
-        } else {
-            $products = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
-        }
+                                })
+                                ->orderBy($this->sort_column, $this->sort_by)->paginate(40);
 
         $data['products'] = $products;
         return view('livewire.product-list', $data);

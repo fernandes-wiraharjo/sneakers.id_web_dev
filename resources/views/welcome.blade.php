@@ -54,7 +54,7 @@
                     </div>
                     <div class="Container">
                         <div class="SectionFooter">
-                            <a href="/collections/newarrivals" class="Button Button--primary">SEE MORE</a>
+                            <a href="/collections/new-release" class="Button Button--primary">SEE MORE</a>
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                     </div>
                     <div class="Container">
                         <div class="SectionFooter">
-                            <a href="/collections/best-sellers" class="Button Button--primary">SEE MORE</a>
+                            <a href="/collections/best-seller" class="Button Button--primary">SEE MORE</a>
                         </div>
                     </div>
                 </div>

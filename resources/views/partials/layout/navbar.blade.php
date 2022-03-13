@@ -22,9 +22,10 @@
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">FEATURED<span class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
-                                    <div class="Collapsible"><a href="/collections/newarrivals" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
-                                    <div class="Collapsible"><a href="/collections/best-sellers" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL PRODUCTS</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'featured') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW FEATURED</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'new-release') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'best-seller') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
                                 </div>
                             </div>
                         </div>
@@ -33,9 +34,9 @@
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">{{ strtoupper($item->brand_title) }}<span class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
-                                    <div class="Collapsible"><a href="/collections/newarrivals" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
-                                    <div class="Collapsible"><a href="/collections/best-sellers" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'new-release.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'best-seller.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +130,10 @@
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'all') }}" class="Link Link--secondary">ALL </a>
+                                            <a href="{{ route('collections', 'all') }}" class="Link Link--secondary">ALL PRODUCTS</a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'featured') }}" class="Link Link--secondary">FEATURED </a>
                                         </li>
                                         <li class="Linklist__Item">
                                             <a href="{{ route('collections', 'new-release') }}" class="Link Link--secondary">NEW RELEASES </a>

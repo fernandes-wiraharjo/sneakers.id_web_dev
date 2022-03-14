@@ -3,6 +3,7 @@
 namespace Modules\Banner\Repositories;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Modules\Banner\Entities\Banner;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
@@ -63,6 +64,12 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function deleteBanner($id){
+    $banner = $this->getBannerById($id);
+    $image_path = public_path("/images/banner/".$banner->banner_image);
+    // Value is not URL but directory file path
+    if(File::exists($image_path)) {
+        File::delete($image_path);
+    }
       return $this->getBannerById($id)->delete();
   }
 

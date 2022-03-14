@@ -8,21 +8,9 @@
         <div id="shopify-section-slideshow" class="shopify-section shopify-section--slideshow">
             <section id="section-slideshow" data-section-id="slideshow" data-section-type="slideshow">
                 <div class="Slideshow">
-                    <div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--insideDots"
-                        data-flickity-config='{
-                            "prevNextButtons": false,
-                            "setGallerySize": true,
-                            "adaptiveHeight": true,
-                            "wrapAround": true,
-                            "dragThreshold": 15,
-                            "pauseAutoPlayOnHover": false,
-                            "autoPlay": 6000,
-                            "pageDots": true
-                          }'>
-                        @livewire('banner-image')
-                    </div>
-                </div>
 
+                        @livewire('banner-image')
+                </div>
                 <span id="section-slideshow-end" class="Anchor"></span>
             </section>
         </div>

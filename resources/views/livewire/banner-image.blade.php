@@ -1,3 +1,14 @@
+<div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--insideDots"
+                        data-flickity-config='{
+                            "prevNextButtons": false,
+                            "setGallerySize": true,
+                            "adaptiveHeight": true,
+                            "wrapAround": true,
+                            "dragThreshold": 15,
+                            "pauseAutoPlayOnHover": false,
+                            "autoPlay": 6000,
+                            "pageDots": true
+                          }'>
 @foreach ($banner as $key => $item)
 @php
     $image_size = getimagesize(getImage($item->banner_image, 'banner'));
@@ -56,3 +67,4 @@
     </div>
 </div>
 @endforeach
+</div>

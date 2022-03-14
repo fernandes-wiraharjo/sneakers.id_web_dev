@@ -8,5 +8,12 @@
         $('.Product__SlideshowNavImage').eq($(this).index()).addClass('is-selected');
         $('.flickity-page-dots .dot').removeClass('is-selected')
         $('.flickity-page-dots .dot').eq($(this).index()).addClass('is-selected');
-    })
+    });
+
+    $('.Popover__Value').click(function(){
+        console.log('clicked!');
+        $('html').removeClass('no-scroll');
+    });
+
+    var product_variants_removed = [];
 </script>

@@ -16,9 +16,11 @@
     }
 
     #pinBoot {
+        /* margin-bottom: 100px; */
         position: relative;
         max-width: 100%;
         width: 100%;
+        padding: 0;
     }
 
     img {
@@ -59,7 +61,6 @@ stylize any heading tags withing white-panel below
         height: -webkit-fill-available;
         width: -webkit-fill-available;
         display: block;
-        position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
@@ -67,6 +68,8 @@ stylize any heading tags withing white-panel below
 
     .Modal {
         background-color: rgba(0, 0, 0, 0.322) !important;
+        max-width: calc(100vw);
+        max-height: calc(var(--window-height)) !important;
     }
 
     .modal-content {
@@ -84,9 +87,35 @@ stylize any heading tags withing white-panel below
         border-bottom: none;
     }
 
+    .modal-open {
+        position: relative;
+    }
+
     .close {
         color: white !important;
         opacity: unset !important;
+    }
+
+    .pagination-section {
+        /* position: fixed; */
+        display: block;
+        text-align: center;
+        /* margin-top: inherit; */
+    }
+
+    @media only screen and (max-width: 715px) {
+        .content {
+            padding-bottom: 0;
+        }
+
+        .pagination {
+            position: unset;
+            margin-top: 150px;
+        }
+    }
+
+    .pagination {
+        position: unset;
     }
 
 </style>
@@ -95,20 +124,26 @@ stylize any heading tags withing white-panel below
     @include('partials.layout.navbar')
 
     <main id="main" role="main">
-        <section id="pinBoot">
-            @foreach ($lookbook as $item)
-                    <article class="white-panel">
-                        <p>
-                            <span>
-                                {{$item->look_book_title}}
-                            </span>
-                        </p>
-                        <a  class="pop" href="#" data-id="{{$item->id}}">
-                            <img id="imageresource{{$item->id}}" src="{{ getImage($item->look_book_image, 'lookbook')}}" alt="{{$item->look_book_title}}">
-                        </a>
-                    </article>
-            @endforeach
-        </section>
+        <div class="content">
+            <section id="pinBoot">
+                @foreach ($lookbook as $item)
+                        <article class="white-panel">
+                            <p>
+                                <span>
+                                    {{$item->look_book_title}}
+                                </span>
+                            </p>
+                            <a  class="pop" href="#" data-id="{{$item->id}}">
+                                <img id="imageresource{{$item->id}}" src="{{ getImage($item->look_book_image, 'lookbook')}}" alt="{{$item->look_book_title}}">
+                            </a>
+                        </article>
+                @endforeach
+
+            </section>
+            <div class="pagination-section">
+                {{$lookbook->links()}}
+            </div>
+        </div>
 
         @foreach ($lookbook as $item)
         <!-- Creates the bootstrap modal where the image will appear -->
@@ -125,10 +160,6 @@ stylize any heading tags withing white-panel below
             </div>
         </div>
         @endforeach
-
-        <div class="text-center">
-            {{$lookbook->links()}}
-        </div>
     </main>
 
     <script>
@@ -283,7 +314,8 @@ stylize any heading tags withing white-panel below
 
         })(jQuery, window, document);
 
-        $(".pop").on("click", function() {
+        $(".pop").on("click", function(e) {
+            e.preventDefault();
             var id = $(this).attr('data-id');
             $('#imagemodal'+id+' #imagepreview'+id).attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
             $('#imagemodal'+id).modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function

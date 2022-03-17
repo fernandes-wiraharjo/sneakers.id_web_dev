@@ -7,9 +7,10 @@
 5. ``` npm install ```
 
 Updating `migrations`
-``` php artisan migrate:fresh --seed```
+``` php artisan migrate:fresh```
 ``` php artisan migrate --path=database/migrations/* ```
 ``` php artisan migrate --path=database/migrations/*/* ```
+``` php artisan db:seed ```
 
 # Using Library
 * hexters/ladmin

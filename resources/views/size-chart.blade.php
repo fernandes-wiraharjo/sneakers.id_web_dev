@@ -16,7 +16,7 @@
         }
 
         .table-container {
-            margin-top: 15%;
+            /* margin-top: 15%; */
             /* margin-bottom: 5%; */
             margin-right:auto;
             margin-left:auto;
@@ -26,11 +26,13 @@
             min-height:50vh;
             max-height: 85vh;
             height: 800px;
-            position: relative;
+            /* position: relative; */
         }
 
         .table {
             padding-top: 10%;
+            padding-left: 10%;
+            padding-right: 10%;
             width:100%;
             border:1px solid $color-form-highlight;
             overflow-x: auto;
@@ -88,6 +90,17 @@
                 font-size:24px;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+        }
+
+        @media only screen and (max-width: 715px) {
+            .table-container {
+                position: relative;
+            }
+
+            .table {
+                padding-left: unset;
+                padding-right: unset;
             }
         }
     </style>

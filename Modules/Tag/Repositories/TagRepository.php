@@ -26,19 +26,7 @@ class TagRepository extends Repository implements MasterRepositoryInterface {
     $tag = $this->tagService->updateTag($request);
 
     $get_tag = $this->model->findOrFail($id);
-    $data = $request->all();
-    if($data['tag_code'] != $get_tag->tag_code){
 
-      $updated = $get_tag->update([
-        'is_active' => false
-      ]);
-
-      if($updated){
-        $tag['is_active'] = $data['is_active'];
-
-        return $this->model->create($tag);
-      }
-    }
     return $get_tag->update($tag);
   }
 

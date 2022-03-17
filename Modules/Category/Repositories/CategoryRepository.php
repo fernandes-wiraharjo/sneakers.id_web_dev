@@ -26,19 +26,7 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
     $category = $this->categoryService->updateCategory($request);
 
     $get_category = $this->model->findOrFail($id);
-    $data = $request->all();
-    if($data['category_code'] != $get_category->category_code){
 
-      $updated = $get_category->update([
-        'is_active' => false
-      ]);
-
-      if($updated){
-        $category['is_active'] = $data['is_active'];
-
-        return $this->model->create($category);
-      }
-    }
     return $get_category->update($category);
   }
 

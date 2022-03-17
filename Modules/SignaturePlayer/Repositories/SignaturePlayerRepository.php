@@ -26,19 +26,7 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
     $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
 
     $get_signaturePlayer = $this->model->findOrFail($id);
-    $data = $request->all();
-    if($data['signature_code'] != $get_signaturePlayer->signature_code){
 
-      $updated = $get_signaturePlayer->update([
-        'is_active' => false
-      ]);
-
-      if($updated){
-        $signaturePlayer['is_active'] = $data['is_active'];
-
-        return $this->model->create($signaturePlayer);
-      }
-    }
     return $get_signaturePlayer->update($signaturePlayer);
   }
 

@@ -26,19 +26,7 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
     $brand = $this->brandService->updateBrand($request);
 
     $get_brand = $this->model->findOrFail($id);
-    $data = $request->all();
-    if($data['brand_code'] != $get_brand->brand_code){
 
-      $updated = $get_brand->update([
-        'is_active' => false
-      ]);
-
-      if($updated){
-        $brand['is_active'] = $data['is_active'];
-
-        return $this->model->create($brand);
-      }
-    }
     return $get_brand->update($brand);
   }
 

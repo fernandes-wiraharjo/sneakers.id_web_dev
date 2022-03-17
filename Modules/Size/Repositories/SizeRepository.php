@@ -33,39 +33,24 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
 
     $data = $request->all();
 
-    if($data['size_code'] != $get_size->size_code){
+    $updated = $get_size->update($size);
 
-      $updated = $get_size->update([
-        'is_active' => false
-      ]);
+    if($updated){
+        foreach($data['size'] as $item) {
+            $exists = $this->getSizeChartById($item['size_chart_id']);
 
-      if($updated){
-        $size['is_active'] = $data['is_active'];
-
-        $this->model->create($size);
-
-        return true;
-      }
-    } else {
-      $updated = $get_size->update($size);
-
-      if($updated){
-          foreach($data['size'] as $item) {
-              $exists = $this->getSizeChartById($item['size_chart_id']);
-
-              if ($exists && ( $item['size_name'] != $exists->size_name || $item['size_value'] != $exists->size_value )) {
-                  $this->updateSizeChart($item['size_chart_id'], [
-                      'size_name' => $item['size_name'],
-                      'size_value' => $item['size_value']]);
-              } elseif (empty($item['size_chart_id'])) {
-                  $this->createSizeChart([
-                      'size_id' => $id,
-                      'size_name' => $item['size_name'],
-                      'size_value' => $item['size_value']
-                  ]);
-              }
-          }
-      }
+            if ($exists && ( $item['size_name'] != $exists->size_name || $item['size_value'] != $exists->size_value )) {
+                $this->updateSizeChart($item['size_chart_id'], [
+                    'size_name' => $item['size_name'],
+                    'size_value' => $item['size_value']]);
+            } elseif (empty($item['size_chart_id'])) {
+                $this->createSizeChart([
+                    'size_id' => $id,
+                    'size_name' => $item['size_name'],
+                    'size_value' => $item['size_value']
+                ]);
+            }
+        }
     }
     return true;
   }
@@ -131,6 +116,6 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getSizeIdAndName(){
-      return $this->model->get()->pluck('id', 'size_title');
+      return $this->model->where('is_active', 1)->get()->pluck('id', 'size_title');
   }
 }

@@ -70,7 +70,7 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
     if(File::exists($image_path)) {
         File::delete($image_path);
     }
-      return $this->getBannerById($id)->delete();
+    return $this->getBannerById($id)->delete();
   }
 
   public function getBannerOrdered($limit = 5, $offset = 0){

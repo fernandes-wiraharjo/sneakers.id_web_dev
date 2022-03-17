@@ -73,6 +73,14 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
   }
 
   public function deleteLookBook($id){
-      return $this->getLookBookById($id)->delete();
+    $lookbook = $this->getLookBookById($id);
+
+    $image_path = public_path("/images/lookbook/".$lookbook->look_book_image);
+    // Value is not URL but directory file path
+    if(File::exists($image_path)) {
+        File::delete($image_path);
+    }
+
+    return $lookbook->delete();
   }
 }

@@ -11,9 +11,9 @@
     });
 
     $('.Popover__Value').click(function(){
-        console.log('clicked!');
         $('html').removeClass('no-scroll');
     });
 
     var product_variants_removed = [];
 </script>
+@stack('scripts')

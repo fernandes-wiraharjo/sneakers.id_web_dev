@@ -1,6 +1,23 @@
+@push('styles')
+    <style>
+        @media only screen and (max-width: 1007px) {
+           .Drawer__Main {
+                padding-top: 35px;
+                padding-left: 20px !important;
+            }
+        }
+
+        .Drawer__Main {
+            padding-left: 20px !important;
+        }
+    </style>
+@endpush
 <div class="CollectionMain" style="padding-top: 10rem; padding-botom: 5rem; margin-bottom: 5rem;">
     <div class="CollectionToolbar CollectionToolbar--top CollectionToolbar--reverse">
         <div class="CollectionToolbar__Group">
+            <a class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading Text--subdued u-h6 hidden-lap-and-up" data-action="open-drawer" data-drawer-id="collection-filter-drawer" aria-label="Show filters">
+                Filter
+            </a>
             <a class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
                 aria-label="Show sort by" aria-haspopup="true" aria-expanded="false"
                 aria-controls="collection-sort-popover">
@@ -11,6 +28,21 @@
                 </svg>
             </a>
         </div>
+        <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true" tabindex="-1" style="max-height: 929px;">
+            <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">
+              <span class="Drawer__Title Heading u-h4">Filters</span>
+                <a class="Drawer__Close Icon-Wrapper--clickable" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="Close navigation">
+                    <svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
+                        <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
+                    </svg>
+                </a>
+            </header>
+            <div class="Drawer__Content">
+              <div class="Drawer__Main" data-scrollable="" style="padding-left: 20px !important;">
+                @include('components.filters', $filters)
+              </div>
+            </div>
+          </div>
         <div id="collection-sort-popover" class="Popover Popover--positionBottom Popover--alignRight" aria-hidden="true" style="top: 233px; right: 0px;">
             <header class="Popover__Header">
                 <a class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
@@ -165,4 +197,13 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    <script>
+        $(".Drawer__Main .bc-sf-filter-block-content").click(function() {
+            console.log('clicked');
+            $('.PageOverlay').removeClass('is-visible')
+            $('html').removeClass('no-scroll');
+        });
+    </script>
+@endpush
 

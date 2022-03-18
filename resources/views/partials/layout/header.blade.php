@@ -118,5 +118,6 @@
             font-family: 'Montserrat', sans-serif !important;
         }
     </style>
+    @stack('styles')
     @livewireStyles
 </head>

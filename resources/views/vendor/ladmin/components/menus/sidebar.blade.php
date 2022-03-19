@@ -10,7 +10,7 @@
     }
 @endphp
 
-<div class="menu-item">
+{{-- <div class="menu-item">
     <a class="menu-link {{ request()->is(config('ladmin.prefix', 'administrator')) ? 'active' : null }}"
         href="{{ route('administrator.index') }}">
         <span class="menu-icon">
@@ -24,7 +24,7 @@
         <span class="menu-title">Dashboard
         </span>
     </a>
-</div>
+</div> --}}
 
 {!! $viewMenu($menu->sidebar) !!}
 

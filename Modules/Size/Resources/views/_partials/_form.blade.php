@@ -13,7 +13,6 @@
 <x-ladmin-form-group name="size_description" label="Description *">
 	<textarea placeholder="Size Description" class="form-control" name="size_description" id="size_description">{{ old('size_description', $size->size_description) }}</textarea>
 </x-ladmin-form-group>
-
 <hr>
 <h5>Size Charts</h5>
 <!--begin::Repeater-->
@@ -25,13 +24,17 @@
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$edit ? ($size->charts()->count() > 0 ? $size->charts[0]->id : '') : ''}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value=" @if($edit){{ $size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "US – Men's")->first()->id ?? "")
+                                 : '' }}@endif" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="US – Men's" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
-                                value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[0]->size_value : '') : '' }}"/>
+                                value="@if($edit){{ ($size->charts()->count() > 0 ?
+                                        ($size->charts()->where('size_name', "US – Men's")->first()->size_value ?? '')
+                                     : '')}}@endif"/>
                         </div>
                     </div>
                 </div>
@@ -39,13 +42,17 @@
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$edit ? ($size->charts()->count() > 0 ? $size->charts[1]->id : '') : ''}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value="@if($edit){{ $size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "US – Women's")->first()->id ?? "")
+                                : '' }}@endif" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="US – Women's" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
-                                value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[1]->size_value : '') : '' }}"/>
+                            value="@if($edit){{ ($size->charts()->count() > 0 ?
+                                        ($size->charts()->where('size_name', "US – Women's")->first()->size_value ?? '')
+                                    : '')}}@endif"/>
                         </div>
                     </div>
                 </div>
@@ -53,13 +60,17 @@
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$edit ? ($size->charts()->count() > 0 ? $size->charts[2]->id : '') : ''}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value="@if($edit){{ $size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "US – Kid's")->first()->id ?? "")
+                                : '' }}@endif" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="US – Kid's" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
-                                value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[2]->size_value : '') : '' }}" />
+                            value="@if($edit){{ ($size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "US – Kid's")->first()->size_value ?? '')
+                                : '')}} @endif"/>
                         </div>
                     </div>
                 </div>
@@ -67,13 +78,17 @@
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$edit ? ($size->charts()->count() > 0 ? $size->charts[3]->id : '') : ''}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value="@if($edit){{ $size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "UK")->first()->id ?? "")
+                                : '' }}@endif" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="UK" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
-                                value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[3]->size_value : '') : '' }}"/>
+                            value="@if($edit){{ ($size->charts()->count() > 0 ?
+                                ($size->charts()->where('size_name', "UK")->first()->size_value ?? '')
+                                : '') }}@endif"/>
                         </div>
                     </div>
                 </div>
@@ -81,13 +96,17 @@
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$edit ? ($size->charts()->count() > 0 ? $size->charts[4]->id : '') : ''}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value="@if($edit){{ $size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "CM")->first()->id ?? "")
+                                : '' }}@endif" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="CM" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
-                                value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[4]->size_value : '') : '' }}"/>
+                            value="@if($edit){{ ($size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "CM")->first()->size_value ?? '')
+                                : '')}}@endif"/>
                         </div>
                     </div>
                 </div>
@@ -95,13 +114,17 @@
                     <div class="form-group row mb-5">
                         <div class="col-md-3">
                             <label class="form-label">Name :</label>
-                            <input type="hidden" class="form-control" value="{{$edit ? ($size->charts()->count() > 0 ? $size->charts[5]->id : '') : ''}}" name="size_chart_id">
+                            <input type="hidden" class="form-control" value="@if($edit){{ $size->charts()->count() > 0 ?
+                                    ($size->charts()->where('size_name', "EU")->first()->id ?? "")
+                                : '' }}@endif" name="size_chart_id">
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_name" value="EU" readonly/>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Value :</label>
                             <input type="text" class="form-control mb-2 mb-md-0" name="size_value"  placeholder="Enter Size Chart Value"
-                            value="{{ $edit ? ($size->charts()->count() > 0 ? $size->charts[5]->size_value : '') : '' }}"/>
+                            value="@if($edit){{ ($size->charts()->count() > 0 ?
+                                        ($size->charts()->where('size_name', "EU")->first()->size_value ?? '')
+                                    : '')}}@endif"/>
                         </div>
                     </div>
                 </div>

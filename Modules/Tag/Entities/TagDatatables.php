@@ -31,17 +31,24 @@ class TagDatatables  extends DataTable
                 if($item->products()->count() > 0){
                     $type = 'restrict';
                 }
+
+                if($item->tag_code == 'BEST-SELLER' || $item->tag_code == 'FEATURED' || $item->tag_code == 'NEW-ARRIVAL' || $item->tag_code == 'NEW-RELEASE') {
+                    $destory_button = null;
+                } else {
+                    $destory_button = [
+                        'gate' => 'administrator.master-data.tag.destroy',
+                        'url' => route('administrator.master-data.tag.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                        'type' => $type ?? null
+                    ];
+                }
+
                 return view('components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.tag.update',
                       'url' => route('administrator.master-data.tag.edit', [$item->id, 'back' => request()->fullUrl()])
                     ],
-                    'destroy' => [
-                      'gate' => 'administrator.master-data.tag.destroy',
-                      'url' => route('administrator.master-data.tag.destroy', [$item->id, 'back' => request()->fullUrl()]),
-                      'type' => $type ?? null
-                    ]
+                    'destroy' => $destory_button
                   ]);
             });
     }

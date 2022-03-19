@@ -14,13 +14,13 @@
     {{--end::Search--}}
 
     {{--begin::Activities--}}
-    <div class="d-flex align-items-center {{ $toolbarButtonMarginClass }}">
+    {{-- <div class="d-flex align-items-center {{ $toolbarButtonMarginClass }}"> --}}
         {{--begin::drawer toggle--}}
-        <div class="btn btn-icon btn-active-light-primary {{ $toolbarButtonHeightClass }}" id="kt_activities_toggle">
-            {!! theme()->getSvgIcon("icons/duotune/general/gen032.svg", $toolbarButtonIconSizeClass) !!}
-        </div>
+        {{-- <div class="btn btn-icon btn-active-light-primary {{ $toolbarButtonHeightClass }}" id="kt_activities_toggle"> --}}
+            {{-- {!! theme()->getSvgIcon("icons/duotune/general/gen032.svg", $toolbarButtonIconSizeClass) !!} --}}
+        {{-- </div> --}}
         {{--end::drawer toggle--}}
-    </div>
+    {{-- </div> --}}
     {{--end::Activities--}}
 
     {{--begin::Notifications--}}

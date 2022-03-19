@@ -22,7 +22,7 @@
     {{--begin::Brand--}}
     <div class="aside-logo flex-column-auto" id="kt_aside_logo">
         {{--begin::Logo--}}
-        <a class="navbar-brand mr-0 p-3" href="{{ route('administrator.index') }}">
+        <a class="navbar-brand mr-0 p-3" href="{{ route('administrator.product.index') }}">
             @if (config('ladmin.logo'))
             <img src="{{ config('ladmin.logo') }}" alt="Logo" class="h-25px logo">
             @else

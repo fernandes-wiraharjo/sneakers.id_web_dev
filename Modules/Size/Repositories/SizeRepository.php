@@ -67,7 +67,7 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
           $this->createSizeChart([
             'size_id' => $inserted->id,
             'size_name' => $item['size_name'],
-            'size_value' => $item['size_value']
+            'size_value' => $item['size_value'] ?? ''
           ]);
         }
     }

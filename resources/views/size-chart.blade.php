@@ -57,9 +57,9 @@
             width:100%;
             /* padding:($half-spacing-unit * 1.5) 0; */
 
-            &:nth-of-type(odd) {
+            /* &:nth-of-type(odd) {
                 background:$color-form-highlight;
-            }
+            } */
         }
 
         .table-data, .header__item {
@@ -124,9 +124,10 @@
                                 <div class="table-data">{{ $item->size_title }}</div>
                                 @if ($item->charts->count() > 0)
                                     @foreach ($item->charts as $item_chart)
-                                        <div class="table-data">{{ $item_chart->size_value }}</div>
+                                        <div class="table-data">{{ $item_chart->size_value ?? '-' }}</div>
                                     @endforeach
                                 @else
+                                    <div class="table-data">-</div>
                                     <div class="table-data">-</div>
                                     <div class="table-data">-</div>
                                     <div class="table-data">-</div>

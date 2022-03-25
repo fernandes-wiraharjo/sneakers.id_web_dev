@@ -118,7 +118,7 @@
                     data-desktop-count="4">
                     @foreach ($products as $product)
                     @php
-                        $image_size = getimagesize(getImage($product->image, 'products'));
+                        $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
                         $ratio = $image_size[0] / $image_size[1];
                     @endphp
                         <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
@@ -133,7 +133,7 @@
                                             @if($product->image != $image->image_url)
                                                 <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
                                                 {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                                    data-src="{{ getImage($image->image_url, 'products') }}"
+                                                    data-src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
                                                     data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
                                                     alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
                                             @endif
@@ -141,7 +141,7 @@
 
                                         <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                                         {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                            data-src="{{ getImage($product->image, 'products') }}"
+                                            data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
                                             data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
                                             alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
 

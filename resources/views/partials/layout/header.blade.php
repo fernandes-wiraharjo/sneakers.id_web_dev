@@ -1,4 +1,3 @@
-<head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport"
@@ -120,4 +119,12 @@
     </style>
     @stack('styles')
     @livewireStyles
+    <style>
+                .grid-flow {
+            display: grid;
+            grid-auto-flow: row;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+    </style>
 </head>

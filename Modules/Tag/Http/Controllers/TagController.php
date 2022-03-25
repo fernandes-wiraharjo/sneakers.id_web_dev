@@ -113,11 +113,11 @@ class TagController extends Controller
 
             if($old_data->tag_code == $data['tag_code']){
                 $validation = [
-                    'tag_code' => 'required|exists:products,tag_code|max:255',
+                    'tag_code' => 'required|exists:tags,tag_code|max:255',
                 ];
             } else {
                 $validation = [
-                    'tag_code' => 'required|unique:products,tag_code|max:255',
+                    'tag_code' => 'required|unique:tags,tag_code|max:255',
                 ];
             }
 

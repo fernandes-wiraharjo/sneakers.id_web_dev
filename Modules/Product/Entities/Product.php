@@ -5,6 +5,7 @@ namespace Modules\Product\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Hexters\Ladmin\LadminLogable;
+use Modules\Brand\Entities\Brand;
 
 class Product extends Model
 {
@@ -45,5 +46,10 @@ class Product extends Model
 
     public function signatures(){
         return $this->belongsToMany(\Modules\SignaturePLayer\Entities\SignaturePLayer::class, 'product_signature', 'product_id', 'signature_player_id');
+    }
+
+    public function brand()
+    {
+        return $this->hasOneThrough(Brand::class, ProductDetail::class, 'product_id', 'id', 'id', 'brand_id');
     }
 }

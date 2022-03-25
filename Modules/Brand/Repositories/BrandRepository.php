@@ -61,6 +61,6 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getBrandIdAndName(){
-      return $this->model->get()->pluck('id', 'brand_title');
+      return $this->model->where('is_active', 1)->get()->pluck('id', 'brand_title');
   }
 }

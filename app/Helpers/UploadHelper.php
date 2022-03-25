@@ -59,8 +59,13 @@ if(!function_exists('imageUploadProduct')) {
 
         switch ($type) {
             case 'public' :
+                $path = public_path($path);
+
+                if(!File::isDirectory($path)){
+                    File::makeDirectory($path, 0777, true, true);
+                }
+
                 foreach($resolution as $item){
-                    $filePath = public_path($path);
                     $img = Image::make($file->path());
                     if($item == 1800) {
                         $resize_file_name = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$time.'_1800x1800'.'.'.$file->extension();
@@ -70,10 +75,10 @@ if(!function_exists('imageUploadProduct')) {
 
                     $img->resize($item, $item, function ($const) {
                         $const->aspectRatio();
-                    })->save($filePath.'/'.$resize_file_name);
+                    })->save($path.'/'.$resize_file_name);
                 }
 
-                $path = public_path($path);
+
                 $stored = $file->move($path, $imageName);
             break;
             case 'storage' :

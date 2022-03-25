@@ -50,16 +50,16 @@
                 <div class="bc-sf-filter-block-title">
                     <h3><span>SIZE</span></h3>
                 </div>
-                    <div class="bc-sf-filter-block-content no-scrollbar" >
-                        <div class="bc-sf-filter-option-swatch circle-grid">
-                            @foreach ($size as $item)
-                                <span style="margin: 1rem;">
-                                    <input type="checkbox" wire:model="size.{{$item->id}}" value="{{$item->id}}">
-                                    <label>{{ $item->size_title}}</label>
-                                </span>
-                            @endforeach
-                        </div>
+                <div class="bc-sf-filter-block-content" >
+                    <div class="grid-flow">
+                        @foreach ($size as $count => $item)
+                            <span>
+                                <input type="checkbox" wire:model="size.{{$item->id}}" value="{{$item->id}}">
+                                <label>{{ $item->size_title}}</label>
+                            </span>
+                        @endforeach
                     </div>
+                </div>
             </div>
         </div>
     </div>

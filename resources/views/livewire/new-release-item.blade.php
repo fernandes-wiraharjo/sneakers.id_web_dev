@@ -1,6 +1,6 @@
 @foreach ($products as $item)
 @php
-    $image_size = getimagesize(getImage($item->image, 'products'));
+    $image_size = getimagesize(getImage($item->image, 'products/'.$item->product_code));
     $ratio = $image_size[0] / $image_size[1];
 @endphp
 <div class="Carousel__Cell">
@@ -15,7 +15,7 @@
                         @if($item->image != $image->image_url)
                             <img class="ProductItem__Image ProductItem__Image--alternate  Image--lazyLoad Image--fadeIn"
                             {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                data-src="{{ getImage($image->image_url, 'products') }}"
+                                data-src="{{ getImage($image->image_url, 'products/'.$item->product_code) }}"
                                 data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
                                 alt='{{$item->product_name}}' data-image-id="{{$image->id}}" />
                         @endif
@@ -23,7 +23,7 @@
 
                     <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                     {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                        data-src="{{ getImage($item->image, 'products') }}"
+                        data-src="{{ getImage($item->image, 'products/'.$item->product_code) }}"
                         data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
                         alt='{{$item->product_name}}' data-image-id="{{$item->id}}" />
 
@@ -34,13 +34,13 @@
                         {{-- BOX-A2_600x.jpg?v=1644800500 --}}
                             @if($item->image != $image->image_url)
                                 <img class="ProductItem__Image ProductItem__Image--alternate"
-                                    src="{{ getImage($image->image_url, 'products') }}"
+                                    src="{{ getImage($image->image_url, 'products/'.$item->product_code) }}"
                                     alt='{{$item->product_name}}' />
                             @endif
                         @endforeach
 
                         <img class="ProductItem__Image"
-                            src="{{ getImage($item->image, 'products') }}"
+                            src="{{ getImage($item->image, 'products/'.$item->product_code) }}"
                             alt='{{$item->product_name}}' />
 
                     </noscript>

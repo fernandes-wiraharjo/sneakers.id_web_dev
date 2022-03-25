@@ -26,7 +26,7 @@ class ProductDatatables extends DataTable
             // ->filter(function($q) {
 
             // })
-            ->rawColumns(['action', 'id', 'product_name', 'tag', 'size', 'category', 'signature', 'status'])
+            ->rawColumns(['action', 'id', 'product_name', 'tag', 'price', 'category', 'signature', 'status'])
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
               })
@@ -36,21 +36,6 @@ class ProductDatatables extends DataTable
                     foreach($item->tags()->get() as $tag) {
                         $result .= view('components.chips', [
                             'a' => $tag->tag_title,
-                            'b' => ''
-                        ]);
-                    }
-                    return $result;
-                } else {
-                    return '-';
-                }
-
-            })
-            ->addColumn('size', function ($item) {
-                if ($item->sizes()->count() > 0) {
-                    $result = "";
-                    foreach($item->sizes()->get() as $size) {
-                        $result .= view('components.chips', [
-                            'a' => $size->size_title,
                             'b' => ''
                         ]);
                     }
@@ -90,20 +75,32 @@ class ProductDatatables extends DataTable
                 }
 
             })
-            ->editColumn('base_price', function($item) {
-                return 'Rp.' .rupiah_format($item->base_price ?? 0);
+            ->editColumn('price', function($item) {
+
+                $item->retail_price = intval($item->retail_price);
+                $item->after_discount_price = intval($item->after_discount_price);
+
+                if($item->retail_price > $item->after_discount_price && $item->after_discount_price > 0){
+                    $prices = '<span><del>Rp. '.rupiah_format($item->retail_price ?? 0)."</del></span><br> "
+                        ."<span>Rp.".rupiah_format($item->after_discount_price ?? 0)."</span>";
+                } else {
+                    $prices = 'Rp.' .rupiah_format($item->retail_price ?? 0);
+                }
+
+                return $prices;
             })
             ->editColumn('product_name', function ($item) {
                 $image_url = $item->image;
-                return '<div class="d-flex align-items-center">'.
+                return "<span class='badge badge-primary'>".$item->brand->brand_title."</span>".
+                '<div class="d-flex align-items-center">'.
                             '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'" class="symbol symbol-50px">'.
-                            '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'products').');"></span>'.
-                        '</a>'.
-                        '<div class="ms-5">'.
-                            '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'"'.
-                            ' class="text-gray-800 text-hover-primary fs-5 fw-bolder" data-kt-ecommerce-product-filter="product_name">'.$item->product_name.'</a>'.
-                        '</div>'.
-                    '</div>';
+                                '<span class="symbol-label" style="background-image:url('.getImage($image_url ?? '' , 'products/'.$item->product_code).');"></span>'.
+                            '</a>'.
+                            '<div class="ms-5">'.
+                                '<a href="'.route('administrator.product.edit', [$item->id, 'back' => request()->fullUrl()]).'"'.
+                                ' class="text-gray-800 text-hover-primary fs-5 fw-bolder" data-kt-ecommerce-product-filter="product_name">'.$item->product_name.'</a>'.
+                            '</div>'.
+                        '</div>';
             })
             ->editColumn('created_at', function (Product $model) {
                 return $model->created_at->format('d-m-Y H:i');
@@ -155,7 +152,7 @@ class ProductDatatables extends DataTable
         return $model
             ->with(['tags', 'detail'])
             ->crossJoin('product_details as pd', 'pd.product_id', '=', 'products.id')
-            ->select('products.*', 'pd.qty', 'pd.base_price')
+            ->select('products.*', 'pd.qty', 'pd.retail_price', 'pd.after_discount_price')
             ->newQuery();
     }
 
@@ -175,7 +172,6 @@ class ProductDatatables extends DataTable
                     ->responsive(true)
                     ->parameters([
                         'scrollX' => true,
-                        'autoWidth' => false,
                         'processing' => true,
                         'serverSide' => true
                         ])
@@ -200,20 +196,16 @@ class ProductDatatables extends DataTable
             Column::make('product_code')
                 ->title(__('Article Number')),
             Column::make('product_name')
-                ->width(150),
+                ->width(300),
             Column::make('qty')->width(50)
                 ->searchable(false),
-            Column::make('base_price')
+            Column::make('price')
                 ->searchable(false),
             Column::make('tag')
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),
             Column::make('category')
-                ->width(150)
-                ->searchable(false)
-                ->sortable(false),
-            Column::make('size')
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),
@@ -225,9 +217,6 @@ class ProductDatatables extends DataTable
                 ->width(10)
                 ->sortable(false)
                 ->searchable(false),
-            Column::make('created_at')
-                ->searchable(false),
-
         ];
     }
 

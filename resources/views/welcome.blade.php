@@ -8,7 +8,6 @@
         <div id="shopify-section-slideshow" class="shopify-section shopify-section--slideshow">
             <section id="section-slideshow" data-section-id="slideshow" data-section-type="slideshow">
                 <div class="Slideshow">
-
                         @livewire('banner-image')
                 </div>
                 <span id="section-slideshow-end" class="Anchor"></span>

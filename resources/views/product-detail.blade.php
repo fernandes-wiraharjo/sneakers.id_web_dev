@@ -126,25 +126,25 @@
                                 @endphp
                                 <div id="image-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="0">
                                     @php
-                                        $image_size = getimagesize(getImage($product->image, 'products'));
+                                        $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
                                         $ratio_main_image = $image_size[0] / $image_size[1];
                                     @endphp
                                     <div class="AspectRatio AspectRatio--withFallback" style="padding-bottom: 100%; --aspect-ratio: {{$ratio_main_image}};">
                                         <img
                                             class="Image--lazyLoad Image--fadeIn"
-                                            data-src="{{ getImage($product->image, 'products') }}"
+                                            data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
                                             data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]"
                                             data-sizes="auto"
                                             data-expand="-100"
                                             alt='{{ $product->product_name }}'
                                             data-max-width="2000"
                                             data-max-height="2000"
-                                            data-original-src="{{ getImage($product->image, 'products') }}"
+                                            data-original-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
                                         />
 
                                         <span class="Image__Loader"></span>
                                         <noscript>
-                                            <img src="{{ getImage($product->image, 'products') }}" alt='{{ $product->product_name }}' />
+                                            <img src="{{ getImage($product->image, 'products/'.$product->product_code) }}" alt='{{ $product->product_name }}' />
                                         </noscript>
                                     </div>
                                 </div>
@@ -152,25 +152,25 @@
                                     @if ($product->image != $item->image_url)
                                         <div id="image-{{$index}}" class="Product__SlideItem Product__SlideItem--image Carousel__Cell" data-image-position-ignoring-video="12" data-image-position="12" data-image-id="{{$index}}">
                                             @php
-                                                $image_size = getimagesize(getImage($item->image_url, 'products'));
+                                                $image_size = getimagesize(getImage($item->image_url, 'products/'.$product->product_code));
                                                 $ratio = $image_size[0] / $image_size[1];
                                             @endphp
                                             <div class="AspectRatio AspectRatio--withFallback" style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
                                                 <img
                                                     class="Image--lazyLoad Image--fadeIn"
-                                                    data-src="{{ getImage($item->image_url, 'products') }}"
+                                                    data-src="{{ getImage($item->image_url, 'products/'.$product->product_code) }}"
                                                     data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]"
                                                     data-sizes="auto"
                                                     data-expand="-100"
                                                     alt='{{ $product->product_name }}'
                                                     data-max-width="2000"
                                                     data-max-height="2000"
-                                                    data-original-src="{{ getImage($item->image_url, 'products') }}"
+                                                    data-original-src="{{ getImage($item->image_url, 'products/'.$product->product_code) }}"
                                                 />
 
                                                 <span class="Image__Loader"></span>
                                                 <noscript>
-                                                    <img src="/{{ getImage($item->image_url, 'products') }}" alt='{{ $product->product_name }}' />
+                                                    <img src="/{{ getImage($item->image_url, 'products/'.$product->product_code) }}" alt='{{ $product->product_name }}' />
                                                 </noscript>
                                             </div>
                                         </div>
@@ -186,16 +186,16 @@
                                         $index = 1;
                                     @endphp
                                     <span data-index="0" data-image-id="0" class="Product__SlideshowNavImage AspectRatio is-selected" style="--aspect-ratio: {{ $ratio_main_image }};">
-                                        <img src="{{ getImage($product->image, 'products') }}" />
+                                        <img src="{{ getImage($product->image, 'products/'.$product->product_code) }}" />
                                     </span>
                                     @foreach ($product->images as $key => $item)
                                         @if ($product->image != $item->image_url)
                                         @php
-                                            $image_size = getimagesize(getImage($item->image_url, 'products'));
+                                            $image_size = getimagesize(getImage($item->image_url, 'products/'.$product->product_code));
                                             $ratio_image = $image_size[0] / $image_size[1];
                                         @endphp
                                             <span data-index="{{$index}}" data-image-id="{{$index}}" class="Product__SlideshowNavImage AspectRatio" style="--aspect-ratio: {{ $ratio_image }};">
-                                                <img src="{{ getImage($item->image_url, 'products') }}" />
+                                                <img src="{{ getImage($item->image_url, 'products/'.$product->product_code) }}" />
                                             </span>
                                             @php
                                                 $index++;
@@ -207,40 +207,11 @@
                         </div>
                         <h5 data-mce-fragment="1">Detail</h5>
                         <p data-mce-fragment="1"><strong>Size Chart :</strong></p>
-                        <div style="margin: 5% 5%;">
-                            <div class="table-container">
-                                <div class="table">
-                                    <div class="table-header">
-                                        <div class="header__item"><a id="size" class="filter__link" href="#">Size</a></div>
-                                        <div class="header__item"><a id="men" class="filter__link filter__link--number" href="#">US - Men's</a></div>
-                                        <div class="header__item"><a id="woman" class="filter__link filter__link--number" href="#">US - Women's</a></div>
-                                        <div class="header__item"><a id="kids" class="filter__link filter__link--number" href="#">US - Kid's</a></div>
-                                        <div class="header__item"><a id="uk" class="filter__link filter__link--number" href="#">UK</a></div>
-                                        <div class="header__item"><a id="cm" class="filter__link filter__link--number" href="#">CM</a></div>
-                                        <div class="header__item"><a id="eu" class="filter__link filter__link--number" href="#">EU</a></div>
-                                    </div>
-                                    <div class="table-content">
-                                    @foreach ($product->sizes as $item)
-                                    <div class="table-row">
-                                        <div class="table-data">{{ $item->size_title }}</div>
-                                            @if ($item->charts->count() > 0)
-                                                @foreach ($item->charts as $item_chart)
-                                                    <div class="table-data">{{ $item_chart->size_value }}</div>
-                                                @endforeach
-                                            @else
-                                                <div class="table-data">-</div>
-                                                <div class="table-data">-</div>
-                                                <div class="table-data">-</div>
-                                                <div class="table-data">-</div>
-                                                <div class="table-data">-</div>
-                                                <div class="table-data">-</div>
-                                            @endif
-                                    </div>
-                                    @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        <a href="#" class="ProductForm__AddToCart Button Button--primary">
+                            <span>SHOW SIZES</span>
+                        </a>
+
                         <p data-mce-fragment="1"><strong>Signature:</strong></p>
                         <div>
                             @foreach ($product->signatures as $item)

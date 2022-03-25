@@ -10,7 +10,7 @@ const sizeList = JSON.parse(inputElm.dataset.json);
 // Initialize Tagify script on the above inputs
 var sizes = new Tagify(inputElm, {
     whitelist: sizeList,
-    maxTags: 10,
+    maxTags: 30,
     dropdown: {
         maxItems: 20,           // <- mixumum allowed rendered suggestions
         classname: "tagify__inline__suggestions", // <- custom classname for this dropdown, so it could be targeted

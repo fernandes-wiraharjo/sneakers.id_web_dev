@@ -1,5 +1,5 @@
 <div class="mr-5 ml-5 mt-3 p-2 mb-2 text-center">
-    @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products', 'edit' => $edit, 'main_image' => $product->image ?? ''])
+    @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products/'.$product->product_code, 'edit' => $edit, 'main_image' => $product->image ?? ''])
 </div>
 <hr>
 <x-ladmin-form-group name="product_code" label="Article Number *">

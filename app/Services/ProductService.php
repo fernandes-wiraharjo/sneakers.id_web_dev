@@ -24,7 +24,7 @@ class ProductService {
         if($insertedProduct) {
             $idNewProduct = $insertedProduct->id;
 
-            $path = 'images/products';
+            $path = 'images/products/'.$request['product_code'];
 
             if(isset($request['products_image'])){
                 $no = 1;
@@ -70,7 +70,6 @@ class ProductService {
 
             if(!$inserted_product_detail){
                 return false;
-                dump('1');
             }
 
             $sizes = json_decode($request['size']);
@@ -130,238 +129,109 @@ class ProductService {
         ];
         $getProduct = $this->productRepository->getProductById($id);
 
-        if($request['product_code'] != $getProduct->product_code){
+        $updatedProduct = $getProduct->update($product);
 
-            $updated = $getProduct->update([
-              'is_active' => false
-            ]);
-
-            if($updated){
-                $insertedProduct = $this->productRepository->createProduct($product);
-
-                if($insertedProduct) {
-                    $idNewProduct = $insertedProduct->id;
-
-                    $path = 'images/products';
-
-                    if(isset($request['products_image'])){
-                        $no = 1;
-
-                        foreach($request['products_image'] as $key=>$image){
-
-                            $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
-
-                            if(!$do_upload){
-                                abort(500, 'Failed upload image');
-                            } else {
-                                $productImage = [
-                                    'product_id' => $idNewProduct,
-                                    'image_url' => $do_upload
-                                ];
-
-                                $this->productRepository->insertProductImage($productImage);
-
-                                if(isset($request['is_main'][$key])){
-                                    if(intval($request['is_main'][$key])){
-                                        $product_main_image = $do_upload;
-                                        $getProductForUpdate = $this->productRepository->getProductById($idNewProduct);
-
-                                        if($getProductForUpdate) {
-                                            $getProductForUpdate->image = $product_main_image;
-                                            $getProductForUpdate->save();
-                                        }
-                                    }
-                                }
-                            }
-                            $no++;
-                        }
-                    } else {
-                        foreach($getProduct->images as $key=>$image){
-                            $productImage = [
-                                'product_id' => $idNewProduct,
-                                'image_url' => $image->image_url
-                            ];
-
-                            $this->productRepository->insertProductImage($productImage);
-
-                            if(isset($request['is_main'][$key])){
-                                if(intval($request['is_main'][$key])){
-                                    $product_main_image = $image->image_url;
-                                    $getProductForUpdate = $this->productRepository->getProductById($idNewProduct);
-
-                                    if($getProductForUpdate) {
-                                        $getProductForUpdate->image = $product_main_image;
-                                        $getProductForUpdate->save();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    $inserted_product_detail = $this->productRepository->insertProductDetails([
-                        'product_id' => $idNewProduct,
-                        'brand_id' => $request['brand_id'],
-                        'qty' => $request['qty'],
-                        'base_price' => str_replace('.','',$request['base_price']),
-                        'retail_price' => str_replace('.','',$request['retail_price']),
-                        'after_discount_price' => str_replace('.','',$request['after_discount_price'])
-                    ]);
-
-                    if(!$inserted_product_detail){
-                        return false;
-                        dump('1');
-                    }
-
-                    $sizes = json_decode($request['size']);
-                    $categories = json_decode($request['category']);
-                    $tags = json_decode($request['tag']);
-                    $signatures = json_decode($request['signature']);
-
-                    $sizes_id = [];
-                    $categories_id = [];
-                    $tags_id = [];
-                    $signatures_id = [];
-
-                    if(isset($sizes)){
-                        foreach($sizes as $item){
-                            $sizes_id[] = $item->id;
-                        }
-
-                        $this->productRepository->attachProductSizes($idNewProduct, $sizes_id);
-                    }
-
-                    if(isset($categories)){
-                        foreach($categories as $item){
-                            $categories_id[] = $item->id;
-                        }
-
-                        $this->productRepository->attachProductCategories($idNewProduct, $categories_id);
-                    }
-
-                    if(isset($tags)){
-                        foreach($tags as $item){
-                            $tags_id[] = $item->id;
-                        }
-
-                        $this->productRepository->attachProductTags($idNewProduct, $tags_id);
-                    }
-
-                    if(isset($signatures)){
-                        foreach($signatures as $item){
-                            $signatures_id[] = intval($item->value);
-                        }
-
-                        $this->productRepository->attachProductSignatures($idNewProduct, $signatures_id);
-                    }
-
+        if($updatedProduct) {
+            $path = 'images/products/'.$request['product_code'];
+            foreach($request['remove_image'] as $removed_key=>$removed){
+                if(intval($removed)){
+                    $image_name = $request['before_image'][$removed_key];
+                    $deleted = $this->productRepository->deleteProductImageByImageId($image_name, $id);
                 }
             }
 
-        } else {
-            $updatedProduct = $getProduct->update($product);
+            if(isset($request['products_image'])){
+                $no = 1;
+                foreach($request['products_image'] as $key=>$image){
+                    $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
+                    if(!$do_upload){
+                        abort(500, 'Failed upload image');
+                    } else {
+                        $productImage = [
+                            'product_id' => $id,
+                            'image_url' => $do_upload
+                        ];
 
-            if($updatedProduct) {
-                $path = 'images/products';
-                foreach($request['remove_image'] as $removed_key=>$removed){
-                    if(intval($removed)){
-                        $image_name = $request['before_image'][$removed_key];
-                        $deleted = $this->productRepository->deleteProductImageByImageId($image_name, $id);
-                    }
-                }
+                        $this->productRepository->insertProductImage($productImage);
 
-                if(isset($request['products_image'])){
-                    $no = 1;
-                    foreach($request['products_image'] as $key=>$image){
-                        $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
-                        if(!$do_upload){
-                            abort(500, 'Failed upload image');
-                        } else {
-                            $productImage = [
-                                'product_id' => $id,
-                                'image_url' => $do_upload
-                            ];
+                        if(isset($request['is_main'][$key])){
+                            if(intval($request['is_main'][$key])){
+                                $product_main_image = $do_upload;
+                                $productForUpdate = $this->productRepository->getProductById($id);
 
-                            $this->productRepository->insertProductImage($productImage);
-
-                            if(isset($request['is_main'][$key])){
-                                if(intval($request['is_main'][$key])){
-                                    $product_main_image = $do_upload;
-                                    $productForUpdate = $this->productRepository->getProductById($id);
-
-                                    if($productForUpdate) {
-                                        $productForUpdate->image = $product_main_image;
-                                        $productForUpdate->save();
-                                    }
+                                if($productForUpdate) {
+                                    $productForUpdate->image = $product_main_image;
+                                    $productForUpdate->save();
                                 }
                             }
                         }
-
-                        $no++;
                     }
-                } else {
-                    if(isset($request['is_main'])){
-                        $is_main_key = array_keys($request['is_main']);
-                        if(intval($request['is_main'][$is_main_key[0]])){
-                            $product_main_image = $request['before_image'][$is_main_key[0]];
-                            $productForUpdate = $this->productRepository->getProductById($id);
 
-                            if($productForUpdate) {
-                                $productForUpdate->image = $product_main_image;
-                                $productForUpdate->save();
-                            }
+                    $no++;
+                }
+            } else {
+                if(isset($request['is_main'])){
+                    $is_main_key = array_keys($request['is_main']);
+                    if(intval($request['is_main'][$is_main_key[0]])){
+                        $product_main_image = $request['before_image'][$is_main_key[0]];
+                        $productForUpdate = $this->productRepository->getProductById($id);
+
+                        if($productForUpdate) {
+                            $productForUpdate->image = $product_main_image;
+                            $productForUpdate->save();
                         }
                     }
                 }
+            }
 
-                $getProduct->detail()->update([
-                    'brand_id' => $request['brand_id'],
-                    'qty' => $request['qty'],
-                    'base_price' => str_replace('.','',$request['base_price']),
-                    'retail_price' => str_replace('.','',$request['retail_price']),
-                    'after_discount_price' => str_replace('.','',$request['after_discount_price'])
-                ]);
+            $getProduct->detail()->update([
+                'brand_id' => $request['brand_id'],
+                'qty' => $request['qty'],
+                'base_price' => str_replace('.','',$request['base_price']),
+                'retail_price' => str_replace('.','',$request['retail_price']),
+                'after_discount_price' => str_replace('.','',$request['after_discount_price'])
+            ]);
 
-                $sizes = json_decode($request['size']);
-                $categories = json_decode($request['category']);
-                $tags = json_decode($request['tag']);
-                $signatures = json_decode($request['signature']);
+            $sizes = json_decode($request['size']);
+            $categories = json_decode($request['category']);
+            $tags = json_decode($request['tag']);
+            $signatures = json_decode($request['signature']);
 
-                $sizes_id = [];
-                $categories_id = [];
-                $tags_id = [];
-                $signatures_id = [];
+            $sizes_id = [];
+            $categories_id = [];
+            $tags_id = [];
+            $signatures_id = [];
 
-                if(isset($sizes)){
-                    foreach($sizes as $item){
-                        $sizes_id[] = $item->id;
-                    }
-
-                    $this->productRepository->syncProductSizes($id, $sizes_id);
+            if(isset($sizes)){
+                foreach($sizes as $item){
+                    $sizes_id[] = $item->id;
                 }
 
-                if(isset($categories)){
-                    foreach($categories as $item){
-                        $categories_id[] = $item->id;
-                    }
+                $this->productRepository->syncProductSizes($id, $sizes_id);
+            }
 
-                    $this->productRepository->syncProductCategories($id, $categories_id);
+            if(isset($categories)){
+                foreach($categories as $item){
+                    $categories_id[] = $item->id;
                 }
 
-                if(isset($tags)){
-                    foreach($tags as $item){
-                        $tags_id[] = $item->id;
-                    }
+                $this->productRepository->syncProductCategories($id, $categories_id);
+            }
 
-                    $this->productRepository->syncProductTags($id, $tags_id);
+            if(isset($tags)){
+                foreach($tags as $item){
+                    $tags_id[] = $item->id;
                 }
 
-                if(isset($signatures)){
-                    foreach($signatures as $item){
-                        $signatures_id[] = intval($item->value);
-                    }
+                $this->productRepository->syncProductTags($id, $tags_id);
+            }
 
-                    $this->productRepository->syncProductSignatures($id, $signatures_id);
+            if(isset($signatures)){
+                foreach($signatures as $item){
+                    $signatures_id[] = intval($item->value);
                 }
+
+                $this->productRepository->syncProductSignatures($id, $signatures_id);
             }
         }
         return true;

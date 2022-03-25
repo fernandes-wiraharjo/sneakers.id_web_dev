@@ -56,7 +56,7 @@ class ProductList extends Component
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
 
-        // dump([$this->search, $this->brand, $this->size, $this->tag, $this->category, $this->signature]);
+        // dump([$this->search]);
         $where_column = ['product_code', 'product_name', 'description'];
 
         if ($this->brand) {
@@ -117,35 +117,52 @@ class ProductList extends Component
                 $tag_id = $tag ? $tag->id : null;
                 $this->tag[] = $tag_id;
             }
-        } else {
-            $this->search = null;
         }
 
-        $products = $productRepository->getProductWhereLike($where_column, $this->search ?? '')
+        $products = $productRepository->getProductWhere()
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){
-                                        $q->whereIn('brand_id', $brands);
+                                        $q->whereIn('brand_id', $brands)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
                                     });
                                 })
                                 ->when($this->size, function ($query, $sizes){
                                     return $query->whereHas('sizes', function ($q) use ($sizes){
-                                        $q->whereIn('size_id', $sizes);
+                                        $q->whereIn('size_id', $sizes)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
                                     });
                                 })
                                 ->when($this->tag, function ($query, $tags) {
                                     return $query->whereHas('tags', function ($q) use ($tags){
-                                        $q->whereIn('tag_id', $tags);
+                                        $q->whereIn('tag_id', $tags)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
                                     });
                                 })
                                 ->when($this->category, function ($query, $categories){
                                     return $query->whereHas('categories', function ($q) use ($categories){
-                                        $q->whereIn('category_id', $categories);
+                                        $q->whereIn('category_id', $categories)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
                                     });
                                 })
                                 ->when($this->signature, function ($query, $signatures){
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
-                                        $q->whereIn('signature_player_id', $signatures);
+                                        $q->whereIn('signature_player_id', $signatures)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
                                     });
+                                })
+                                ->when($this->search, function ($query, $search){
+                                    return $query->where('product_name', 'LIKE', '%'.$search.'%')
+                                        ->where('description', 'LIKE', '%'.$search.'%');
                                 })
                                 ->orderBy($this->sort_column, $this->sort_by)->paginate(40);
 

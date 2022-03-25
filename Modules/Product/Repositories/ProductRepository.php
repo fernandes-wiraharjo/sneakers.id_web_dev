@@ -39,11 +39,25 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductWhereLike($where_column = [], $where_value = ''){
+        $where_like = [];
+        foreach($where_column as $value){
+            $where_like[$value] = $where_value;
+        }
+
+        //dd($where_like);
         return $this->model->query()
             ->with(['detail', 'images', 'signatures'])
             ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
             ->select('products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-            ->whereLike($where_column, $where_value)
+            ->where($where_like)
+            ->where('is_active', 1);
+    }
+
+    public function getProductWhere(){
+        return $this->model->query()
+            ->with(['detail', 'images', 'signatures'])
+            ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
+            ->select('products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
             ->where('is_active', 1);
     }
 

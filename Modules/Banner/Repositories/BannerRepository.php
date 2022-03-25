@@ -33,7 +33,7 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
 
         if($existing_banner_order){
             foreach($existing_banner_order as $item) {
-                $this->model->where('id', $item->id)->update(['is_active' => 0]);
+                $this->model->where(['id'=> $item->id, 'is_active' => 1])->update(['is_active' => 0]);
             }
         }
     }
@@ -48,7 +48,7 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
         $same_number_banner = $this->getBannerBySameOrderNumber($data['order']);
         if($same_number_banner->count() > 5) {
             foreach($same_number_banner as $item) {
-                $this->model->where('id', $item->id)->update(['is_active' => 0]);
+                $this->model->where(['id'=> $item->id, 'is_active' => 1])->update(['is_active' => 0]);
             }
         }
     }

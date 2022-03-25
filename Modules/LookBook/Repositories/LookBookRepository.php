@@ -32,7 +32,7 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
 
         if($existing_lookbook_order){
             foreach($existing_lookbook_order as $item){
-                $this->model->where('id', $item->id)->update(['is_active' => 0]);
+                $this->model->where(['id'=> $item->id, 'is_active' => 1])->update(['is_active' => 0]);
             }
         }
     }
@@ -48,7 +48,7 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
 
     if($existing_lookbook_order){
         foreach($existing_lookbook_order as $item){
-            $this->model->where('id', $item->id)->update(['is_active' => 0]);
+            $this->model->where(['id'=> $item->id, 'is_active' => 1])->update(['is_active' => 0]);
         }
     }
     return $this->model->create($lookbook);

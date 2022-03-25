@@ -43,7 +43,7 @@
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="base" type="text" class="form-control" name="base_price" min=1
-                    value="{{ old('base_price', rupiah_format($product->detail->base_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    value="{{ rupiah_format( old('base_price', $product->detail->base_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
 
@@ -51,7 +51,7 @@
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="retail" type="text" class="form-control" name="retail_price" min=1
-                    value="{{ old('retail_price', rupiah_format($product->detail->retail_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    value="{{ rupiah_format( old('retail_price', $product->detail->retail_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
 
@@ -59,7 +59,7 @@
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
                     <input id="discount" type="text" class="form-control" name="after_discount_price"
-                     value="{{ old('after_discount_price', rupiah_format($product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                     value="{{ rupiah_format( old('after_discount_price', $product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                     <span class="input-group-text">%</span>
                     <input type="text" class="form-control" id="percent"
                     @if ($edit)

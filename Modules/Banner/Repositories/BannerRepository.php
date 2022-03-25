@@ -29,10 +29,12 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
     $get_banner = $this->model->findOrFail($id);
 
     if($get_banner->order != $data['order']){
-        $existing_banner_order = $this->getBannerByOrderNumber($data['order']);
+        $existing_banner_order = $this->getBannerBySameOrderNumber($data['order']);
 
         if($existing_banner_order){
-            $existing_banner_order->update(['is_active' => 0]);
+            foreach($existing_banner_order as $item) {
+                $this->model->where('id', $item->id)->update(['is_active' => 0]);
+            }
         }
     }
 
@@ -42,12 +44,14 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
   public function createBanner(Request $request) {
     $banner = $this->bannerService->insertBanner($request);
     $data = $request->all();
-    $existing_banner_order = $this->getBannerByOrderNumber($data['order']);
-
-    if($existing_banner_order){
-        $existing_banner_order->update(['is_active' => 0]);
+    if(intval($data['is_active'])){
+        $same_number_banner = $this->getBannerBySameOrderNumber($data['order']);
+        if($same_number_banner->count() > 5) {
+            foreach($same_number_banner as $item) {
+                $this->model->where('id', $item->id)->update(['is_active' => 0]);
+            }
+        }
     }
-
     return $this->model->create($banner);
   }
 
@@ -57,6 +61,10 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
 
   public function getBannerByOrderNumber($number){
       return $this->model->where('order', $number)->first();
+  }
+
+  public function getBannerBySameOrderNumber($number){
+    return $this->model->where('order', $number)->get();
   }
 
   public function getOrderBannerByOrderByLatest(){

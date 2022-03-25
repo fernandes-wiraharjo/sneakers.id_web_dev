@@ -117,7 +117,6 @@ class BrandController extends Controller
             if($old_data->brand_code == $data['brand_code']){
                 $validation = [
                     'brand_code' => 'required|exists:brands,brand_code|max:255',
-                    'is_menu' => 'brandmenu'
                 ];
             } else {
                 $validation = [

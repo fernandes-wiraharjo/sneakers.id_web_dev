@@ -28,10 +28,12 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
 
     $get_lookbook = $this->model->find($id);
     if($get_lookbook->look_book_order != $data['look_book_order']){
-        $existing_lookbook_order = $this->getLookBookByPageNumber($data['look_book_order']);
+        $existing_lookbook_order = $this->getLookBookBySamePageNumber($data['look_book_order']);
 
         if($existing_lookbook_order){
-            $existing_lookbook_order->update(['is_active' => 0]);
+            foreach($existing_lookbook_order as $item){
+                $this->model->where('id', $item->id)->update(['is_active' => 0]);
+            }
         }
     }
 
@@ -40,7 +42,15 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
 
   public function createLookBook(Request $request) {
     $lookbook = $this->lookbookService->insertLookBook($request);
+    $data = $request->all();
 
+    $existing_lookbook_order = $this->getLookBookBySamePageNumber($data['look_book_order']);
+
+    if($existing_lookbook_order){
+        foreach($existing_lookbook_order as $item){
+            $this->model->where('id', $item->id)->update(['is_active' => 0]);
+        }
+    }
     return $this->model->create($lookbook);
   }
 
@@ -54,6 +64,10 @@ class LookBookRepository extends Repository implements MasterRepositoryInterface
 
   public function getLookBookByPageNumber($page){
     return $this->model->where('look_book_order', $page)->first();
+  }
+
+  public function getLookbookBySamePageNumber($page){
+    return $this->model->where('look_book_order', $page)->get();
   }
 
   public function getOrderLookBookByOrderByLatest(){

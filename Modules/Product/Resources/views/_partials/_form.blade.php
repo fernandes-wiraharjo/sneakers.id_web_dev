@@ -270,9 +270,6 @@
             }
         );
 
-            console.log(retailPriceValidator);
-            console.log(discountPriceValidator);
-
         $(form.querySelector('[name="brand_id"]')).on('change', function () {
             validator.revalidateField('brand_id');
         });

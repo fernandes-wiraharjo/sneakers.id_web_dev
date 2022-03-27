@@ -191,6 +191,11 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function deleteProduct($id){
         $product = $this->model->find($id);
+        $path = 'images/products/'.$product->product_code;
+
+        foreach($product->images()->get() as $image){
+            removeImageFromStorage($path, $image->image_url);
+        }
 
         $product->images()->delete();
         $product->detail()->delete();

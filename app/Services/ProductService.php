@@ -4,6 +4,7 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
@@ -128,14 +129,26 @@ class ProductService {
             'is_active' => $request['is_active']
         ];
         $getProduct = $this->productRepository->getProductById($id);
+        $beforeProductCode = $getProduct->product_code;
 
         $updatedProduct = $getProduct->update($product);
 
         if($updatedProduct) {
             $path = 'images/products/'.$request['product_code'];
+
+            $image_path = $path;
+
+            if($beforeProductCode != $request['product_code']){
+                $image_path = 'images/products/'.$beforeProductCode;
+
+                File::copyDirectory($image_path, $path);
+                File::deleteDirectory($image_path);
+            }
+
             foreach($request['remove_image'] as $removed_key=>$removed){
                 if(intval($removed)){
                     $image_name = $request['before_image'][$removed_key];
+                    removeImageFromStorage($path, $image_name);
                     $deleted = $this->productRepository->deleteProductImageByImageId($image_name, $id);
                 }
             }
@@ -208,6 +221,8 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductSizes($id, $sizes_id);
+            }   else {
+                $this->productRepository->syncProductSizes($id);
             }
 
             if(isset($categories)){
@@ -216,6 +231,8 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductCategories($id, $categories_id);
+            }  else {
+                $this->productRepository->syncProductCategories($id);
             }
 
             if(isset($tags)){
@@ -224,6 +241,8 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductTags($id, $tags_id);
+            } else {
+                $this->productRepository->syncProductTags($id);
             }
 
             if(isset($signatures)){
@@ -232,6 +251,8 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductSignatures($id, $signatures_id);
+            } else {
+                $this->productRepository->syncProductSignatures($id);
             }
         }
         return true;

@@ -126,7 +126,7 @@
                     <nav class="Header__MainNav hidden-pocket hidden-lap" aria-label="Main navigation">
                         <ul class="HorizontalList HorizontalList--spacingExtraLoose">
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'all') }}" class="Heading u-h6">FEATURED</a>
+                                <a href="{{ route('collections', 'all') }}" class="Heading u-h6 main-heading-text">FEATURED</a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
@@ -146,7 +146,7 @@
                             </li>
                             @foreach ($brand_menu as $item)
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Heading u-h6">{{ strtoupper($item->brand_title) }}<span class="Header__LinkSpacer">{{ strtoupper($item->brand_title) }}</span></a>
+                                <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Heading u-h6 main-heading-text">{{ strtoupper($item->brand_title) }}<span class="Header__LinkSpacer">{{ strtoupper($item->brand_title) }}</span></a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
@@ -197,10 +197,10 @@
                             </li>
                             @endforeach
                             <li class="HorizontalList__Item">
-                                <a href="{{ route('lookbook', 1) }}" class="Heading u-h6">LOOKBOOK<span class="Header__LinkSpacer">LOOKBOOK</span></a>
+                                <a href="{{ route('lookbook', 1) }}" class="Heading u-h6 main-heading-text">LOOKBOOK<span class="Header__LinkSpacer">LOOKBOOK</span></a>
                             </li>
                             <li class="HorizontalList__Item">
-                                <a href="{{ route('size-chart') }}" class="Heading u-h6">Size Chart<span class="Header__LinkSpacer">Size Chart</span></a>
+                                <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">Size Chart<span class="Header__LinkSpacer">Size Chart</span></a>
                             </li>
                         </ul>
                     </nav>

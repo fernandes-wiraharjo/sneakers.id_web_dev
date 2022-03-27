@@ -120,11 +120,38 @@
     @stack('styles')
     @livewireStyles
     <style>
-                .grid-flow {
+        .grid-flow {
             display: grid;
             grid-auto-flow: row;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(2, 1fr);
         }
+
+        .Header__Wrapper {
+            background-color: black;
+        }
+
+        .Header__FlexItem {
+            color: white;
+        }
+
+        .shopify-section--header {
+            top: unset !important;
+            position: relative !important;
+        }
+
+        .main-heading-text{
+            color: white !important;
+
+        }
+
+        #main {
+            margin-top: unset !important;
+        }
+/*
+        .DropdownMenu{
+            background: white;
+        } */
+
     </style>
 </head>

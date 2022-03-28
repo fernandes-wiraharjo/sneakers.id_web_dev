@@ -29,23 +29,51 @@
                                 </div>
                             </div>
                         </div>
-                        @foreach ($brand_menu as $item)
                         <div class="Collapsible">
-                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">{{ strtoupper($item->brand_title) }}<span class="Collapsible__Plus"></span></button>
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">MEN'S<span class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
-                                    <div class="Collapsible"><a href="{{ route('collections', 'new-release.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
-                                    <div class="Collapsible"><a href="{{ route('collections', 'best-seller.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all.MEN') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'new-release.MEN') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'best-seller.MEN') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
+                        <div class="Collapsible">
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">WOMAN'S<span class="Collapsible__Plus"></span></button>
+                            <div class="Collapsible__Inner">
+                                <div class="Collapsible__Content">
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all.WOMAN') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'new-release.WOMAN') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'best-seller.WOMAN') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Collapsible">
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">KIDS'<span class="Collapsible__Plus"></span></button>
+                            <div class="Collapsible__Inner">
+                                <div class="Collapsible__Content">
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'new-release.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW RELEASES</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'best-seller.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST SELLERS</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Collapsible">
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">BRAND<span class="Collapsible__Plus"></span></button>
+                            <div class="Collapsible__Inner">
+                                <div class="Collapsible__Content">
+                                    @foreach ($brand_menu as $item)
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">{{$item->brand_title}}</a></div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                         <li class="HorizontalList__Item">
                             <a href="{{ route('lookbook', 1) }}" class="Heading u-h6">LOOKBOOK<span class="Header__LinkSpacer">LOOKBOOK</span></a>
                         </li>
                         <li class="HorizontalList__Item">
-                            <a href="{{ route('size-chart') }}" class="Heading u-h6">Size Chart<span class="Header__LinkSpacer">Size Chart</span></a>
+                            <a href="{{ route('size-chart') }}" class="Heading u-h6">SIZE CHART<span class="Header__LinkSpacer">SIZE CHART</span></a>
                         </li>
                     </nav>
                     <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
@@ -144,63 +172,71 @@
                                     </ul>
                                 </div>
                             </li>
-                            @foreach ($brand_menu as $item)
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Heading u-h6 main-heading-text">{{ strtoupper($item->brand_title) }}<span class="Header__LinkSpacer">{{ strtoupper($item->brand_title) }}</span></a>
+                                <a href="{{ route('collections', 'all.MEN') }}" class="Heading u-h6 main-heading-text">MEN'S<span class="Header__LinkSpacer">MEN'S</span></a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Link Link--secondary">ALL </a>
+                                            <a href="{{ route('collections', 'all.MEN') }}" class="Link Link--secondary">ALL </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'new-release.'.$item->brand_code) }}" class="Link Link--secondary">NEW RELEASES </a>
+                                            <a href="{{ route('collections', 'new-release.MEN') }}" class="Link Link--secondary">NEW RELEASES </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'best-seller.'.$item->brand_code) }}" class="Link Link--secondary">BEST SELLERS </a>
+                                            <a href="{{ route('collections', 'best-seller.MEN') }}" class="Link Link--secondary">BEST SELLERS </a>
                                         </li>
                                     </ul>
                                 </div>
-                                {{-- <div class="MegaMenu" aria-hidden="true">
-                                    <div class="MegaMenu__Inner">
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="{{ route('collections', 'air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">ALL</a>
-                                        </div>
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="{{ route('collections', 'best-seller.air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">BEST SELLER</a>
-                                        </div>
-                                        <div class="MegaMenu__Item MegaMenu__Item--fit">
-                                            <a href="{{ route('collections', 'new-arrival.air-jordan') }}" class="MegaMenu__Title Heading Text--subdued u-h7">NEW ARRIVAL</a>
-                                        </div>
-                                        @if($featured_air_jordan)
-                                        @php
-                                            $image = $featured_air_jordan->images()->first();
-                                        @endphp
-                                        <div class="MegaMenu__Item" style="width: 370px; min-width: 250px;">
-                                            <div class="MegaMenu__Push">
-                                                <a class="MegaMenu__PushLink" href="{{ route('product-detail', $featured_air_jordan->id) }}">
-                                                    <div
-                                                        class="MegaMenu__PushImageWrapper AspectRatio"
-                                                        style="background: url({{ getImage($image->image_url, 'products') }}); max-width: 200px; --aspect-ratio: 1;"
-                                                    >
-                                                        <img class="Image--lazyLoad Image--fadeIn" data-src="{{ getImage($image->image_url, 'products') }}" alt="" />
-
-                                                        <span class="Image__Loader"></span>
-                                                    </div>
-                                                    <p class="MegaMenu__PushHeading Heading u-h6">{{ $featured_air_jordan->product_name }}</p>
-                                                    <p class="MegaMenu__PushSubHeading Heading Text--subdued u-h7">Must Have</p>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        @endif
-                                    </div>
-                                </div> --}}
                             </li>
-                            @endforeach
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Heading u-h6 main-heading-text">WOMEN'S<span class="Header__LinkSpacer">WOMEN'S</span></a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'all.WOMEN') }}" class="Link Link--secondary">ALL </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'new-release.WOMEN') }}" class="Link Link--secondary">NEW RELEASES </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'best-seller.WOMEN') }}" class="Link Link--secondary">BEST SELLERS </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Heading u-h6 main-heading-text">KIDS'<span class="Header__LinkSpacer">KIDS'</span></a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'all.KIDS') }}" class="Link Link--secondary">ALL </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'new-release.KIDS') }}" class="Link Link--secondary">NEW RELEASES </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'best-seller.KIDS') }}" class="Link Link--secondary">BEST SELLERS </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'all') }}" class="Heading u-h6 main-heading-text">BRAND<span class="Header__LinkSpacer">BRAND</span></a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        @foreach ($brand_menu as $item)
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'all.'.$item->brand_code) }}" class="Link Link--secondary">{{ strtoupper($item->brand_title) }}</a>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
                             <li class="HorizontalList__Item">
                                 <a href="{{ route('lookbook', 1) }}" class="Heading u-h6 main-heading-text">LOOKBOOK<span class="Header__LinkSpacer">LOOKBOOK</span></a>
                             </li>
                             <li class="HorizontalList__Item">
-                                <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">Size Chart<span class="Header__LinkSpacer">Size Chart</span></a>
+                                <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">SIZE CHART<span class="Header__LinkSpacer">SIZE CHART</span></a>
                             </li>
                         </ul>
                     </nav>

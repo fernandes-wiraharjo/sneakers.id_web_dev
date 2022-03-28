@@ -102,6 +102,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
+        ->orderBy('created_at', 'DESC')
         ->get();
     }
 
@@ -112,6 +113,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
+        ->orderBy('created_at', 'DESC')
         ->get();
     }
 

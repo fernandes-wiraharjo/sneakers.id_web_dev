@@ -113,9 +113,21 @@ class DatabaseSeeder extends Seeder
 
         $category = [
             [
-                'category_code' => 'MEN-SHOES',
-                'category_title' => 'MEN SHOES',
-                'category_description' => 'MEN SHOES',
+                'category_code' => 'MENS',
+                'category_title' => "MEN'S",
+                'category_description' => "MEN'S",
+                'is_active' => 1
+            ],
+            [
+                'category_code' => 'WOMANS',
+                'category_title' => "WOMAN'S",
+                'category_description' => "WOMAN'S",
+                'is_active' => 1
+            ],
+            [
+                'category_code' => 'KIDS',
+                'category_title' => "KIDS'",
+                'category_description' => "KIDS'",
                 'is_active' => 1
             ],
             [

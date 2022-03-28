@@ -2,7 +2,7 @@
     <style>
         @media only screen and (max-width: 1007px) {
            .Drawer__Main {
-                padding-top: 35px;
+                padding-top: 15px;
                 padding-left: 20px !important;
             }
         }
@@ -12,7 +12,7 @@
         }
     </style>
 @endpush
-<div class="CollectionMain" style="padding-top: 10rem; padding-botom: 5rem; margin-bottom: 5rem;">
+<div class="CollectionMain" style="padding-top: 1rem; padding-botom: 5rem; margin-bottom: 5rem;">
     <div class="CollectionToolbar CollectionToolbar--top CollectionToolbar--reverse">
         <div class="CollectionToolbar__Group">
             <a class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading Text--subdued u-h6 hidden-lap-and-up" data-action="open-drawer" data-drawer-id="collection-filter-drawer" aria-label="Show filters">

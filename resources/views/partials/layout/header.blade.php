@@ -7,7 +7,6 @@
     <title>
         SNEAKERS.ID
     </title>
-
     <link rel="stylesheet"
         href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/theme.scss.css?v=7344590805236375534" />
     <link rel="stylesheet"
@@ -108,13 +107,17 @@
     <link href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/bc-sf-filter.scss.css?v=14122405562365021248"
         rel="stylesheet" type="text/css" media="all">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
+        {{-- <script src="{{ asset('css/font-awesome.css') }}"></script> --}}
+
+        {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css"> --}}
+
     <style>
         html * {
-            font-family: 'Montserrat', sans-serif !important;
+            font-family: 'Montserrat', sans-serif, 'FontAwesome' !important;
         }
     </style>
     @stack('styles')

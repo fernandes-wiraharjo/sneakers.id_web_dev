@@ -151,6 +151,10 @@
         #main {
             margin-top: unset !important;
         }
+
+        .Search__Form {
+            margin-bottom: unset;
+        }
 /*
         .DropdownMenu{
             background: white;

@@ -66,7 +66,8 @@ class ProductService {
                 'qty' => $request['qty'],
                 'base_price' => str_replace('.','',$request['base_price']),
                 'retail_price' => str_replace('.','',$request['retail_price']),
-                'after_discount_price' => str_replace('.','',$request['after_discount_price'])
+                'after_discount_price' => str_replace('.','',$request['after_discount_price']),
+                'discount_percentage' => $request['discount_percentage']
             ]);
 
             if(!$inserted_product_detail){
@@ -202,7 +203,8 @@ class ProductService {
                 'qty' => $request['qty'],
                 'base_price' => str_replace('.','',$request['base_price']),
                 'retail_price' => str_replace('.','',$request['retail_price']),
-                'after_discount_price' => str_replace('.','',$request['after_discount_price'])
+                'after_discount_price' => str_replace('.','',$request['after_discount_price']),
+                'discount_percentage' => $request['discount_percentage']
             ]);
 
             $sizes = json_decode($request['size']);

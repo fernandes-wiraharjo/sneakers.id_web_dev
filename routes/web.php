@@ -22,6 +22,8 @@ Route::get('/product-detail/{id}', [StoreController::class, 'productDetail'])->n
 
 Route::get('/collections/{filter}', [StoreController::class, 'collections'])->name('collections');
 
+Route::get('/search', [StoreController::class, 'search'])->name('search');
+
 Route::get('/lookbook/page/{page}', [StoreController::class, 'lookbook'])->name('lookbook');
 
 Route::get('/size-chart', [StoreController::class, 'sizeChart'])->name('size-chart');

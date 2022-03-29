@@ -149,14 +149,14 @@
 
                                         <noscript>
                                             <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                src="{{ getImage($product->image, 'products') }}"
+                                                src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
                                                 alt='{{$product->product_name}}' />
 
                                             @foreach ($product->images()->get() as $key => $image)
                                             {{-- BOX-A2_600x.jpg?v=1644800500 --}}
                                                 @if($product->image != $image->image_url)
                                                     <img class="ProductItem__Image"
-                                                        src="{{ getImage($image->image_url, 'products') }}"
+                                                        src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
                                                         alt='{{$product->product_name}}' />
                                                 @endif
                                             @endforeach

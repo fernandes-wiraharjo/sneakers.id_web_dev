@@ -119,9 +119,9 @@ class DatabaseSeeder extends Seeder
                 'is_active' => 1
             ],
             [
-                'category_code' => 'WOMANS',
-                'category_title' => "WOMAN'S",
-                'category_description' => "WOMAN'S",
+                'category_code' => 'WOMENS',
+                'category_title' => "WOMEN'S",
+                'category_description' => "WOMEN'S",
                 'is_active' => 1
             ],
             [

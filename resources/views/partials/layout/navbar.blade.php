@@ -226,7 +226,7 @@
                                 </div>
                             </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'all.MEN') }}"
+                                <a href="{{ route('collections', 'all.MENS') }}"
                                     class="Heading u-h6 main-heading-text">MEN'S<span
                                         class="Header__LinkSpacer">MEN'S</span></a>
                                 <div class="DropdownMenu" aria-hidden="true">
@@ -247,7 +247,7 @@
                                 </div>
                             </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'all.' . $item->brand_code) }}"
+                                <a href="{{ route('collections', 'all.WOMENS') }}"
                                     class="Heading u-h6 main-heading-text">WOMEN'S<span
                                         class="Header__LinkSpacer">WOMEN'S</span></a>
                                 <div class="DropdownMenu" aria-hidden="true">
@@ -268,7 +268,7 @@
                                 </div>
                             </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'all.' . $item->brand_code) }}"
+                                <a href="{{ route('collections', 'all.KIDS') }}"
                                     class="Heading u-h6 main-heading-text">KIDS'<span
                                         class="Header__LinkSpacer">KIDS'</span></a>
                                 <div class="DropdownMenu" aria-hidden="true">
@@ -291,7 +291,8 @@
                             <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="{{ route('collections', 'all') }}"
                                     class="Heading u-h6 main-heading-text">BRAND<span
-                                        class="Header__LinkSpacer">BRAND</span></a>
+                                        class="Header__LinkSpacer">BRAND</span>
+                                </a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         @foreach ($brand_menu as $item)

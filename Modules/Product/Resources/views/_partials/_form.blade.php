@@ -61,11 +61,11 @@
                     <input id="discount" type="text" class="form-control" name="after_discount_price"
                      value="{{ rupiah_format( old('after_discount_price', $product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                     <span class="input-group-text">%</span>
-                    <input type="text" class="form-control" id="percent"
+                    <input type="number" class="form-control" id="percent" name="discount_percentage" min="0" max="100"
                     @if ($edit)
                         value="{{100 - round(100 * ($product->detail->after_discount_price / $product->detail->retail_price), 0)}}"
                     @endif
-                    placeholder="Percentage" aria-label="Percent" disabled/>
+                    placeholder="Percentage" aria-label="Percent"/>
                 </div>
             </x-ladmin-form-group>
         </div>
@@ -270,9 +270,6 @@
             }
         );
 
-            console.log(retailPriceValidator);
-            console.log(discountPriceValidator);
-
         $(form.querySelector('[name="brand_id"]')).on('change', function () {
             validator.revalidateField('brand_id');
         });
@@ -325,6 +322,24 @@
         var rawPriceDiscount = discount.value.replace(/\D/g,'');
 
         let result = 0;
+
+        percent.addEventListener("keyup", function(){
+            discount.value = 0;
+            rawPriceRetail = retail.value.replace(/\D/g,'');
+            discounted = (percent.value/100) * rawPriceRetail;
+            discounted_price = parseInt(rawPriceRetail - discounted);
+            discount.value = discounted_price;
+            discount.value = formatRupiah(discount.value);
+        });
+
+        percent.addEventListener("change", function(){
+            discount.value = 0;
+            rawPriceRetail = retail.value.replace(/\D/g,'');
+            discounted = (percent.value/100) * rawPriceRetail;
+            discounted_price = parseInt(rawPriceRetail - discounted);
+            discount.value = discounted_price;
+            discount.value = formatRupiah(discount.value);
+        });
 
         retail.addEventListener("keyup", function(e) {
             result = 0;

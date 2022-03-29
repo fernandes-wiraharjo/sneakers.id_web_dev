@@ -50,6 +50,14 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
       }
   }
 
+  public function getCategoryByName($keyword){
+    return $this->model
+      ->where('category_code', 'LIKE', '%'.$keyword.'%')
+      ->orWhere('category_title', 'LIKE', '%'.$keyword.'%')
+      ->orWhere('category_description', 'LIKE', '%'.$keyword.'%')
+      ->first();
+  }
+
   public function getAllCategories() {
       return $this->model->where('is_active', 1)->get();
   }

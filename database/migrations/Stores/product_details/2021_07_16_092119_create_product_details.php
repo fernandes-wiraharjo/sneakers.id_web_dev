@@ -21,6 +21,7 @@ class CreateProductDetails extends Migration
             $table->double('base_price', 20, 2);
             $table->double('retail_price', 20, 2);
             $table->double('after_discount_price', 20, 2);
+            $table->integer('discount_percentage')->default(0);
             //$table->text('description')->nullable();
             $table->timestamps();
         });

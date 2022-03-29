@@ -16,4 +16,5 @@
 
     var product_variants_removed = [];
 </script>
+<script src="https://use.fontawesome.com/eeb42b6d4d.js"></script>
 @stack('scripts')

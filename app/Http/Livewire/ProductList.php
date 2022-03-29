@@ -105,24 +105,39 @@ class ProductList extends Component
             if(count($keyword_array) >= 2){
                 $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
                 $brand = $brandRepository->getBrandByName($keyword_array[1]);
+                $category = $categoryRepository->getCategoryByName($keyword_array[1]);
                 $brand_id = $brand ? $brand->id : null;
-                $this->brand[] = $brand_id;
+                $category_id = $category ? $category->id : null;
+                if($brand_id) {
+                    $this->brand[] = $brand_id;
+                }
+
+                if($category_id) {
+                    $this->category[] = strval($category_id);
+                }
+
                 if($keyword_array[0] != 'all'){
                     $tag = $tagRepository->getTagByName($keyword_array[0]);
                     $tag_id = $tag ? $tag->id : null;
-                    $this->tag[] = $tag_id;
+                    if($tag_id) {
+                        $this->tag[] = $tag_id;
+                    }
                 }
             } else {
                 $tag = $tagRepository->getTagByName($keyword);
                 $tag_id = $tag ? $tag->id : null;
-                $this->tag[] = $tag_id;
+                if($tag_id) {
+                    $this->tag[] = $tag_id;
+                }
             }
         }
+
+        // dump([$this->brand, $this->category, $this->tag]);
 
         $products = $productRepository->getProductWhere()
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){
-                                        $q->whereIn('brand_id', $brands)
+                                        return $q->whereIn('brand_id', $brands)
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -130,7 +145,7 @@ class ProductList extends Component
                                 })
                                 ->when($this->size, function ($query, $sizes){
                                     return $query->whereHas('sizes', function ($q) use ($sizes){
-                                        $q->whereIn('size_id', $sizes)
+                                        return $q->whereIn('size_id', $sizes)
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -138,7 +153,8 @@ class ProductList extends Component
                                 })
                                 ->when($this->tag, function ($query, $tags) {
                                     return $query->whereHas('tags', function ($q) use ($tags){
-                                        $q->whereIn('tag_id', $tags)
+                                        $tags = array_unique($tags);
+                                        return $q->whereIn('tag_id', $tags)
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -146,7 +162,9 @@ class ProductList extends Component
                                 })
                                 ->when($this->category, function ($query, $categories){
                                     return $query->whereHas('categories', function ($q) use ($categories){
-                                        $q->whereIn('category_id', $categories)
+                                        $categories = array_unique($categories);
+                                        //dump($categories);
+                                        return $q->whereIn('category_id', $categories)
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -154,7 +172,7 @@ class ProductList extends Component
                                 })
                                 ->when($this->signature, function ($query, $signatures){
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
-                                        $q->whereIn('signature_player_id', $signatures)
+                                        return $q->whereIn('signature_player_id', $signatures)
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });

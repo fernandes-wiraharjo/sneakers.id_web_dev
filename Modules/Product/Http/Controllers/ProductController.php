@@ -136,14 +136,20 @@ class ProductController extends Controller
             $old_data = $this->repository->getProductById($id);
             $data = $request->all();
 
+            $request['base_price'] = intval(str_replace('.','', $request['base_price']));
+            $request['retail_price'] = intval(str_replace('.','', $request['retail_price']));
+            $request['after_discount_price'] = intval(str_replace('.','', $request['after_discount_price']));
+
             if($old_data->product_code == $data['product_code']){
                 $validation = [
                     'product_code' => 'required|exists:products,product_code|max:255',
+                    'retail_price' => 'gte:1',
                     'after_discount_price' => 'lt:retail_price'
                 ];
             } else {
                 $validation = [
                     'product_code' => 'required|unique:products,product_code|max:255',
+                    'retail_price' => 'gte:1',
                     'after_discount_price' => 'lt:retail_price'
                 ];
             }

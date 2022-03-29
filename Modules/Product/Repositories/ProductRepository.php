@@ -102,6 +102,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
+        ->orderBy('created_at', 'DESC')
         ->get();
     }
 
@@ -112,6 +113,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
+        ->orderBy('created_at', 'DESC')
         ->get();
     }
 
@@ -191,6 +193,11 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function deleteProduct($id){
         $product = $this->model->find($id);
+        $path = 'images/products/'.$product->product_code;
+
+        foreach($product->images()->get() as $image){
+            removeImageFromStorage($path, $image->image_url);
+        }
 
         $product->images()->delete();
         $product->detail()->delete();

@@ -106,3 +106,27 @@ if (!function_exists('getImage')) {
         }
     }
 }
+
+if(!function_exists('removeImageFromStorage')) {
+    function removeImageFromStorage($path = '', $filename = ''){
+        $image_path = public_path($path."/".$filename);
+        if(File::exists($image_path)) {
+            File::delete($image_path);
+        }
+
+        return true;
+    }
+}
+
+if(!function_exists('moveImage')) {
+    function moveImage($beforePath = '', $afterPath = '', $filename = ''){
+        $image_before_path = public_path($beforePath."/".$filename);
+        $image_after_path = public_path($afterPath."/".$filename);
+
+        if(File::exists($image_before_path)) {
+            File::move($image_before_path, $image_after_path);
+        }
+
+        return true;
+    }
+}

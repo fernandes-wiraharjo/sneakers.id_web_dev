@@ -310,94 +310,6 @@
                             </div>
                         </div>
                     </div>
-                    <h5 data-mce-fragment="1">Detail</h5>
-                    <p data-mce-fragment="1"><strong>Size Chart :</strong></p>
-                    <div class="ButtonGroup ButtonGroup--spacingSmall">
-                        <a href="#" class="ButtonGroup__Item Button pop">
-                            SIZES
-                        </a>
-                    </div>
-                    <div class="modal fade" id="sizeModal" tabindex="-1" role="dialog"
-                        aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-body">
-                                    <a class="close" data-dismiss="modal">
-                                        <span
-                                            aria-hidden="true">&times;</span>
-                                        <span class="sr-only">Close</span>
-                                    </a>
-
-                                    <div>
-                                        <div class="table-container">
-                                            <div class="table">
-                                                <div class="table-header">
-                                                    <div class="header__item"><a id="size" class="filter__link"
-                                                            href="#">Size</a></div>
-                                                    <div class="header__item"><a id="men"
-                                                            class="filter__link filter__link--number" href="#">US -
-                                                            Men's</a></div>
-                                                    <div class="header__item"><a id="woman"
-                                                            class="filter__link filter__link--number" href="#">US -
-                                                            Women's</a></div>
-                                                    <div class="header__item"><a id="kids"
-                                                            class="filter__link filter__link--number" href="#">US -
-                                                            Kid's</a></div>
-                                                    <div class="header__item"><a id="uk"
-                                                            class="filter__link filter__link--number" href="#">UK</a>
-                                                    </div>
-                                                    <div class="header__item"><a id="cm"
-                                                            class="filter__link filter__link--number" href="#">CM</a>
-                                                    </div>
-                                                    <div class="header__item"><a id="eu"
-                                                            class="filter__link filter__link--number" href="#">EU</a>
-                                                    </div>
-                                                </div>
-                                                <div class="table-content">
-                                                    @foreach ($product->sizes as $item)
-                                                        <div class="table-row">
-                                                            <div class="table-data">{{ $item->size_title }}</div>
-                                                            @if ($item->charts->count() > 0)
-                                                                @foreach ($item->charts as $item_chart)
-                                                                    <div class="table-data">
-                                                                        {{ $item_chart->size_value }}</div>
-                                                                @endforeach
-                                                            @else
-                                                                <div class="table-data">-</div>
-                                                                <div class="table-data">-</div>
-                                                                <div class="table-data">-</div>
-                                                                <div class="table-data">-</div>
-                                                                <div class="table-data">-</div>
-                                                                <div class="table-data">-</div>
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p data-mce-fragment="1"><strong>Signature:</strong></p>
-                    <div>
-                        @foreach ($product->signatures as $item)
-                            <div style="height: 50px; width: 90%; text-align: left; align-items: center; margin: 5px;">
-                                {{ $item->signature_title }} - {{ $item->signature_player_name }}
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <p data-mce-fragment="1"><strong>Category:</strong></p>
-                    <div>
-                        @foreach ($product->categories as $item)
-                            <span style="margin: 5px;">
-                                <a
-                                    href="{{ route('collections', $item->category_title) }}">{{ $item->category_title }}</a>
-                            </span>
-                        @endforeach
-                    </div>
                     <div class="Product__InfoWrapper">
                         <div class="Product__Info">
                             <div class="Container">
@@ -768,6 +680,97 @@
                                     </svg>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                    <h3 style="font-size: 20px;">Detail</h3>
+                    <div style="margin-left: 20px;">
+                        <p data-mce-fragment="1"><strong>Size Chart :</strong></p>
+                        <div class="ButtonGroup ButtonGroup--spacingSmall m-2">
+                            <a href="#" class="Button Button--primary pop">
+                                SIZES
+                            </a>
+                        </div>
+                        <p></p>
+                        <div class="modal fade" id="sizeModal" tabindex="-1" role="dialog"
+                            aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <a class="close" data-dismiss="modal">
+                                            <span
+                                                aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </a>
+
+                                        <div>
+                                            <div class="table-container">
+                                                <div class="table">
+                                                    <div class="table-header">
+                                                        <div class="header__item"><a id="size" class="filter__link"
+                                                                href="#">Size</a></div>
+                                                        <div class="header__item"><a id="men"
+                                                                class="filter__link filter__link--number" href="#">US -
+                                                                Men's</a></div>
+                                                        <div class="header__item"><a id="woman"
+                                                                class="filter__link filter__link--number" href="#">US -
+                                                                Women's</a></div>
+                                                        <div class="header__item"><a id="kids"
+                                                                class="filter__link filter__link--number" href="#">US -
+                                                                Kid's</a></div>
+                                                        <div class="header__item"><a id="uk"
+                                                                class="filter__link filter__link--number" href="#">UK</a>
+                                                        </div>
+                                                        <div class="header__item"><a id="cm"
+                                                                class="filter__link filter__link--number" href="#">CM</a>
+                                                        </div>
+                                                        <div class="header__item"><a id="eu"
+                                                                class="filter__link filter__link--number" href="#">EU</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="table-content">
+                                                        @foreach ($product->sizes as $item)
+                                                            <div class="table-row">
+                                                                <div class="table-data">{{ $item->size_title }}</div>
+                                                                @if ($item->charts->count() > 0)
+                                                                    @foreach ($item->charts as $item_chart)
+                                                                        <div class="table-data">
+                                                                            {{ $item_chart->size_value }}</div>
+                                                                    @endforeach
+                                                                @else
+                                                                    <div class="table-data">-</div>
+                                                                    <div class="table-data">-</div>
+                                                                    <div class="table-data">-</div>
+                                                                    <div class="table-data">-</div>
+                                                                    <div class="table-data">-</div>
+                                                                    <div class="table-data">-</div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p data-mce-fragment="1"><strong>Signature:</strong></p>
+                        <div>
+                            @foreach ($product->signatures as $item)
+                                <div style="height: 50px; width: 90%; text-align: left; align-items: center; margin: 5px;">
+                                    {{ $item->signature_title }} - {{ $item->signature_player_name }}
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <p data-mce-fragment="1"><strong>Category:</strong></p>
+                        <div>
+                            @foreach ($product->categories as $item)
+                                <span style="margin: 5px;">
+                                    <a
+                                        href="{{ route('collections', $item->category_title) }}">{{ $item->category_title }}</a>
+                                </span>
+                            @endforeach
                         </div>
                     </div>
                 </div>

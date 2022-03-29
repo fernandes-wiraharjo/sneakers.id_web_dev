@@ -8,7 +8,7 @@
     <option value="instagram" {{ ($selected ?? '') == 'instagram' ? 'selected' : '' }}>Instagram</option>
     <option value="facebook" {{ ($selected ?? '') == 'facebook' ? 'selected' : '' }}>Facebook</option>
     {{-- <option value="line" {{ ($selected ?? '') == 'line' ? 'selected' : '' }}>Line</option> --}}
-    {{-- <option value="whatsapp" {{ ($selected ?? '') == 'whatsapp' ? 'selected' : '' }}>Whatsapp</option> --}}
+    <option value="whatsapp" {{ ($selected ?? '') == 'whatsapp' ? 'selected' : '' }}>Whatsapp</option>
     <option value="youtube" {{ ($selected ?? '') == 'youtube' ? 'selected' : '' }}>Youtube</option>
 </select>
 

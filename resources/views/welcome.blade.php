@@ -8,7 +8,7 @@
         <div id="shopify-section-slideshow" class="shopify-section shopify-section--slideshow">
             <section id="section-slideshow" data-section-id="slideshow" data-section-type="slideshow">
                 <div class="Slideshow">
-                        @livewire('banner-image')
+                    @livewire('banner-image')
                 </div>
                 <span id="section-slideshow-end" class="Anchor"></span>
             </section>
@@ -82,6 +82,21 @@
             </section>
         </div>
     </main>
+    <div class="bc-sf-search-suggestion-wrapper " style="top: 207.504px; left: 91px; width: 1247px;">
+        <div class="bc-sf-search-suggestion-popover" data-direction="left"
+            style="top: -20px; left: 20px; display: none;"></div>
+        <ul id="ui-id-1" tabindex="0"
+            class="ui-menu ui-widget ui-widget-content ui-autocomplete bc-sf-search-suggestion ui-front"
+            style="display: none; width: 1247px; top: 0px; left: 0px;" data-search-box="#bc-sf-search-box-0">
+            <li class="bc-sf-search-suggestion-group ui-menu-divider ui-widget-content" data-group="suggestions"
+                aria-label="Suggestions">
+                <ul aria-hidden="true" aria-expanded="false" class="ui-menu ui-widget ui-widget-content ui-front"
+                    style="display: none;"></ul>
+            </li>
+
+        </ul>
+    </div>
+
     @include('partials.layout.footer', ['footer' => $footer])
 
     @include('partials.layout.script')

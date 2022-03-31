@@ -139,7 +139,7 @@
 </div>
 <div class="PageContainer">
     <div id="shopify-section-header" class="shopify-section shopify-section--header">
-        {{-- <div id="Search" class="Search" aria-hidden="true">
+        <div id="Search" class="Search" aria-hidden="true">
             <div class="Search__Inner">
                 <div class="Search__SearchBar">
                     <form action="{{ route('search') }}" class="Search__Form">
@@ -175,7 +175,7 @@
                     </button>
                 </div>
             </div>
-        </div> --}}
+        </div>
         <header id="section-header" class="Header Header--logoLeft Header--withIcons" data-section-id="header"
             data-section-type="header" data-section-settings='{
   "navigationStyle": "logoLeft",

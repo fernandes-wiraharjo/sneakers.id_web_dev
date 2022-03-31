@@ -45,7 +45,7 @@ class Product extends Model
     }
 
     public function signatures(){
-        return $this->belongsToMany(\Modules\SignaturePLayer\Entities\SignaturePLayer::class, 'product_signature', 'product_id', 'signature_player_id');
+        return $this->belongsToMany(\Modules\SignaturePlayer\Entities\SignaturePlayer::class, 'product_signature', 'product_id', 'signature_player_id');
     }
 
     public function brand()

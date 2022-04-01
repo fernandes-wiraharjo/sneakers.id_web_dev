@@ -17,7 +17,7 @@ class CreateProducts extends Migration
             $table->id();
             $table->string('product_code', 100)->unique();
             $table->string('product_name', 100);
-            $table->string('product_link', 100);
+            $table->string('product_link', 255);
             $table->smallInteger('product_visit')->default(0);
             $table->text('image')->nullable();
             $table->text('description')->nullable();

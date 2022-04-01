@@ -1,9 +1,9 @@
 <?php
 
-  namespace Modules\Category\Entities;
+namespace Modules\Category\Entities;
 
-  use Modules\Category\Entities\Category;
-  use Yajra\DataTables\Html\Button;
+use Modules\Category\Entities\Category;
+use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
@@ -30,17 +30,24 @@ use Yajra\DataTables\Services\DataTable;
                 if($item->products()->count() > 0){
                     $type = 'restrict';
                 }
+
+                if($item->category_code == 'MENS' || $item->category_code == 'WOMENS' || $item->category_code == 'KIDS') {
+                    $destory_button = null;
+                } else {
+                    $destory_button = [
+                        'gate' => 'administrator.master-data.category.destroy',
+                        'url' => route('administrator.master-data.category.destroy', [$item->id, 'back' => request()->fullUrl()]),
+                        'type' => $type ?? null
+                    ];
+                }
+
                 return view('components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.category.update',
                       'url' => route('administrator.master-data.category.edit', [$item->id, 'back' => request()->fullUrl()])
                     ],
-                    'destroy' => [
-                      'gate' => 'administrator.master-data.category.destroy',
-                      'url' => route('administrator.master-data.category.destroy', [$item->id, 'back' => request()->fullUrl()]),
-                      'type' => $type ?? null
-                    ]
+                    'destroy' => $destory_button
                   ]);
             });
     }

@@ -56,7 +56,6 @@ class ProductList extends Component
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
 
-        // dump([$this->search]);
         $where_column = ['product_code', 'product_name', 'description'];
 
         if ($this->brand) {
@@ -132,8 +131,6 @@ class ProductList extends Component
             }
         }
 
-        // dump([$this->brand, $this->category, $this->tag]);
-
         $products = $productRepository->getProductWhere()
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){
@@ -163,7 +160,6 @@ class ProductList extends Component
                                 ->when($this->category, function ($query, $categories){
                                     return $query->whereHas('categories', function ($q) use ($categories){
                                         $categories = array_unique($categories);
-                                        //dump($categories);
                                         return $q->whereIn('category_id', $categories)
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');

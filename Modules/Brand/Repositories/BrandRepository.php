@@ -41,7 +41,7 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getBrandMenu(){
-      return $this->model->where(['is_active' => 1, 'is_menu' => 1])->offset(0)->limit(3)->get();
+      return $this->model->where('is_active', 1)->get();
   }
 
   public function checkActiveMenuBrand(){

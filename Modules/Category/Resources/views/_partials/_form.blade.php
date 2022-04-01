@@ -1,5 +1,7 @@
 <x-ladmin-form-group name="category_code" label="Code *">
-	<input type="text" placeholder="Category Code" class="form-control" name="category_code" id="category_code" required value="{{ old('category_code', $category->category_code) }}">
+	<input type="text" placeholder="Category Code" class="form-control" name="category_code" id="category_code" required value="{{ old('category_code', $category->category_code) }}" @if ($category->category_code == 'MENS' || $category->category_code == 'WOMENS' || $category->category_code == 'KIDS')
+        disabled
+    @endif>
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="category_title" label="Title *">

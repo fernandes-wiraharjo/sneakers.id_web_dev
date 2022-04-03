@@ -60,6 +60,21 @@
     .Slideshow__ImageContainer {
         --aspect-ratio: 1 !important;
     }
+
+    .CollectionToolbar {
+        display: block !important;
+    }
+
+    .Search__SearchBar {
+        height: 50px;
+        margin-left: unset !important;
+        padding: 5px;
+    }
+
+    .Drawer__Main {
+        padding-right: 20px;
+        overflow-y: auto;
+    }
 }
 
 .CollectionToolbar {

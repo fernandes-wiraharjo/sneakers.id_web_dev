@@ -60,6 +60,14 @@
     .Slideshow__ImageContainer {
         --aspect-ratio: 1 !important;
     }
+
+    .CollectionToolbar {
+        display: block !important;
+    }
+
+    .Search__SearchBar {
+        height: 50px;
+    }
 }
 
 .CollectionToolbar {

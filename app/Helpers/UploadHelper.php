@@ -49,7 +49,7 @@ if(!function_exists('imageUploadProduct')) {
 
     function imageUploadProduct($file, $path, $type, $queue = false, $number = 0, $custom_name = '')
     {
-        $resolution = [1800];//[200, 300,400,600,700,800,900,1000,1200, 1800];
+        $resolution = [1200 ,1800];//[200, 300,400,600,700,800,900,1000,1200, 1800];
         $image_new_name = time().'.'.$file->extension();
         $time = time();
 
@@ -69,7 +69,10 @@ if(!function_exists('imageUploadProduct')) {
                     $img = Image::make($file->path());
                     if($item == 1800) {
                         $resize_file_name = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$time.'_1800x1800'.'.'.$file->extension();
-                    } else {
+                    } else if ($item == 1200) {
+                        $resize_file_name = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$time.'_1200x1200'.'.'.$file->extension();
+                    }
+                     else {
                         $resize_file_name = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$time.'_'.$item.'.'.$file->extension();
                     }
 

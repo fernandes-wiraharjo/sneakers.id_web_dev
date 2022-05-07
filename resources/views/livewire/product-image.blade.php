@@ -1,8 +1,8 @@
 <div id="image-upload">
-    @for ($i = 0; $i < 5; $i++)
+    @for ($i = 0; $i < 8; $i++)
     <!--begin::Image input-->
     <div class="image-input {{ $edit ? (!empty($image[$i]) ? '' : 'image-input-empty') : 'image-input-empty' }} image-input-outline" data-kt-image-input="true"
-        style="background-image: url({{ asset('demo1/media/blank/blank-image.png') }}); background-position: center; margin-right: 20px;">
+        style="background-image: url({{ asset('demo1/media/blank/blank-image.png') }}); background-position: center; margin-right: 20px; margin-bottom: 20px">
         <!--begin::Image preview wrapper-->
         <div class="image-input-wrapper w-125px h-125px"
             @if($edit)

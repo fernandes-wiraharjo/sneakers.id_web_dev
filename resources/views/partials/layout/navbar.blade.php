@@ -63,19 +63,19 @@
                         </div>
                         <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
-                                data-action="toggle-collapsible" aria-expanded="false">WOMAN'S<span
+                                data-action="toggle-collapsible" aria-expanded="false">WOMEN'S<span
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all.WOMANS') }}"
+                                    <div class="Collapsible"><a href="{{ route('collections', 'all.WOMENS') }}"
                                             class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a>
                                     </div>
                                     <div class="Collapsible"><a
-                                            href="{{ route('collections', 'new-release.WOMANS') }}"
+                                            href="{{ route('collections', 'new-release.WOMENS') }}"
                                             class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
                                             RELEASES</a></div>
                                     <div class="Collapsible"><a
-                                            href="{{ route('collections', 'best-seller.WOMANS') }}"
+                                            href="{{ route('collections', 'best-seller.WOMENS') }}"
                                             class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
                                             SELLERS</a></div>
                                 </div>
@@ -116,14 +116,14 @@
                                 </div>
                             </div>
                         </div>
-                        <li class="HorizontalList__Item">
-                            <a href="{{ route('lookbook', 1) }}" class="Heading u-h6">LOOKBOOK<span
-                                    class="Header__LinkSpacer">LOOKBOOK</span></a>
-                        </li>
-                        <li class="HorizontalList__Item">
-                            <a href="{{ route('size-chart') }}" class="Heading u-h6">SIZE CHART<span
-                                    class="Header__LinkSpacer">SIZE CHART</span></a>
-                        </li>
+                        <div class="Collapsible">
+                            <a href="{{ route('lookbook', 1) }}" class="Collapsible__Button Heading Link Link--primary u-h6">LOOKBOOK<span
+                                        class="Header__LinkSpacer">LOOKBOOK</span></a>
+                        </div>
+                        <div class="Collapsible">
+                            <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
+                                        class="Header__LinkSpacer">SIZE CHART</span></a>
+                        </div>
                     </nav>
                     <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
                         <ul class="Linklist Linklist--spacingLoose">

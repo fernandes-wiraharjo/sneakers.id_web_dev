@@ -181,7 +181,7 @@
     <main id="main" role="main">
         <!-- /spurit_sri-added -->
         <div id="shopify-section-product-template" class="shopify-section shopify-section--bordered"
-            style="margin: 10%;">
+            style="margin: 5%;">
             <section class="Product Product--large" data-section-id="product-template" data-section-type="product"
                 data-section-settings='{
                       "enableHistoryState": true,
@@ -343,13 +343,24 @@
                                     </div>
                                 </div>
                                 <div style="margin: 50px;"></div>
-                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
-                                    href="{{ $product->product_link }}" target="_blank"
-                                    class="ProductForm__AddToCart Button Button--primary Button--full">
-                                    <span>BUY NOW</span>
-                                </a>
+                                <div style="width: 100%;">
+                                    <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                        href="{{ $product->product_link }}" target="_blank"
+                                        class="ProductForm__AddToCart Button Button--primary Button--half">
+                                        <span>BUY NOW</span>
+                                    </a>
+                                    <a href="#" class="ProductForm__AddToCart Button Button--primary Button--half pop">
+                                        <span>Sizes</span>
+                                    </a>
+                                </div>
 
                                 <style>
+                                    .ProductForm__AddToCart{
+                                        display: inline-block !important;
+                                    }
+                                    .Button--half {
+                                        width: 49%;
+                                    }
                                     .spiff-spinner-outer {
                                         animation: rotator 1s linear infinite;
                                     }
@@ -682,15 +693,7 @@
                             </div>
                         </div>
                     </div>
-                    <h3 style="font-size: 20px;">Detail</h3>
                     <div style="margin-left: 20px;">
-                        <p data-mce-fragment="1"><strong>Size Chart :</strong></p>
-                        <div class="ButtonGroup ButtonGroup--spacingSmall m-2">
-                            <a href="#" class="Button Button--primary pop">
-                                SIZES
-                            </a>
-                        </div>
-                        <p></p>
                         <div class="modal fade" id="sizeModal" tabindex="-1" role="dialog"
                             aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -754,7 +757,7 @@
                                 </div>
                             </div>
                         </div>
-                        <p data-mce-fragment="1"><strong>Signature:</strong></p>
+                        {{-- <p data-mce-fragment="1"><strong>Signature:</strong></p>
                         <div>
                             @foreach ($product->signatures as $item)
                                 <div style="height: 50px; width: 90%; text-align: left; align-items: center; margin: 5px;">
@@ -771,7 +774,7 @@
                                         href="{{ route('collections', $item->category_title) }}">{{ $item->category_title }}</a>
                                 </span>
                             @endforeach
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </section>

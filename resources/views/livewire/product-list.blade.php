@@ -29,8 +29,7 @@
                     </svg>
                 </a>
             </div>
-            <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true"
-             style="max-height: 929px;">
+            <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
                 <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">
                   <span class="Drawer__Title Heading u-h4">Filters</span>
                     <a class="Drawer__Close Icon-Wrapper--clickable close-filter" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="Close navigation">

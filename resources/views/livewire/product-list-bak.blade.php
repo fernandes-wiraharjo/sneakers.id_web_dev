@@ -87,7 +87,7 @@
                         <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
                             <div class="ProductItem">
                                 <div class="ProductItem__Wrapper">
-                                    <a href="{{ route('product-detail', $product->id) }}"
+                                    <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
                                         class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
                                         <div class="AspectRatio AspectRatio--withFallback"
                                             style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: 1;">

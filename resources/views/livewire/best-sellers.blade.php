@@ -7,7 +7,7 @@
     <div class="ProductItem">
         <div class="ProductItem__Wrapper">
             {{-- Item detail route --}}
-            <a href="{{ route('product-detail', $item->id) }}" class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
+            <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}" class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
                 <div class="AspectRatio AspectRatio--withFallback" style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
 
                     {{-- multi image --}}
@@ -50,7 +50,7 @@
                 <p class="ProductItem__Vendor Heading">{{$item->detail->brand->brand_title}}</p>
                 <h2 class="ProductItem__Title Heading">
                     {{-- item Name --}}
-                    <a href="{{ route('product-detail', $item->id) }}">{{$item->product_name}}</a>
+                    <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">{{$item->product_name}}</a>
                 </h2>
                 {{-- base price if discount and count discount--}}
                 <div class="ProductItem__PriceList Heading">

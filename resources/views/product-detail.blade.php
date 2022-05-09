@@ -321,18 +321,18 @@
                                     <div class="ProductMeta__PriceList Heading">
                                         <span class="ProductMeta__Price Price Text--subdued u-h4"
                                             data-money-convertible>
-                                            @if ($product->detail->after_discount_price > 0 && $product->detail->retail_price > $product->detail->after_discount_price)
+                                            @if ($product->detail->discount_percentage > 0)
                                                 <span class="money">
                                                     RP.
                                                     <del>
                                                         {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                                     </del>
                                                     <span style="position:inherit; font-weight: 800;">
-                                                        {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}</span>
+                                                        {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}
+                                                    </span>
                                                 </span>
                                                 <div style="color: red; font-size: 20px; font-weight: bold;">
-                                                    {{ 100 - round(100 * ($product->detail->after_discount_price / $product->detail->retail_price), 0) }}%
-                                                    OFF
+                                                    {{ $product->detail->discount_percentage }}% OFF
                                                 </div>
                                             @else
                                                 <span class="money">RP.

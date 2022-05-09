@@ -50,21 +50,19 @@
             <x-ladmin-form-group name="retail_price" label="Retail Price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="retail" type="text" class="form-control" name="retail_price" min=1
-                    value="{{ rupiah_format( old('retail_price', $product->detail->retail_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    <input id="retail" type="text" class="form-control" name="retail_price" min="0"
+                    value="{{ rupiah_format( old('retail_price', $product->detail->retail_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
                 </div>
             </x-ladmin-form-group>
 
             <x-ladmin-form-group name="after_discount_price" label="After discount price">
                 <div class="input-group mb-5">
                     <span class="input-group-text">Rp</span>
-                    <input id="discount" type="text" class="form-control" name="after_discount_price"
-                     value="{{ rupiah_format( old('after_discount_price', $product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
+                    <input type="text" class="form-control" name="after_discount_price"
+                     value="{{ rupiah_format( old('after_discount_price', $product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)" min="0"/>
                     <span class="input-group-text">%</span>
-                    <input type="number" class="form-control" id="percent" name="discount_percentage" min="0" max="100"
-                    @if ($edit)
-                        value="{{100 - round(100 * ($product->detail->after_discount_price / $product->detail->retail_price), 0)}}"
-                    @endif
+                    <input type="number" class="form-control" name="discount_percentage" min="0" max="100"
+                        value="{{$edit ? $product->detail->discount_percentage : 0}}"
                     placeholder="Percentage" aria-label="Percent"/>
                 </div>
             </x-ladmin-form-group>
@@ -226,8 +224,8 @@
                                 message: 'Retail Price is required'
                             },
                             graterThan: {
-                                message: 'Retail Price should grater than 0',
-                                min: 1
+                                message: 'Retail Price should grater than or equal 0',
+                                min: 0
                             },
                             numeric: {
                                 message: 'Retail Price must be valid number',

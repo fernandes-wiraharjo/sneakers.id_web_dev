@@ -70,9 +70,9 @@ class ProductController extends Controller
                 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
                 'is_main' => 'required',
-                'base_price' => 'gte:1',
-                'retail_price' => 'gte:1',
-                'after_discount_price' => 'lt:retail_price'
+                'base_price' => 'gte:0',
+                'retail_price' => 'gte:0',
+                'after_discount_price' => 'lte:retail_price|gte:0'
             ],[
                 'is_main.required' => 'Main image should be chosen!',
                 'products_image.0.required' => 'Image must be chosen!, at least one image',
@@ -143,14 +143,14 @@ class ProductController extends Controller
             if($old_data->product_code == $data['product_code']){
                 $validation = [
                     'product_code' => 'required|exists:products,product_code|max:255',
-                    'retail_price' => 'gte:1',
-                    'after_discount_price' => 'lt:retail_price'
+                    'retail_price' => 'gte:0',
+                    'after_discount_price' => 'lte:retail_price|gte:0'
                 ];
             } else {
                 $validation = [
                     'product_code' => 'required|unique:products,product_code|max:255',
-                    'retail_price' => 'gte:1',
-                    'after_discount_price' => 'lt:retail_price'
+                    'retail_price' => 'gte:0',
+                    'after_discount_price' => 'lte:retail_price|gte:0'
                 ];
             }
 

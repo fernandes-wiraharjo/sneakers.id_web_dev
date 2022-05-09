@@ -55,6 +55,7 @@
 
     .table-data,
     .header__item {
+        width: 50px;
         flex: 1 1 20%;
         text-align: center;
         padding: 10px 10px;
@@ -737,7 +738,7 @@
                                                                 @if ($item->charts->count() > 0)
                                                                     @foreach ($item->charts as $item_chart)
                                                                         <div class="table-data">
-                                                                            {{ $item_chart->size_value }}</div>
+                                                                            {{ $item_chart->size_value != "" ? $item_chart->size_value : "-" }}</div>
                                                                     @endforeach
                                                                 @else
                                                                     <div class="table-data">-</div>

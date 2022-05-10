@@ -736,10 +736,12 @@
                                                             <div class="table-row">
                                                                 <div class="table-data">{{ $item->size_title }}</div>
                                                                 @if ($item->charts->count() > 0)
-                                                                    @foreach ($item->charts as $item_chart)
-                                                                        <div class="table-data">
-                                                                            {{ $item_chart->size_value != "" ? $item_chart->size_value : "-" }}</div>
-                                                                    @endforeach
+                                                                <div class="table-data">{{ $item->charts->where('size_name', "US - Men's")->first()->size_value != "" ? $item->charts->where('size_name', "US - Men's")->first()->size_value : '-' }}</div>
+                                                                <div class="table-data">{{ $item->charts->where('size_name', "US - Women's")->first()->size_value != "" ? $item->charts->where('size_name', "US - Women's")->first()->size_value : '-' }}</div>
+                                                                <div class="table-data">{{ $item->charts->where('size_name', "US - Kid's")->first()->size_value != "" ? $item->charts->where('size_name', "US - Kid's")->first()->size_value : '-' }}</div>
+                                                                <div class="table-data">{{ $item->charts->where('size_name', "UK")->first()->size_value != "" ? $item->charts->where('size_name', "UK")->first()->size_value : '-' }}</div>
+                                                                <div class="table-data">{{ $item->charts->where('size_name', "CM")->first()->size_value != "" ?  $item->charts->where('size_name', "CM")->first()->size_value : '-' }}</div>
+                                                                <div class="table-data">{{ $item->charts->where('size_name', "EU")->first()->size_value != "" ? $item->charts->where('size_name', "EU")->first()->size_value : '-' }}</div>
                                                                 @else
                                                                     <div class="table-data">-</div>
                                                                     <div class="table-data">-</div>

@@ -1,5 +1,6 @@
-<div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--insideDots"
-                        data-flickity-config='{
+<div>
+    <div class="Slideshow__Carousel Carousel Carousel--insideDots"
+    data-flickity-config='{
                             "prevNextButtons": false,
                             "setGallerySize": true,
                             "adaptiveHeight": true,
@@ -17,10 +18,10 @@
 <div class="Slideshow__Slide Carousel__Cell {{ $key == 0 ? 'is-selected' : '' }}" style="{{ $key == 0 ? 'visibility: visible;' : '' }}" data-slide-index="{{$key}}">
     {{-- Banner Mobile 1x1 = 800x800 --}}
     <a href="{{ $item->banner_url }}">
-        <div class="Slideshow__ImageContainer Image--contrast AspectRatio hidden-tablet-and-up"
+        <div class="Slideshow__ImageContainer Image--contrast hidden-tablet-and-up"
                 {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
-            style="--aspect-ratio: {{round($ratio,2)}}; background-image: url({{ getImage($item->banner_image, 'banner') }});">
-            <img class="Slideshow__Image Image--lazyLoad" style="max-width: 100% !important; height: auto !important;"
+            >
+            <img class="Slideshow__Image "
                 {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
                 src="{{ getImage($item->banner_image, 'banner') }}"
                 {{-- x800  Mobile_Banner_mocca_x800.jpg?v=1644823129--}}
@@ -40,9 +41,8 @@
     <a href="{{ $item->banner_url }}">
         <div class="Slideshow__ImageContainer Image--contrast AspectRatio AspectRatio--withFallback hidden-phone"
                 {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
-            style="padding-bottom: 66.66666666666667%; --aspect-ratio: {{round($ratio,2)}}; background-image: url({{ getImage($item->banner_image, 'banner') }});">
-
-            <img class="Slideshow__Image Image--lazyLoad hide-no-js" style="max-width: 100% !important; height: auto !important;"
+            style="padding-bottom: 66.66666666666667%; --aspect-ratio: {{round($ratio,2)}}; background-image: url({{ getImage($item->banner_image, 'banner') }}); background-position: center; background-repeat: no-repeat; background-size: cover;">
+            <img class="Slideshow__Image hide-no-js" style="max-width: 100% !important; height: auto !important;"
                 {{-- WEB_Banner_mocca_{width}x.jpg --}}
                 data-src="{{ getImage($item->banner_image, 'banner') }}"
                 data-optimumx="1.2"
@@ -70,4 +70,5 @@
     </div> --}}
 </div>
 @endforeach
+</div>
 </div>

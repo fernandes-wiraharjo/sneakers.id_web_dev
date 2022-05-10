@@ -39,7 +39,7 @@
 
 #section-slideshow .Heading,
 #section-slideshow .flickity-page-dots {
-    color: #ffffff;
+    color: #d0cfcf;
 }
 
 #section-slideshow .Button {
@@ -48,7 +48,7 @@
 }
 
 #section-slideshow .Button::before {
-    background-color: #ffffff;
+    background-color: #000000;
 }
 @media (-moz-touch-enabled: 0), (hover: hover) {
     #section-slideshow .Button:hover {

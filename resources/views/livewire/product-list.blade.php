@@ -47,7 +47,7 @@
                     </a>
                 </header>
                 <div class="Drawer__Content">
-                  <div class="Drawer__Main" style="padding-left: 20px !important;">
+                  <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
                     @include('components.filters', $filters)
                   </div>
                 </div>

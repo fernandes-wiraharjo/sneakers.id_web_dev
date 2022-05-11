@@ -68,7 +68,7 @@
                 <div class="Footer__Copyright">
                     <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">Developed by : </a>
                     <br>
-                    <span class="Footer__StoreName Heading u-h8 Link Link--secondary" style="padding-block-start: 10px">Fernandes Wiharjo - 089693670282 - fernandeswiraharjo@gmail.com </span>
+                    <span class="Footer__StoreName Heading u-h8 Link Link--secondary" style="padding-block-start: 10px">Fernandes Wiraharjo - 089693670282 - fernandeswiraharjo@gmail.com </span>
                     <br>
                     <span class="Footer__StoreName Heading u-h8 Link Link--secondary" style="padding-block-start: 10px">Aldy Satria Gumilar - 089636022489 - aldy.satria07@gmail.com </span>
                 </div>

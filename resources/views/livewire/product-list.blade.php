@@ -1,9 +1,17 @@
 @push('styles')
     <style>
+        #filter_button {
+            display: none !important;
+        }
+
         @media only screen and (max-width: 1007px) {
            .Drawer__Main {
                 padding-top: 15px;
                 padding-left: 20px !important;
+            }
+
+            .filter-button {
+                display: block;
             }
         }
 
@@ -16,7 +24,7 @@
     <div class="CollectionMain" style="padding-top: 1rem; padding-botom: 5rem; margin-bottom: 5rem;">
         <div class="CollectionToolbar CollectionToolbar--top CollectionToolbar--reverse">
             <div class="CollectionToolbar__Group">
-                <a class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading Text--subdued u-h6 filter-button" data-action="open-drawer" data-drawer-id="collection-filter-drawer" aria-label="Show filters" aria-expanded="false">
+                <a class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading Text--subdued u-h6 filter-button " data-action="open-drawer" data-drawer-id="collection-filter-drawer" aria-label="Show filters" aria-expanded="false" id="filter_button">
                     Filter
                 </a>
                 <a class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6 sort-button"

@@ -70,12 +70,12 @@
         margin-left: unset !important;
         padding: 5px;
     }
+}
 
-    .Drawer__Main {
-        padding-right: 20px;
-        overflow-y: auto;
-    }
-
+.Drawer__Main {
+    padding-right: 20px;
+    padding-bottom: 20px;
+    overflow-y: auto;
 }
 
 .CollectionInner__Sidebar {
@@ -91,4 +91,14 @@
     background: white;
     box-shadow: 1px 1px #e7e7e7, -1px -1px #e7e7e7;
     z-index: 2;
+}
+
+#filter_button {
+    display: none !important;
+}
+
+@media only screen and (max-width: 1007px) {
+    #filter_button {
+        display: block !important;
+    }
 }

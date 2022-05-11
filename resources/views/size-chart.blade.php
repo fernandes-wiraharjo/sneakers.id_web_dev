@@ -123,12 +123,12 @@
                             <div class="table-row">
                                 <div class="table-data">{{ $item->size_title }}</div>
                                 @if ($item->charts->count() > 0)
-                                <div class="table-data">{{ $item->charts->where('size_name', "US - Men's")->first()->size_value != "" ? $item->charts->where('size_name', "US - Men's")->first()->size_value : '-' }}</div>
-                                <div class="table-data">{{ $item->charts->where('size_name', "US - Women's")->first()->size_value != "" ? $item->charts->where('size_name', "US - Women's")->first()->size_value : '-' }}</div>
-                                <div class="table-data">{{ $item->charts->where('size_name', "US - Kid's")->first()->size_value != "" ? $item->charts->where('size_name', "US - Kid's")->first()->size_value : '-' }}</div>
-                                <div class="table-data">{{ $item->charts->where('size_name', "UK")->first()->size_value != "" ? $item->charts->where('size_name', "UK")->first()->size_value : '-' }}</div>
-                                <div class="table-data">{{ $item->charts->where('size_name', "CM")->first()->size_value != "" ?  $item->charts->where('size_name', "CM")->first()->size_value : '-' }}</div>
-                                <div class="table-data">{{ $item->charts->where('size_name', "EU")->first()->size_value != "" ? $item->charts->where('size_name', "EU")->first()->size_value : '-' }}</div>
+                                <div class="table-data">{{ $item->charts->where('size_name', "US - Men's")->first() ? $item->charts->where('size_name', "US - Men's")->first()->size_value : '-' }}</div>
+                                <div class="table-data">{{ $item->charts->where('size_name', "US - Women's")->first() ? $item->charts->where('size_name', "US - Women's")->first()->size_value : '-' }}</div>
+                                <div class="table-data">{{ $item->charts->where('size_name', "US - Kid's")->first() ? $item->charts->where('size_name', "US - Kid's")->first()->size_value : '-' }}</div>
+                                <div class="table-data">{{ $item->charts->where('size_name', "UK")->first() ? $item->charts->where('size_name', "UK")->first()->size_value : '-' }}</div>
+                                <div class="table-data">{{ $item->charts->where('size_name', "CM")->first() ?  $item->charts->where('size_name', "CM")->first()->size_value : '-' }}</div>
+                                <div class="table-data">{{ $item->charts->where('size_name', "EU")->first() ? $item->charts->where('size_name', "EU")->first()->size_value : '-' }}</div>
                                 @else
                                     <div class="table-data">-</div>
                                     <div class="table-data">-</div>

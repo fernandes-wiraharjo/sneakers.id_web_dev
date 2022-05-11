@@ -344,15 +344,18 @@
                                     </div>
                                 </div>
                                 <div style="margin: 50px;"></div>
+                                <div class="size-button Heading u-h6" style="width: 100%;text-align: right;">
+                                    <a href="{{ route('size-chart') }}" target="_blank">Size Chart</a>
+                                </div>
                                 <div style="width: 100%;">
                                     <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                         href="{{ $product->product_link }}" target="_blank"
-                                        class="ProductForm__AddToCart Button Button--primary Button--half">
+                                        class="ProductForm__AddToCart Button Button--primary Button--full">
                                         <span>BUY NOW</span>
                                     </a>
-                                    <a href="#" class="ProductForm__AddToCart Button Button--primary Button--half pop">
+                                    {{-- <a href="#" class="ProductForm__AddToCart Button Button--primary Button--half pop">
                                         <span>Sizes</span>
-                                    </a>
+                                    </a> --}}
                                 </div>
 
                                 <style>

@@ -34,4 +34,19 @@ class Size extends Model
     {
         return $this->hasMany(SizeChart::class,'size_id', 'id');
     }
+
+    public function mens()
+    {
+        return $this->hasOne(SizeMen::class, 'size_id', 'id');
+    }
+
+    public function womens()
+    {
+        return $this->hasOne(SizeWomen::class, 'size_id', 'id');
+    }
+
+    public function kids()
+    {
+        return $this->hasOne(SizeKid::class, 'size_id', 'id');
+    }
 }

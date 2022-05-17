@@ -1,11 +1,11 @@
 <!--begin::Action--->
 {{-- <td class="text-end"> --}}
     @if(isset($show))
-        @can($show['gate'])
+        {{-- @can($show['gate']) --}}
             <a href="{{ $show['url'] }}" class="btn btn-icon btn-info btn-active-light-primary btn-sm">
-                <i class="fas fa-document-search"></i>
+                <i class="fas fa-eye"></i>
             </a>
-        @endcan
+        {{-- @endcan --}}
     @endif
 
     @if(isset($edit))

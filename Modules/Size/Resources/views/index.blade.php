@@ -3,15 +3,15 @@
         {{-- <link rel="stylesheet" href="{{ mix('css/custom.css') }}"> --}}
     </x-slot>
     <x-slot name="title">
-        <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Size</h1>
+        <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">{{ $title ?? '' }}</h1>
     </x-slot>
     <x-slot name="button_create">
-        @can('administrator.master-data.size.create')
+        @can($gate ?? '')
         <!--begin::Wrapper-->
-        <div data-bs-toggle="tooltip" data-bs-placement="left" data-bs-trigger="hover" title="Create a new Size">
-            <a href="{{ route('administrator.master-data.size.create', ['back' => request()->fullUrl()]) }}"
+        <div data-bs-toggle="tooltip" data-bs-placement="left" data-bs-trigger="hover" title="{{ $create_tooltip ?? '' }}">
+            <a href="{{ route($create_route ?? '', ['back' => request()->fullUrl()]) }}"
                 class="btn btn-sm btn-primary fw-bolder">
-                Create Size
+                {{ $create_button ?? 'Create'}}
             </a>
         </div>
         <!--end::Wrapper-->

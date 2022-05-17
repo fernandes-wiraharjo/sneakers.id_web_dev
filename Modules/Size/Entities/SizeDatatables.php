@@ -51,7 +51,10 @@ use Yajra\DataTables\Services\DataTable;
                     ];
                 }
                 return view('components.action-burger', [
-                    'show' => null,
+                    'show' => [
+                        'gate' => 'administrator.master-data.size.show',
+                        'url' => route('administrator.master-data.size.show', [$item->id, 'back' => request()->fullUrl()])
+                      ],
                     'edit' => [
                       'gate' => 'administrator.master-data.size.update',
                       'url' => route('administrator.master-data.size.edit', [$item->id, 'back' => request()->fullUrl()])

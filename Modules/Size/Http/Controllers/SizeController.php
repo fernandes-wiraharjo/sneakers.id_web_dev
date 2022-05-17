@@ -29,7 +29,15 @@ class SizeController extends Controller
     {
         ladmin()->allow('administrator.master-data.size.index');
 
-        return $dataTables->render('size::index');
+        $data = [
+            'gate' => 'administrator.master-data.size.create',
+            'create_route' => 'administrator.master-data.size.create',
+            'create_button' => "Create Size",
+            'create_tooltip' => "Create new Size",
+            'title' => "Size"
+        ];
+
+        return $dataTables->render('size::index', $data);
     }
 
     /**
@@ -39,7 +47,13 @@ class SizeController extends Controller
     public function create()
     {
         ladmin()->allow('administrator.master-data.size.create');
-        $data['size'] = new Size();
+        $data = [
+            'title' => 'Create Size',
+            'size' => new Size(),
+            'route' => 'administrator.master-data.size.store',
+            'seperate' => false,
+            'type' => 'size'
+        ];
 
         return view('size::create', $data);
     }
@@ -85,7 +99,12 @@ class SizeController extends Controller
      */
     public function show($id)
     {
-        return view('size::show');
+        $size = $this->repository->getSizeById($id);
+        $data = [
+            'title' => 'Show Size '.$size->size_title,
+            'size' => $size,
+        ];
+        return view('size::show', $data);
     }
 
     /**
@@ -96,7 +115,14 @@ class SizeController extends Controller
     public function edit($id)
     {
         ladmin()->allow('administrator.master-data.size.update');
-        $data['size'] = $this->repository->getSizeById($id);
+        $size = $this->repository->getSizeById($id);
+        $data = [
+            'title' => 'Edit Size',
+            'size' => $size,
+            'route' => 'administrator.master-data.size.update',
+            'seperate' => false,
+            'type' => 'Size',
+        ];
         return view('size::edit', $data);
     }
 

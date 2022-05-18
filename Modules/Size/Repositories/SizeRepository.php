@@ -277,6 +277,13 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
       return $this->model->findOrFail($id);
   }
 
+  public function getSizeByName($keyword){
+    return $this->model
+      ->where('size_title', 'LIKE', '%'.$keyword.'%')
+      ->where('size_description', 'LIKE', '%'.$keyword.'%')
+      ->get();
+  }
+
   public function deleteSize($id){
       $delete = $this->getSizeById($id);
 

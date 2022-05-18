@@ -177,7 +177,7 @@
 						<div class="table-data">{{ $item->US }}</div>
 						<div class="table-data">{{ $item->UK }}</div>
 						<div class="table-data">{{ $item->EU }}</div>
-						<div class="table-data">{{ $item->US }}</div>
+						<div class="table-data">{{ $item->CM }}</div>
 					</div>
 				@endforeach
 			</div>
@@ -197,7 +197,7 @@
 						<div class="table-data">{{ $item->US }}</div>
 						<div class="table-data">{{ $item->UK }}</div>
 						<div class="table-data">{{ $item->EU }}</div>
-						<div class="table-data">{{ $item->US }}</div>
+						<div class="table-data">{{ $item->CM }}</div>
 					</div>
 				@endforeach
 			</div>
@@ -217,7 +217,7 @@
 						<div class="table-data">{{ $item->US }}</div>
 						<div class="table-data">{{ $item->UK }}</div>
 						<div class="table-data">{{ $item->EU }}</div>
-						<div class="table-data">{{ $item->US }}</div>
+						<div class="table-data">{{ $item->CM }}</div>
 					</div>
 				@endforeach
 			</div>

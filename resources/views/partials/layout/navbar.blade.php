@@ -142,7 +142,7 @@
         <div id="Search" class="Search" aria-hidden="true">
             <div class="Search__Inner">
                 <div class="Search__SearchBar">
-                    <form action="{{ route('search') }}" class="Search__Form">
+                    {{-- <form action="{{ route('search') }}" class="Search__Form"> --}}
                         <div class="Search__InputIconWrapper">
                             <span class="hidden-tablet-and-up">
                                 <svg class="Icon Icon--search" role="presentation" viewBox="0 0 18 17">
@@ -164,9 +164,9 @@
                             </span>
                         </div>
 
-                        <input type="search" class="Search__Input Heading ui-autocomplete-input bc-sf-search-box" name="q" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." autofocus="" id="bc-sf-search-box-0" data-search-box="#bc-sf-search-box-0">
+                        <input type="search" class="Search__Input Heading ui-autocomplete-input" name="q" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." autofocus="" id="global_search">
 
-                    </form>
+                    {{-- </form> --}}
 
                     <button class="Search__Close Link Link--primary" data-action="close-search">
                         <svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
@@ -341,7 +341,7 @@
                             </g>
                         </svg>
                     </a>
-                    {{-- <a href="/search" class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable "
+                    <a href="/search" class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable "
                         data-action="toggle-search" aria-label="Search">
                         <span class="hidden-tablet-and-up">
                             <svg class="Icon Icon--search" role="presentation"
@@ -363,7 +363,7 @@
                                 </g>
                             </svg>
                         </span>
-                    </a> --}}
+                    </a>
                 </div>
             </div>
         </header>

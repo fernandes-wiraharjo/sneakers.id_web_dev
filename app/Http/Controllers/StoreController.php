@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Livewire\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
@@ -9,6 +10,9 @@ use Modules\Product\Repositories\ProductRepository;
 use Modules\LookBook\Repositories\LookBookRepository;
 use Modules\Size\Repositories\SizeRepository;
 use Modules\Faq\Repositories\FaqRepository;
+use Modules\Category\Repositories\CategoryRepository;
+use Modules\Tag\Repositories\TagRepository;
+use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
 
 class StoreController extends Controller
 {
@@ -17,13 +21,20 @@ class StoreController extends Controller
         ProductRepository $productRepository,
         LookBookRepository $lookBookRepository,
         SizeRepository $sizeRepository,
-        FaqRepository $faqRepository) {
+        FaqRepository $faqRepository,
+        CategoryRepository $categoryRepository,
+        TagRepository $tagRepository,
+        SignaturePlayerRepository $signaturePlayerRepository) {
             $this->brandRepository = $brandRepository;
             $this->productRepository = $productRepository;
             $this->lookBookRepository = $lookBookRepository;
             $this->sizeRepository = $sizeRepository;
             $this->faqRepository = $faqRepository;
+            $this->categoryRepository = $categoryRepository;
+            $this->tagRepository = $tagRepository;
+            $this->signaturePlayerRepository = $signaturePlayerRepository;
     }
+
     public function index() {
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
@@ -41,29 +52,88 @@ class StoreController extends Controller
     }
 
     public function search(Request $request){
-        // $data = $request->all();
-        // $keyword = $data['q'];
-        // $data['keyword'] = $keyword;
-        // $data['brand_menu'] = $this->brandRepository->getBrandMenu();
-        // $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return '<div class="Segment">'.
-        '<div class="Segment__Title Segment__Title--flexed"><span class="Heading Text--subdued u-h7">Journal</span><a class="Heading Link Link--secondary u-h7" href="/search?q=s*&type=article">View all</a></div>'.
 
-        '<div class="Segment__Content"><ul class="Linklist"><li class="Linklist__Item">'.
-                    '<a href="/blogs/articles/ticket-to-90-s-roller-skate-kembali-mengambil-hati?_pos=1&_sid=0a113e99d&_ss=r" class="Link Link--secondary">Ticket to 90’s : Roller Skate Kembali Mengambil Hati</a>'.
-                  '</li><li class="Linklist__Item">'.
-                    '<a href="/blogs/articles/sole-superior-singapore-2017?_pos=2&_sid=0a113e99d&_ss=r" class="Link Link--secondary">SOLE SUPERIOR SINGAPORE 2017</a>'.
-                  '</li><li class="Linklist__Item">'.
-                    '<a href="/blogs/articles/artist-series-stcl-x-decky-sastra?_pos=3&_sid=0a113e99d&_ss=r" class="Link Link--secondary">ARTIST SERIES "STCL X DECKY SASTRA"</a>'.
-                  '</li><li class="Linklist__Item">'.
-                    '<a href="/blogs/articles/570-pairs-staycool-socks-sold-without-promo-discount-at-jakarta-sneaker-day-2019?_pos=4&_sid=0a113e99d&_ss=r" class="Link Link--secondary">2000 pairs StayCool Socks sold without promo / discount at Jakarta Sneaker Day 2019!</a>'.
-                  '</li><li class="Linklist__Item">'.
-                    '<a href="/blogs/articles/mind-control-skateboard-best-trick-contest-by-staycool-socks-vearst-jeans?_pos=5&_sid=0a113e99d&_ss=r" class="Link Link--secondary">SkateBoard Best Trick Contest by StayCool Socks</a>'.
-                  '</li><li class="Linklist__Item">'.
-                    '<a href="/blogs/articles/do-it-yourself?_pos=6&_sid=0a113e99d&_ss=r" class="Link Link--secondary">StayCool x Street Vision: Semangat #Pulsitive Melalui DIY Masker Knit</a>'.
-                  '</li></ul></div>'.
-      '</div>';
-        // return view('collections', $data);
+        $data = $request->all();
+        $keyword = $data['search'];
+        $this->search = $keyword;
+
+        $brand = $this->brandRepository->getBrandByName($keyword);
+        $category = $this->categoryRepository->getCategoryByName($keyword);
+        $tag = $this->tagRepository->getTagByName($keyword);
+        $size = $this->sizeRepository->getSizeByName($keyword);
+        $signature = $this->signaturePlayerRepository->getSignatureByName($keyword);
+
+        $brand_id = $brand ? $brand->pluck('id')->toArray() : null;
+        $category_id = $category ? $category->pluck('id')->toArray() : null;
+        $tag_id = $tag ? $tag->pluck('id')->toArray() : null;
+        $size_id = $size ? $size->pluck('id')->toArray() : null;
+        $signature_id = $signature ? $signature->pluck('id')->toArray() : null;
+
+        $result_item = $this->productRepository->getProductWhere()
+                                ->when($brand_id, function ($query, $brands){
+                                    return $query->whereHas('detail', function ($q) use ($brands){
+                                        return $q->whereIn('brand_id', $brands)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
+                                })
+                                ->when($size_id, function ($query, $sizes){
+                                    return $query->whereHas('sizes', function ($q) use ($sizes){
+                                        return $q->whereIn('size_id', $sizes)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
+                                })
+                                ->when($tag_id, function ($query, $tags) {
+                                    return $query->whereHas('tags', function ($q) use ($tags){
+                                        $tags = array_unique($tags);
+                                        return $q->whereIn('tag_id', $tags)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
+                                })
+                                ->when($category_id, function ($query, $categories){
+                                    return $query->whereHas('categories', function ($q) use ($categories){
+                                        $categories = array_unique($categories);
+                                        return $q->whereIn('category_id', $categories)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
+                                })
+                                ->when($signature_id, function ($query, $signatures){
+                                    return $query->whereHas('signatures', function ($q) use ($signatures){
+                                        return $q->whereIn('signature_player_id', $signatures)
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
+                                })
+                                ->when($this->search, function ($query, $search){
+                                    return $query->where('product_name', 'LIKE', '%'.$search.'%')
+                                        ->where('description', 'LIKE', '%'.$search.'%');
+                                });
+
+        $result = [
+            'item' => $result_item->limit(5)->get(),
+            'total_result' => $result_item->get()->count()
+        ];
+
+        return json_encode($result);
+    }
+
+    public function searchResult($keyword){
+        $data['keyword'] = $keyword;
+        $data['sizes'] = $this->sizeRepository->getAllActiveSizes();
+        $data['men_sizes'] = $this->sizeRepository->getAllMenSize();
+        $data['women_sizes'] = $this->sizeRepository->getAllWomenSize();
+        $data['kid_sizes'] = $this->sizeRepository->getAllKidSize();
+        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('search-result', $data);
     }
 
     public function collections($keyword){

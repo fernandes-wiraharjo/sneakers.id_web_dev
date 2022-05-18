@@ -102,3 +102,11 @@
         display: block !important;
     }
 }
+
+.bc-sf-search-suggestion li {
+    list-style: unset !important;
+}
+
+.bc-sf-search-suggestion-product-title {
+    margin-top: 30px !important;
+}

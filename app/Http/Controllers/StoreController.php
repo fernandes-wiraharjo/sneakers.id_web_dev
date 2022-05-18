@@ -119,7 +119,7 @@ class StoreController extends Controller
 
         $result = [
             'item' => $result_item->limit(5)->get(),
-            'total_result' => $result_item->get()->count()
+            'total_result' => $result_item->count()
         ];
 
         return json_encode($result);

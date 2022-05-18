@@ -57,7 +57,7 @@
         </div>
         <div class="input-group rounded mb-5">
             <span class="input-group-text w-50">CM</span>
-            <input type="text" placeholder="CM Size" class="form-control mr-lg-10" name="women[CM]" id="CM" required value="{{ old('CM', $edit ? ($size->womens->US ?? '') : '') }}">
+            <input type="text" placeholder="CM Size" class="form-control mr-lg-10" name="women[CM]" id="CM" required value="{{ old('CM', $edit ? ($size->womens->CM ?? '') : '') }}">
         </div>
     </div>
     <div class="col-md-4">

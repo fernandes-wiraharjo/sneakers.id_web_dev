@@ -77,10 +77,12 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('brandmenu', function($attribute, $value, $parameters) use ($brandRepository) {
-            $brand_is_menu =  $brandRepository->getBrandMenu()->count();
-            if($value){
+            $brand_is_menu =  $brandRepository->checkActiveMenuBrand();
+
+            if(intval($value)){
                 $brand_is_menu++;
             }
+
             return $brand_is_menu <= 3;
         });
     }

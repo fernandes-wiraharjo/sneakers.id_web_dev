@@ -7,16 +7,18 @@
                     $image_size = getimagesize(getImage($item->banner_image, 'banner'));
                     $ratio = $image_size[0] / $image_size[1];
                 @endphp
-                <!--begin::Item-->
-                <div class="carousel-item {{ $key == 0 ? 'active' : ''}}">
-                    <img class="w-100 h-fit"
-                        {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
-                        src="{{ getImage($item->banner_image, 'banner') }}"
-                        {{-- x800  Mobile_Banner_mocca_x800.jpg?v=1644823129--}}
-                        data-src="{{ getImage($item->banner_image, 'banner') }}"
-                        alt="" />
-                </div>
-                <!--end::Item-->
+                <a href="{{ $item->banner_url }}">
+                    <!--begin::Item-->
+                    <div class="carousel-item {{ $key == 0 ? 'active' : ''}}">
+                        <img class="w-100 h-fit"
+                            {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
+                            src="{{ getImage($item->banner_image, 'banner') }}"
+                            {{-- x800  Mobile_Banner_mocca_x800.jpg?v=1644823129--}}
+                            data-src="{{ getImage($item->banner_image, 'banner') }}"
+                            alt="" />
+                    </div>
+                    <!--end::Item-->
+                </a>
             @endforeach
         </div>
         <!--end::Carousel-->

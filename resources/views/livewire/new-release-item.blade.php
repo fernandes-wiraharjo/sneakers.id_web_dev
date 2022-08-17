@@ -17,10 +17,11 @@
                         $image_size = getimagesize(getImage($item->image, 'products/'.$item->product_code));
                         $ratio = $image_size[0] / $image_size[1];
                     @endphp
-                    {{-- <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}"> --}}
                         <!--begin::item-->
                         <div class="text-center tns-item tns-slide-cloned p-5" aria-hidden="true" tabindex="-1">
-                            <!--begin::Photo-->
+                            <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">
+                                <div>
+                                     <!--begin::Photo-->
                             @foreach ($item->images()->limit(1)->get() as $key => $image)
                             <div class="mx-auto mb-5 d-flex w-200px h-200px bgi-no-repeat bgi-size-contain bgi-position-center"
                                 style="background-image:url('{{ getImage($image->image_url, 'products/'.$item->product_code) }}')"></div>
@@ -57,9 +58,10 @@
                                 <!--end::Total-->
                             </div>
                             <!--end::Person-->
+                                </div>
+                            </a>
                         </div>
                         <!--end::Item-->
-                    {{-- </a> --}}
                     @endforeach
 
                 </div>

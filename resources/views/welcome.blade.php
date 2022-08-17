@@ -1,7 +1,5 @@
 <x-base-front-layout>
-    {{-- <div class="d-flex mh-225px mw-100 h-65px min-h-65px bg-black text-white"> --}}
     @include('public.partials._navbar')
-    {{-- </div> --}}
 
     @livewire('banner-image')
 

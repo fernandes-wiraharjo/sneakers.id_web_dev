@@ -30,6 +30,7 @@
 @endpush
 
 @section('content')
+
     <div class="d-flex flex-column flex-root">
         {{ $slot }}
 

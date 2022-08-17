@@ -1,100 +1,94 @@
-<div id="shopify-section-footer" class="shopify-section shopify-section--footer">
-    <footer id="section-footer" class="Footer" role="contentinfo">
-        <div class="Container">
-            <div class="Footer__Inner">
-                <div class="Footer__Block Footer__Block--text">
-                    <h2 class="Footer__Title Heading u-h6">Contact Us</h2>
-                    <div class="Footer__Content Rte">
-                        @if (isset($footer->phone_number_1))
-                            <p><strong>Hotline:</strong>
-                                {{ $footer->phone_number_1 ?? '' }}{{ isset($footer->phone_number_2) ? ' / ' . ($footer->phone_number_2 ?? '') : '' }}
-                            </p>
-                        @endif
-                        <p></p>
-                        @if (isset($footer->email))
-                            <p><strong>E-mail:</strong> {{ $footer->email ?? '' }}</p>
-                        @endif
-                        @if (isset($footer->address))
-                            <p><strong>Address:</strong> {{ $footer->address ?? '' }}</p>
-                        @endif
-                        @if (isset($footer->wa))
-                            <p><strong>Whatsapp:</strong> {{ $footer->wa ?? '' }}</p>
-                        @endif
-                        @if (isset($footer->line))
-                            <p><strong>Line:</strong> {{ $footer->line ?? '' }}</p>
-                        @endif
-                    </div>
-                    <ul class="Footer__Social HorizontalList HorizontalList--spacingLoose">
-                        @if (isset($footer->social_media))
-                            @foreach ($footer->social_media as $item)
-                                <li class="HorizontalList__Item">
-                                    <a href="{{ $item->social_link ?? '' }}" class="Link Link--primary" target="_blank"
-                                        rel="noopener" aria-label="{{ $item->social_name ?? '' }}">
-                                        <span class="Icon-Wrapper--clickable" style="width: 2rem !important;">
-                                            <i class="fa fa-{{ $item->social_icon ?? 'circle' }}"
-                                                aria-hidden="true"></i>
-                                        </span>
-                                    </a>
-                                </li>
-                            @endforeach
-                        @endif
-                    </ul>
+<!--begin::Footer-->
+<div class="footer py-4 {{ theme()->printHtmlClasses('footer', false) }}" id="kt_footer" style="width: -webkit-fill-available; background-color: black;">
+    <div class="{{ theme()->printHtmlClasses('footer-container', false) }} d-flex flex-center flex-column-auto flex-md-row align-items-center justify-content-around">
+        <div class="flex-column text-center">
+                <h1 class="text-white">CONTACT US</h1>
+                <div class="text-white">
+                    @if (isset($footer->phone_number_1))
+                        <p><strong>Hotline:</strong>
+                            {{ $footer->phone_number_1 ?? '' }}{{ isset($footer->phone_number_2) ? ' / ' . ($footer->phone_number_2 ?? '') : '' }}
+                        </p>
+                    @endif
+                    <p></p>
+                    @if (isset($footer->email))
+                        <p><strong>E-mail:</strong> {{ $footer->email ?? '' }}</p>
+                    @endif
+                    @if (isset($footer->address))
+                        <p><strong>Address:</strong> {{ $footer->address ?? '' }}</p>
+                    @endif
+                    @if (isset($footer->wa))
+                        <p><strong>Whatsapp:</strong> {{ $footer->wa ?? '' }}</p>
+                    @endif
+                    @if (isset($footer->line))
+                        <p><strong>Line:</strong> {{ $footer->line ?? '' }}</p>
+                    @endif
                 </div>
-                <div class="Footer__Block Footer__Block--links">
-                    <h2 class="Footer__Title Heading u-h6">HELP</h2>
-                    <ul class="Linklist">
-                        <li class="Linklist__Item">
-                            <a href="{{ route('faq') }}" class="Link Link--primary">FAQ</a>
-                        </li>
-
-                        <li class="Linklist__Item">
-                            <a href="{{ $footer->maps ?? '' }}" class="Link Link--primary">
-                                OUR STORE
+                <!--begin::Menu-->
+                <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1" style="display: inline-flex;">
+                    @if (isset($footer->social_media))
+                        @foreach ($footer->social_media as $item)
+                            <a href="{{ $item->social_link ?? '' }}"
+                                aria-label="{{ $item->social_name ?? '' }}"
+                                class="btn btn-icon btn-bg-light me-5 rounded-circle">
+                                <i class="fab fa-{{ $item->social_icon ?? 'circle' }} fs-4"></i>
                             </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="Footer__Block Footer__Block--newsletter">
-                    <h2 class="Footer__Title Heading u-h6">
-                        <a href="{{ route('about-us') }}" class="Link Link--primary">About us</a>
-                    </h2>
-                    <div class="Footer__Content Rte">
-                        <p>{{ $footer->about ?? '' }}</p>
-                    </div>
-                </div>
-            </div>
+                        @endforeach
+                    @endif
+                </ul>
+                <!--end::Menu-->
+        </div>
 
-            <div class="Footer__Aside">
-                <div class="Footer__Block Footer__Block--text">
-                    <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">© Sneakers.id
-                        {{ date('Y') }}</a>
-                </div>
-                <div class="Footer__Copyright">
-                    <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">Developed by : </a>
-                    <br>
-                    <span class="Footer__StoreName Heading u-h8 Link Link--secondary"
-                        style="padding-block-start: 10px">Fernandes Wiraharjo - 089693670282 -
-                        fernandeswiraharjo@gmail.com </span>
-                    <br>
-                    <span class="Footer__StoreName Heading u-h8 Link Link--secondary"
-                        style="padding-block-start: 10px">Aldy Satria Gumilar - 089636022489 - aldy.satria07@gmail.com
-                    </span>
-                </div>
+        <div class="flex-column">
+            <div class="text-center">
+                <h1 class="text-white">ABOUT US</h1>
+                <p class="text-white">{{ $footer->about ?? '' }}</p>
             </div>
         </div>
-    </footer>
-</div>
-<div class="bc-sf-search-suggestion-wrapper " style="top: 187.504px; left: 91px; width: 90%;">
-    <div class="bc-sf-search-suggestion-popover" data-direction="left" style="top: -20px; left: 20px;display: none;">
+
+        <div class="flex-column">
+            <div class="text-center">
+                <h1 class="text-white">HELP</h1>
+                <a href="{{ route('faq') }}" class="text-white">FAQ</a>
+                <br>
+                <a href="{{ $footer->maps ?? '' }}" class="text-white">
+                    OUR STORE
+                </a>
+            </div>
+        </div>
     </div>
-    <ul id="ui-id-1" tabindex="0"
-        class="ui-menu ui-widget ui-widget-content ui-autocomplete bc-sf-search-suggestion ui-front"
-        style="width: 100%; top: 0px; left: -40px;display: none;" data-search-box="#bc-sf-search-box-0">
-        <li class="bc-sf-search-suggestion-header-product bc-sf-search-suggestion-header ui-menu-item"
-            aria-label="Products">Products</li>
-        <li id="item" data-group="products" aria-label="Products"></li>
-        <li class="bc-sf-search-suggestion-header-view-all bc-sf-search-suggestion-header ui-menu-item"
-            aria-label="View All"><a href="#" tabindex="-1" class="ui-menu-item-wrapper" id="total_result"></a></li>
-    </ul>
 </div>
-@livewireScripts
+<!--end::Footer-->
+<div class="footer py-4 {{ theme()->printHtmlClasses('footer', false) }}" id="kt_footer" style="width: -webkit-fill-available; background-color: black;">
+    <div class="{{ theme()->printHtmlClasses('footer-container', false) }} d-flex flex-center flex-column-auto flex-md-row align-items-center justify-content-between">
+        <div class="flex-column">
+            <div class="text-dark order-2 order-md-1">
+                <span class="text-muted fw-bold me-1">Hak Cipta &copy; {{ date('Y') }}</span>
+                <a href="#" target="_blank"
+                    class="text-gray-200 text-hover-primary">sneakers.id</a>
+                <span class="text-white"> - Semua hak cipta dilindungi.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--end::Footer-->
+<div class="footer py-4 {{ theme()->printHtmlClasses('footer', false) }}" id="kt_footer" style="width: -webkit-fill-available; background-color: black;">
+    <div class="{{ theme()->printHtmlClasses('footer-container', false) }} d-flex flex-center flex-column-auto flex-md-row align-items-center justify-content-between">
+        <div class="flex-column">
+            <div class="text-dark order-2 order-md-1">
+                <span class="text-muted fw-bold me-1">Developed by :</span>
+            </div>
+        </div>
+        <div class="flex-column">
+            <div class="text-white order-2 order-md-1">
+                <a href="#">Fernandes Wiraharjo - 089693670282 -
+                    fernandeswiraharjo@gmail.com </a>
+            </div>
+        </div>
+        <div class="flex-column">
+            <div class="text-white order-2 order-md-1">
+                <a href="">Aldy Satria Gumilar - 089636022489 - aldy.satria07@gmail.com</a>
+            </div>
+        </div>
+    </div>
+</div>

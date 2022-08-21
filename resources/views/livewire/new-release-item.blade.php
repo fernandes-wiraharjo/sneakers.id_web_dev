@@ -9,7 +9,7 @@
                     data-tns-autoplay="true" data-tns-autoplay-timeout="15000" data-tns-controls="true"
                     data-tns-nav="false" data-tns-items="1" data-tns-center="false" data-tns-dots="false"
                     data-tns-prev-button="#kt_team_slider_prev" data-tns-next-button="#kt_team_slider_next"
-                    data-tns-responsive="{1200: {items: 3}, 992: {items: 2}}"
+                    data-tns-responsive="{1200: {items: 4}, 992: {items: 2}}"
                     class="  tns-slider tns-carousel tns-subpixel tns-calc tns-horizontal" id="tns1"
                     data-kt-initialized="1" style="transform: translate3d(-40%, 0px, 0px);">
                     @foreach ($products as $item)

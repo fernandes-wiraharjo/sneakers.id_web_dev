@@ -83,6 +83,48 @@
         html * {
             font-family: 'Montserrat', sans-serif, 'FontAwesome' !important;
         }
+
+        .accordion-button:not(.collapsed) {
+            color: unset;
+            background-color: unset;
+            box-shadow: unset;
+        }
+
+        .accordion-button.collapsed {
+            background-color: unset;
+        }
+
+        .accordion-body {
+            padding: 0 1.5rem;
+        }
+
+        body {
+            background-color: #f5f5f5 !important;
+        }
+
+        .card.card-body.product-list {
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        .select2-container--bootstrap5 .select2-dropdown {
+            box-shadow: unset;
+            border-radius: unset;
+        }
+
+        .select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--highlighted {
+            color: unset;
+            background-color: unset;
+            text-align: end;
+        }
+
+        .select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--selected {
+            font-weight: 600;
+        }
+
+        .page-item .page-link {
+            background-color: transparent !important;
+        }
     </style>
 
 </head>

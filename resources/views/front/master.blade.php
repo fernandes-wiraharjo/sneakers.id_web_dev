@@ -30,10 +30,11 @@
 @endpush
 
 @section('content')
+    @include('public.partials._navbar', ['brand_menu' => $brand_menu])
 
-    <div class="d-flex flex-column flex-root">
+    <div class="d-flex flex-column flex-root py-5">
         {{ $slot }}
-
-        @include('partials.layout.footer', ['footer' => $footer])
     </div>
+
+    @include('partials.layout.footer', ['footer' => $footer])
 @endsection

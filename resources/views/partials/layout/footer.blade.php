@@ -1,4 +1,5 @@
-<!--begin::Footer-->
+<div class="position-relative">
+    <!--begin::Footer-->
 <div class="footer py-4 {{ theme()->printHtmlClasses('footer', false) }}" id="kt_footer" style="width: -webkit-fill-available; background-color: black;">
     <div class="{{ theme()->printHtmlClasses('footer-container', false) }} d-flex flex-center flex-column-auto flex-md-row align-items-center justify-content-around">
         <div class="flex-column text-center">
@@ -91,4 +92,6 @@
             </div>
         </div>
     </div>
+</div>
+
 </div>

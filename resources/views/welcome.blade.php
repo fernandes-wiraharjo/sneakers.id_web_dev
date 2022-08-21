@@ -1,6 +1,4 @@
 <x-base-front-layout>
-    @include('public.partials._navbar')
-
     @livewire('banner-image')
 
     <div class="m-10 text-center">

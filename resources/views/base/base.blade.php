@@ -53,11 +53,6 @@ License: {{ theme()->getOption('product', 'license') }}
         {{-- end::Global Stylesheets Bundle --}}
     @endif
 
-    @if (theme()->getViewMode() === 'preview')
-        {{ theme()->getView('partials/trackers/_ga-general') }}
-        {{ theme()->getView('partials/trackers/_ga-tag-manager-for-head') }}
-    @endif
-
     {!! $styles ?? null !!}
     @livewireStyles
 
@@ -101,9 +96,6 @@ License: {{ theme()->getOption('product', 'license') }}
 @endif
 {{-- end::Javascript --}}
 @stack('top-scripts')
-@if (theme()->getViewMode() === 'preview')
-    {{ theme()->getView('partials/trackers/_ga-tag-manager-for-body') }}
-@endif
 
 <script src="{{ asset('demo1/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 {!! $scripts ?? null !!}

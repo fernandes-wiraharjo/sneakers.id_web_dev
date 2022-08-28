@@ -22,7 +22,7 @@
 
         <!--begin::Header Logo-->
         <div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0 ms-5">
-            <a href="http://bkn-sadataasn.localtest">
+            <a href="/">
                 @if (config('ladmin.logo'))
                     <img alt="Logo" src="{{ config('ladmin.logo') }}" class="logo-default h-100px">
                 @endif

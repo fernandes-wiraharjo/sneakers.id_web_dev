@@ -33,6 +33,7 @@
 
     <link href="{{ asset('demo1/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/theme.css') }}" rel="stylesheet" type="text/css"/>
     {{-- begin::Fonts --}}
     {{ theme()->includeFonts() }}
     {{-- end::Fonts --}}
@@ -61,11 +62,6 @@
         {{-- end::Global Stylesheets Bundle --}}
     @endif
 
-    @if (theme()->getViewMode() === 'preview')
-        {{ theme()->getView('partials/trackers/_ga-general') }}
-        {{ theme()->getView('partials/trackers/_ga-tag-manager-for-head') }}
-    @endif
-
     {!! $styles ?? null !!}
     @livewireStyles
 
@@ -74,6 +70,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="http://fonts.cdnfonts.com/css/futura-lt" rel="stylesheet">
 
     <style>
         .aside-enabled.aside-fixed.header-fixed .header {
@@ -81,7 +78,10 @@
         }
 
         html * {
-            font-family: 'Montserrat', sans-serif, 'FontAwesome' !important;
+            font-family: 'Futura LT', sans-serif !important;
+            font-weight: 400 !important;
+            font-style: normal !important;
+            font-display: fallback !important;
         }
 
         .accordion-button:not(.collapsed) {
@@ -125,6 +125,31 @@
         .page-item .page-link {
             background-color: transparent !important;
         }
+
+        .Container {
+            width: 100%;
+            padding: 0 50px;
+        }
+
+        .ProductMeta {
+            text-align: left;
+        }
+
+        .ProductMeta__Vendor {
+            margin-bottom: 20px;
+        }
+
+        .ProductMeta__Title {
+            margin-bottom: 0;
+        }
+
+        a {
+            color: black;
+        }
+
+        .money {
+            color: black;
+        }
     </style>
 
 </head>
@@ -165,9 +190,6 @@
 @endif
 {{-- end::Javascript --}}
 @stack('top-scripts')
-@if (theme()->getViewMode() === 'preview')
-    {{ theme()->getView('partials/trackers/_ga-tag-manager-for-body') }}
-@endif
 
 <script src="{{ asset('demo1/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 {!! $scripts ?? null !!}

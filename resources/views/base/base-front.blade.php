@@ -32,8 +32,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="{{ asset('demo1/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ asset('css/theme.css') }}" rel="stylesheet" type="text/css"/>
+
     {{-- begin::Fonts --}}
     {{ theme()->includeFonts() }}
     {{-- end::Fonts --}}
@@ -72,86 +71,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
     <link href="http://fonts.cdnfonts.com/css/futura-lt" rel="stylesheet">
 
-    <style>
-        .aside-enabled.aside-fixed.header-fixed .header {
-            left: 0 !important;
-        }
-
-        html * {
-            font-family: 'Futura LT', sans-serif !important;
-            font-weight: 400 !important;
-            font-style: normal !important;
-            font-display: fallback !important;
-        }
-
-        .accordion-button:not(.collapsed) {
-            color: unset;
-            background-color: unset;
-            box-shadow: unset;
-        }
-
-        .accordion-button.collapsed {
-            background-color: unset;
-        }
-
-        .accordion-body {
-            padding: 0 1.5rem;
-        }
-
-        body {
-            background-color: #f5f5f5 !important;
-        }
-
-        .card.card-body.product-list {
-            padding: 0 !important;
-            margin: 0;
-        }
-
-        .select2-container--bootstrap5 .select2-dropdown {
-            box-shadow: unset;
-            border-radius: unset;
-        }
-
-        .select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--highlighted {
-            color: unset;
-            background-color: unset;
-            text-align: end;
-        }
-
-        .select2-container--bootstrap5 .select2-dropdown .select2-results__option.select2-results__option--selected {
-            font-weight: 600;
-        }
-
-        .page-item .page-link {
-            background-color: transparent !important;
-        }
-
-        .Container {
-            width: 100%;
-            padding: 0 50px;
-        }
-
-        .ProductMeta {
-            text-align: left;
-        }
-
-        .ProductMeta__Vendor {
-            margin-bottom: 20px;
-        }
-
-        .ProductMeta__Title {
-            margin-bottom: 0;
-        }
-
-        a {
-            color: black;
-        }
-
-        .money {
-            color: black;
-        }
-    </style>
-
+    <link href="{{ asset('css/theme.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet" type="text/css"/>
 </head>
 {{-- end::Head --}}
 
@@ -197,6 +118,8 @@
 
 @livewireScripts
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/custom.js') }}"></script>
+
 @stack('scripts')
 @include('sweetalert::alert')
 </body>

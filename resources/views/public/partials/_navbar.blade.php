@@ -45,86 +45,103 @@
                         id="#kt_header_menu" data-kt-menu="true">
                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
                             class="menu-item menu-lg-down-accordion me-lg-1 text-primary"><span
-                                class="menu-link py-3 menu-parent"><span
-                                    class="menu-title text-white">FEATURED</span><span
+                                class="menu-link py-3 menu-parent"><span class="menu-title">FEATURED</span><span
                                     class="menu-arrow d-lg-none"></span></span>
                             <div
                                 class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
                                 <div class="menu-item"><a class="menu-link py-3"
-                                        href="http://bkn-sadataasn.localtest/data-search"><span
-                                            class="menu-icon"></span><span class="menu-title">ALL PRODUCTS</span></a>
+                                        href="{{ route('collections', 'all') }}"><span class="menu-icon"></span><span
+                                            class="menu-title menu-sub-title">ALL PRODUCTS</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">NEW FEATURED</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'featured') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">NEW
+                                            FEATURED</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">NEW REALEASES</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'new-release') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">NEW
+                                            REALEASES</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">BEST SELLERS</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'best-seller') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">BEST
+                                            SELLERS</span></a>
                                 </div>
                             </div>
                         </div>
                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
                             class="menu-item menu-lg-down-accordion me-lg-1 text-primary"><span
-                                class="menu-link py-3 menu-parent"><span class="menu-title text-white">MEN'S</span><span
+                                class="menu-link py-3 menu-parent"><span class="menu-title">MEN'S</span><span
                                     class="menu-arrow d-lg-none"></span></span>
                             <div
                                 class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
                                 <div class="menu-item"><a class="menu-link py-3"
-                                        href="http://bkn-sadataasn.localtest/data-dashboard"><span
-                                            class="menu-icon"></span><span class="menu-title">ALL</span></a>
+                                        href="{{ route('collections', 'all.MENS') }}"><span
+                                            class="menu-icon"></span><span
+                                            class="menu-title menu-sub-title">ALL</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">NEW RELEASES</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'new-release.MENS') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">NEW
+                                            RELEASES</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">BEST SELLERS</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'best-seller.MENS') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">BEST
+                                            SELLERS</span></a>
                                 </div>
                             </div>
                         </div>
                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
                             class="menu-item menu-lg-down-accordion me-lg-1 text-primary"><span
-                                class="menu-link py-3 menu-parent"><span
-                                    class="menu-title text-white">WOMEN'S</span><span
+                                class="menu-link py-3 menu-parent"><span class="menu-title">WOMEN'S</span><span
                                     class="menu-arrow d-lg-none"></span></span>
                             <div
                                 class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
                                 <div class="menu-item"><a class="menu-link py-3"
-                                        href="http://bkn-sadataasn.localtest/data-dashboard"><span
-                                            class="menu-icon"></span><span class="menu-title">ALL</span></a>
+                                        href="{{ route('collections', 'all.WOMENS') }}"><span
+                                            class="menu-icon"></span><span
+                                            class="menu-title menu-sub-title">ALL</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">NEW RELEASES</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'new-release.WOMENS') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">NEW
+                                            RELEASES</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">BEST SELLERS</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'best-seller.WOMENS') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">BEST
+                                            SELLERS</span></a>
                                 </div>
                             </div>
                         </div>
                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
                             class="menu-item menu-lg-down-accordion me-lg-1 text-primary"><span
-                                class="menu-link py-3 menu-parent"><span
-                                    class="menu-title text-white">KID'S</span><span
+                                class="menu-link py-3 menu-parent"><span class="menu-title">KID'S</span><span
                                     class="menu-arrow d-lg-none"></span></span>
                             <div
                                 class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
                                 <div class="menu-item"><a class="menu-link py-3"
-                                        href="http://bkn-sadataasn.localtest/data-dashboard"><span
-                                            class="menu-icon"></span><span class="menu-title">ALL</span></a>
+                                        href="{{ route('collections', 'all.KIDS') }}"><span
+                                            class="menu-icon"></span><span
+                                            class="menu-title menu-sub-title">ALL</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">NEW RELEASES</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'new-release.KIDS') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">NEW
+                                            RELEASES</span></a>
                                 </div>
-                                <div class="menu-item"><a class="menu-link py-3" href="#"><span
-                                            class="menu-icon"></span><span class="menu-title">BEST SELLERS</span></a>
+                                <div class="menu-item"><a class="menu-link py-3"
+                                        href="{{ route('collections', 'best-seller.KIDS') }}"><span
+                                            class="menu-icon"></span><span class="menu-title menu-sub-title">BEST
+                                            SELLERS</span></a>
                                 </div>
                             </div>
                         </div>
                         <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
                             class="menu-item menu-lg-down-accordion me-lg-1 text-primary"><span
-                                class="menu-link py-3 menu-parent"><span
-                                    class="menu-title text-white">BRAND</span><span
+                                class="menu-link py-3 menu-parent"><span class="menu-title">BRAND</span><span
                                     class="menu-arrow d-lg-none"></span></span>
                             <div
                                 class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
@@ -132,10 +149,18 @@
                                     <div class="menu-item"><a class="menu-link py-3"
                                             href="{{ route('collections', 'all.' . $item->brand_code) }}"><span
                                                 class="menu-icon"></span><span
-                                                class="menu-title">{{ $item->brand_title }}</span></a>
+                                                class="menu-title menu-sub-title">{{ $item->brand_title }}</span></a>
                                     </div>
                                 @endforeach
                             </div>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('lookbook', 1) }}"><span
+                                    class="menu-title">LOOKBOOK</span></a>
+                        </div>
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('size-chart') }}"><span class="menu-title">SIZE
+                                    CHART</span></a>
                         </div>
                     </div>
                     <!--end::Menu-->
@@ -153,85 +178,44 @@
             <!--begin::Navbar-->
             <div class="d-flex align-items-stretch" id="kt_header_nav_tool">
                 <!--begin::Menu wrapper-->
-                <div class="header-menu align-items-stretch" data-kt-drawer="true" data-kt-drawer-name="header-menu"
-                    data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
-                    data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start"
-                    data-kt-drawer-toggle="#kt_header_menu_mobile_toggle" data-kt-swapper="true"
-                    data-kt-swapper-mode="prepend"
-                    data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav_tool'}">
+                <div class="align-self-center">
                     <!--begin::Menu-->
-                    <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch"
-                        id="#kt_header_menu" data-kt-menu="true">
-                        <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
-                            class="menu-item menu-lg-down-accordion me-lg-1 text-primary"><span
-                                class="menu-link py-3 menu-parent">
-                                <div class="btn btn-icon btn-custom btn-icon-muted w-35px h-35px w-md-40px h-md-40px">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                    <span class="svg-icon svg-icon-1">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
-                                                height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
-                                                fill="currentColor"></rect>
-                                            <path
-                                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                                fill="currentColor"></path>
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                </div><span class="menu-arrow d-lg-none"></span>
+                    <div class="dropdown">
+                        <button onclick="myFunction()" class="btn btn-icon w-30px h-30px w-md-40px h-md-40px dropbtn bg-transparent">
+                            <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-08-29-071832/core/html/src/media/icons/duotune/general/gen021.svg-->
+                            <span class="svg-icon svg-icon-muted svg-icon-2x"><svg width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
+                                        height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                        fill="currentColor" />
+                                </svg>
                             </span>
-                            <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 p-2 w-lg-300px mr-5">
-                                <form data-kt-search-element="form" class="w-100 position-relative" autocomplete="off">
-                                    <!--begin::Icon-->
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                                    <span class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-0">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
-                                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                    <!--end::Icon-->
-                                    <!--begin::Input-->
-                                    <input type="text" class="search-input form-control form-control-flush ps-10" name="search" value="" placeholder="Search..." data-kt-search-element="input">
-                                    <!--end::Input-->
-                                    <!--begin::Spinner-->
-                                    <span class="position-absolute top-50 end-0 translate-middle-y lh-0 d-none me-1" data-kt-search-element="spinner">
-                                        <span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
-                                    </span>
-                                    <!--end::Spinner-->
-                                    <!--begin::Reset-->
-                                    <span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0 d-none" data-kt-search-element="clear">
-                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-                                        <span class="svg-icon svg-icon-2 svg-icon-lg-1 me-0">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                            </svg>
-                                        </span>
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                    <!--end::Reset-->
-                                </form>
-                            </div>
+                            <!--end::Svg Icon-->
+                        </button>
+                        <div id="myDropdown" class="dropdown-content">
+                            @livewire('global-search')
                         </div>
-
                     </div>
-                    <!--end::Menu-->
                 </div>
-                <!--end::Menu wrapper-->
                 <div class="align-self-center">
                     <a href="{{ route('login') }}">
                         <!--begin::Menu-->
-                        <div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch">
+                        <div
+                            class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch">
                             <div class="btn btn-icon w-30px h-30px w-md-40px h-md-40px">
                                 <!--begin::Svg Icon | path: assets/media/icons/duotune/abstract/abs015.svg-->
-                                <span class="svg-icon svg-icon-2x"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor"></path>
-                                    <rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor"></rect>
-                                </svg></span>
-                            <!--end::Svg Icon-->
+                                <span class="svg-icon svg-icon-2x"><svg width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z"
+                                            fill="currentColor"></path>
+                                        <rect opacity="0.3" x="8" y="3" width="8"
+                                            height="8" rx="4" fill="currentColor"></rect>
+                                    </svg></span>
+                                <!--end::Svg Icon-->
                             </div>
                         </div>
                     </a>
@@ -244,3 +228,5 @@
     </div>
     <!--end::Container-->
 </div>
+
+@push('')

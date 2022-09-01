@@ -92,7 +92,7 @@
                                     @if ($product->detail->discount_percentage > 0)
                                         <span class="money">
                                             RP.
-                                            <del>
+                                            <del class="fs-5">
                                                 {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                             </del>
                                             <span style="position:inherit; font-weight: 800;">

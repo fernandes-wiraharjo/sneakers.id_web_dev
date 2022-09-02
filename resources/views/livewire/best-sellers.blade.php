@@ -17,46 +17,48 @@
                         $image_size = getimagesize(getImage($item->image, 'products/'.$item->product_code));
                         $ratio = $image_size[0] / $image_size[1];
                     @endphp
-                    {{-- <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}"> --}}
                         <!--begin::item-->
                         <div class="text-center tns-item tns-slide-cloned p-5" aria-hidden="true" tabindex="-1">
-                            <!--begin::Photo-->
-                            @foreach ($item->images()->limit(1)->get() as $key => $image)
-                            <div class="mx-auto mb-5 d-flex w-200px h-200px bgi-no-repeat bgi-size-contain bgi-position-center"
-                                style="background-image:url('{{ getImage($image->image_url, 'products/'.$item->product_code) }}')"></div>
-                            @endforeach
-                            <!--end::Photo-->
-                            <!--begin::Person-->
-                            <div class="mb-0">
-                                <!--begin::Name-->
-                                <a href="#" class="text-dark fw-bold text-hover-primary fs-3">{{$item->detail->brand->brand_title}}</a>
-                                <!--end::Name-->
-                                <!--begin::Position-->
-                                <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1 mh-40px" style="overflow-wrap: break-word; min-height: 45px;">
-									{{-- item Name --}}
-										<a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">{{$item->product_name}}</a>
-								</span>
-                                <!--begin::Position-->
-                                <!--begin::Total-->
-                                <span class="text-danger text-end fw-bold fs-1">
-                                    @if ($item->detail->after_discount_price > 0 && $item->detail->after_discount_price < $item->detail->retail_price)
-                                        <span class="money">
-                                            RP
-                                            <del>
+                            <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">
+                                <div class="figure">
+                                    @foreach ($item->images()->limit(2)->get() as $key => $image)
+                                        <img src="{{ getImage($image->image_url, 'products/' . $item->product_code) }}"
+                                            class="mx-auto mb-5 d-flex w-200px h-200px bgi-no-repeat bgi-size-contain bgi-position-center {{ $key == 0 ? 'image-main' : 'image-hover' }}"
+                                            alt="{{ $item->product_name }}">
+                                    @endforeach
+                                </div>
+                                <!--begin::Person-->
+                                <div class="mb-0">
+                                    <!--begin::Name-->
+                                    <a href="#" class="text-dark fw-bold text-hover-primary fs-3">{{$item->detail->brand->brand_title}}</a>
+                                    <!--end::Name-->
+                                    <!--begin::Position-->
+                                    <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1 mh-40px" style="overflow-wrap: break-word; min-height: 45px;">
+                                        {{-- item Name --}}
+                                            <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">{{$item->product_name}}</a>
+                                    </span>
+                                    <!--begin::Position-->
+                                    <!--begin::Total-->
+                                    <span class="text-danger text-end fw-bold fs-1">
+                                        @if ($item->detail->after_discount_price > 0 && $item->detail->after_discount_price < $item->detail->retail_price)
+                                            <span class="money">
+                                                RP
+                                                <del>
+                                                    {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
+                                                </del>
+                                                <span style="position:inherit; font-weight: 800;">
+                                                    {{ rupiah_format(intval($item->detail->after_discount_price ?? 0)) }}</span>
+                                            </span>
+                                        @else
+                                            <span class="money" >RP
                                                 {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
-                                            </del>
-                                            <span style="position:inherit; font-weight: 800;">
-                                                {{ rupiah_format(intval($item->detail->after_discount_price ?? 0)) }}</span>
-                                        </span>
-                                    @else
-                                        <span class="money" >RP
-                                            {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
-                                        </span>
-                                    @endif
-                                </span>
-                                <!--end::Total-->
-                            </div>
-                            <!--end::Person-->
+                                            </span>
+                                        @endif
+                                    </span>
+                                    <!--end::Total-->
+                                </div>
+                                <!--end::Person-->
+                            </a>
                         </div>
                         <!--end::Item-->
                     {{-- </a> --}}

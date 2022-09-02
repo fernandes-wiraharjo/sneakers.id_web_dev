@@ -287,3 +287,24 @@ a {
 .no-radius {
     border-radius: unset !important;
 }
+
+.figure {
+    position: relative;
+    width: 360px;
+    /* can be omitted for a regular non-lazy image */
+    max-width: 100%;
+}
+
+.figure img.image-hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity .2s;
+    transform: translate(-50%, -50%);
+}
+
+.figure:hover img.image-hover {
+    opacity: 1;
+}

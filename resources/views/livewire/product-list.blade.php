@@ -58,9 +58,11 @@
                                         <!--begin::Body-->
                                         <div class="card-body text-center p-0">
                                             <!--begin::Food img-->
-                                            @foreach ($product->images()->limit(1)->get() as $key => $image)
-                                                <img src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}" class="rounded-3 mb-4 w-250px h-250px w-xxl-300px h-xxl-300px" alt="{{ $product->product_name }}">
-                                            @endforeach
+                                            <div class="figure">
+                                                @foreach ($product->images()->limit(2)->get() as $key => $image)
+                                                    <img src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}" class="rounded-3 mb-4 w-250px h-250px w-xxl-300px h-xxl-300px {{ $key == 0 ? 'image-main' : 'image-hover' }}" alt="{{ $product->product_name }}">
+                                                @endforeach
+                                            </div>
                                             <!--end::Food img-->
                                             <div class="mb-0" style="text-align: -webkit-center;">
                                                 <!--begin::Name-->

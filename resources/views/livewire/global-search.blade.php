@@ -1,7 +1,7 @@
 <div>
     <div class="d-flex flex-col m-2">
         <input type="text" class="form-control flex-lg-grow-1 rounded-start-0 rounded-end-0 bg-transparent " placeholder="SEARCH . . ." aria-label="keyword" aria-describedby="basic-addon1" wire:model="search" id="myInput" onkeyup="filterFunction()"/>
-        <button wire:ignore.self class="Search__Close Link Link--primary mx-2"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
+        <button wire:ignore.self class="Search__Close Link Link--primary mx-2" onclick="onCLose()"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
             <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
         </svg></button>
     </div>

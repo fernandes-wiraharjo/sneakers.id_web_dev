@@ -1,5 +1,6 @@
 <?php
 return array(
+    '' => array(),
     'product' => array(
         'title'       => 'Dashboard',
         'description' => '',

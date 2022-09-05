@@ -1,224 +1,114 @@
-@push('styles')
-    <style>
-        #filter_button {
-            display: none !important;
-        }
-
-        @media only screen and (max-width: 1007px) {
-           .Drawer__Main {
-                padding-top: 15px;
-                padding-left: 20px !important;
-            }
-
-            .filter-button {
-                display: block;
-            }
-        }
-
-        .Drawer__Main {
-            padding-left: 20px !important;
-        }
-    </style>
-@endpush
 <div>
-    <div class="CollectionMain" style="padding-top: 1rem; padding-botom: 5rem; margin-bottom: 5rem;">
-        <div class="CollectionToolbar CollectionToolbar--top CollectionToolbar--reverse">
-            <div class="CollectionToolbar__Group">
-                <a class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading Text--subdued u-h6 filter-button " data-action="open-drawer" data-drawer-id="collection-filter-drawer" aria-label="Show filters" aria-expanded="false" id="filter_button">
-                    Filter
-                </a>
-                <a class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6 sort-button"
-                    aria-label="Show sort by" aria-haspopup="true" aria-expanded="false"
-                    aria-controls="collection-sort-popover">
-                    Sort
-                    <svg class="Icon Icon--select-arrow" role="presentation" viewBox="0 0 19 12">
-                        <polyline fill="none" stroke="currentColor" points="17 2 9.5 10 2 2" fill-rule="evenodd"
-                            stroke-width="2" stroke-linecap="square"></polyline>
-                    </svg>
-                </a>
-            </div>
-            <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
-                <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">
-                  <span class="Drawer__Title Heading u-h4">Filters</span>
-                    <a class="Drawer__Close Icon-Wrapper--clickable close-filter" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="Close navigation">
-                        <svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
-                            <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                </header>
-                <div class="Drawer__Content">
-                  <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                    @include('components.filters', $filters)
-                  </div>
-                </div>
-            </div>
-            <div id="collection-sort-popover" class="Popover Popover--positionBottom Popover--alignRight" aria-hidden="true" style="top: 233px; right: 0px;">
-                <header class="Popover__Header">
-                    <a class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
-                        <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                    <span class="Popover__Title Heading u-h4">Sort</span>
-                </header>
-                <div class="Popover__Content">
-                    <div class="Popover__ValueList">
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'ASC')">
-                        Alphabetically, A-Z
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'DESC')">
-                        Alphabetically, Z-A
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'ASC')">
-                        Price, low to high
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
-                        Price, high to low
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'ASC')">
-                        Discount Price, low to high
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
-                        Disount Price, high to low
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
-                        Date, old to new
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'DESC')">
-                        Date, new to old
-                        </a>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div class="app-container container-xxl-12 " id="kt_app_content_container">
+            <div class="-flex flex-row-fluid">
+                <div class="input-group input-group-lg flex-nowrap">
+                    <input type="text" class="form-control flex-lg-grow-1 rounded-start-0 rounded-end-0 bg-transparent h-60px" placeholder="SEARCH . . ." aria-label="keyword" aria-describedby="basic-addon1" wire:model="search"/>
+                    <div class="overflow-hidden" style="width: 20%; max-width: 300px;">
+                        <button type="button" class="form-select form-select-lg rounded-start-0 rounded-end-0 bg-transparent h-60px menu-dropdown" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-target="#sort">
+                            SORT
+                        </button>
+                        <div class="menu menu-sub menu-sub-dropdown min-w-300px text-end mt-5" style="border-radius: 0;" data-kt-menu="true" id="sort">
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('product_name', 'ASC')" value="product_name.ASC">
+                                Alphabetically, A-Z
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('product_name', 'DESC')" value="product_name.DESC">
+                                Alphabetically, Z-A
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('pd.retail_price', 'ASC')" value="pd.retail_price.ASC">
+                                Price, low to high
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('pd.retail_price', 'DESC')" value="pd.retail_price.DESC">
+                                Price, high to low
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('pd.after_discount_price', 'ASC')" value="pd.after_discount_price.ASC">
+                                Discount Price, low to high
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('pd.after_discount_price', 'DESC')" value="pd.after_discount_priceDESC">
+                                Disount Price, high to low
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('created_at', 'ASC')" value="created_at.ASC">
+                                Date, old to new
+                            </a>
+                            <a class="px-12 py-3 fs-4 text-black cursor-pointer" wire:click="sort('created_at', 'DESC')" value="created_at.DESC">
+                                Date, new to old
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
-                <div class="Search__InputIconWrapper">
-                    <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
-                            viewBox="0 0 18 17">
-                            <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
-                                stroke-linecap="square">
-                                <path d="M16 16l-5.0752-5.0752"></path>
-                                <circle cx="6.4" cy="6.4" r="6.4"></circle>
-                            </g>
-                        </svg></span>
-                    <span class="hidden-phone">
-                        <svg class="Icon Icon--search-desktop" role="presentation"
-                            viewBox="0 0 21 21">
-                            <g transform="translate(1 1)" stroke="currentColor" stroke-width="2" fill="none"
-                                fill-rule="evenodd" stroke-linecap="square">
-                                <path d="M18 18l-5.7096-5.7096"></path>
-                                <circle cx="7.2" cy="7.2" r="7.2"></circle>
-                            </g>
-                        </svg>
-                    </span>
+            <div class="d-flex flex-column flex-xl-row">
+                <div class="flex-row-auto w-xl-375px">
+                    <div class="card bg-transparent">
+                        <div class="card-body bg">
+                            <div class="row mb-1">
+                                @include('components.filters', $filters)
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <input wire:model="search" type="text" class="Search__Input Heading ui-autocomplete-input"
-                    autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..."
-                    autofocus="" >
-            </div>
-        </div>
-        <div class="CollectionInner">
-            <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
-                style="top: -4.0625px;">
-                @include('components.filters', $filters)
-            </div>
-            <div class="CollectionInner__Products">
-                <div class="ProductListWrapper">
-                    <div class="ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="2"
-                        data-desktop-count="4">
-                        @foreach ($products as $product)
-                        @php
-                            $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                            $ratio = $image_size[0] / $image_size[1];
-                        @endphp
-                            <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
-                                <div class="ProductItem" style="visibility: visible;">
-                                    <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
-                                        class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
-                                        <div class="AspectRatio AspectRatio--withFallback"
-                                            style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
-
-                                            {{-- multi image --}}
-                                            @foreach ($product->images()->limit(2)->get() as $key => $image)
-                                                @if($product->image != $image->image_url)
-                                                    <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
-                                                    {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                                        data-src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                        data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
-                                                        alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
-                                                @endif
-                                            @endforeach
-
-                                            <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
-                                            {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                                data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
-                                                alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
-
-                                            <span class="Image__Loader"></span>
-
-                                            <noscript>
-                                                <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                    src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                    alt='{{$product->product_name}}' />
-
-                                                @foreach ($product->images()->get() as $key => $image)
-                                                {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                    @if($product->image != $image->image_url)
-                                                        <img class="ProductItem__Image"
-                                                            src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                            alt='{{$product->product_name}}' />
-                                                    @endif
+                <div class="d-flex me-xl-9 mb-10 mb-xl-0">
+                    <!--begin::Wrapper-->
+                    <div class="d-flex flex-column">
+                        <div class="d-flex flex-wrap d-grid gap-1 gap-sm-1">
+                            @foreach ($products as $product)
+                                <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">
+                                    <!--begin::Card-->
+                                    <div class="card card-flush flex-row-fluid pb-5 mw-100 bg-transparent p-0">
+                                        <!--begin::Body-->
+                                        <div class="card-body text-center p-0">
+                                            <!--begin::Food img-->
+                                            <div class="figure">
+                                                @foreach ($product->images()->limit(2)->get() as $key => $image)
+                                                    <img src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}" class="rounded-3 mb-4 w-250px h-250px w-xxl-300px h-xxl-300px {{ $key == 0 ? 'image-main' : 'image-hover' }}" alt="{{ $product->product_name }}">
                                                 @endforeach
-                                            </noscript>
-                                        </div>
-                                    </a>
-                                    <div class="ProductItem__Info ProductItem__Info--center">
-                                        <h2 class="ProductItem__Title Heading">
-                                            <a href="{{ $product->product_link }}">{{ $product->product_name }}</a>
-                                        </h2>
-                                        <div class="ProductItem__PriceList Heading">
-                                            <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                                                    @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                                            </div>
+                                            <!--end::Food img-->
+                                            <div class="mb-0" style="text-align: -webkit-center;">
+                                                <!--begin::Name-->
+                                                <a href="#" class="text-dark fw-bold text-hover-primary fs-3">{{$product->detail->brand->brand_title}}</a>
+                                                <!--end::Name-->
+                                                <div class="w-200px">
+                                                        <!--begin::Position-->
+                                                    <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1 mh-60px" style="overflow-wrap: break-word; min-height: 45px;">
+                                                        {{-- product Name --}}
+                                                            <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">{{$product->product_name}}</a>
+                                                    </span>
+                                                </div>
+                                                <!--begin::Position-->
+                                                <!--begin::Total-->
+                                                <span class="text-danger text-end fw-bold fs-1">
+                                                    @if ($product->detail->after_discount_price > 0 && $product->detail->after_discount_price < $product->detail->retail_price)
                                                         <span class="money">
-                                                            RP.
-                                                            <del>
+                                                            RP
+                                                            <del class="fs-5">
                                                                 {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                                             </del>
-                                                            <span style="position:inherit; font-weight: 800;">
-                                                                {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
+                                                            <span style="position:inherit; font-weight: 600;">
+                                                                {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}</span>
                                                         </span>
                                                     @else
-                                                        <span class="money" >RP.
+                                                        <span class="money" >RP
                                                             {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                                         </span>
                                                     @endif
-                                            </span>
+                                                </span>
+                                                <!--end::Total-->
+                                            </div>
                                         </div>
+                                        <!--end::Body-->
                                     </div>
-                                </div>
-                            </div>
-                        @endforeach
+                                    <!--end::Card-->
+                                </a>
+                            @endforeach
+                        </div>
+                        <div class="d-flex justify-content-center last-column">
+                            {{ $products->links('partials.layout.pagination') }}
+                        </div>
                     </div>
-                </div>
-                <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                    {{ $products->links('partials.layout.pagination') }}
+                    <!--end::Wrapper-->
                 </div>
             </div>
         </div>
     </div>
 </div>
-@push('scripts')
-    <script>
-        $(".Popover__Value").click(function() {
-            $('.PageOverlay').removeClass('is-visible');
-            $('html').removeClass('no-scroll');
-            $('.PageOverlay').trigger("click");
-        });
-
-        $(".bc-sf-filter-block-content").click(function() {
-            $('.close-filter').trigger("click");
-            $('.PageOverlay').trigger("click");
-        });
-    </script>
-@endpush
-

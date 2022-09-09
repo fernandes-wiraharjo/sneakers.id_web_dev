@@ -17,6 +17,9 @@
 <h1>Our site is getting a little tune up and some love.</h1>
 <div>
 <p>We apologize for the inconvenience, but we're performing some maintenance. We'll be back up soon!</p>
+<p>visit our <span><a href="https://www.tokopedia.com/sneakers-id">Tokopedia Store</a></span></p>
+<p>or</p>
+<p>our <span><a href="https://www.instagram.com/sneakers.id/">Instagram</a></span></p>
 <p>— We ain't talkin' about fake | SNEAKERS.ID</p>
 </div>
 </div>

@@ -36,6 +36,10 @@ class StoreController extends Controller
     }
 
     public function index() {
+        return view('public.under-maintain.under-maintenance');
+    }
+
+    public function indexBak() {
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['brand'] = $this->brandRepository->getAllBrand();

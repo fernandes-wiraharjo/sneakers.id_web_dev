@@ -13,14 +13,14 @@
                     <!--begin::Slider-->
                     <div class="tns tns-default mb-10">
                         <!--begin::Wrapper-->
-                        <div data-tns="true" data-tns-loop="true" data-tns-swipe-angle="false" data-tns-speed="2000" data-tns-autoplay="true" data-tns-autoplay-timeout="18000" data-tns-controls="true" data-tns-nav="false" data-tns-items="1" data-tns-center="false" data-tns-dots="false" data-tns-prev-button="#kt_team_slider_prev" data-tns-next-button="#kt_team_slider_next" data-tns-responsive="{1200: {items: 1}, 992: {items: 1}}">
+                        <div id="image-initiator" data-tns="true" data-tns-loop="true" data-tns-swipe-angle="false" data-tns-speed="2000" data-tns-autoplay="true" data-tns-autoplay-timeout="18000" data-tns-controls="true" data-tns-nav="false" data-tns-items="1" data-tns-center="false" data-tns-dots="false" data-tns-prev-button="#kt_team_slider_prev" data-tns-next-button="#kt_team_slider_next" data-tns-responsive="{1200: {items: 1}, 992: {items: 1}}">
                             @foreach ($product->images as $key => $item)
                                 @if ($product->image != $item->image_url)
                                     <!--begin::Item-->
                                     <div class="text-center">
                                         <!--begin::Photo-->
-                                        <div class="mx-auto mb-5 d-flex min-h-600px min-w-600px bgi-no-repeat bgi-size-contain bgi-position-center"
-                                        style="background-image:url('{{ getImage($item->image_url, 'products/' . $product->product_code) }}')"></div>
+                                        <div class="mx-auto mb-5 d-flex min-h-600px min-w-600px bgi-no-repeat bgi-size-contain bgi-position-center image-catalog-preview" data-id="{{ $key }}" style="background-image:url('{{ getImage($item->image_url, 'products/' . $product->product_code) }}')">
+                                        </div>
                                         <!--end::Photo-->
                                     </div>
                                     <!--end::Item-->
@@ -60,14 +60,17 @@
                             <!--begin::Col-->
                             <div class="col px-2 py-5">
                                 <!--begin::Overlay-->
-                                <a class="d-block overlay" data-fslightbox="lightbox-hot-sales"
-                                    href="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
+                                <a class="d-block overlay"
+                                    href="#" onclick="change('{{ $key }}')">
                                     <!--begin::Image-->
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover min-h-75px min-w-75px card-rounded"
-                                        style="background-image:url('{{ getImage($item->image_url, 'products/' . $product->product_code) }}')"></div>
+                                        style="background-image:url('{{ getImage($item->image_url, 'products/' . $product->product_code) }}')">
+                                    </div>
                                     <!--end::Image-->
                                     <!--begin::Action-->
-                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 image-catalog-{{$key}}" data-id="{{ $key }}"
+                                        {{-- onclick="change('{{ $key }}')" --}}
+                                        >
                                         <i class="bi bi-eye-fill fs-2x text-white"></i>
                                     </div>
                                     <!--end::Action-->

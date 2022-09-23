@@ -177,7 +177,7 @@ class GlobalSearch extends Component
                                     return $query->where('product_name', 'LIKE', '%'.$search.'%')
                                         ->where('description', 'LIKE', '%'.$search.'%');
                                 })
-                                ->orderBy($this->sort_column, $this->sort_by)->limit(10)->get();
+                                ->orderBy($this->sort_column, $this->sort_by)->paginate(40);
 
         $data['products'] = $products;
         return view('livewire.global-search', $data);

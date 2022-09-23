@@ -40,7 +40,7 @@
                             @if ($item->detail->after_discount_price > 0 && $item->detail->after_discount_price < $item->detail->retail_price)
                                 <span class="money">
                                     RP.
-                                    <del class="fs-5">
+                                    <del>
                                         {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
                                     </del>
                                     <span style="position:inherit; font-weight: 800;">

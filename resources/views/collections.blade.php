@@ -1,7 +1,34 @@
-<x-base-front-layout>
+<html class="no-js" lang="en">
+@include('partials.layout.header')
+    <body class="prestige--v4 template-collection">
+        @include('partials.layout.navbar')
 
-    <div class="w-100" style="padding-top: 90px;">
-        @livewire('product-list', ['keyword' => $keyword])
-    </div>
+        <main id="main" role="main">
+            <div id="shopify-section-collection-template" class="shopify-section shopify-section--bordered">
+                <section
+                    data-section-id="collection-template"
+                    data-section-type="collection"
+                    data-section-settings='{
+                      "collectionUrl": "\/collections\/all-products",
+                      "currentTags": [],
+                      "sortBy": "manual",
+                      "filterPosition": "sidebar"
+                    }'
+                >
+                    <header class="PageHeader">
+                        <div class="Container">
+                            <div class="SectionHeader SectionHeader--center"></div>
+                        </div>
+                    </header>
 
-</x-base-front-layout>
+                    @livewire('product-list', ['keyword' => $keyword])
+
+                </section>
+            </div>
+        </main>
+
+        @include('partials.layout.footer')
+
+        @include('partials.layout.script')
+    </body>
+</html>

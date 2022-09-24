@@ -34,3 +34,25 @@
 .DropdownMenu{
     background: white;
 } */
+/* Customize the label (the Check__Box__Container) */
+.Check__Box__Container {
+    display: block;
+    position: relative;
+    padding-left: 7px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.Check__Box__Container input {
+    /* position: absolute; */
+    /* opacity: 0; */
+    cursor: pointer;
+    height: 20px;
+    width: 34px;
+    vertical-align: middle;
+}
+
+.Check__Box__Container label {
+    vertical-align: middle;
+}

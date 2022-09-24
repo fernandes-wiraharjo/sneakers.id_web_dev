@@ -121,87 +121,93 @@
                 style="top: -4.0625px;">
                 @include('components.filters', $filters)
             </div>
-            <div class="CollectionInner__Products">
-                <div class="ProductListWrapper">
-                    <div class="ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="2"
-                        data-desktop-count="4">
-                        @foreach ($products as $product)
-                        @php
-                            $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                            $ratio = $image_size[0] / $image_size[1];
-                        @endphp
-                            <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
-                                <div class="ProductItem" style="visibility: visible;">
-                                    <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
-                                        class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
-                                        <div class="AspectRatio AspectRatio--withFallback"
-                                            style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
+            <div wire:loading>
+                <div class="PageOverlay is-visible"></div>
+                <div id="bc-sf-filter-loading"></div>
+            </div>
+            <div wire:loading.remove>
+                <div class="CollectionInner__Products">
+                    <div class="ProductListWrapper">
+                        <div class="ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="2"
+                            data-desktop-count="4">
+                            @foreach ($products as $product)
+                            @php
+                                $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
+                                $ratio = $image_size[0] / $image_size[1];
+                            @endphp
+                                <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
+                                    <div class="ProductItem" style="visibility: visible;">
+                                        <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
+                                            class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
+                                            <div class="AspectRatio AspectRatio--withFallback"
+                                                style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
 
-                                            {{-- multi image --}}
-                                            @foreach ($product->images()->limit(2)->get() as $key => $image)
-                                                @if($product->image != $image->image_url)
-                                                    <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
-                                                    {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                                        data-src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                        data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
-                                                        alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
-                                                @endif
-                                            @endforeach
-
-                                            <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
-                                            {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
-                                                data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
-                                                alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
-
-                                            <span class="Image__Loader"></span>
-
-                                            <noscript>
-                                                <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                    src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                    alt='{{$product->product_name}}' />
-
-                                                @foreach ($product->images()->get() as $key => $image)
-                                                {{-- BOX-A2_600x.jpg?v=1644800500 --}}
+                                                {{-- multi image --}}
+                                                @foreach ($product->images()->limit(2)->get() as $key => $image)
                                                     @if($product->image != $image->image_url)
-                                                        <img class="ProductItem__Image"
-                                                            src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                            alt='{{$product->product_name}}' />
+                                                        <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
+                                                        {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
+                                                            data-src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
+                                                            data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                            alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
                                                     @endif
                                                 @endforeach
-                                            </noscript>
-                                        </div>
-                                    </a>
-                                    <div class="ProductItem__Info ProductItem__Info--center">
-                                        <h2 class="ProductItem__Title Heading">
-                                            <a href="{{ $product->product_link }}">{{ $product->product_name }}</a>
-                                        </h2>
-                                        <div class="ProductItem__PriceList Heading">
-                                            <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                                                    @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
-                                                        <span class="money">
-                                                            RP.
-                                                            <del>
+
+                                                <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
+                                                {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
+                                                    data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
+                                                    data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                    alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
+
+                                                <span class="Image__Loader"></span>
+
+                                                <noscript>
+                                                    <img class="ProductItem__Image ProductItem__Image--alternate"
+                                                        src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
+                                                        alt='{{$product->product_name}}' />
+
+                                                    @foreach ($product->images()->get() as $key => $image)
+                                                    {{-- BOX-A2_600x.jpg?v=1644800500 --}}
+                                                        @if($product->image != $image->image_url)
+                                                            <img class="ProductItem__Image"
+                                                                src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
+                                                                alt='{{$product->product_name}}' />
+                                                        @endif
+                                                    @endforeach
+                                                </noscript>
+                                            </div>
+                                        </a>
+                                        <div class="ProductItem__Info ProductItem__Info--center">
+                                            <h2 class="ProductItem__Title Heading">
+                                                <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">{{ $product->product_name }}</a>
+                                            </h2>
+                                            <div class="ProductItem__PriceList Heading">
+                                                <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
+                                                        @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                                                            <span class="money">
+                                                                RP.
+                                                                <del>
+                                                                    {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                                </del>
+                                                                <span style="position:inherit; font-weight: 800;">
+                                                                    {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
+                                                            </span>
+                                                        @else
+                                                            <span class="money" >RP.
                                                                 {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
-                                                            </del>
-                                                            <span style="position:inherit; font-weight: 800;">
-                                                                {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
-                                                        </span>
-                                                    @else
-                                                        <span class="money" >RP.
-                                                            {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
-                                                        </span>
-                                                    @endif
-                                            </span>
+                                                            </span>
+                                                        @endif
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-                <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                    {{ $products->links('partials.layout.pagination') }}
+                    <div style="margin-top: 20px;padding: 10px; text-align: center;">
+                        {{ $products->links('partials.layout.pagination') }}
+                    </div>
                 </div>
             </div>
         </div>

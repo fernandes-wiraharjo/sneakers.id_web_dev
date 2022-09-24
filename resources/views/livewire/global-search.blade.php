@@ -174,7 +174,7 @@
                                     </a>
                                     <div class="ProductItem__Info ProductItem__Info--center">
                                         <h2 class="ProductItem__Title Heading">
-                                            <a href="{{ $product->product_link }}">{{ $product->product_name }}</a>
+                                            <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">{{ $product->product_name }}</a>
                                         </h2>
                                         <div class="ProductItem__PriceList Heading">
                                             <span class="ProductItem__Price Price Text--subdued" data-money-convertible>

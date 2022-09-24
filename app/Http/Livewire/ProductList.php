@@ -25,11 +25,11 @@ class ProductList extends Component
     public $signature;
     public $keyword;
     public $sort_by = 'ASC';
-    public $sort_column = 'product_name';
+    public $sort_column = 'created_at';
 
     protected $updatesQueryString = ['search'];
 
-    public function sort($sort_column = 'product_name', $sort_by = 'ASC'){
+    public function sort($sort_column = 'created_at', $sort_by = 'ASC'){
         $this->sort_by = $sort_by;
         $this->sort_column = $sort_column;
     }

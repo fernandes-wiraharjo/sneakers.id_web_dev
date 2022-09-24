@@ -53,7 +53,6 @@
         <!--end::Root-->
 
         <!--begin::Drawers-->
-        {{ theme()->getView('partials/topbar/_activity-drawer') }}
         {{ theme()->getView('partials/explore/_main') }}
         <!--end::Drawers-->
 

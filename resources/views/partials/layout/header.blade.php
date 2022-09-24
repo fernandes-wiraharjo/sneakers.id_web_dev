@@ -5,7 +5,7 @@
     <meta name="theme-color" content="" />
 
     <!-- Primary Meta Tags -->
-    <title>SNEAKERS.ID — WE AIN'T TALKIN' BOUT FAKE</title>
+    <title>{{ $title ?? "SNEAKERS.ID — WE AIN'T TALKIN' BOUT FAKE" }}</title>
     <meta name="title" content="SNEAKERS.ID — WE AIN'T TALKIN' BOUT FAKE">
     <meta name="keyword" content="nike sneakers, new balance sneakers, shoes, sport shoes, sepatu sneakers, sneaker, sepatu sneakers wanita, sepatu sneakers pria, adidas, sepatu adidas, sepatu air jordan, sepatu nike, nike, air jordan, original, sepatu original, sneakers original, sneakers asli, sepatu sneakers original, sepatu original sneakers, sneakers.id, jakarta sneakers day, sepatu sneakers jakarta" >
     <meta name="description" content="US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.">
@@ -24,8 +24,8 @@
     <meta property="twitter:description" content="US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.">
     <meta property="twitter:image" content="https://sneakers.id/stores-info/logos.png">
 
-    <link rel="stylesheet"
-        href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/theme.scss.css?v=7344590805236375534" />
+    {{-- <link rel="stylesheet"
+        href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/theme.scss.css?v=7344590805236375534" /> --}}
     <link rel="stylesheet"
         href="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/custom.scss.css?v=1208790817752646728" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
@@ -96,9 +96,11 @@
     <script
         src="https://cdn.polyfill.io/v3/polyfill.min.js?unknown=polyfill&features=fetch,Element.prototype.closest,Element.prototype.remove,Element.prototype.classList,Array.prototype.includes,Array.prototype.fill,Object.assign,CustomEvent,IntersectionObserver,IntersectionObserverEntry,URL"
         defer></script>
-    <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/libs.min.js?v=8846682211898979100" defer></script>
+    {{-- <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/libs.min.js?v=8846682211898979100" defer></script> --}}
+    <script href="{{ asset('js/libs.min.js') }}"></script>
     <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/theme.min.js?v=5920970342993277604" defer></script>
     <script src="//cdn.shopify.com/s/files/1/2854/1776/t/46/assets/custom.js?v=3101674707528230198" defer></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/theme.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />
     <style data-id="bc-sf-filter-style" type="text/css">
         #bc-sf-filter-options-wrapper .bc-sf-filter-option-block .bc-sf-filter-block-title h3,

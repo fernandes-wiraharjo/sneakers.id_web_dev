@@ -35,13 +35,13 @@ class FooterSettingController extends Controller
     public function store(Request $request)
     {
         try {
-            $validator = $request->validate([
-                'social.media.*' => 'required',
-                'social_media.*.social_link' => 'required|url',
-                'maps' => 'url'
-            ]);
+            // $validator = $request->validate([
+                // 'social.media.*' => 'required',
+                // 'social_media.*.social_link' => 'required|url',
+                // 'maps' => 'url'
+            // ]);
 
-            if($validator) {
+            // if($validator) {
                 $stored = $this->service->insertFooterSetting($request->all());
                 if($stored){
                     Alert::success('Footer Setting Updated Successfully!');
@@ -51,10 +51,10 @@ class FooterSettingController extends Controller
                     Alert::error('Failed to updated footer setting, check your info!');
                     return redirect()->back();
                 }
-            } else {
-                Alert::error('Failed to updated footer setting, check your info!');
-                return redirect()->back();
-            }
+            // } else {
+            //     Alert::error('Failed to updated footer setting, check your info!');
+            //     return redirect()->back();
+            // }
         } catch (LadminException $e) {
             Alert::error($e->getMessage());
             return redirect()->back()->withErrors([

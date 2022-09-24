@@ -1,0 +1,17 @@
+#bc-sf-filter-options-wrapper .bc-sf-filter-option-block .bc-sf-filter-block-title h3,
+#bc-sf-filter-tree-h .bc-sf-filter-option-block .bc-sf-filter-block-title a {}
+
+#bc-sf-filter-options-wrapper .bc-sf-filter-option-block .bc-sf-filter-block-content ul li a,
+#bc-sf-filter-tree-h .bc-sf-filter-option-block .bc-sf-filter-block-content ul li a {}
+
+#bc-sf-filter-tree-mobile button {
+    font-family: "Futura" !important;
+}
+
+.bc-sf-filter-option-block .bc-sf-filter-block-title h3 > span:before {
+    content: none !important;
+}
+
+.bc-sf-filter-block-content {
+    padding-left: 5%;
+}

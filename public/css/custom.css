@@ -1,3 +1,89 @@
+.pt-45 {
+    padding-top: 35px
+}
+
+.bc-sf-filter-clear {
+    margin-right: 20px !important
+}
+
+.ProductItem__LabelList .Sale,
+.ProductItem__LabelList .Sold.Out {
+    background: red;
+    color: #fff;
+    width: 100px
+}
+
+.brand-promise {
+    width: 100%;
+    max-width: 480px;
+    display: block;
+    margin: auto
+}
+
+.img-paymentlist-custom {
+    max-width: 420px;
+    display: block;
+    width: 100%
+}
+
+#maptab #powered_by {
+    display: none !important
+}
+
+.Image--contrast:after {
+    background-image: unset !important
+}
+
+.Header__CartDot {
+    background-color: #00b5ff;
+    color: #efefef;
+    width: 20px;
+    height: 20px;
+    left: 15px;
+    right: unset;
+    top: -9px;
+    padding-top: 3px;
+    padding-left: 6px
+}
+
+#bc-sf-filter-bottom-pagination ul.pagination-custom {
+    text-align: center
+}
+
+#bc-sf-filter-bottom-pagination ul.pagination-custom li {
+    display: inline-block !important;
+    margin: 15px 5px
+}
+
+.banner-custom .\31\/2--phone {
+    margin-top: 24px
+}
+
+.text-center {
+    text-align: center
+}
+
+#sidebar-cart.Drawer--fromRight {
+    padding-top: 30px
+}
+
+.SizeSwatch.sold-out:after {
+    content: "(Sold Out)"
+}
+
+@media (max-width: 560px) {
+    .pt-45 {
+        padding-top: 45px
+    }
+
+    #collection-filter-drawer.Drawer--fromRight,
+    #sidebar-menu.Drawer--fromLeft {
+        padding-top: 25px
+    }
+}
+
+/*# sourceMappingURL=/s/files/1/2854/1776/t/53/assets/custom.scss.css.map?v=12087908177526467281660034362 */
+
 .table tr {
     border-top: none !important;
 }
@@ -50,7 +136,9 @@
 #section-slideshow .Button::before {
     background-color: #000000;
 }
-@media (-moz-touch-enabled: 0), (hover: hover) {
+
+@media (-moz-touch-enabled: 0),
+(hover: hover) {
     #section-slideshow .Button:hover {
         color: #ffffff;
     }
@@ -83,7 +171,7 @@
 }
 
 .CollectionToolbar {
-   /* position: -webkit-sticky;
+    /* position: -webkit-sticky;
     position: sticky;*/
     display: flex;
     justify-content: space-between;

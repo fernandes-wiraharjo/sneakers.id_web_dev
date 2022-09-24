@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
     $('.Product__SlideshowNavImage').click(function(){
         $('.Product__SlideItem').removeClass('is-selected');
         $('.Product__SlideItem').css('left', '100%');

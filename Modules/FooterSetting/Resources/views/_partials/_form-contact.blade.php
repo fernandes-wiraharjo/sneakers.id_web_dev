@@ -3,12 +3,12 @@
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="maps" label="Maps*">
-	<input type="text" placeholder="Google maps url" class="form-control" name="maps" id="maps" required
+	<input type="text" placeholder="Google maps url" class="form-control" name="maps" id="maps"
         value="{{ old('maps', $footer->maps ?? '') }}">
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="phone_number_1" label="Phone Number 1*">
-	<input type="text" placeholder="Phone Number 1" class="form-control" name="phone_number_1" id="phone_number_1" required
+	<input type="text" placeholder="Phone Number 1" class="form-control" name="phone_number_1" id="phone_number_1"
         value="{{ old('phone_number_1', $footer->phone_number_1 ?? '') }}">
 </x-ladmin-form-group>
 
@@ -28,6 +28,6 @@
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="line" label="Line*">
-	<input type="text" placeholder="Line" class="form-control" name="line" id="line" required
+	<input type="text" placeholder="Line" class="form-control" name="line" id="line"
         value="{{ old('line', $footer->line ?? '') }}">
 </x-ladmin-form-group>

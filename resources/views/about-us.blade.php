@@ -1,12 +1,15 @@
-<html class="no-js" lang="en">
-    @include('partials.layout.header')
-    <body class="prestige--v4 template-collection">
-        @include('partials.layout.navbar')
-        <main id="main" role="main">
+@extends('store-theme._base')
 
-        </main>
-        @include('partials.layout.footer')
+@section('title', 'ABOUT US')
 
-        @include('partials.layout.script')
-    </body>
-</html>
+@push('styles')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/pages/about-us.css') }}" />
+@endpush
+
+@section('body')
+
+@endsection
+
+@push('scripts')
+    <script src="{{ asset('js/pages/about-us.js') }}" defer></script>
+@endpush

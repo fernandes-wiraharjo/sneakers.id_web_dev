@@ -218,7 +218,7 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
 
   public function getAllMenSize()
   {
-      return $this->sizeMenModel->get();
+      return $this->sizeMenModel->whereNotNull(['CM', 'US', 'UK', 'EU'])->orderBy('CM', 'ASC')->get();
   }
 
   public function getMenSizeById($id) {
@@ -236,7 +236,7 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
 
   public function getAllWomenSize()
   {
-      return $this->sizeWomenModel->get();
+      return $this->sizeWomenModel->whereNotNull(['CM', 'US', 'UK', 'EU'])->orderBy('CM', 'ASC')->get();
   }
 
   public function getWomenSizeById($id) {
@@ -254,7 +254,7 @@ class SizeRepository extends Repository implements MasterRepositoryInterface {
 
   public function getAllKidSize()
   {
-      return $this->sizeKidModel->get();
+      return $this->sizeKidModel->whereNotNull(['CM', 'US', 'UK', 'EU'])->orderBy('CM', 'ASC')->get();
   }
 
   public function getKidSizeById($id) {

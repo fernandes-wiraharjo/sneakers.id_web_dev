@@ -76,4 +76,4 @@
         };
     };
 </script>
-@stack('scripts')
+

@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                {{ $products->links('partials.layout.pagination') }}
+                {{ $products->links('store-theme._partials._pagination') }}
             </div>
         </div>
     </div>

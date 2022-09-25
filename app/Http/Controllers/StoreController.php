@@ -54,7 +54,7 @@ class StoreController extends Controller
     public function search(Request $request){
 
         $data = $request->all();
-        $keyword = $data['search'];
+        $keyword = $data['search'] ?? '';
         $this->search = $keyword;
 
         $brand = $this->brandRepository->getBrandByName($keyword);

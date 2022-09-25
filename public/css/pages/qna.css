@@ -1,0 +1,27 @@
+.table-container {
+    max-width: 1000px;
+    margin-right:auto;
+    margin-left:auto;
+    padding: 20px 20px;
+    display:flex;
+    justify-content:left;
+    /* align-items:center; */
+    min-height:50vh;
+}
+
+.a {
+    margin-bottom: 1rem;
+}
+
+.mark{
+    min-width: 20px;
+    vertical-align: top;
+}
+
+.SectionHeader {
+    width: 100%;
+    margin-top: auto !important;
+    margin-bottom: unset !important;
+    padding-top: 80px;
+    header-height: unset !important;
+}

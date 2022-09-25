@@ -97,4 +97,4 @@
             aria-label="View All"><a href="#" tabindex="-1" class="ui-menu-item-wrapper" id="total_result"></a></li>
     </ul>
 </div>
-@livewireScripts
+

@@ -38,6 +38,8 @@
                                     <div class="Collapsible"><a href="{{ route('collections', 'best-seller') }}"
                                             class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
                                             SELLERS</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'sale') }}"
+                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">SALE</a></div>
                                 </div>
                             </div>
                         </div>
@@ -47,17 +49,37 @@
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all.MENS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'all.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            ALL PRODUCTS
+                                        </a>
                                     </div>
-                                    <div class="Collapsible"><a
-                                            href="{{ route('collections', 'new-release.MENS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
-                                            RELEASES</a></div>
-                                    <div class="Collapsible"><a
-                                            href="{{ route('collections', 'best-seller.MENS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
-                                            SELLERS</a></div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'basketball-shoes.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            BASKETBALL SHOES
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'casual-sneakers.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            CASUAL SNEAKERS
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'apparels.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            APPARELS
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'accesories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            ACCESSORIES
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'sale.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            SALE
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -67,17 +89,38 @@
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all.WOMENS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a>
+                                    <div class="Collapsible__Content">
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'all.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                ALL PRODUCTS
+                                            </a>
+                                        </div>
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'basketball-shoes.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                BASKETBALL SHOES
+                                            </a>
+                                        </div>
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'casual-sneakers.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                CASUAL SNEAKERS
+                                            </a>
+                                        </div>
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'apparels.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                APPARELS
+                                            </a>
+                                        </div>
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'accesories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                ACCESSORIES
+                                            </a>
+                                        </div>
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'sale.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                SALE
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="Collapsible"><a
-                                            href="{{ route('collections', 'new-release.WOMENS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
-                                            RELEASES</a></div>
-                                    <div class="Collapsible"><a
-                                            href="{{ route('collections', 'best-seller.WOMENS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
-                                            SELLERS</a></div>
                                 </div>
                             </div>
                         </div>
@@ -87,17 +130,36 @@
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'all.KIDS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL</a>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'all.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            ALL PRODUCTS
+                                        </a>
                                     </div>
-                                    <div class="Collapsible"><a
-                                            href="{{ route('collections', 'new-release.KIDS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
-                                            RELEASES</a></div>
-                                    <div class="Collapsible"><a
-                                            href="{{ route('collections', 'best-seller.KIDS') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
-                                            SELLERS</a></div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'basketball-shoes.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            BASKETBALL SHOES
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'casual-sneakers.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            CASUAL SNEAKERS
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'apparels.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            APPARELS
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'accesories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            ACCESSORIES
+                                        </a>
+                                    </div>
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'sale.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            SALE
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -116,10 +178,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="Collapsible">
+                        {{-- <div class="Collapsible">
                             <a href="{{ route('lookbook', 1) }}" class="Collapsible__Button Heading Link Link--primary u-h6">LOOKBOOK<span
                                         class="Header__LinkSpacer">LOOKBOOK</span></a>
-                        </div>
+                        </div> --}}
                         <div class="Collapsible">
                             <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
                                         class="Header__LinkSpacer">SIZE CHART</span></a>
@@ -220,6 +282,10 @@
                                             <a href="{{ route('collections', 'best-seller') }}"
                                                 class="Link Link--secondary">BEST SELLERS </a>
                                         </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale') }}"
+                                                class="Link Link--secondary">SALE </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -231,15 +297,39 @@
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
                                             <a href="{{ route('collections', 'all.MENS') }}"
-                                                class="Link Link--secondary">ALL </a>
+                                                class="Link Link--secondary">
+                                                ALL PRODUCTS
+                                            </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'new-release.MENS') }}"
-                                                class="Link Link--secondary">NEW RELEASES </a>
+                                            <a href="{{ route('collections', 'basketball-shoes.MENS') }}"
+                                                class="Link Link--secondary">
+                                                BASKETBALL SHOES
+                                            </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'best-seller.MENS') }}"
-                                                class="Link Link--secondary">BEST SELLERS </a>
+                                            <a href="{{ route('collections', 'casual-sneakers.MENS') }}"
+                                                class="Link Link--secondary">
+                                                CASUAL SNEAKERS
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'apparels.MENS') }}"
+                                                class="Link Link--secondary">
+                                                APPARELS
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'accesories.MENS') }}"
+                                                class="Link Link--secondary">
+                                                ACCESSORIES
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.MENS') }}"
+                                                class="Link Link--secondary">
+                                                SALE
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -252,15 +342,39 @@
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
                                             <a href="{{ route('collections', 'all.WOMENS') }}"
-                                                class="Link Link--secondary">ALL </a>
+                                                class="Link Link--secondary">
+                                                ALL PRODUCTS
+                                            </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'new-release.WOMENS') }}"
-                                                class="Link Link--secondary">NEW RELEASES </a>
+                                            <a href="{{ route('collections', 'basketball-shoes.WOMENS') }}"
+                                                class="Link Link--secondary">
+                                                BASKETBALL SHOES
+                                            </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'best-seller.WOMENS') }}"
-                                                class="Link Link--secondary">BEST SELLERS </a>
+                                            <a href="{{ route('collections', 'casual-sneakers.WOMENS') }}"
+                                                class="Link Link--secondary">
+                                                CASUAL SNEAKERS
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'apparels.WOMENS') }}"
+                                                class="Link Link--secondary">
+                                                APPARELS
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'accesories.WOMENS') }}"
+                                                class="Link Link--secondary">
+                                                ACCESSORIES
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.WOMENS') }}"
+                                                class="Link Link--secondary">
+                                                SALE
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -273,15 +387,39 @@
                                     <ul class="Linklist">
                                         <li class="Linklist__Item">
                                             <a href="{{ route('collections', 'all.KIDS') }}"
-                                                class="Link Link--secondary">ALL </a>
+                                                class="Link Link--secondary">
+                                                ALL PRODUCTS
+                                            </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'new-release.KIDS') }}"
-                                                class="Link Link--secondary">NEW RELEASES </a>
+                                            <a href="{{ route('collections', 'basketball-shoes.KIDS') }}"
+                                                class="Link Link--secondary">
+                                                BASKETBALL SHOES
+                                            </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'best-seller.KIDS') }}"
-                                                class="Link Link--secondary">BEST SELLERS </a>
+                                            <a href="{{ route('collections', 'casual-sneakers.KIDS') }}"
+                                                class="Link Link--secondary">
+                                                CASUAL SNEAKERS
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'apparels.KIDS') }}"
+                                                class="Link Link--secondary">
+                                                APPARELS
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'accesories.KIDS') }}"
+                                                class="Link Link--secondary">
+                                                ACCESSORIES
+                                            </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.KIDS') }}"
+                                                class="Link Link--secondary">
+                                                SALE
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -301,11 +439,6 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            </li>
-                            <li class="HorizontalList__Item">
-                                <a href="{{ route('lookbook', 1) }}"
-                                    class="Heading u-h6 main-heading-text">LOOKBOOK<span
-                                        class="Header__LinkSpacer">LOOKBOOK</span></a>
                             </li>
                             <li class="HorizontalList__Item">
                                 <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">SIZE

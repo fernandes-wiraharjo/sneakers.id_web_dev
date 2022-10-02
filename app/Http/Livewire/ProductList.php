@@ -197,7 +197,10 @@ class ProductList extends Component
                                     return $query->where('pd.discount_percentage', '>', 0);
                                 })
                                 ->orderBy($this->sort_column, $this->sort_by);
-        $data['sql'] = $products->toSql();
+        /**
+         * Query debug
+         */
+        // $data['sql'] = $products->toSql();
         $data['products'] = $products->paginate(40);
         return view('livewire.product-list', $data);
     }

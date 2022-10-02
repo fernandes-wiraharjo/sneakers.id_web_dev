@@ -8,7 +8,7 @@
                 </div>
                 @foreach ($brand as $item)
                     <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar">
-                        <input type="checkbox" wire:model="brand.{{$item->id}}" value="{{$item->id}}">
+                        <input type="checkbox" wire:model="brand" value="{{$item->id}}" wire:loading.attr="disabled">
                         {{-- <span class="Checkmark_Container"></span> --}}
                         <label>{{ strtoupper($item->brand_title) }}</label>
                     </div>
@@ -20,7 +20,7 @@
                 </div>
                 @foreach ($category as $item)
                     <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
-                        <input type="checkbox" wire:model="category.{{$item->id}}" value="{{$item->id}}" wire:loading.attr="disabled">
+                        <input type="checkbox" wire:model="category" value="{{$item->id}}" wire:loading.attr="disabled" id="category">
                         {{-- <span class="Checkmark_Container"></span> --}}
                         <label>{{ strtoupper($item->category_title) }}</label>
                     </div>
@@ -32,7 +32,7 @@
                 </div>
                 @foreach ($tag as $item)
                     <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
-                        <input type="checkbox" wire:model="tag.{{$item->id}}" value="{{$item->id}}" wire:loading.attr="disabled">
+                        <input type="checkbox" wire:model="tag" value="{{$item->id}}" wire:loading.attr="disabled">
                         {{-- <span class="Checkmark_Container"></span> --}}
                         <label>{{ strtoupper($item->tag_title) }}</label>
                     </div>
@@ -44,7 +44,7 @@
                 </div>
                 @foreach ($signature_player as $item)
                     <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
-                        <input type="checkbox" wire:model="signature.{{$item->id}}" value="{{$item->id}}" wire:loading.attr="disabled">
+                        <input type="checkbox" wire:model="signature" value="{{$item->id}}" wire:loading.attr="disabled">
                         {{-- <span class="Checkmark_Container"></span> --}}
                         <label>{{ strtoupper($item->signature_title) }}</label>
                     </div>
@@ -59,7 +59,7 @@
                     <div class="grid-flow">
                         @foreach ($size as $count => $item)
                             <span>
-                                <input type="checkbox" wire:model="size.{{$item->id}}" value="{{$item->id}}">
+                                <input type="checkbox" wire:model="size" value="{{$item->id}}">
                                 <label>{{ $item->size_title}}</label>
                             </span>
                         @endforeach

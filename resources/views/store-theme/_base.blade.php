@@ -37,12 +37,35 @@
         @stack('styles')
 
         @livewireStyles
+
+        <style>
+            .float{
+                position:fixed;
+                width:60px;
+                height:60px;
+                bottom:40px;
+                right:40px;
+                background-color:#0C9;
+                color:#FFF;
+                border-radius:50px;
+                text-align:center;
+                box-shadow: 2px 2px 3px #999;
+            }
+
+            .my-float{
+                margin-top:17px;
+            }
+        </style>
     </head>
     <body class="prestige--v4 template-collection">
         @include('store-theme._partials._navbar')
 
         <main id="main" role="main">
             @yield('body')
+
+            <a href="https://wa.me/{{ $footer->wa ?? '' }}" target="_blank" class="float">
+                <i class="fa fa-whatsapp my-float fa-2x"></i>
+            </a>
         </main>
 
         @include('store-theme._partials._footer')

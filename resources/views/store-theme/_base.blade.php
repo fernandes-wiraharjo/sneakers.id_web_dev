@@ -72,8 +72,6 @@
 
         @include('store-theme._partials._bottom_scripts')
 
-
-
         @stack('scripts')
         @livewireScripts
     </body>

@@ -101,3 +101,9 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
   }
+
+.pagination {
+    display: flex;
+    list-style-type: none;
+    justify-content: center;
+}

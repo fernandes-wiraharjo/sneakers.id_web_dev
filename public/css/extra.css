@@ -56,3 +56,14 @@
 .Check__Box__Container label {
     vertical-align: middle;
 }
+
+.pagination {
+    display: flex;
+    list-style-type: none;
+    justify-content: center;
+}
+
+.page-item {
+    padding: 0 5px;
+    font-size: large;
+}

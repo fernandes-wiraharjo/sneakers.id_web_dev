@@ -24,12 +24,12 @@ class ProductList extends Component
     public $category = [];
     public $signature = [];
     public $keyword;
-    public $sort_by = 'ASC';
+    public $sort_by = 'DESC';
     public $sort_column = 'created_at';
 
     protected $updatesQueryString = ['search'];
 
-    public function sort($sort_column = 'created_at', $sort_by = 'ASC'){
+    public function sort($sort_column = 'created_at', $sort_by){
         $this->sort_by = $sort_by;
         $this->sort_column = $sort_column;
     }

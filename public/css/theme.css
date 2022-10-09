@@ -1183,6 +1183,7 @@ body {
 .Icon-Wrapper--clickable:before {
     position: absolute;
     content: "";
+    cursor: pointer;
     top: -8px;
     right: -12px;
     left: -12px;

@@ -1,9 +1,5 @@
 @push('styles')
     <style>
-        #filter_button {
-            display: none !important;
-        }
-
         @media only screen and (max-width: 1007px) {
            .Drawer__Main {
                 padding-top: 15px;
@@ -29,7 +25,7 @@
                 </a>
                 <a class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6 sort-button"
                     aria-label="Show sort by" aria-haspopup="true" aria-expanded="false"
-                    aria-controls="collection-sort-popover">
+                    aria-controls="collection-sort-popover" id="sort_button">
                     Sort
                     <svg class="Icon Icon--select-arrow" role="presentation" viewBox="0 0 19 12">
                         <polyline fill="none" stroke="currentColor" points="17 2 9.5 10 2 2" fill-rule="evenodd"
@@ -37,58 +33,7 @@
                     </svg>
                 </a>
             </div>
-            <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
-                <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">
-                  <span class="Drawer__Title Heading u-h4">Filters</span>
-                    <a class="Drawer__Close Icon-Wrapper--clickable close-filter" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="Close navigation">
-                        <svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
-                            <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                </header>
-                <div class="Drawer__Content">
-                  <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                    @include('components.filters', $filters)
-                  </div>
-                </div>
-            </div>
-            <div id="collection-sort-popover" class="Popover Popover--positionBottom Popover--alignRight" aria-hidden="true" style="top: 233px; right: 0px;">
-                <header class="Popover__Header">
-                    <a class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
-                        <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                    <span class="Popover__Title Heading u-h4">Sort</span>
-                </header>
-                <div class="Popover__Content">
-                    <div class="Popover__ValueList">
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'ASC')">
-                        Alphabetically, A-Z
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'DESC')">
-                        Alphabetically, Z-A
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'ASC')">
-                        Price, low to high
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
-                        Price, high to low
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'ASC')">
-                        Discount Price, low to high
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
-                        Disount Price, high to low
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
-                        Date, old to new
-                        </a>
-                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'DESC')">
-                        Date, new to old
-                        </a>
-                    </div>
-                </div>
-            </div>
+
             <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
                 <div class="Search__InputIconWrapper">
                     <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
@@ -114,6 +59,58 @@
                 <input wire:model="search" type="text" class="Search__Input Heading ui-autocomplete-input"
                     autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..."
                     autofocus="" >
+            </div>
+        </div>
+        <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
+            <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">
+              <span class="Drawer__Title Heading u-h4">Filters</span>
+                <a class="Drawer__Close Icon-Wrapper--clickable close-filter" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="Close navigation">
+                    <svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
+                        <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
+                    </svg>
+                </a>
+            </header>
+            <div class="Drawer__Content">
+              <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
+                @include('components.filters', $filters)
+              </div>
+            </div>
+        </div>
+        <div id="collection-sort-popover" class="Popover Popover--positionBottom Popover--alignRight" aria-hidden="true" style="top: 233px; right: 0px;">
+            <header class="Popover__Header">
+                <a class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover"><svg class="Icon Icon--close" role="presentation" viewBox="0 0 16 14">
+                    <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
+                    </svg>
+                </a>
+                <span class="Popover__Title Heading u-h4">Sort</span>
+            </header>
+            <div class="Popover__Content">
+                <div class="Popover__ValueList">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'ASC')">
+                    Alphabetically, A-Z
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'DESC')">
+                    Alphabetically, Z-A
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'ASC')">
+                    Price, low to high
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
+                    Price, high to low
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'ASC')">
+                    Discount Price, low to high
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
+                    Disount Price, high to low
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
+                    Date, old to new
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'DESC')">
+                    Date, new to old
+                    </a>
+                </div>
             </div>
         </div>
         <div class="CollectionInner">
@@ -220,6 +217,15 @@
             $('html').removeClass('no-scroll');
             $('.PageOverlay').trigger("click");
         });
+
+        $(".CollectionToolbar__Item--sort").click(function() {
+                // console.log('A');
+                // $("#main-overlay").css("z-index", "2");
+                // $("#main-overlay").attr("class", "x");
+                // $('#main-overlay').removeClass('is-visible');
+                $('html').removeClass('no-scroll');
+                $('#main-overlay').trigger("click");
+            });
 
         $(".bc-sf-filter-block-content").click(function() {
             $('.close-filter').trigger("click");

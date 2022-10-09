@@ -144,7 +144,7 @@
     }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1007px) {
     .Slideshow__ImageContainer {
         --aspect-ratio: 1 !important;
     }
@@ -157,6 +157,7 @@
         height: 50px;
         margin-left: unset !important;
         padding: 5px;
+        border-top: outset;
     }
 }
 

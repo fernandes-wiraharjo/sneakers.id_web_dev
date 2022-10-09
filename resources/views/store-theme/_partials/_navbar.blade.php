@@ -1,6 +1,6 @@
 <a class="PageSkipLink u-visually-hidden" href="#main">Skip to content</a>
 <span class="LoadingBar"></span>
-<div class="PageOverlay"></div>
+<div id="main-overlay" class="PageOverlay"></div>
 <div class="PageTransition"></div>
 
 <div id="shopify-section-popup" class="shopify-section"></div>

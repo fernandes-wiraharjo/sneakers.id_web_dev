@@ -63,7 +63,7 @@
         <main id="main" role="main">
             @yield('body')
 
-            <a href="https://wa.me/{{ $footer->wa ?? '' }}" target="_blank" class="float">
+            <a href="https://wa.me/{{ $footer->wa ?? '089617925925' }}?text=" target="_blank" class="float">
                 <i class="fa fa-whatsapp my-float fa-2x"></i>
             </a>
         </main>

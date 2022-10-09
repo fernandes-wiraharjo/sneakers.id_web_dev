@@ -1,8 +1,8 @@
-<x-ladmin-form-group name="address" label="Address*">
+<x-ladmin-form-group name="address" label="Address">
 	<textarea class="form-control" aria-label="Address" name="address" id="address" rows="5">{{ old('address', $footer->address ?? '')}}</textarea>
 </x-ladmin-form-group>
 
-<x-ladmin-form-group name="maps" label="Maps*">
+<x-ladmin-form-group name="maps" label="Maps">
 	<input type="text" placeholder="Google maps url" class="form-control" name="maps" id="maps"
         value="{{ old('maps', $footer->maps ?? '') }}">
 </x-ladmin-form-group>
@@ -27,7 +27,7 @@
         value="{{ old('wa', $footer->wa ?? '') }}">
 </x-ladmin-form-group>
 
-<x-ladmin-form-group name="line" label="Line*">
+<x-ladmin-form-group name="line" label="Line">
 	<input type="text" placeholder="Line" class="form-control" name="line" id="line"
         value="{{ old('line', $footer->line ?? '') }}">
 </x-ladmin-form-group>

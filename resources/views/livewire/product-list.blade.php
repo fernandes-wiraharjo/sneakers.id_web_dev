@@ -219,10 +219,6 @@
         });
 
         $(".CollectionToolbar__Item--sort").click(function() {
-                // console.log('A');
-                // $("#main-overlay").css("z-index", "2");
-                // $("#main-overlay").attr("class", "x");
-                // $('#main-overlay').removeClass('is-visible');
                 $('html').removeClass('no-scroll');
                 $('#main-overlay').trigger("click");
             });

@@ -147,8 +147,7 @@ class ProductList extends Component
 
         $products = $productRepository->getProductWhere()
                                 ->when($this->search, function ($query, $search){
-                                    return $query->where('product_name', 'LIKE', '%'.$search.'%')
-                                        ->orWhere('description', 'LIKE', '%'.$search.'%');
+                                    return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                 })
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){

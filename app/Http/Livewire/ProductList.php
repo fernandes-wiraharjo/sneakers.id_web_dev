@@ -151,7 +151,7 @@ class ProductList extends Component
                                 })
                                 ->when($this->brand, function ($query, $brands){
                                     return $query->whereHas('detail', function ($q) use ($brands){
-                                        rsort($brand);
+                                        rsort($brands);
 
                                         return $q->where('brand_id', array_unique($brands))
                                             ->when($this->search, function ($query, $search){

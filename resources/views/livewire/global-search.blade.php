@@ -1,8 +1,5 @@
 @push('styles')
     <style>
-        #filter_button {
-            display: none !important;
-        }
 
         @media only screen and (max-width: 1007px) {
            .Drawer__Main {

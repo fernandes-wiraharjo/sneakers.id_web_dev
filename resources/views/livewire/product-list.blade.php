@@ -125,14 +125,32 @@
             <div wire:loading.remove>
                 <div class="CollectionInner__Products">
                     <div class="ProductListWrapper">
+                            @php
+                                $count = $products->count();
+                                $desktop_count = 4;
+                                $class = '';
+                                $style = '';
+
+                                if ($count > 3) {
+                                    $class = '1/2--phone 1/3--tablet-and-up 1/4--desk';
+                                } elseif ($count == 3) {
+                                    $class = '1/4--desk';
+                                    $style = 'width: 85vw;';
+                                    $desktop_count = 4;
+                                } else {
+                                    $class = '1/4--desk';
+                                    $style = 'width: 85vw;';
+                                    $desktop_count = 4;
+                                }
+                            @endphp
                         <div class="ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="2"
-                            data-desktop-count="4">
+                            data-desktop-count="{{ $desktop_count }}" style="{{ $style }}">
                             @foreach ($products as $product)
                             @php
                                 $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
                                 $ratio = $image_size[0] / $image_size[1];
                             @endphp
-                                <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
+                                <div class="Grid__Cell {{ $class }}">
                                     <div class="ProductItem" style="visibility: visible;">
                                         <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
                                             class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
@@ -216,6 +234,7 @@
             $('.PageOverlay').removeClass('is-visible');
             $('html').removeClass('no-scroll');
             $('.PageOverlay').trigger("click");
+            $('#main-overlay').trigger("click");
         });
 
         $(".CollectionToolbar__Item--sort").click(function() {
@@ -226,6 +245,7 @@
         $(".bc-sf-filter-block-content").click(function() {
             $('.close-filter').trigger("click");
             $('.PageOverlay').trigger("click");
+            $('#main-overlay').trigger("click");
         });
     </script>
 @endpush

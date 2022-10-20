@@ -29,6 +29,31 @@ class ProductList extends Component
 
     protected $updatesQueryString = ['search'];
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingBrand()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingTag()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingCategory()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSignature()
+    {
+        $this->resetPage();
+    }
+
     public function sort($sort_column = 'created_at', $sort_by){
         $this->sort_by = $sort_by;
         $this->sort_column = $sort_column;

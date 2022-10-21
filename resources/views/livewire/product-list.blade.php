@@ -234,28 +234,38 @@
             $('.PageOverlay').removeClass('is-visible');
             $('html').removeClass('no-scroll');
             $('.PageOverlay').trigger("click");
-            $('#main-overlay').trigger("click");
+            // $('#main-overlay').trigger("click");
+            $('#main-overlay').attr("style", "display: none;");
 
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("click", true, true);
-            document.getElementById('main-overlay').dispatchEvent(evt);
+
+            // var evt = document.createEvent("HTMLEvents");
+            // evt.initEvent("click", true, true);
+            // document.getElementById('main-overlay').dispatchEvent(evt);
         });
 
         $(".CollectionToolbar__Item--sort").click(function() {
                 $('html').removeClass('no-scroll');
-                $('#main-overlay').trigger("click");
-                var evt = document.createEvent("HTMLEvents");
-                evt.initEvent("click", true, true);
-                document.getElementById('main-overlay').dispatchEvent(evt);
+                // $('#main-overlay').trigger("click");
+
+                $('#main-overlay').attr("style", "display: none;");
+
+                // var evt = document.createEvent("HTMLEvents");
+                // evt.initEvent("click", true, true);
+                // document.getElementById('main-overlay').dispatchEvent(evt);
+
+
             });
 
         $(".bc-sf-filter-block-content").click(function() {
             $('.close-filter').trigger("click");
             $('.PageOverlay').trigger("click");
-            $('#main-overlay').trigger("click");
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("click", true, true);
-            document.getElementById('main-overlay').dispatchEvent(evt);
+            // $('#main-overlay').trigger("click");
+
+            $('#main-overlay').attr("style", "display: none;");
+
+            // var evt = document.createEvent("HTMLEvents");
+            // evt.initEvent("click", true, true);
+            // document.getElementById('main-overlay').dispatchEvent(evt);
         });
     </script>
 @endpush

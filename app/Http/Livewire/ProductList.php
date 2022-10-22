@@ -178,7 +178,7 @@ class ProductList extends Component
                                     return $query->whereHas('detail', function ($q) use ($brands){
                                         rsort($brands);
 
-                                        return $q->where('brand_id', array_unique($brands))
+                                        return $q->whereIn('brand_id', array_unique($brands))
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -188,7 +188,7 @@ class ProductList extends Component
                                     return $query->whereHas('categories', function ($q) use ($categories){
                                         rsort($categories);
 
-                                        return $q->where('category_id', array_unique($categories))
+                                        return $q->whereIn('category_id', array_unique($categories))
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -198,7 +198,7 @@ class ProductList extends Component
                                     return $query->whereHas('tags', function ($q) use ($tags){
                                         rsort($tags);
 
-                                        return $q->where('tag_id', array_unique($tags))
+                                        return $q->whereIn('tag_id', array_unique($tags))
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
@@ -208,7 +208,7 @@ class ProductList extends Component
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
                                         rsort($signatures);
 
-                                        return $q->where('signature_player_id', array_unique($signatures))
+                                        return $q->whereIn('signature_player_id', array_unique($signatures))
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });

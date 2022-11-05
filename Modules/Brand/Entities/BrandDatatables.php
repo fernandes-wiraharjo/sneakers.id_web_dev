@@ -21,7 +21,12 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'status', 'menu'])
+            ->rawColumns(['action', 'status', 'menu', 'brand_image'])
+            ->editColumn('brand_image', function ($item) {
+                return '<div class="text-center px-4">
+                    <img class="mw-75 card-rounded" alt="" src="'.getImage($item->brand_image, 'brand') .'"/>
+                </div>';
+            })
             ->addColumn('status', function ($item) {
               return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
@@ -58,6 +63,9 @@ use Yajra\DataTables\Services\DataTable;
             Column::make('DT_RowIndex')->title(__('No'))
                     ->sortable(false)
                     ->searchable(false),
+            Column::make('brand_image')->width(150)
+                ->sortable(false)
+                ->searchable(false),
             Column::make('brand_code'),
             Column::make('brand_title'),
             Column::make('menu')

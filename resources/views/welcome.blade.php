@@ -107,7 +107,7 @@
                 </div>
                 <div class="Container">
                     <div class="SectionFooter">
-                        <a href="/collections/best-seller" class="Button Button--primary">SEE MORE</a>
+                        <a href="/collections/brand" class="Button Button--primary">SEE MORE</a>
                     </div>
                 </div>
             </div>

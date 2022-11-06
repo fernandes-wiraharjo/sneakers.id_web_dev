@@ -99,10 +99,7 @@
                     Price, high to low
                     </a>
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'ASC')">
-                    Discount Price, low to high
-                    </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
-                    Disount Price, high to low
+                    Discount Price
                     </a>
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
                     Date, old to new

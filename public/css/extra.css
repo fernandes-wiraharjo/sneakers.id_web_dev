@@ -82,10 +82,16 @@ li.page-item.active {
     z-index: 11 !important;
 }
 
-@media screen and (min-width: 641px)
-.Footer__Social {
-    margin-top: 14px;
+@media screen and (min-width: 641px){
+    .Footer__Social {
+        margin-top: 14px;
+    }
+
+    .Search__Close {
+        font-size: 22px;
+    }
 }
+
 
 .fa {
     display: inline-block;
@@ -127,7 +133,7 @@ li.page-item.active {
     padding: 5px 10px 4px;
     color: #a0a0a0;
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .bc-sf-search-suggestion-header-view-all>a {
@@ -138,5 +144,5 @@ li.page-item.active {
     padding: 5px 10px 4px;
     color: #a0a0a0;
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
 }

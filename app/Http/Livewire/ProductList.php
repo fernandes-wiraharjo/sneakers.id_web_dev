@@ -26,6 +26,7 @@ class ProductList extends Component
     public $keyword;
     public $sort_by = 'DESC';
     public $sort_column = 'created_at';
+    public $gender = [];
 
     protected $updatesQueryString = ['search'];
 
@@ -50,6 +51,11 @@ class ProductList extends Component
     }
 
     public function updatingSignature()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingGender()
     {
         $this->resetPage();
     }
@@ -104,6 +110,16 @@ class ProductList extends Component
         );
     }
 
+    public function updatedGender()
+    {
+        if(!is_array($this->gender)) return;
+        $this->gender = array_filter($this->gender,
+            function ($gender) {
+                return $gender != false;
+            }
+        );
+    }
+
     public function render(
         ProductRepository $productRepository,
         BrandRepository $brandRepository,
@@ -117,10 +133,9 @@ class ProductList extends Component
             'brand' => $brandRepository->getAllBrand(),
             'size' => $sizeRepository->getAllSizes(),
             'tag' => $tagRepository->getAllTags(),
-            'category' => $categoryRepository->getAllCategories(),
+            'category' => $categoryRepository->getAllCategoriesExceptGender(),
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
-
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
             $keyword_array = explode('.', $keyword);
@@ -169,6 +184,8 @@ class ProductList extends Component
         $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? null;
         $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? null;
         $discount_id = $tagRepository->getTagByName('discount')->id ?? null;
+        // $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender))->pluck('id');
+        // dump($gender_id);
 
         $products = $productRepository->getProductWhere()
                                 ->when($this->search, function ($query, $search){
@@ -182,7 +199,7 @@ class ProductList extends Component
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
-                                    });
+                                        });
                                 })
                                 ->when($this->category, function ($query, $categories){
                                     return $query->whereHas('categories', function ($q) use ($categories){
@@ -192,7 +209,7 @@ class ProductList extends Component
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
-                                    });
+                                        });
                                 })
                                 ->when($this->tag, function ($query, $tags) {
                                     return $query->whereHas('tags', function ($q) use ($tags){
@@ -202,8 +219,8 @@ class ProductList extends Component
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
-                                    });
-                                })
+                                        });
+                                    })
                                 ->when($this->signature, function ($query, $signatures){
                                     return $query->whereHas('signatures', function ($q) use ($signatures){
                                         rsort($signatures);
@@ -212,8 +229,8 @@ class ProductList extends Component
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });
-                                    });
-                                })
+                                        });
+                                    })
                                 /**
                                  * Sizes not in filter
                                  */
@@ -227,6 +244,16 @@ class ProductList extends Component
                                 // })
                                 ->when($this->keyword === 'sale' || $this->keyword === 'discount' || in_array($sale_category_id, $this->category) || in_array($sale_tag_id, $this->tag) || in_array($discount_id, $this->tag), function ($query) {
                                     return $query->where('pd.discount_percentage', '>', 0);
+                                })
+                                ->when($this->gender, function ($query, $gender){
+                                    return $query->whereHas('categories', function ($q) use ($gender){
+                                        rsort($gender);
+
+                                        return $q->whereIn('categories.category_code', array_unique($gender))
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
                                 })
                                 ->orderBy($this->sort_column, $this->sort_by);
         /**

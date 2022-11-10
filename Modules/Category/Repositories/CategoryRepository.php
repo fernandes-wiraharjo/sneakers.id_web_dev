@@ -58,8 +58,18 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
       ->first();
   }
 
+  public function getCategoryByCode($keywordList = []){
+    return $this->model
+      ->whereIn('category_code', $keywordList)
+      ->get();
+  }
+
   public function getAllCategories() {
       return $this->model->where('is_active', 1)->get();
+  }
+
+  public function getAllCategoriesExceptGender() {
+    return $this->model->whereNotIn('category_code', ['MENS', 'WOMENS', 'KIDS'])->where('is_active', 1)->get();
   }
 
   public function getCategoryIdAndNameLivewire(){

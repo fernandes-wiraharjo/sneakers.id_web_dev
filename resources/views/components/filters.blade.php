@@ -16,6 +16,23 @@
             </div>
             <div class="bc-sf-filter-option-block bc-sf-filter-option-block-list bc-sf-filter-option-block-category">
                 <div class="bc-sf-filter-block-title">
+                    <h3><span>GENDER</span></h3>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="gender" value="MENS" wire:loading.attr="disabled" id="gender">
+                    <label>MEN'S</label>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="gender" value="WOMENS" wire:loading.attr="disabled" id="gender">
+                    <label>WOMEN'S</label>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="gender" value="KIDS" wire:loading.attr="disabled" id="gender">
+                    <label>KID'S</label>
+                </div>
+            </div>
+            <div class="bc-sf-filter-option-block bc-sf-filter-option-block-list bc-sf-filter-option-block-category">
+                <div class="bc-sf-filter-block-title">
                     <h3><span>CATEGORY</span></h3>
                 </div>
                 @foreach ($category as $item)

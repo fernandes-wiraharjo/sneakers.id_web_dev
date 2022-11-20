@@ -40,6 +40,7 @@
 
         <style>
             .float{
+                z-index: 1;
                 position:fixed;
                 width:60px;
                 height:60px;

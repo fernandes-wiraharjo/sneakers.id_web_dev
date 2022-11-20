@@ -39,14 +39,14 @@ class StoreController extends Controller
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['brand'] = $this->brandRepository->getAllBrand();
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('welcome', $data);
     }
 
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('product-detail', $data);
     }
@@ -131,14 +131,14 @@ class StoreController extends Controller
         $data['men_sizes'] = $this->sizeRepository->getAllMenSize();
         $data['women_sizes'] = $this->sizeRepository->getAllWomenSize();
         $data['kid_sizes'] = $this->sizeRepository->getAllKidSize();
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('search-result', $data);
     }
 
     public function collections($keyword){
         $data['keyword'] = $keyword;
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('collections', $data);
     }
@@ -147,7 +147,7 @@ class StoreController extends Controller
         $data['next_page'] = $this->lookBookRepository->getNextLookBook($page);
         $data['prev_page'] = $this->lookBookRepository->getPrevLookBook($page);
         $data['lookbook'] = $this->lookBookRepository->getAllLookBookPaginate(20);
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('lookbook', $data);
     }
@@ -157,20 +157,20 @@ class StoreController extends Controller
         $data['men_sizes'] = $this->sizeRepository->getAllMenSize();
         $data['women_sizes'] = $this->sizeRepository->getAllWomenSize();
         $data['kid_sizes'] = $this->sizeRepository->getAllKidSize();
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('size-chart', $data);
     }
 
     public function aboutUs(){
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('about-us', $data);
     }
 
     public function faq(){
         $data['faq'] = $this->faqRepository->getAllFaq();
-        $data['brand_menu'] = $this->brandRepository->getBrandMenu();
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('qna', $data);
     }

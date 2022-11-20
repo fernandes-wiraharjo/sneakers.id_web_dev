@@ -53,9 +53,11 @@ class BrandController extends Controller
         try {
             $validator = $request->validate([
                 'brand_code' => 'required|unique:brands|max:255',
+                'image' => 'required|mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
                 'is_menu' => 'brandmenu'
             ], [
-                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!'
+                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
+                'image.dimensions' => 'Brand image must be more than 500p, below 1500p and aspect ratio 1:1!'
             ]);
 
             if($validator) {
@@ -117,16 +119,19 @@ class BrandController extends Controller
             if($old_data->brand_code == $data['brand_code']){
                 $validation = [
                     'brand_code' => 'required|exists:brands,brand_code|max:255',
+                    'image' => 'mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
                 ];
             } else {
                 $validation = [
                     'brand_code' => 'required|unique:brands,brand_code|max:255',
+                    'image' => 'mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
                     'is_menu' => 'brandmenu'
                 ];
             }
 
             $message = [
-                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!'
+                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
+                'image.dimensions' => 'Brand image must be more than 500p, below 1500p and aspect ratio 1:1!'
             ];
 
             $validator = $request->validate($validation, $message);

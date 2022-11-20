@@ -48,6 +48,10 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
       return $this->model->where(['is_active' => 1, 'is_menu' => 1])->count();
   }
 
+  public function getActiveMenuBrand(){
+    return $this->model->where(['is_active' => 1, 'is_menu' => 1])->get();
+}
+
   public function getBrandByName($name = '') {
       return $this->model->where('brand_title', 'LIKE', '%'.$name.'%')->first();
   }

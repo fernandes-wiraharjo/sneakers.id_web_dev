@@ -52,6 +52,10 @@
                 box-shadow: 2px 2px 3px #999;
             }
 
+            .fa-2x {
+                font-size: 4.5em !important;
+            }
+
             .my-float{
                 margin-top:17px;
             }

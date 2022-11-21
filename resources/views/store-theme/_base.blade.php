@@ -59,6 +59,24 @@
             .my-float{
                 margin-top:17px;
             }
+
+            .Linklist__Item>.Link, .Linklist__Item>.shopify-payment-button__more-options {
+                display: block;
+                width: 100%;
+                text-align: inherit;
+                font-size: 12px;
+            }
+
+            .bc-sf-search-suggestion-header {
+                box-shadow: 0 1px #0000000d;
+                text-transform: uppercase;
+                background: #f5f5f5;
+                text-align: left;
+                padding: 5px 10px 4px;
+                color: #a0a0a0;
+                margin: 0;
+                font-size: 16px;
+            }
         </style>
     </head>
     <body class="prestige--v4 template-collection">

@@ -39,6 +39,14 @@
         @livewireStyles
 
         <style>
+            .fa-2x {
+                font-size: 4.5em !important;
+            }
+
+            .my-float{
+                margin-top:17px;
+            }
+            }
             .float {
                 position: fixed;
                 width: 100px;
@@ -77,6 +85,29 @@
                 margin: 0;
                 font-size: 16px;
             }
+
+            @media only screen and (max-width: 1007px) {
+                .float {
+                    position: fixed;
+                    width: 60px;
+                    height: 60px;
+                    bottom: 40px;
+                    right: 40px;
+                    background-color: #0C9;
+                    color: #FFF;
+                    border-radius: 50px;
+                    text-align: center;
+                    box-shadow: 2px 2px 3px #999;
+                }
+
+                .fa-2x {
+                    font-size: 2.5em !important;
+                }
+
+                .my-float{
+                    margin-top:13px;
+                }
+            }
         </style>
     </head>
     <body class="prestige--v4 template-collection">
@@ -85,7 +116,7 @@
         <main id="main" role="main">
             @yield('body')
 
-            <a href="https://api.whatsapp.com/send?phone={{ $footer->wa ?? '6289617925925' }}" target="_blank" class="float">
+            <a href="https://api.whatsapp.com/send?phone={{ '6289617925925' }}" target="_blank" class="float">
                 <i class="fa fa-whatsapp my-float fa-2x"></i>
             </a>
         </main>

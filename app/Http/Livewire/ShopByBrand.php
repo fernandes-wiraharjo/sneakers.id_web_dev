@@ -9,7 +9,7 @@ class ShopByBrand extends Component
 {
     public function render(BrandRepository $brandRepository)
     {
-        $data['brand'] = $brandRepository->getActiveMenuBrand();
+        $data['brand'] = $brandRepository->getActiveShopByBrand();
         return view('livewire.shop-by-brand', $data);
     }
 }

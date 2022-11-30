@@ -56,7 +56,7 @@ class BrandController extends Controller
                 'image' => 'required|mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
                 'is_menu' => 'brandmenu'
             ], [
-                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
+                //'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
                 'image.dimensions' => 'Brand image must be more than 500p, below 1500p and aspect ratio 1:1!'
             ]);
 
@@ -130,7 +130,7 @@ class BrandController extends Controller
             }
 
             $message = [
-                'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
+                //'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
                 'image.dimensions' => 'Brand image must be more than 500p, below 1500p and aspect ratio 1:1!'
             ];
 

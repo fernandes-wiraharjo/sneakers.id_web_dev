@@ -98,9 +98,9 @@
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
                     Price, high to low
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
+                    {{-- <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
                     Discount Price
-                    </a>
+                    </a> --}}
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
                     Date, old to new
                     </a>

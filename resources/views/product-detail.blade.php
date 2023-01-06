@@ -1,6 +1,7 @@
 @extends('store-theme._base')
 
 @section('title', $product->product_name)
+@section('description', strip_tags($product->description))
 
 @push('styles')
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>

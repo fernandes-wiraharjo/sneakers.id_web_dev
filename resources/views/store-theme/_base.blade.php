@@ -10,22 +10,22 @@
         <!-- Primary Meta Tags -->
         <title>SNEAKERS.ID - @yield('title')</title>
         <!-- Primary Meta Tags -->
-        <meta name="title" content="SNEAKERS.ID — WE AIN'T TALKIN' BOUT FAKE">
+        <meta name="title" content="SNEAKERS.ID — @if(trim($__env->yieldContent('title'))) @yield('title') @else 'WE AIN'T TALKIN' BOUT FAKE' }} @endif">
         <meta name="keyword" content="nike sneakers, new balance sneakers, shoes, sport shoes, sepatu sneakers, sneaker, sepatu sneakers wanita, sepatu sneakers pria, adidas, sepatu adidas, sepatu air jordan, sepatu nike, nike, air jordan, original, sepatu original, sneakers original, sneakers asli, sepatu sneakers original, sepatu original sneakers, sneakers.id, jakarta sneakers day, sepatu sneakers jakarta" >
-        <meta name="description" content="US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.">
+        <meta name="description" content="@if(trim($__env->yieldContent('description'))) @yield('description') @else 'US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.' @endif">
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://sneakers.id/">
-        <meta property="og:title" content="SNEAKERS.ID — WE AIN'T TALKIN' BOUT FAKE">
-        <meta property="og:description" content="US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.">
+        <meta property="og:title" content="SNEAKERS.ID — @if(trim($__env->yieldContent('title'))) @yield('title') @else 'WE AIN'T TALKIN' BOUT FAKE' }} @endif">
+        <meta property="og:description" content="@if(trim($__env->yieldContent('description'))) @yield('description') @else 'US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.' @endif">
         <meta property="og:image" content="https://sneakers.id/stores-info/logos.png">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:url" content="https://sneakers.id/">
-        <meta property="twitter:title" content="SNEAKERS.ID — WE AIN'T TALKIN' BOUT FAKE">
-        <meta property="twitter:description" content="US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.">
+        <meta property="twitter:title" content="SNEAKERS.ID — @if(trim($__env->yieldContent('title'))) @yield('title') @else 'WE AIN'T TALKIN' BOUT FAKE' }} @endif">
+        <meta property="twitter:description" content="@if(trim($__env->yieldContent('description'))) @yield('description') @else 'US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.' @endif">
         <meta property="twitter:image" content="https://sneakers.id/stores-info/logos.png">
 
         <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />

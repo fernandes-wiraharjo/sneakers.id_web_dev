@@ -54,13 +54,11 @@
                       }'>
                     @php
                         $index = 1;
+                        $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
+                        $ratio_main_image = $image_size[0] / $image_size[1];
                     @endphp
-                    <div id="image-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
-                        data-image-position-ignoring-video="12" data-image-position="12" data-image-id="0">
-                        @php
-                            $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
-                            $ratio_main_image = $image_size[0] / $image_size[1];
-                        @endphp
+                    <div id="image-{{ $product->product_code }}-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
+                        data-image-position-ignoring-video="0" data-image-position="0" data-image-id="image-{{ $product->product_code }}-0">
                         <div class="AspectRatio AspectRatio--withFallback"
                             style="padding-bottom: 100%; --aspect-ratio: {{ $ratio_main_image }};">
                             <img class="Image--lazyLoad Image--fadeIn"
@@ -79,10 +77,10 @@
                     </div>
                     @foreach ($product->images as $item)
                         @if ($product->image != $item->image_url)
-                            <div id="image-{{ $index }}"
+                            <div id="image-{{ $product->product_code }}-{{ $index}}"
                                 class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
-                                data-image-position-ignoring-video="12" data-image-position="12"
-                                data-image-id="{{ $index }}">
+                                data-image-position-ignoring-video="{{ $index }}" data-image-position="{{ $index }}"
+                                data-image-id="image-{{ $product->product_code }}-{{ $index }}">
                                 @php
                                     $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
                                     $ratio = $image_size[0] / $image_size[1];
@@ -126,7 +124,7 @@
                                     $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
                                     $ratio_image = $image_size[0] / $image_size[1];
                                 @endphp
-                                <span data-index="{{ $index }}" data-image-id="{{ $index }}"
+                                <span data-index="{{ $index }}" data-image-id="image-{{ $product->product_code }}-{{ $index }}"
                                     class="Product__SlideshowNavImage AspectRatio"
                                     style="--aspect-ratio: {{ $ratio_image }};">
                                     <img

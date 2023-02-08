@@ -53,7 +53,7 @@ class BannerController extends Controller
     {
         try {
             $validator = $request->validate([
-                'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000',
+                'image' => 'mimes:jpeg,jpg,png,gif|required',
             ]);
 
             if($validator) {

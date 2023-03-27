@@ -27,6 +27,7 @@ class ProductList extends Component
     public $sort_by = 'DESC';
     public $sort_column = 'created_at';
     public $gender = [];
+    public $age_range = [];
 
     protected $updatesQueryString = ['search'];
 
@@ -56,6 +57,11 @@ class ProductList extends Component
     }
 
     public function updatingGender()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingAgeRange()
     {
         $this->resetPage();
     }
@@ -116,6 +122,16 @@ class ProductList extends Component
         $this->gender = array_filter($this->gender,
             function ($gender) {
                 return $gender != false;
+            }
+        );
+    }
+
+    public function updatedAgeRange()
+    {
+        if(!is_array($this->age_range)) return;
+        $this->age_range = array_filter($this->age_range,
+            function ($age_range) {
+                return $age_range != false;
             }
         );
     }
@@ -250,6 +266,16 @@ class ProductList extends Component
                                         rsort($gender);
 
                                         return $q->whereIn('categories.category_code', array_unique($gender))
+                                            ->when($this->search, function ($query, $search){
+                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                            });
+                                    });
+                                })
+                                ->when($this->age_range, function ($query, $age_range){
+                                    return $query->whereHas('categories', function ($q) use ($age_range){
+                                        rsort($age_range);
+
+                                        return $q->whereIn('categories.category_code', array_unique($age_range))
                                             ->when($this->search, function ($query, $search){
                                                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                             });

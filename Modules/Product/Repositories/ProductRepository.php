@@ -8,6 +8,7 @@ use Modules\Product\Entities\ProductImage;
 use Modules\Product\Entities\ProductDetail;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
+use Carbon\Carbon;
 
 class ProductRepository extends Repository implements MasterRepositoryInterface {
 
@@ -96,13 +97,17 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductNewRelease($limit = 10, $offset = 0) {
-        return $this->model->whereHas('tags', function($q) {
+        $date = date('Y-m-d H:i:s');
+        $today = Carbon::createFromFormat('Y-m-d H:i:s', $date)->toString();
+
+        return $this->model->with('tags')->whereHas('tags', function($q) use ($date) {
             $q->where('tag_title', 'NEW RELEASE');
+            $q->whereRaw('datediff(product_tags.created_at, ?) < 30', $date);
         })
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
-        ->orderBy('created_at', 'DESC')
+        ->orderBy('products.created_at', 'DESC')
         ->get();
     }
 

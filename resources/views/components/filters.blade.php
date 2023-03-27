@@ -33,6 +33,27 @@
             </div>
             <div class="bc-sf-filter-option-block bc-sf-filter-option-block-list bc-sf-filter-option-block-category">
                 <div class="bc-sf-filter-block-title">
+                    <h3><span>AGE RANGE</span></h3>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="age_range" value="GRADE_SCHOOL" wire:loading.attr="disabled" id="age_range">
+                    <label>GRADE SCHOOL</label>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="age_range" value="PRESCHOOL" wire:loading.attr="disabled" id="age_range">
+                    <label>PRESCHOOL</label>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="age_range" value="TODDLER" wire:loading.attr="disabled" id="age_range">
+                    <label>TODDLER </label>
+                </div>
+                <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar" >
+                    <input type="checkbox" wire:model="age_range" value="INFANT" wire:loading.attr="disabled" id="age_range">
+                    <label>INFANT </label>
+                </div>
+            </div>
+            <div class="bc-sf-filter-option-block bc-sf-filter-option-block-list bc-sf-filter-option-block-category">
+                <div class="bc-sf-filter-block-title">
                     <h3><span>CATEGORY</span></h3>
                 </div>
                 @foreach ($category as $item)

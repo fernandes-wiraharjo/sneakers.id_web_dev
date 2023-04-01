@@ -8,8 +8,10 @@
 
 Updating `migrations`
 ``` php artisan migrate:fresh```
+``` bila terkena error saat creating table men, maka lanjut dulu```
 ``` php artisan migrate --path=database/migrations/* ```
 ``` php artisan migrate --path=database/migrations/*/* ```
+``` hapus table men size yang sudah kecreate, kemudian jalanin ulang php artisan migrate```
 ``` php artisan db:seed ```
 
 # Using Library

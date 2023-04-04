@@ -69,7 +69,7 @@ class CategoryRepository extends Repository implements MasterRepositoryInterface
   }
 
   public function getAllCategoriesExceptGender() {
-    return $this->model->whereNotIn('category_code', ['MENS', 'WOMENS', 'KIDS'])->where('is_active', 1)->get();
+    return $this->model->whereNotIn('category_code', ['MENS', 'WOMENS', 'KIDS', 'GRADE_SCHOOL', 'PRESCHOOL', 'TODDLER', 'INFANT'])->where('is_active', 1)->get();
   }
 
   public function getCategoryIdAndNameLivewire(){

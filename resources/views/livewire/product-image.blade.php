@@ -1,119 +1,160 @@
 <div id="image-upload">
-    @for ($i = 0; $i < 8; $i++)
-    <!--begin::Image input-->
-    <div class="image-input {{ $edit ? (!empty($image[$i]) ? '' : 'image-input-empty') : 'image-input-empty' }} image-input-outline" data-kt-image-input="true"
-        style="background-image: url({{ asset('demo1/media/blank/blank-image.png') }}); background-position: center; margin-right: 20px; margin-bottom: 20px">
-        <!--begin::Image preview wrapper-->
-        <div class="image-input-wrapper w-125px h-125px" id="image-input-warpper-{{$i}}"
-            @if($edit)
-                style="background-image: url({!! !empty($image[$i]) ? getImage($image[$i]['image_url'], $module) : '' !!});"
-            @endif>
+    <div class="row align-middle" style="align-items: center">
+        <div class="col-3">
+            <label for="">Thumbnail</label>
+            <div class="d-flex flex-center h-150px">
+                <img
+                    src="{{ asset('demo1/media/blank/blank-image.png') }}"
+                    class="thumbnail rounded h-12"
+                    style="height: inherit;"
+                    alt=""
+                />
+            </div>
         </div>
-            <!--end::Image preview wrapper-->
-        <!--begin::Inputs-->
+        <div class="col-9">
+            <label for="">Drop files here or click to upload. Click image to select main image / thumbnail</label>
+            <!--begin::Form-->
+            <form class="form" action="#" enctype="multipart/form-data" method="post">
+                <!--begin::Input group-->
+                <div class="fv-row">
+                    <!--begin::Dropzone-->
+                    <div class="dropzone" id="kt_dropzonejs_example_1">
+                        <!--begin::Message-->
+                        <div class="dz-message needsclick">
+                            <i class="fas fa-file-up fs-3x text-primary"><span class="path1"></span><span class="path2"></span></i>
 
-        {{-- <input type="hidden" name="{{ $module }}_image[]" /> --}}
-        <input type="hidden" name="remove_image[]" />
-        <input type="hidden" name="before_image[]" value="{{!empty($image[$i]) ? $image[$i]['image_url'] : ''}}" />
-        <!--end::Inputs-->
-
-        @if($i < 1)
-        <!--begin::Edit button-->
-        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow {{ $edit ? (!empty($image[$i]) ? 'd-none' : '') : '' }}"
-        id="image-upload-{{$i}}"
-        data-kt-image-input-action="change"
-        data-bs-toggle="tooltip"
-        data-bs-dismiss="click"
-        title="Change image">
-            <i class="bi bi-pencil-fill fs-7"></i>
-
-            <input class="files" id="{{$i}}" type="file" onchange="imagesSelected" name="products_image[]" accept=".png, .jpg, .jpeg" multiple/>
-        </label>
-        <!--end::Edit button-->
-        @endif
-
-        <!--begin::Cancel button-->
-        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-        data-kt-image-input-action="cancel"
-        data-bs-toggle="tooltip"
-        data-bs-dismiss="click"
-        title="Cancel image">
-            <i class="bi bi-x fs-2"></i>
-        </span>
-        <!--end::Cancel button-->
-
-        <!--begin::Remove button-->
-        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow remove-{{$i}}"
-        data-id="{{$i}}"
-        data-kt-image-input-action="remove"
-        data-bs-toggle="tooltip"
-        data-bs-dismiss="click"
-        title="Remove image">
-            <i class="bi bi-x fs-2"></i>
-        </span>
-        <!--end::Remove button-->
-
-        <span class="form-check form-check-custom form-check-solid form-check-sm m-2">
-                <input class="form-check-input main-image" type="checkbox" value="1" name="is_main[{{$i}}]" id="mainImage{{$i}}"
-                    {{ $main_image ? ($main_image == (!empty($image[$i]) ? $image[$i]['image_url'] : '') ? 'checked' : '') : '' }} />
-                <label class="form-check-label" for="mainImage{{$i}}">
-                    Main image
-                </label>
-        </span>
+                            <!--begin::Info-->
+                            <div class="ms-4">
+                                <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
+                                <span class="fs-7 fw-semibold text-gray-400">Upload up to 8 files</span>
+                            </div>
+                            <!--end::Info-->
+                        </div>
+                    </div>
+                    <!--end::Dropzone-->
+                </div>
+                <!--end::Input group-->
+            </form>
+            <!--end::Form-->
+        </div>
     </div>
-<!--end::Image input-->
+{{-- <input type="hidden" name="remove_image[]" /> --}}
+{{-- <input type="hidden" name="before_image[]" value="{{!empty($image[$i]) ? $image[$i]['image_url'] : ''}}" /> --}}
+</div>
+@push('styles')
+<style>
+    .dropzone .dz-preview .dz-image img{
+        width: inherit;
+        height: inherit;
+    }
+</style>
+@endpush
 @push('scripts')
     <script>
-        $('.remove-{{ $i }}').click(function () {
-            var data = $(this).attr('data-id');
-            $('#image-upload-'+data).removeClass('d-none');
-        })
-    </script>
-@endpush
-@endfor
-@push('top-scripts')
-    <script>
-        $('.files').on("change", async (event) => {
-            var totalfiles = document.getElementById(0).files.length;
-            console.log(totalfiles)
-
-            let files = [...event.target.files];
-
-		    let images = await Promise.all(files.map(f=>{
-                return readAsDataURL(f)
-            }));
-
-            if(totalfiles > 0 ){
-                // Read selected files
-                for (var index = 0; index < totalfiles; index++) {
-                    var div = document.getElementById('image-input-warpper-'+index);
-                    div.style.backgroundImage = 'url(' + images[index].data + ')';
-                }
-            }
-        })
-
-        async function imagesSelected(event) {
-		    let files = [...event.target.files];
-
-		    let images = await Promise.all(files.map(f=>{
-                console.log(files)
-                return readAsDataURL(f)
-            }));
-            //all images' base64encoded data will be available as array in images
-        }
-
-        function readAsDataURL(file) {
-                return new Promise((resolve, reject)=>{
-                    let fileReader = new FileReader();
-                    fileReader.onload = function(){
-                        return resolve({data:fileReader.result, name:file.name, size: file.size, type: file.type});
+        var myDropzone = new Dropzone("#kt_dropzonejs_example_1", {
+            url: "{{ route('administrator.product.upload') }}", // Set the url for your upload script location
+            paramName: "file", // The name that will be used to transfer the file
+            maxFiles: 8,
+            maxFilesize: 10, // MB
+            addRemoveLinks: true,
+            acceptedFiles: ".jpeg,.jpg,.png,.gif",
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function (file, response) {
+                if (response.code === 200) {
+                    var name = ''
+                    if (typeof file.file_name !== 'undefined') {
+                        name = file.file_name
                     }
-                    fileReader.readAsDataURL(file);
-                })
-        }
+                    $('.product-images').append('<input type="hidden" name="products_image[]" value="' + response.success + '">')
+                    file.previewElement.id = response.success;
+                    $('#is_main').val(response.success);
+                    $('.thumbnail').attr('src', '{{ asset("images/upload-buckets/") }}'+'/'+response.success);
+                    // set new images names in dropzone’s preview box.
+                    var olddatadzname = file.previewElement.querySelector("[data-dz-name]");
+                    file.previewElement.querySelector("img").alt = response.success;
+                    olddatadzname.innerHTML = response.success;
+                } else {
+                    var message = response.message;
+                    file.previewElement.classList.add("dz-error");
+                    _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                    _results = [];
+                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                        node = _ref[_i];
+                        _results.push(node.textContent = message);
+                    }
+				    return _results;
+                }
+            },
+            removedfile: function (file) {
+                file.previewElement.remove()
+                var name = ''
+                if (typeof file.file_name !== 'undefined') {
+                     name = file.file_name
+                 } //else {
+                //     name = uploadedDocumentMap[file.name]
+                // }
+                // $('form').find('input[name="document[]"][value="' + name + '"]').remove()
+                @if($edit)
+                $('.product-images').append('<input type="hidden" name="remove_image[]" value="' + file.name + '">')
+                @else
+                $('.product-images').append('<input type="hidden" name="remove_image[]" value="' + name + '">')
+                @endif
+
+                if($('#is_main').val() === file.name){
+                    $('.thumbnail').attr('src', '{{ asset("demo1/media/blank/blank-image.png") }}');
+                }
+            },
+            init: function () {
+                @if($edit)
+                    var main_image = $('#is_main').val();
+                    var product_code = $('#product_code').val();
+                    $('.thumbnail').attr('src', '{{ asset("images/products") }}'+'/'+product_code+'/'+main_image);
+
+                    data = {
+                        'product_code' : product_code
+                    }
+                    myDropzone = this;
+
+                    $.ajax({
+                    url: '{{ route("administrator.product.readfiles") }}',
+                    type: 'get',
+                    data: data,
+                    dataType: 'json',
+                    success: function(response){
+
+                        $.each(response.files, function(key,value) {
+                            var mockFile = { name: value.name, size: value.size };
+
+                            myDropzone.emit("addedfile", mockFile);
+                            myDropzone.emit("thumbnail", mockFile, value.path);
+                            myDropzone.emit("complete", mockFile);
+
+                            // console.log(myDropzone.options.thumbnailWidth )
+                        });
+
+                    }
+                    });
+                @endif
+            }
+        });
+
+        myDropzone.on("addedfile", function(file) {
+            file.previewElement.addEventListener("click", function() {
+                @if($edit)
+                    if(file.name.includes("0_")) {
+                        $('.thumbnail').attr('src', '{{ asset("images/".$module) }}'+'/'+file.name);
+                        $('#is_main').val(file.name);
+                    } else {
+                        $('.thumbnail').attr('src', '{{ asset("images/upload-buckets/") }}'+'/0_'+file.name);
+                        $('#is_main').val('0_'+file.name);
+                    }
+                @else
+                $('.thumbnail').attr('src', '{{ asset("images/upload-buckets/") }}'+'/0_'+file.name);
+                $('#is_main').val('0_'+file.name);
+                @endif
+            });
+        });
     </script>
 @endpush
-</div>
-
-
-

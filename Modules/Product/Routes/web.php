@@ -19,4 +19,6 @@ Route::group(['prefix' => 'administrator/product', 'middleware' => 'auth'], func
     Route::delete('/destroy/{id}', 'ProductController@destroy')->name('administrator.product.destroy');
     Route::post('/store', 'ProductController@store')->name('administrator.product.store');
     Route::put('/update/{id}', 'ProductController@update')->name('administrator.product.update');
+    Route::post('/upload-to-buckets', 'ProductController@uploadImagetoBuckets')->name('administrator.product.upload');
+    Route::get('/read-files', 'ProductController@readFiles')->name('administrator.product.readfiles');
 });

@@ -15,6 +15,7 @@ use Modules\Product\Entities\ProductDetail;
 use App\Services\ProductService;
 use Alert;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -48,6 +49,7 @@ class ProductController extends Controller
         $data['product'] = new Product();
         $data['brand'] = $this->brand->getBrandIdAndName();
         $data['product_code'] = $this->service->generateProductCode();
+        cleanDirectory('images/upload-buckets');
 
         return view('product::create', $data);
     }
@@ -66,8 +68,8 @@ class ProductController extends Controller
 
             $validator = $request->validate([
                 'product_code' => 'required|unique:products',
-                'products_image' => 'array|min:1|max:8',
-                'products_image.*' => 'image|max:2048',
+                // 'products_image' => 'array|min:1|max:8',
+                // 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
                 'is_main' => 'required',
                 'base_price' => 'gte:0',
@@ -121,6 +123,7 @@ class ProductController extends Controller
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
+        cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }
 
@@ -201,6 +204,31 @@ class ProductController extends Controller
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
+        }
+    }
+
+    public function uploadImagetoBuckets(Request $request)
+    {
+        try {
+            $uploadService = $this->service->uploadImagetoBuckets($request->all());
+
+            if(!$uploadService){
+                return response()->json(['code' => 500, 'message' => 'Image is Exist']);
+            }
+            return response()->json(['code' => 200, 'success' => $uploadService]);
+        } catch (LadminException $e) {
+            return response()->json(['code' => 500, 'message' => $e]);
+        }
+    }
+
+    public function readFiles(Request $request)
+    {
+        try {
+            $fileInfo = $this->service->readFiles($request->all());
+
+            return response()->json(['code' => 200, 'files' => $fileInfo]);
+        } catch (LadminException $e) {
+            return response()->json(['code' => 500, 'message' => $e]);
         }
     }
 }

@@ -66,7 +66,7 @@
                                 data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]" data-sizes="auto"
                                 data-expand="-100" alt='{{ $product->product_name }}' data-max-width="2000"
                                 data-max-height="2000"
-                                data-original-src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
+                                data-original-src="{{ getImageGallery($product->image, 'products/' . $product->product_code) }}" />
 
                             <span class="Image__Loader"></span>
                             <noscript>
@@ -93,7 +93,7 @@
                                         data-sizes="auto" data-expand="-100"
                                         alt='{{ $product->product_name }}' data-max-width="2000"
                                         data-max-height="2000"
-                                        data-original-src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" />
+                                        data-original-src="{{ getImageGallery($item->image_url, 'products/' . $product->product_code) }}" />
 
                                     <span class="Image__Loader"></span>
                                     <noscript>

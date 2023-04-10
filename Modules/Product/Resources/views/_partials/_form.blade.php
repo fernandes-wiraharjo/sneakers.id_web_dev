@@ -1,7 +1,6 @@
-<div class="mr-5 ml-5 mt-3 p-2 mb-2 text-center">
-    @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products/'.$product->product_code, 'edit' => $edit, 'main_image' => $product->image ?? ''])
+<div class="product-images">
+    <input type="hidden" id="is_main" name="is_main" value="{{ $edit ? $main_image : ''}}" />
 </div>
-<hr>
 <x-ladmin-form-group name="product_code" label="Article Number *">
     <input type="text" placeholder="Article Number" class="form-control" name="product_code" id="product_code" required
         value="{{ old('product_code', $product->product_code) ?? $product_code}}">

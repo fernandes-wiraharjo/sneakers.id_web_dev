@@ -178,7 +178,17 @@
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="{{ $product->product_link }}" target="_blank"
                                 class="ProductForm__AddToCart Button Button--primary Button--full">
-                                <span>BUY NOW</span>
+                                <span>BUY AT TOKOPEDIA</span>
+                            </a>
+                        </div>
+                        <div style="height: 10px;">
+                            <span class="h-2"></span>
+                        </div>
+                        <div style="width: 100%;">
+                            <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                href="http://wa.me/6289617925925" target="_blank"
+                                class="ProductForm__AddToCart Button Button--primary Button--full">
+                                <span>BUY AT WHATSAPP</span>
                             </a>
                         </div>
 

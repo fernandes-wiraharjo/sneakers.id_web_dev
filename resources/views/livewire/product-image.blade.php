@@ -130,10 +130,14 @@
                             myDropzone.emit("addedfile", mockFile);
                             myDropzone.emit("thumbnail", mockFile, value.path);
                             myDropzone.emit("complete", mockFile);
-
-                            // console.log(myDropzone.options.thumbnailWidth )
                         });
-
+                        if (response.files.length >= 8) {
+                            //maxfiles = 0
+                            $('.dropzone')[0].dropzone.options.maxFiles = 0;
+                        } else {
+                            //current - 8 = max files
+                            $('.dropzone')[0].dropzone.options.maxFiles = 8 - response.files.length;
+                        }
                     }
                     });
                 @endif
@@ -141,6 +145,7 @@
         });
 
         myDropzone.on("addedfile", function(file) {
+            //check length of files if more than 8 disable & update validation
             file.previewElement.addEventListener("click", function() {
                 @if($edit)
                     if(file.name.includes("0_")) {

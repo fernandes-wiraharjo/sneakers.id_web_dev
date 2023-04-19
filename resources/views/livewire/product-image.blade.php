@@ -96,6 +96,7 @@
                 //     name = uploadedDocumentMap[file.name]
                 // }
                 // $('form').find('input[name="document[]"][value="' + name + '"]').remove()
+                $('.dropzone')[0].dropzone.options.maxFiles = $('.dropzone')[0].dropzone.options.maxFiles + 1;
                 @if($edit)
                 $('.product-images').append('<input type="hidden" name="remove_image[]" value="' + file.name + '">')
                 @else
@@ -148,7 +149,18 @@
             //check length of files if more than 8 disable & update validation
             file.previewElement.addEventListener("click", function() {
                 @if($edit)
-                    if(file.name.includes("0_")) {
+                    console.log(file.name.includes("0_"));
+                    if( file.name.includes("0_") ||
+                        file.name.includes("1_") ||
+                        file.name.includes("2_") ||
+                        file.name.includes("3_") ||
+                        file.name.includes("4_") ||
+                        file.name.includes("5_") ||
+                        file.name.includes("6_") ||
+                        file.name.includes("7_") ||
+                        file.name.includes("8_") ||
+                        file.name.includes("9_")
+                        ) {
                         $('.thumbnail').attr('src', '{{ asset("images/".$module) }}'+'/'+file.name);
                         $('#is_main').val(file.name);
                     } else {

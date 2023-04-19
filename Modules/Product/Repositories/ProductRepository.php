@@ -210,12 +210,19 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             removeImageFromStorage($path, $image->image_url);
         }
 
+
+
         $product->images()->delete();
         $product->detail()->delete();
         $product->tags()->detach();
         $product->categories()->detach();
         $product->sizes()->detach();
         $product->signatures()->detach();
+
+        if($product->images()->count() == 0) {
+            //delete folder
+            removeFolderFromStorage($path);
+        }
 
         return $product->delete();
     }

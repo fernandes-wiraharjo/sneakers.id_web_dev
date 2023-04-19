@@ -192,6 +192,18 @@ if(!function_exists('removeImageFromStorage')) {
     }
 }
 
+if(!function_exists('removeFolderFromStorage')) {
+    function removeFolderFromStorage($path = ''){
+        $new_path = public_path($path);
+        if(File::isDirectory($new_path)) {
+            File::deleteDirectory($new_path);
+        }
+
+        return true;
+    }
+}
+
+
 if(!function_exists('moveImage')) {
     function moveImage($beforePath = '', $afterPath = '', $filename = ''){
         $image_before_path = public_path($beforePath."/".$filename);

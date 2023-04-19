@@ -106,15 +106,17 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         $date = date('Y-m-d H:i:s');
         $today = Carbon::createFromFormat('Y-m-d H:i:s', $date)->toString();
 
-        return $this->model->with('tags')->whereHas('tags', function($q) use ($date) {
+        $query = $this->model->with('tags')->whereHas('tags', function($q) use ($date) {
             $q->where('tag_title', 'NEW RELEASE');
-            $q->whereRaw('datediff(product_tags.created_at, ?) < 30', $date);
+            $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
         })
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
         ->orderBy('products.created_at', 'DESC')
         ->get();
+
+        return $query;
     }
 
     public function getProductBestSeller($limit = 10, $offset = 0) {

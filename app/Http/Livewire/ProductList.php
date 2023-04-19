@@ -281,6 +281,14 @@ class ProductList extends Component
                                             });
                                     });
                                 })
+                                ->when($this->keyword === 'new-release', function($query) {
+                                    $date = date('Y-m-d H:i:s');
+
+                                    return $query->whereHas('tags', function($q) use ($date) {
+                                        $q->where('tag_title', 'NEW RELEASE');
+                                        $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
+                                    });
+                                })
                                 ->orderBy($this->sort_column, $this->sort_by);
         /**
          * Query debug

@@ -151,8 +151,9 @@
                         $('#is_main').val('0_'+file.name);
                     }
                 @else
-                $('.thumbnail').attr('src', '{{ asset("images/upload-buckets/") }}'+'/0_'+file.name);
-                $('#is_main').val('0_'+file.name);
+                    files = file.name.split('.')
+                    $('.thumbnail').attr('src', '{{ asset("images/upload-buckets/") }}'+'/0_'+files[0]+'_1800x1800.'+files[1]);
+                    $('#is_main').val('0_'+files[0]+'_1800x1800.'+files[1]);
                 @endif
             });
         });

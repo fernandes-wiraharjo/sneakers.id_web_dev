@@ -10,6 +10,11 @@
         <div class="card">
             <!--begin::Card body-->
             <div class="card-body pt-6">
+                <div class="mr-5 ml-5 mt-3 p-2 mb-2 text-center">
+                    @livewire('product-image', ['image' => $product->images()->get('image_url')->toArray(),'module' => 'products/'.$product->product_code, 'edit' => false, 'main_image' => $product->image ?? ''])
+                </div>
+                <hr>
+
                 <form action="{{ route('administrator.product.store') }}" method="post" id="form"
                     enctype="multipart/form-data">
                     @csrf

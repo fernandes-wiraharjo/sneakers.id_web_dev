@@ -4,11 +4,23 @@ namespace App\Services;
 use Illuminate\Http\Request;
 use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
+use Error;
 use Illuminate\Support\Facades\File;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
         $this->productRepository = $productRepository;
+    }
+
+    public function uploadImagetoBuckets($request){
+        $path = 'images/upload-buckets';
+
+        if (!imageIsExist($path, '0_'.$request['file']->getClientOriginalName())){
+            $do_upload = imageUploadtoBucket($request['file'], $path ,'public', true, 0);
+            return $do_upload;
+        }
+
+        return false;
     }
 
 	public function insertProduct($request){
@@ -25,38 +37,37 @@ class ProductService {
         if($insertedProduct) {
             $idNewProduct = $insertedProduct->id;
 
-            $path = 'images/products/'.$request['product_code'];
+            $afterPath = 'images/products/'.$request['product_code'];
+            $beforePath = 'images/upload-buckets';
 
             if(isset($request['products_image'])){
-                $no = 1;
-
                 foreach($request['products_image'] as $key=>$image){
+                    // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
+                    $checkFileExists = imageIsExist($beforePath, $image);
+                    if ($checkFileExists) {
+                        $do_move = moveImage($beforePath, $afterPath, $image);
 
-                    $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
+                        if(!$do_move){
+                            abort(500, 'Failed upload image');
+                        } else {
+                            $productImage = [
+                                'product_id' => $idNewProduct,
+                                'image_url' => $image
+                            ];
 
-                    if(!$do_upload){
-                        abort(500, 'Failed upload image');
-                    } else {
-                        $productImage = [
-                            'product_id' => $idNewProduct,
-                            'image_url' => $do_upload
-                        ];
+                            $this->productRepository->insertProductImage($productImage);
 
-                        $this->productRepository->insertProductImage($productImage);
-
-                        if(isset($request['is_main'][$key])){
-                            if(intval($request['is_main'][$key])){
-                                $product_main_image = $do_upload;
+                            if(isset($request['is_main'])){
                                 $getProduct = $this->productRepository->getProductById($idNewProduct);
 
                                 if($getProduct) {
-                                    $getProduct->image = $product_main_image;
+                                    $getProduct->image = $request['is_main'];
                                     $getProduct->save();
                                 }
                             }
                         }
+
                     }
-                    $no++;
                 }
             }
 
@@ -135,66 +146,63 @@ class ProductService {
         $updatedProduct = $getProduct->update($product);
 
         if($updatedProduct) {
-            $path = 'images/products/'.$request['product_code'];
-
-            $image_path = $path;
+            $afterPath = 'images/products/'.$request['product_code'];
+            $beforePath = 'images/upload-buckets';
 
             if($beforeProductCode != $request['product_code']){
                 $image_path = 'images/products/'.$beforeProductCode;
 
-                File::copyDirectory($image_path, $path);
+                File::copyDirectory($image_path, $afterPath);
                 File::deleteDirectory($image_path);
             }
 
-            foreach($request['remove_image'] as $removed_key=>$removed){
-                if(intval($removed)){
-                    $image_name = $request['before_image'][$removed_key];
-                    removeImageFromStorage($path, $image_name);
-                    $deleted = $this->productRepository->deleteProductImageByImageId($image_name, $id);
+            if(isset($request['remove_image'])){
+                foreach($request['remove_image'] as $removed_file){
+                    if(in_array($removed_file ,$request['before_image'])){
+                        removeImageFromStorage($afterPath, $removed_file);
+                        $deleted = $this->productRepository->deleteProductImageByImageId($removed_file, $id);
+                    }
                 }
             }
 
             if(isset($request['products_image'])){
-                $no = 1;
                 foreach($request['products_image'] as $key=>$image){
-                    $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
-                    if(!$do_upload){
-                        abort(500, 'Failed upload image');
-                    } else {
-                        $productImage = [
-                            'product_id' => $id,
-                            'image_url' => $do_upload
-                        ];
+                    // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
+                    $checkFileExists = imageIsExist($beforePath, $image);
+                    if ($checkFileExists) {
+                        $do_move = moveImage($beforePath, $afterPath, $image);
 
-                        $this->productRepository->insertProductImage($productImage);
+                        if(!$do_move){
+                            abort(500, 'Failed upload image');
+                        } else {
+                            $productImage = [
+                                'product_id' => $id,
+                                'image_url' => $image
+                            ];
 
-                        if(isset($request['is_main'][$key])){
-                            if(intval($request['is_main'][$key])){
-                                $product_main_image = $do_upload;
-                                $productForUpdate = $this->productRepository->getProductById($id);
-
-                                if($productForUpdate) {
-                                    $productForUpdate->image = $product_main_image;
-                                    $productForUpdate->save();
-                                }
-                            }
+                            $this->productRepository->insertProductImage($productImage);
                         }
-                    }
 
-                    $no++;
+                    }
                 }
-            } else {
-                if(isset($request['is_main'])){
-                    $is_main_key = array_keys($request['is_main']);
-                    if(intval($request['is_main'][$is_main_key[0]])){
-                        $product_main_image = $request['before_image'][$is_main_key[0]];
-                        $productForUpdate = $this->productRepository->getProductById($id);
+            }
 
-                        if($productForUpdate) {
-                            $productForUpdate->image = $product_main_image;
-                            $productForUpdate->save();
-                        }
-                    }
+            if(isset($request['is_main'])){
+                $getProduct = $this->productRepository->getProductById($id);
+
+                if($getProduct) {
+                    $getProduct->image = $request['is_main'];
+                    $getProduct->save();
+                }
+            }
+
+            //sync unused file
+            foreach (File::allFiles(public_path($afterPath)) as $file) {
+                $getProduct = $this->productRepository->getProductByCode($request['product_code']);
+                $imagePack = $getProduct->images()->pluck('image_url')->toArray();
+
+                if(!in_array($file->getFilename(), $imagePack)){
+                    removeImageFromStorage($afterPath, $file->getFilename());
                 }
             }
 
@@ -279,4 +287,39 @@ class ProductService {
 
         return $new_code;
     }
+
+    public function readFiles($request)
+    {
+        $getProduct = $this->productRepository->getProductByCode($request['product_code']);
+        $imagePack = $getProduct->images()->pluck('image_url')->toArray();
+        //get code
+        //get data images
+        $directory = 'images/products/'.$request['product_code'];
+        $files_info = [];
+        $file_ext = array('png','jpg','jpeg','pdf');
+
+        // Read files
+        foreach (File::allFiles(public_path($directory)) as $file) {
+            $extension = strtolower($file->getExtension());
+            // check file in database & in file directory
+            if(in_array($file->getFilename(), $imagePack)){
+                if(in_array($extension,$file_ext)){ // Check file extension
+                    $filename = $file->getFilename();
+                    $size = $file->getSize(); // Bytes
+                    $sizeinMB = round($size / (1000 * 1024), 2);// MB
+
+                    if($sizeinMB <= 2){ // Check file size is <= 2 MB
+                        $files_info[] = array(
+                            "name" => $filename,
+                            "size" => $size,
+                            "path" => url($directory.'/'.$filename)
+                        );
+                    }
+                }
+            }
+        }
+        return $files_info;
+    }
+
+
 }

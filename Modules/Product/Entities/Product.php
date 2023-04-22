@@ -33,7 +33,7 @@ class Product extends Model
     }
 
     public function tags(){
-        return $this->belongsToMany(\Modules\Tag\Entities\Tag::class, 'product_tags', 'product_id', 'tag_id');
+        return $this->belongsToMany(\Modules\Tag\Entities\Tag::class, 'product_tags', 'product_id', 'tag_id')->withTimestamps();
     }
 
     public function sizes(){

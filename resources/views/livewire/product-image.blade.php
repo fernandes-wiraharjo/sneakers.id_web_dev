@@ -61,6 +61,8 @@
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
+            autoProcessQueue: true,
+            parallelUploads: 1,
             success: function (file, response) {
                 if (response.code === 200) {
                     var name = ''

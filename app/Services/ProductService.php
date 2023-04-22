@@ -201,7 +201,7 @@ class ProductService {
                 $getProduct = $this->productRepository->getProductByCode($request['product_code']);
                 $imagePack = $getProduct->images()->pluck('image_url')->toArray();
 
-                if(!in_array($file->getFilename(), $imagePack)){
+                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false)){
                     removeImageFromStorage($afterPath, $file->getFilename());
                 }
             }

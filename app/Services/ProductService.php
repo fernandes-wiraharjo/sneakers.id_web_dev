@@ -44,8 +44,10 @@ class ProductService {
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
-                    if ($checkFileExists) {
+                    $checkFile1200isExists = imageIsExist($beforePath, str_replace("1800x1800", "1200x1200", $image));
+                    if ($checkFileExists && $checkFile1200isExists) {
                         $do_move = moveImage($beforePath, $afterPath, $image);
+                        $do_move = moveImage($beforePath, $afterPath, str_replace("1800x1800", "1200x1200", $image));
 
                         if(!$do_move){
                             abort(500, 'Failed upload image');
@@ -169,9 +171,10 @@ class ProductService {
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
-                    if ($checkFileExists) {
+                    $checkFile1200isExists = imageIsExist($beforePath, str_replace("1800x1800", "1200x1200", $image));
+                    if ($checkFileExists && $checkFile1200isExists) {
                         $do_move = moveImage($beforePath, $afterPath, $image);
-
+                        $do_move = moveImage($beforePath, $afterPath, str_replace("1800x1800", "1200x1200", $image));
                         if(!$do_move){
                             abort(500, 'Failed upload image');
                         } else {
@@ -201,7 +204,7 @@ class ProductService {
                 $getProduct = $this->productRepository->getProductByCode($request['product_code']);
                 $imagePack = $getProduct->images()->pluck('image_url')->toArray();
 
-                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false)){
+                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
                     removeImageFromStorage($afterPath, $file->getFilename());
                 }
             }

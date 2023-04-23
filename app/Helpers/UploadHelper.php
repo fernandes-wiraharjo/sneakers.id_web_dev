@@ -34,17 +34,23 @@ if (!function_exists('imageUploadtoBucket')) {
      */
     function imageUploadtoBucket($file, $path, $type, $queue = false, $number = 0, $custom_name = '')
     {
+        $img = Image::make($file->path());
         $imageName = $file->getClientOriginalName();
         $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $imageName);
 
         if($queue){
-            $imageName = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$withoutExt."_1800x1800.".$file->extension();
+            $imageName_1800 = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$withoutExt."_1800x1800.".$file->extension();
+            $imageName_1200 = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$withoutExt."_1200x1200.".$file->extension();
         }
+
+        $img->resize(1200, 1200, function ($const) {
+            $const->aspectRatio();
+        })->save($path.'/'.$imageName_1200);
 
         switch ($type) {
             case 'public' :
                 $path = public_path($path);
-                $stored = $file->move($path, $imageName);
+                $stored = $file->move($path, $imageName_1800);
             break;
             case 'storage' :
                 $stored = $file->storeAs($path, $imageName);
@@ -55,7 +61,7 @@ if (!function_exists('imageUploadtoBucket')) {
         }
 
         if($stored){
-            return $imageName;
+            return $imageName_1800; //TOBESTOREDINDB
         } else {
             return false;
         }

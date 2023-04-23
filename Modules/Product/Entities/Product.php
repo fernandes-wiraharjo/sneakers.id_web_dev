@@ -29,7 +29,7 @@ class Product extends Model
     }
 
     public function images(){
-        return $this->hasMany(ProductImage::class, 'product_id');
+        return $this->hasMany(ProductImage::class, 'product_id')->OrderBy('product_images.image_url');
     }
 
     public function tags(){

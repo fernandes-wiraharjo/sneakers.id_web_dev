@@ -51,6 +51,7 @@
 @endpush
 @push('scripts')
     <script>
+
         var myDropzone = new Dropzone("#kt_dropzonejs_example_1", {
             url: "{{ route('administrator.product.upload') }}", // Set the url for your upload script location
             paramName: "file", // The name that will be used to transfer the file
@@ -61,7 +62,7 @@
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            autoProcessQueue: true,
+            autoProcessQueue: false,
             parallelUploads: 1,
             success: function (file, response) {
                 if (response.code === 200) {

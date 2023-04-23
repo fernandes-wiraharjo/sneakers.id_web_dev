@@ -62,7 +62,7 @@
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            autoProcessQueue: false,
+            autoProcessQueue: true,
             parallelUploads: 1,
             success: function (file, response) {
                 if (response.code === 200) {

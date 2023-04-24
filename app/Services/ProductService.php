@@ -200,10 +200,9 @@ class ProductService {
             }
 
             //sync unused file
+            $imagePack = $getProduct->images()->pluck('image_url')->toArray();
             foreach (File::allFiles(public_path($afterPath)) as $file) {
-                $getProduct = $this->productRepository->getProductByCode($request['product_code']);
-                $imagePack = $getProduct->images()->pluck('image_url')->toArray();
-
+                // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
                 if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
                     removeImageFromStorage($afterPath, $file->getFilename());
                 }

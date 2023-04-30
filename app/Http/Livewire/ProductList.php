@@ -295,6 +295,7 @@ class ProductList extends Component
          */
         // $data['sql'] = $products->toSql();
         $data['products'] = $products->paginate(40);
+        // dd($products->toSql());
         return view('livewire.product-list', $data);
     }
 }

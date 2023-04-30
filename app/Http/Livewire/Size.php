@@ -7,6 +7,9 @@ use Modules\Size\Repositories\SizeRepository;
 
 class Size extends Component
 {
+    public $data_size;
+    public $selected_size;
+    public $selected_chart;
     public $current_size;
     public $edit;
 

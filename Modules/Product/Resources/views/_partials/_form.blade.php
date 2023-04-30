@@ -1,5 +1,6 @@
 <div class="product-images">
     <input type="hidden" id="is_main" name="is_main" value="{{ $edit ? $main_image : ''}}" />
+    <input type="hidden" id="product_details" value="{{ $edit ? $product_details : '' }}" />
 </div>
 <x-ladmin-form-group name="product_code" label="Article Number *">
     <input type="text" placeholder="Article Number" class="form-control" name="product_code" id="product_code" required
@@ -27,56 +28,182 @@
 <h3>Product Details</h3>
 <br>
 <div class="row">
+    <h5>Sizes, Quantity & Prices</h5>
+    <div class="col-sm-12 m-5">
+    <!--begin::Repeater-->
+    <div id="size_price">
+        <!--begin::Form group-->
+        <!--begin::Form update bulk-->
+        {{-- <div class="form-group">
+            <x-ladmin-form-group name="size_product_filter" label="Product Sizes Filter">
+                @livewire('size', ['edit' => $edit ])
+            </x-ladmin-form-group>
+        </div> --}}
+        <!--begin::Form update bulk-->
+        <!--begin::Form update bulk-->
+        {{-- <div class="form-group"> --}}
+        <div class="card shadow-sm card-bordered">
+            <div class="card-header">
+                <h3 class="card-title">Bulk Update by Selection</h3>
+                <div class="card-toolbar">
+                    <a href="javascript:;" class="btn btn-sm btn-light-danger mt-3 mt-md-8" onclick="updateAll(this)">
+                        Update
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-1 form-check"  style="align-self: center !important;">
+                        <input class="form-check-input" type="checkbox" value="" id="bulk_update_size" onchange='bulkChecked(this);'/>
+                    </div>
+                    <div class="col-11">
+                        <div class="form-group row">
+                            <div class="col-md-5">
+                                <label class="form-label">Base Price :</label>
+                                <div class="input-group mb-5">
+                                    <span class="input-group-text">Rp</span>
+                                    <input id="base" type="text" class="form-control bulk-base-price" name="bulk_base_price" min=1
+                                    value="" aria-label="Amount (to the nearest rupiah)"/>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Quantity :</label>
+                                <div class="input-group mb-5">
+                                    <input type="number" id="qty" min="0" class="form-control bulk-qty" name="bulk_qty" aria-label="Amount"
+                                    value=""/>
+                                    <span class="input-group-text"> pcs</span>
+                                </div>
+                            </div>
+                            {{-- <div class="col-md-2">
+                                <a href="javascript:;" class="btn btn-sm btn-light-danger mt-3 mt-md-8" onclick="updateAll(this)">
+                                    Update
+                                </a>
+                            </div> --}}
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-5">
+                                <label class="form-label">Retail Price :</label>
+                                <div class="input-group mb-5">
+                                    <span class="input-group-text">Rp</span>
+                                    <input id="base" type="text" class="form-control bulk-retail-price" name="bulk_retail_price" min=1
+                                    value="" aria-label="Amount (to the nearest rupiah)"/>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">After Discount Price:</label>
+                                <div class="input-group mb-5">
+                                    <span class="input-group-text">Rp</span>
+                                    <input id="discount" type="text" class="form-control bulk-after-discount-price" name="bulk_discount_price" min="0"
+                                    value="" aria-label="Amount (to the nearest rupiah)"/>
+                                    <span class="input-group-text">%</span>
+                                    <input type="number" class="form-control bulk-discount-percentage" name="bulk_discount_percentage" min="0" max="100"
+                                        value=""
+                                    placeholder="Percentage" aria-label="Percent"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- </div> --}}
+        <!--end::Form update bulk-->
+        <hr>
+        <div class="form-group">
+            <div data-repeater-list="size_price">
+                <div data-repeater-item>
+                    <div class="form-group row repeater-form">
+                        <div class="col-1 form-check"  style="align-self: center !important;">
+                            <input class="form-check-input select-update-size" type="checkbox" name="update-size" value="" id="update_size"/>
+                            <input style="display: none;" type="text" id="id" name="detail_id" value="" />
+                        </div>
+                        <div class="col-11">
+                            <div class="form-group row">
+                                <div class="col-4">
+                                    <label class="form-label">Size :</label>
+                                    <input id="base" type="text" class="form-control" name="size"
+                                        value="{{ old('size', '') }}" aria-label="Product Sizes"/>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label">Base Price :</label>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Rp</span>
+                                        <input id="base" type="text" class="form-control base-price" name="base_price" min=1
+                                        value="" aria-label="Amount (to the nearest rupiah)"/>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <label class="form-label">Quantity :</label>
+                                    <div class="input-group mb-5">
+                                        <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
+                                        value=""/>
+                                        <span class="input-group-text"> pcs</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Retail Price:</label>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Rp</span>
+                                        <input id="retail" type="text" class="form-control retail-price" name="retail_price" min="0"
+                                        value="" aria-label="Amount (to the nearest rupiah)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">After Discount Price:</label>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Rp</span>
+                                        <input id="discount" type="text" class="form-control after-discount-price" name="after_discount_price" min="0"
+                                        value="" aria-label="Amount (to the nearest rupiah)"/>
+                                        <span class="input-group-text">%</span>
+                                        <input type="text" class="form-control discount-percentage" name="discount_percentage" min="0" max="100"
+                                            value=""
+                                        placeholder="Percentage" aria-label="Percent"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="javascript:;" data-repeater-delete class="btn btn-sm btn-light-danger mt-3 mt-md-8">
+                                        <i class="fas fa-trash fs-5"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <!--end::Form group-->
+
+        <!--begin::Form group-->
+        <div class="form-group mt-5">
+            <a href="javascript:;" data-repeater-create class="btn btn-light-primary">
+                <i class="fas fa-plus fs-3"></i>
+                Add
+            </a>
+        </div>
+        <!--end::Form group-->
+    </div>
+<!--end::Repeater-->
+
+</div>
+    <hr>
     <div class="col-sm-6">
-        <h5>Quantity & Prices</h5>
-        <div class="pl-2" id="prices">
-            <br>
-            <x-ladmin-form-group name="qty" label="Product Quantity Stock">
-                <div class="input-group mb-5">
-                    <input type="number" min="0" class="form-control" name="qty" aria-label="Amount"
-                    value="{{ old('qty', $product->detail->qty ?? 0) }}"/>
-                    <span class="input-group-text"> pcs</span>
-                </div>
-            </x-ladmin-form-group>
-            <x-ladmin-form-group name="base_price" label="Base Price">
-                <div class="input-group mb-5">
-                    <span class="input-group-text">Rp</span>
-                    <input id="base" type="text" class="form-control" name="base_price" min=1
-                    value="{{ rupiah_format( old('base_price', $product->detail->base_price ?? 1)) }}" aria-label="Amount (to the nearest rupiah)"/>
-                </div>
-            </x-ladmin-form-group>
-
-            <x-ladmin-form-group name="retail_price" label="Retail Price">
-                <div class="input-group mb-5">
-                    <span class="input-group-text">Rp</span>
-                    <input id="retail" type="text" class="form-control" name="retail_price" min="0"
-                    value="{{ rupiah_format( old('retail_price', $product->detail->retail_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)"/>
-                </div>
-            </x-ladmin-form-group>
-
-            <x-ladmin-form-group name="after_discount_price" label="After discount price">
-                <div class="input-group mb-5">
-                    <span class="input-group-text">Rp</span>
-                    <input type="text" class="form-control" name="after_discount_price"
-                     value="{{ rupiah_format( old('after_discount_price', $product->detail->after_discount_price ?? 0)) }}" aria-label="Amount (to the nearest rupiah)" min="0"/>
-                    <span class="input-group-text">%</span>
-                    <input type="number" class="form-control" name="discount_percentage" min="0" max="100"
-                        value="{{$edit ? $product->detail->discount_percentage : 0}}"
-                    placeholder="Percentage" aria-label="Percent"/>
-                </div>
-            </x-ladmin-form-group>
+        <h5>Product Description*</h5>
+        <br>
+        <!--begin::Input group-->
+        <div class="fv-row mb-10">
+            <!--begin::Input-->
+            <textarea name="description" id="kt_docs_tinymce_basic" class="tox-target">
+                {!! old('description', $product->description) !!}
+            </textarea>
         </div>
     </div>
     <div class="col-sm-6">
         <h5>Product Variant</h5>
         <br>
-        <x-ladmin-form-group name="sizes" label="Sizes">
-            @livewire('size', [
-                'current_size' => $product->sizes()
-                    ->select('size_id as id', 'size_title as value')
-                    ->get(),
-                'edit' => $edit ])
-        </x-ladmin-form-group>
         <x-ladmin-form-group name="categories" label="Category">
             @livewire('category', [
                 'current_category' => $product->categories()
@@ -104,24 +231,15 @@
     </div>
 </div>
 <hr>
-<br>
-<!--begin::Input group-->
-<div class="fv-row mb-10">
-    <!--begin::Label-->
-    <label class="required fw-bold fs-6 mb-2">Product description</label>
-    <!--end::Label-->
 
-    <!--begin::Input-->
-    <textarea name="description" id="kt_docs_tinymce_basic" class="tox-target">
-        {!! old('description', $product->description) !!}
-    </textarea>
-</div>
-<hr>
 
 @include('components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
-
+@push('top-scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+@endpush
 @push('scripts')
     <!--CKEditor Build Bundles:: Only include the relevant bundles accordingly-->
+    <script src="{{asset('demo1/plugins/custom/formrepeater/formrepeater.bundle.js')}}"></script>
     <script src="{{asset('demo1/plugins/custom/tinymce/tinymce.bundle.js')}}"></script>
     <script>
         var options = {selector: "#kt_docs_tinymce_basic"};
@@ -129,22 +247,6 @@
         tinymce.init(options);
     </script>
     <script>
-        var basePriceValidator = 1;
-        var retailPriceValidator = 1;
-        var discountPriceValidator = 0;
-
-        document.getElementById('base').addEventListener("change", function(e) {
-            basePriceValidator = this.value.replace(/\D/g,'');
-        });
-
-        document.getElementById('retail').addEventListener("change", function(e) {
-            retailPriceValidator = this.value.replace(/\D/g,'');
-        });
-
-        document.getElementById('discount').addEventListener("change", function(e) {
-            discountPriceValidator = this.value.replace(/\D/g,'');
-        });
-
         const form = document.getElementById('form');
         var validator = FormValidation.formValidation(
             form,
@@ -185,57 +287,10 @@
                             }
                         }
                     },
-                    'size': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Size is required'
-                            }
-                        }
-                    },
                     'category': {
                         validators: {
                             notEmpty: {
                                 message: 'Category is required'
-                            }
-                        }
-                    },
-                    'qty': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Quantity is required'
-                            }
-                        }
-                    },
-                    'base_price': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Base Price is required'
-                            },
-                            graterThan: {
-                                message: 'Base price should grater than 0',
-                                min: 1
-                            }
-                        }
-                    },
-                    'retail_price': {
-                        validators: {
-                            notEmpty: {
-                                message: 'Retail Price is required'
-                            },
-                            graterThan: {
-                                message: 'Retail Price should grater than or equal 0',
-                                min: 0
-                            },
-                            numeric: {
-                                message: 'Retail Price must be valid number',
-                                thousandsSeparator: '.',
-                            }
-                        }
-                    },
-                    'after_discount_price': {
-                        validators: {
-                            notEmpty: {
-                                message: 'After discount price is required'
                             }
                         }
                     },
@@ -276,14 +331,6 @@
             validator.revalidateField('description');
         });
 
-        sizes.on("change", function(){
-            validator.revalidateField('size');
-        });
-
-        categories.on("change", function(){
-            validator.revalidateField('category');
-        });
-
         // Submit button handler
         const submitButton = document.getElementById('form-submit');
         submitButton.addEventListener('click', function (e) {
@@ -309,58 +356,28 @@
         });
     </script>
     <script>
-        var base = document.getElementById("base");
-        var retail = document.getElementById("retail");
-        var discount = document.getElementById("discount");
-        var percent = document.getElementById("percent");
-        var prices = document.getElementById("prices");
+        var base = document.getElementsByClassName("base-price");
+        var retail = document.getElementsByClassName("retail-price");
+        var after_discount = document.getElementsByClassName("after-discount-price");
 
-        var rawPriceBase = base.value.replace(/\D/g,'');
-        var rawPriceRetail = retail.value.replace(/\D/g,'');
-        var rawPriceDiscount = discount.value.replace(/\D/g,'');
+        // base = [].slice.call(base, 0);
+        for (var i = 0; i < base.length; ++i){
+            base[i].addEventListener("keyup", function(e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
 
-        let result = 0;
+        for (var i = 0; i < retail.length; ++i){
+            retail[i].addEventListener("keyup", function(e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
 
-        percent.addEventListener("keyup", function(){
-            discount.value = 0;
-            rawPriceRetail = retail.value.replace(/\D/g,'');
-            discounted = (percent.value/100) * rawPriceRetail;
-            discounted_price = parseInt(rawPriceRetail - discounted);
-            discount.value = discounted_price;
-            discount.value = formatRupiah(discount.value);
-        });
-
-        percent.addEventListener("change", function(){
-            discount.value = 0;
-            rawPriceRetail = retail.value.replace(/\D/g,'');
-            discounted = (percent.value/100) * rawPriceRetail;
-            discounted_price = parseInt(rawPriceRetail - discounted);
-            discount.value = discounted_price;
-            discount.value = formatRupiah(discount.value);
-        });
-
-        retail.addEventListener("keyup", function(e) {
-            result = 0;
-            rawPriceRetail = retail.value.replace(/\D/g,'');
-            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceRetail));
-            percent.value = result;
-            retail.value = formatRupiah(this.value);
-        });
-
-        base.addEventListener("keyup", function(e) {
-            base.value = formatRupiah(this.value);
-        });
-
-        discount.addEventListener("keyup", function(e) {
-            result = 0;
-            rawPriceDiscount = discount.value.replace(/\D/g,'');
-            result = 100 - Math.round(100 * (rawPriceDiscount / rawPriceRetail));
-            percent.value = result;
-            discount.value = formatRupiah(this.value);
-            if(rawPriceDiscount > rawPriceRetail) {
-                percent.value = 0;
-            }
-        });
+        for (var i = 0; i < after_discount.length; ++i){
+            after_discount[i].addEventListener("keyup", function(e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
 
         /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {
@@ -390,6 +407,98 @@
                     $(this).prop('checked', true);
                 }
             });
+        });
+
+        function bulkChecked(checkbox) {
+            if(checkbox.checked == true){
+                $(".select-update-size").each(function(){
+                    $(this).prop('checked', true);
+                });
+            }else{
+                $(".select-update-size").each(function(){
+
+                    $(this).prop('checked', false);
+                });
+
+            }
+        }
+
+        function updateAll(button) {
+            $(".repeater-form").each(function(){
+                isChecked = $(this).find(".select-update-size").is(':checked')
+                if(isChecked){
+                    if($('.bulk-base-price').val() != "") {
+                        $(this).find('.base-price').val($('.bulk-base-price').val());
+                    }
+
+                    if($('.bulk-qty').val() != "") {
+                        $(this).find('.qty').val($('.bulk-qty').val());
+                    }
+
+                    if($('.bulk-retail-price').val() != ""){
+                        $(this).find('.retail-price').val($('.bulk-retail-price').val());
+                    }
+
+                    if($('.bulk-after-discount-price').val() != ""){
+                        $(this).find('.after-discount-price').val($('.bulk-after-discount-price').val());
+                    }
+
+                    if($('.bulk-discount-percentage').val() != ""){
+                        $(this).find('.discount-percentage').val($('.bulk-discount-percentage').val());
+                    }
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        @if($edit)
+            var $repeater = $('#size_price').repeater();
+            $repeater.setList(JSON.parse($('#product_details').val()));
+        @endif
+
+        $('#size_price').repeater({
+            initEmpty: false,
+
+            defaultValues: {
+                'base_price': '1',
+                'retail_price': '1',
+                'discount_price': '0',
+            },
+
+            show: function () {
+                $(this).slideDown();
+
+                var base = document.getElementsByClassName("base-price");
+                var retail = document.getElementsByClassName("retail-price");
+                var after_discount = document.getElementsByClassName("after-discount-price");
+                for (var i = 0; i < base.length; ++i){
+                    base[i].addEventListener("keyup", function(e) {
+                        this.value = formatRupiah(this.value);
+                    });
+                }
+
+                for (var i = 0; i < retail.length; ++i){
+                    retail[i].addEventListener("keyup", function(e) {
+                        this.value = formatRupiah(this.value);
+                    });
+                }
+
+                for (var i = 0; i < after_discount.length; ++i){
+                    after_discount[i].addEventListener("keyup", function(e) {
+                        this.value = formatRupiah(this.value);
+                    });
+                }
+            },
+
+            hide: function (deleteElement) {
+                $(this).slideUp(deleteElement);
+            },
+
+            ready: function() {
+
+            }
         });
     </script>
 @endpush

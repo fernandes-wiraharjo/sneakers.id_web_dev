@@ -26,7 +26,10 @@ class ProductDatatables extends DataTable
             // ->filter(function($q) {
 
             // })
-            ->rawColumns(['action', 'id', 'product_name', 'tag', 'price', 'category', 'signature', 'status'])
+            ->rawColumns(['action', 'id', 'product_name', 'tag', 'price', 'category', 'signature', 'status', 'qty'])
+            ->editColumn('qty', function($item){
+                return $item->details()->sum('qty');
+            })
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
               })
@@ -76,15 +79,15 @@ class ProductDatatables extends DataTable
 
             })
             ->editColumn('price', function($item) {
+                $data = $item->details()->select('retail_price' ,'after_discount_price')->orderBy('retail_price')->first();
+                $data->retail_price = intval($data->retail_price);
+                $data->after_discount_price = intval($data->after_discount_price);
 
-                $item->retail_price = intval($item->retail_price);
-                $item->after_discount_price = intval($item->after_discount_price);
-
-                if($item->retail_price > $item->after_discount_price && $item->after_discount_price > 0){
-                    $prices = '<span><del>Rp. '.rupiah_format($item->retail_price ?? 0)."</del></span><br> "
-                        ."<span>Rp.".rupiah_format($item->after_discount_price ?? 0)."</span>";
+                if($data->retail_price > $data->after_discount_price && $data->after_discount_price > 0){
+                    $prices = '<span><del>Rp. '.rupiah_format($data->retail_price ?? 0)."</del></span><br> "
+                        ."<span>Rp.".rupiah_format($data->after_discount_price ?? 0)."</span>";
                 } else {
-                    $prices = 'Rp.' .rupiah_format($item->retail_price ?? 0);
+                    $prices = 'Rp.' .rupiah_format($data->retail_price ?? 0);
                 }
 
                 return $prices;
@@ -151,8 +154,9 @@ class ProductDatatables extends DataTable
     {
         return $model
             ->with(['tags', 'detail'])
-            ->crossJoin('product_details as pd', 'pd.product_id', '=', 'products.id')
-            ->select('products.*', 'pd.qty', 'pd.retail_price', 'pd.after_discount_price')
+            ->whereHas('details')
+            // ->crossJoin('product_details as pd', 'pd.product_id', '=', 'products.id')
+            ->select('products.*')
             ->newQuery();
     }
 

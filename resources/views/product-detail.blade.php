@@ -6,6 +6,44 @@
 @push('styles')
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/product-detail.css') }}" />
+<style>
+    .Button--selected{
+        color: black;
+    }
+    .Button--selected::before {
+        background-color: white !important;
+    }
+
+    .size-select,
+    .size-select::before,
+    .size-select::after {
+        box-sizing: border-box;
+    }
+
+    .size-select {
+        min-width: 15ch;
+        max-width: 30ch;
+        border: 1px solid var(--select-border);
+        padding: 0.25em 0.5em;
+        font-size: 15px;
+        font-weight: 400;
+        font-style: normal;
+        cursor: pointer;
+        line-height: 1.1;
+        color: rgb(0, 0, 0);
+        background-color: rgb(255, 254, 254);
+    }
+
+    select:focus + .focus {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        right: -1px;
+        bottom: -1px;
+        border: 2px solid var(--select-focus);
+        border-radius: inherit;
+        }
+</style>
 @endpush
 
 @section('body')
@@ -152,27 +190,52 @@
                                     @if ($product->detail->discount_percentage > 0)
                                         <span class="money">
                                             RP.
-                                            <del>
+                                            <del id="retail">
                                                 {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                             </del>
-                                            <span style="position:inherit; font-weight: 800;">
+                                            <span style="position:inherit; font-weight: 800;" id="discount">
                                                 {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}
                                             </span>
                                         </span>
                                         <div style="color: red; font-size: 20px; font-weight: bold;">
-                                            {{ $product->detail->discount_percentage }}% OFF
+                                            <span id="percentage">{{ $product->detail->discount_percentage }}</span>
+                                            % OFF
                                         </div>
-                                    @else
+                                        @else
                                         <span class="money">RP.
-                                            {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                            <span id="retail">
+                                                {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                            </span>
                                         </span>
                                     @endif
                                 </span>
                             </div>
                         </div>
                         <div style="margin: 50px;"></div>
-                        <div class="size-button Heading u-h6" style="width: 100%;text-align: right;">
-                            <a href="{{ route('size-chart') }}" target="_blank">Size Chart</a>
+                        <div class="size-button Heading u-h6" style="display: flex; justify-content: space-between;">
+                            {{-- <label for="">Size Available : </label> --}}
+                            <select name="size" id="size" class="size-select">
+                                <option>Select Size</option>
+                                @foreach ($product->details()->get() as $item)
+                                    <option value="{{$item->size}}" data-id="{{$item->id}}"" data-price="{{ rupiah_format(intval($item->retail_price ?? 0))}}"
+                                        data-discount-price="{{rupiah_format(intval($item->after_discount_price ?? 0))}}" data-discount="{{$item->discount_percentage}}"
+                                        data-qty="{{$item->qty}}">{{$item->size}}</option>
+                                @endforeach
+                            </select>
+                            <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
+                        </div>
+                        <div style="margin: 5px 0">
+
+                            {{-- @if($product->details()->count() > 1)
+                            @foreach ($product->details()->get() as $item)
+                                <a href="javascript:void(0)" onclick="changePrice(this)" data-id="{{$item->id}}"" data-price="{{$item->retail_price}}"
+                                    data-discount-price="{{$item->after_discount_price}}" data-discount="{{$item->discount_percentage}}"
+                                    data-qty="{{$item->qty}}"
+                                    class="Button Button--primary size" style="font-size: 12px; padding: 5px 15px;" id="size-{{$item->id}}">
+                                    <span>{{$item->size}}</span>
+                                </a>
+                            @endforeach
+                            @endif --}}
                         </div>
                         <div style="width: 100%;">
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
@@ -275,6 +338,14 @@
             // $('#imagemodal').attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
             $('#sizeModal').modal(
             'show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+        });
+
+        $(document).ready(function() {
+            $('#size').change(function() {
+                $('#retail').text($(this).find(':selected').attr('data-price'));
+                $('#discount').text($(this).find(':selected').attr('data-discount-price'));
+                $('#percentage').text($(this).find(':selected').attr('data-discount'));;
+            });
         });
     </script>
 @endpush

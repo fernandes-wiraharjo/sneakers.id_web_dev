@@ -19,7 +19,7 @@
                     enctype="multipart/form-data">
                     @csrf
 
-                    @include('product::_partials._form', ['product' => $product, 'product_code' => $product_code, 'edit' => false])
+                    @include('product::_partials._form', ['product' => $product, 'product_code' => $product_code, 'size' => $size,'edit' => false])
 
 
                 <div class="text-right">

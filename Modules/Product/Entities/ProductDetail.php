@@ -12,6 +12,7 @@ class ProductDetail extends Model
     protected $fillable = [
         'product_id',
         'brand_id',
+        'size',
         'qty',
         'base_price',
         'retail_price',
@@ -26,5 +27,9 @@ class ProductDetail extends Model
 
     public function brand(){
         return $this->hasOne(\Modules\Brand\Entities\Brand::class, 'id', 'brand_id');
+    }
+
+    public function product(){
+        return $this->hasOne(\Modules\Product\Entities\Product::class, 'id', 'product_id',);
     }
 }

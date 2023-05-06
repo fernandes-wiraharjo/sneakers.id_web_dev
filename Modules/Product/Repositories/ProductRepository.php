@@ -86,6 +86,11 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             ->where(['is_active' => 1, 'product_code' => $code])->first();
     }
 
+    public function getProductDetailByIdAndSize($id, $size){
+        return $this->productDetail
+            ->where(['product_id' => $id, 'size' => $size]);
+    }
+
     public function getProductOneFeaturedAirJordan(){
         return $this->model->whereHas('tags', function($q) {
             $q->where('tag_title', 'FEATURED');

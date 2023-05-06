@@ -95,7 +95,19 @@
                 .Footer .Container {
                     padding: 0 8%;
                 }
+
+                .Header__Wrapper {
+                    background-color: black;
+                    padding: 18px 8%;
+                }
             }
+
+            @media screen and (min-width: 1240px) {
+                .Header:not(.Header--sidebar) .Header__Wrapper {
+                    padding: 18px 8%;
+                }
+            }
+
 
             @media only screen and (max-width: 1007px) {
                 .float {

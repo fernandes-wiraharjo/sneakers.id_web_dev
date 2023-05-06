@@ -102,8 +102,15 @@
     transform: rotate(45deg);
   }
 
+  .page-item {
+    padding: 0 5px; /*(Padding dihapus aja)*/
+    font-size: large;
+    align-self: self-end;
+}
+
 .pagination {
     display: flex;
     list-style-type: none;
     justify-content: center;
+    gap: 40px; /*(ditambahin gap 40px)*/
 }

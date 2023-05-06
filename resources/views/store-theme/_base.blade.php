@@ -13,6 +13,7 @@
         <meta name="title" content="SNEAKERS.ID — @if(trim($__env->yieldContent('title'))) @yield('title') @else 'WE AIN'T TALKIN' BOUT FAKE' }} @endif">
         <meta name="keyword" content="nike sneakers, new balance sneakers, shoes, sport shoes, sepatu sneakers, sneaker, sepatu sneakers wanita, sepatu sneakers pria, adidas, sepatu adidas, sepatu air jordan, sepatu nike, nike, air jordan, original, sepatu original, sneakers original, sneakers asli, sepatu sneakers original, sepatu original sneakers, sneakers.id, jakarta sneakers day, sepatu sneakers jakarta" >
         <meta name="description" content="@if(trim($__env->yieldContent('description'))) @yield('description') @else 'US PREORDER, READY STOCK, DAN CONSIGNMENT. HANYA MENJUAL BARANG ORIGINAL DAN AUTHENTIC. TIDAK MENJUAL BARANG PALSU.' @endif">
+        <meta name="facebook-domain-verification" content="fviop5qj9pavjiawjtsaz9skn04ei5" />
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
@@ -86,6 +87,16 @@
                 font-size: 16px;
             }
 
+            @media only screen and (min-width: 1007px) {
+                #main {
+                    padding: 0 8%;
+                }
+
+                .Footer .Container {
+                    padding: 0 8%;
+                }
+            }
+
             @media only screen and (max-width: 1007px) {
                 .float {
                     position: fixed;
@@ -107,6 +118,19 @@
                 .my-float{
                     margin-top:13px;
                 }
+            }
+
+            .Footer {
+                background-color: black;
+                color: white !important;
+            }
+
+            .Footer__Aside, .Footer__Title, .Footer__Block, .Footer__Block--text{
+                color: white !important;
+            }
+
+            .Footer .Heading {
+                color: white;
             }
         </style>
     </head>

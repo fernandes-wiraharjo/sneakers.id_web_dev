@@ -125,7 +125,7 @@ class BrandController extends Controller
                 $validation = [
                     'brand_code' => 'required|unique:brands,brand_code|max:255',
                     'image' => 'mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
-                    'is_menu' => 'brandmenu'
+                    // 'is_menu' => 'brandmenu'
                 ];
             }
 

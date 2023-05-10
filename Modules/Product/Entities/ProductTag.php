@@ -4,10 +4,11 @@ namespace Modules\Product\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hexters\Ladmin\LadminLogable;
 
 class ProductTag extends Model
 {
-    use HasFactory;
+    use HasFactory, LadminLogable;
 
     protected $fillable = [];
 

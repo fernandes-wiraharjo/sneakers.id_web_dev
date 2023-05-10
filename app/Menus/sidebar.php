@@ -333,41 +333,41 @@ return [
         ]
     ],
 
-    // [
-    //     'gate' => 'administrator.system',
-    //     'name' => 'System',
-    //     'description' => 'System application control',
-    //     'route' => null,
-    //     'isActive' => null,
-    //     'icon' => 'cog',
-    //     'id' => '',
-    //     'gates' => [],
-    //     'submenus' => [
-    //         [
-    //             'gate' => 'administrator.system.activity.index',
-    //             'name' => 'User Activity',
-    //             'description' => 'List of User activity',
-    //             'route' => ['administrator.system.activity.index', []],
-    //             'isActive' => 'system/activity*',
-    //             'id' => '',
-    //             'gates' => [
-    //                 [
-    //                     'gate' => 'administrator.system.activity.delete',
-    //                     'title' => 'Delete',
-    //                     'description' => 'Delete log activity after 7 days'
-    //                 ],
-    //             ]
-    //         ],
+    [
+        'gate' => 'administrator.system',
+        'name' => 'System',
+        'description' => 'System application control',
+        'route' => null,
+        'isActive' => null,
+        'icon' => 'cog',
+        'id' => '',
+        'gates' => [],
+        'submenus' => [
+            [
+                'gate' => 'administrator.system.activity.index',
+                'name' => 'User Activity',
+                'description' => 'List of User activity',
+                'route' => ['administrator.system.activity.index', []],
+                'isActive' => 'system/activity*',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.system.activity.delete',
+                        'title' => 'Delete',
+                        'description' => 'Delete log activity after 7 days'
+                    ],
+                ]
+            ],
 
-    //         [
-    //             'gate' => 'administrator.system.log.index',
-    //             'name' => 'System Log',
-    //             'description' => 'Display for Ladmin error log',
-    //             'route' => ['administrator.system.log.index', []],
-    //             'isActive' => 'system/log*',
-    //             'id' => '',
-    //             'gates' => []
-    //         ]
-    //     ]
-    // ]
+            [
+                'gate' => 'administrator.system.log.index',
+                'name' => 'System Log',
+                'description' => 'Display for Ladmin error log',
+                'route' => ['administrator.system.log.index', []],
+                'isActive' => 'system/log*',
+                'id' => '',
+                'gates' => []
+            ]
+        ]
+    ]
 ];

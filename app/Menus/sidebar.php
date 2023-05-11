@@ -344,15 +344,15 @@ return [
         'gates' => [],
         'submenus' => [
             [
-                'gate' => 'administrator.system.activity.index',
+                'gate' => 'system.activity.index',
                 'name' => 'User Activity',
                 'description' => 'List of User activity',
-                'route' => ['administrator.system.activity.index', []],
+                'route' => ['system.activity.index', []],
                 'isActive' => 'system/activity*',
                 'id' => '',
                 'gates' => [
                     [
-                        'gate' => 'administrator.system.activity.delete',
+                        'gate' => 'system.activity.delete',
                         'title' => 'Delete',
                         'description' => 'Delete log activity after 7 days'
                     ],

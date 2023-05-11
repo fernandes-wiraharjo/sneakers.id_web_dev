@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-detail-activity-{{ $item->id }}">
+<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-detail-activity-{{ $item->id }}">
   Show
 </button>
 
@@ -7,9 +7,11 @@
     <div class="modal-content">
       <div class="modal-header border-0">
         <h5 class="modal-title" id="modal-detail-activity-{{ $item->id }}Label">Activity</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+         <!--begin::Close-->
+         <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+            <span class="svg-icon svg-icon-2x"><i class="fas fa-times"></i></span>
+        </div>
+        <!--end::Close-->
       </div>
       <div class="table-responsive">
         <table class="table">
@@ -81,7 +83,7 @@
                   <td>{{ $field }}</td>
                   <td class="{{ ($old === $new) ? '' : 'text-warning' }}">{!!  $old !!}</td>
                 </tr>
-                @empty 
+                @empty
                 <tr>
                   <td colspan="2">No data available</td>
                 </tr>

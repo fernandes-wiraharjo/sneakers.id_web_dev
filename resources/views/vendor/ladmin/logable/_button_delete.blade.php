@@ -1,5 +1,5 @@
 @can(['administrator.system.activity.delete'])
-<a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#moda-confirmation">
+<a class="btn btn-danger btn-sm" href="#" data-bs-toggle="modal" data-bs-target="#moda-confirmation">
   Delete
 </a>
 

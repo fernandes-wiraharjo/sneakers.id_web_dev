@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Hexters\Ladmin\Routes\Ladmin;
-use Hexters\Ladmin\Http\Controllers\LadminLogableController;
+use App\Http\Controllers\Administrator\LadminLogableController;
 use App\Http\Controllers\StoreController;
 
 /*

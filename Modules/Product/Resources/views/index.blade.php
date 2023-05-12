@@ -115,6 +115,19 @@
                 $('.modal-backdrop').hide();
                 $('#product-table').DataTable().ajax.reload();
                 //is-validated & success insert
+
+                if(response.code === 200) {
+
+                    Swal.fire({
+                        text: "Success updating product via excel!",
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
+                }
             },
         });
 
@@ -158,7 +171,6 @@
 
                 const json = XLSX.utils.sheet_to_json(worksheet);
                 const rowCount = json.length;
-                console.log(`The worksheet has ${rowCount} rows`);
 
                 if (rowCount > 0) {
                     // if(worksheet["!range"].e.r < 2) {
@@ -170,10 +182,10 @@
                         var articleNumber = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 0 })].v;
                         var namaProduk = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 1 })].v;
                         var ukuran = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 2 })].v;
-                        var hargaAwal = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 3 })].v;
-                        var persentaseDiskon = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v;
-                        var hargaAkhir = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 5 })].v;
-                        var stok = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 6 })].v;
+                        var hargaAwal = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 3 })] != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 3 })].v : 0;
+                        var persentaseDiskon = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v : 0;
+                        var hargaAkhir = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 5 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v : 0;
+                        var stok = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 6 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v : 0;
 
                         // validate Harga awal, persentase diskon, harga akhir dan stok kalau tidak diisi auto dibikin 0
 
@@ -206,12 +218,14 @@
                                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
                             },
                             success: function(response) {
+                                $('.response-message').text('');
                                 // handle successful response
                                 if(response.code === 200) {
                                     //if return true article number is exist
                                     //if errorBUcket is null return remove disabled button
                                     $('#data-raw').val(response.data);
                                     $('#process-btn').attr('disabled', false);
+                                    $('.response-message').text(`The worksheet has ${rowCount} rows`);
 
                                 } else {
                                     $('.response-message').text('there is article number that not exist, please consider to create product first.');

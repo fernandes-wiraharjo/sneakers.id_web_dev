@@ -69,12 +69,16 @@ class ProductController extends Controller
             // $request['base_price'] = intval(str_replace('.','', $request['base_price']));
             // $request['retail_price'] = intval(str_replace('.','', $request['retail_price']));
             // $request['after_discount_price'] = intval(str_replace('.','', $request['after_discount_price']));
-
             $validator = $request->validate([
                 'product_code' => 'required|unique:products',
                 // 'products_image' => 'array|min:1|max:8',
                 // 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
+                'size_prize.0' => 'required',
+                'size_prize.0.size' => 'required',
+                'size_prize.0.base_price' => 'required|gte:0',
+                'size_prize.0.retail_price' => 'required|gte:0',
+                'size_prize.0.after_discount_price' => 'required|lte:retail_price|gte:0',
                 'is_main' => 'required',
                 // 'base_price' => 'gte:0',
                 // 'retail_price' => 'gte:0',
@@ -82,6 +86,12 @@ class ProductController extends Controller
             ],[
                 'is_main.required' => 'Main image should be chosen!',
                 'products_image.0.required' => 'Image must be chosen!, at least one image',
+                'size_prize.0.required' => 'Product size must be filled, at least one record!',
+                'size_prize.0.size.required' => 'Size must be filled!',
+                'size_prize.0.base_price.required' => 'Base price must be filled!',
+                'size_prize.0.retail_price.required' => 'Retail price must be filled!',
+                'size_prize.0.after_discount_price.required' => 'After discount price must be filled!',
+
                 'after_discount_price.lt' => 'Discount price must be less than retail price.'
             ]);
 
@@ -127,7 +137,7 @@ class ProductController extends Controller
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
-        $data['product_details'] = $data['product']->details()->select('id as detail_id','size', 'base_price', 'qty', 'retail_price', 'after_discount_price', 'discount_percentage')->get()->toJson();
+        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage')->get()->toJson();
         cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }
@@ -151,12 +161,22 @@ class ProductController extends Controller
             if($old_data->product_code == $data['product_code']){
                 $validation = [
                     'product_code' => 'required|exists:products,product_code|max:255',
+                    // 'size_prize.0' => 'required',
+                    // 'size_prize.0.size' => 'required',
+                    // 'size_prize.0.base_price' => 'gte:0',
+                    // 'size_prize.0.retail_price' => 'gte:0',
+                    // 'size_prize.0.after_discount_price' => 'lte:retail_price|gte:0',
                     // 'retail_price' => 'gte:0',
                     // 'after_discount_price' => 'lte:retail_price|gte:0'
                 ];
             } else {
                 $validation = [
                     'product_code' => 'required|unique:products,product_code|max:255',
+                    // 'size_prize.0' => 'required',
+                    // 'size_prize.0.size' => 'required',
+                    // 'size_prize.0.base_price' => 'gte:0',
+                    // 'size_prize.0.retail_price' => 'gte:0',
+                    // 'size_prize.0.after_discount_price' => 'lte:retail_price|gte:0',
                     // 'retail_price' => 'gte:0',
                     // 'after_discount_price' => 'lte:retail_price|gte:0'
                 ];

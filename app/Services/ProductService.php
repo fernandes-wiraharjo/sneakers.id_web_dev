@@ -149,6 +149,13 @@ class ProductService {
             'is_active' => $request['is_active']
         ];
         $getProduct = $this->productRepository->getProductById($id);
+        $oldDetail = $getProduct->details()->pluck('id')->toArray();
+        $detail_ids = [];
+
+        foreach ($request['size_price'] as $sub_array) {
+            $detail_ids[] = intval($sub_array['detail_id']);
+        }
+
         $beforeProductCode = $getProduct->product_code;
 
         $updatedProduct = $getProduct->update($product);
@@ -211,6 +218,12 @@ class ProductService {
                 // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
                 if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
                     removeImageFromStorage($afterPath, $file->getFilename());
+                }
+            }
+
+            if($diff = array_diff($oldDetail, $detail_ids)){
+                foreach($diff as $itemDiff) {
+                    $this->productRepository->deleteProductDetail($itemDiff);
                 }
             }
 

@@ -223,6 +223,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         return $product->signatures()->sync($signatures);
     }
 
+    public function deleteProductDetail($id){
+        return $this->productDetail->find($id)->delete();
+    }
+
     public function deleteProductImage($id){
         return $this->model->find($id)->images()->delete();
     }

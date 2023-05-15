@@ -179,14 +179,14 @@
                                                         <span class="money">
                                                             RP.
                                                             <del>
-                                                                {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                                {{ rupiah_format(intval($product->retail_price ?? 0)) }}
                                                             </del>
                                                             <span style="position:inherit; font-weight: 800;">
                                                                 {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
                                                         </span>
                                                     @else
                                                         <span class="money" >RP.
-                                                            {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
+                                                            {{ rupiah_format(intval($product->retail_price ?? 0)) }}
                                                         </span>
                                                     @endif
                                             </span>

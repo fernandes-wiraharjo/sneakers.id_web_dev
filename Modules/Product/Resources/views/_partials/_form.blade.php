@@ -359,6 +359,9 @@
         var base = document.getElementsByClassName("base-price");
         var retail = document.getElementsByClassName("retail-price");
         var after_discount = document.getElementsByClassName("after-discount-price");
+        var bulkBase = document.getElementsByClassName("bulk-base-price");
+        var bulkRetail = document.getElementsByClassName("bulk-retail-price");
+        var bulkAfterDiscount = document.getElementsByClassName("bulk-after-discount-price");
 
         // base = [].slice.call(base, 0);
         for (var i = 0; i < base.length; ++i){
@@ -375,6 +378,24 @@
 
         for (var i = 0; i < after_discount.length; ++i){
             after_discount[i].addEventListener("keyup", function(e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
+
+        for (var i = 0; i < bulkBase.length; ++i){
+            bulkBase[i].addEventListener("keyup", function(e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
+
+        for (var i = 0; i < bulkRetail.length; ++i){
+            bulkRetail[i].addEventListener("keyup", function(e) {
+                this.value = formatRupiah(this.value);
+            });
+        }
+
+        for (var i = 0; i < bulkAfterDiscount.length; ++i){
+            bulkAfterDiscount[i].addEventListener("keyup", function(e) {
                 this.value = formatRupiah(this.value);
             });
         }
@@ -453,12 +474,7 @@
     </script>
 
     <script>
-        @if($edit)
-            var $repeater = $('#size_price').repeater();
-            $repeater.setList(JSON.parse($('#product_details').val()));
-        @endif
-
-        $('#size_price').repeater({
+        var repeater = $('#size_price').repeater({
             initEmpty: false,
 
             defaultValues: {
@@ -500,5 +516,9 @@
 
             }
         });
+
+        @if($edit)
+            repeater.setList(JSON.parse($('#product_details').val()));
+        @endif
     </script>
 @endpush

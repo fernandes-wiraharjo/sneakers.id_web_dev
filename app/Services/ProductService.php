@@ -369,5 +369,67 @@ class ProductService {
         return $files_info;
     }
 
+    public function updateProductbyExcel($data){
+        //Harga awal mewakili base price dan retail price
+        //foreach find by article number, get id
+        //find product_details by id and size, update or insert
+        //file not saved
+        $data_raw = json_decode($data["data-raw"]);
+        foreach($data_raw as $item){
+            //find products by article number get ID
+            $products = $this->productRepository->getProductByCode($item->product_code);
+            $products->update(['product_name' => $item->product_name]);
+            $products_details = $this->productRepository->getProductDetailByIdAndSize($products->id, $item->size);
+            if($products_details->count() > 0) {
+                $products_details->update(
+                    [
+                        'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                        'retail_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                        'after_discount_price' => $item->after_discount_price ? str_replace('.','',$item->after_discount_price ) : 0,
+                        'discount_percentage' => $item->discount_percentage ? $item->discount_percentage : 0,
+                        'qty' => $item->qty ? $item->qty : 0
+                    ]
+                );
+            } else {
+                $brand_id = $products->detail()->first()->brand_id;
 
+                $this->productRepository->insertProductDetails([
+                    'product_id' => $products->id,
+                    'brand_id' => $brand_id,
+                    'size' => $item->size,
+                    'qty' => $item->qty ? intval($item->qty) : 0,
+                    'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                    'retail_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                    'after_discount_price' => $item->after_discount_price ? str_replace('.','',$item->after_discount_price) : 0,
+                    'discount_percentage' => $item->discount_percentage ? intval($item->discount_percentage) : 0
+                ]);
+            }
+            //find product_details by id & size updates new data
+        }
+
+        return true;
+    }
+
+    public function validateArticleNumber($data){
+        // dd($data['data']);
+
+        $data_not_match = [];
+        $data_match = [];
+        foreach($data['data'] as $item){
+            $result = $this->productRepository->getProductByCode($item['product_code']);
+
+            if(!$result){
+                $data_not_match[] = $item['product_code'];
+                continue;
+            }
+
+            $data_match[] = $item;
+        }
+
+        if(count($data_not_match) > 0) {
+            return ['status' => 404, 'data' => json_encode($data_not_match)];
+        }
+
+        return ['status' => 200, 'data' => json_encode($data_match)];
+    }
 }

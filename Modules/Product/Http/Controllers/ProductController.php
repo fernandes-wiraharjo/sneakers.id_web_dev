@@ -232,6 +232,34 @@ class ProductController extends Controller
         }
     }
 
+    public function uploadProductFromExcel(Request $request)
+    {
+        try {
+            $stored = $this->service->updateProductbyExcel($request->all());
+
+            if($stored) {
+                return response()->json(['code' => 200, 'message' => 'Success update product']);
+            }
+        } catch (LadminException $e) {
+            return response()->json(['code' => 500, 'message' => $e]);
+        }
+    }
+
+    public function uploadExcelValidation(Request $request)
+    {
+        try {
+            //find bulk article number is exist or not, return data article number where not exist
+            $validated = $this->service->validateArticleNumber($request->all());
+            if($validated['status'] == 200){
+                return response()->json(['code' => 200, 'data' => $validated['data']]);
+            } else {
+                return response()->json(['code' => 400, 'data' => $validated['data']]);
+            }
+        } catch (LadminException $e) {
+            return response()->json(['code' => 500, 'message' => $e]);
+        }
+    }
+
     public function uploadImagetoBuckets(Request $request)
     {
         try {

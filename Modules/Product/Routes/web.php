@@ -21,4 +21,6 @@ Route::group(['prefix' => 'administrator/product', 'middleware' => 'auth'], func
     Route::put('/update/{id}', 'ProductController@update')->name('administrator.product.update');
     Route::post('/upload-to-buckets', 'ProductController@uploadImagetoBuckets')->name('administrator.product.upload');
     Route::get('/read-files', 'ProductController@readFiles')->name('administrator.product.readfiles');
+    Route::post('/upload-from-excel', 'ProductController@uploadProductFromExcel')->name('administrator.product.uploadFromExcel');
+    Route::post('/upload-excel-validation', 'ProductController@uploadExcelValidation')->name('administrator.product.uploadExcelValidation');
 });

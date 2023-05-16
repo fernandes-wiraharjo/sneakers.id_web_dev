@@ -149,6 +149,13 @@ class ProductService {
             'is_active' => $request['is_active']
         ];
         $getProduct = $this->productRepository->getProductById($id);
+        $oldDetail = $getProduct->details()->pluck('id')->toArray();
+        $detail_ids = [];
+
+        foreach ($request['size_price'] as $sub_array) {
+            $detail_ids[] = intval($sub_array['detail_id']);
+        }
+
         $beforeProductCode = $getProduct->product_code;
 
         $updatedProduct = $getProduct->update($product);
@@ -211,6 +218,12 @@ class ProductService {
                 // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
                 if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
                     removeImageFromStorage($afterPath, $file->getFilename());
+                }
+            }
+
+            if($diff = array_diff($oldDetail, $detail_ids)){
+                foreach($diff as $itemDiff) {
+                    $this->productRepository->deleteProductDetail($itemDiff);
                 }
             }
 
@@ -370,11 +383,11 @@ class ProductService {
             if($products_details->count() > 0) {
                 $products_details->update(
                     [
-                        'base_price' => str_replace('.','',$item->base_price),
-                        'retail_price' => str_replace('.','',$item->base_price),
-                        'after_discount_price' => str_replace('.','',$item->after_discount_price),
-                        'discount_percentage' => $item->discount_percentage,
-                        'qty' => $item->qty
+                        'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                        'retail_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                        'after_discount_price' => $item->after_discount_price ? str_replace('.','',$item->after_discount_price ) : 0,
+                        'discount_percentage' => $item->discount_percentage ? $item->discount_percentage : 0,
+                        'qty' => $item->qty ? $item->qty : 0
                     ]
                 );
             } else {
@@ -384,11 +397,11 @@ class ProductService {
                     'product_id' => $products->id,
                     'brand_id' => $brand_id,
                     'size' => $item->size,
-                    'qty' => intval($item->qty),
-                    'base_price' => str_replace('.','',$item->base_price),
-                    'retail_price' => str_replace('.','',$item->base_price),
-                    'after_discount_price' => str_replace('.','',$item->after_discount_price),
-                    'discount_percentage' => intval($item->discount_percentage)
+                    'qty' => $item->qty ? intval($item->qty) : 0,
+                    'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                    'retail_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
+                    'after_discount_price' => $item->after_discount_price ? str_replace('.','',$item->after_discount_price) : 0,
+                    'discount_percentage' => $item->discount_percentage ? intval($item->discount_percentage) : 0
                 ]);
             }
             //find product_details by id & size updates new data

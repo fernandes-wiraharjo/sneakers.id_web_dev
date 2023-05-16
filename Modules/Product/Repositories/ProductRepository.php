@@ -133,10 +133,18 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         $date = date('Y-m-d H:i:s');
         $today = Carbon::createFromFormat('Y-m-d H:i:s', $date)->toString();
 
-        $query = $this->model->with('tags')->whereHas('tags', function($q) use ($date) {
+        $query = $this->model->with(['tags','detail'])->whereHas('tags', function($q) use ($date) {
             $q->where('tag_title', 'NEW RELEASE');
             $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
         })
+        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
+            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        })
+        ->join('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'pd2.product_id')
+                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
+        })
+        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
@@ -150,6 +158,14 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         return $this->model->whereHas('tags', function($q) {
             $q->where('tag_title', 'BEST SELLER');
         })
+        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
+            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        })
+        ->join('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'pd2.product_id')
+                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
+        })
+        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
         ->where('is_active', 1)
         ->offset($offset)
         ->limit($limit)
@@ -221,6 +237,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     public function syncProductSignatures($id, $signatures = []){
         $product = $this->model->find($id);
         return $product->signatures()->sync($signatures);
+    }
+
+    public function deleteProductDetail($id){
+        return $this->productDetail->find($id)->delete();
     }
 
     public function deleteProductImage($id){

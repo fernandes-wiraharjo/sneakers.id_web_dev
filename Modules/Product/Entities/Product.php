@@ -28,6 +28,10 @@ class Product extends Model
         return $this->hasOne(ProductDetail::class, 'product_id');
     }
 
+    public function details(){
+        return $this->hasMany(ProductDetail::class, 'product_id');
+    }
+
     public function images(){
         return $this->hasMany(ProductImage::class, 'product_id')->OrderBy('product_images.image_url');
     }

@@ -1,16 +1,17 @@
-<input class="form-control form-control-lg d-flex align-items-center" name="size"
-    value="{{ old('size', $edit ? $current_size->toJson() : '')}}" id="kt_tagify_size" data-json="{{ $size }}"/>
+
+<input class="form-control form-control-lg d-flex align-items-center" name="size-filter"
+    value="" id="kt_tagify_size" data-json="{{ $size }}"/>
 
 @push('scripts')
 <script>
 var inputElm = document.querySelector('#kt_tagify_size');
 
-const sizeList = JSON.parse(inputElm.dataset.json);
+const tagList = JSON.parse(inputElm.dataset.json);
 
 // Initialize Tagify script on the above inputs
-var sizes = new Tagify(inputElm, {
-    whitelist: sizeList,
-    maxTags: 30,
+var tags = new Tagify(inputElm, {
+    whitelist: tagList,
+    maxTags: 15,
     dropdown: {
         maxItems: 20,           // <- mixumum allowed rendered suggestions
         classname: "tagify__inline__suggestions", // <- custom classname for this dropdown, so it could be targeted

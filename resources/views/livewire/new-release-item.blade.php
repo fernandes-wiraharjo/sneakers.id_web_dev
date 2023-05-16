@@ -48,7 +48,7 @@
             </a>
             <div class="ProductItem__Info ProductItem__Info--center">
                 {{-- Brand --}}
-                <p class="ProductItem__Vendor Heading">{{$item->detail->brand->brand_title}}</p>
+                <p class="ProductItem__Vendor Heading">{{$item->brand->brand_title}}</p>
                 <h2 class="ProductItem__Title Heading">
                     {{-- item Name --}}
                     <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">{{$item->product_name}}</a>
@@ -56,18 +56,18 @@
                 {{-- base price if discount and count discount--}}
                 <div class="ProductItem__PriceList Heading">
                     <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                        @if ($item->detail->after_discount_price > 0 && $item->detail->after_discount_price < $item->detail->retail_price)
+                        @if ($item->after_discount_price > 0 && $item->after_discount_price < $item->retail_price)
                             <span class="money">
                                 RP.
                                 <del>
-                                    {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
+                                    {{ rupiah_format(intval($item->retail_price ?? 0)) }}
                                 </del>
                                 <span style="position:inherit; font-weight: 800;">
-                                    {{ rupiah_format(intval($item->detail->after_discount_price ?? 0)) }}</span>
+                                    {{ rupiah_format(intval($item->after_discount_price ?? 0)) }}</span>
                             </span>
                         @else
                             <span class="money" >RP.
-                                {{ rupiah_format(intval($item->detail->retail_price ?? 0)) }}
+                                {{ rupiah_format(intval($item->retail_price ?? 0)) }}
                             </span>
                         @endif
                     </span>

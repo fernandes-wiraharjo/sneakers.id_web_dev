@@ -73,37 +73,43 @@ class ProductService {
                 }
             }
 
-            $inserted_product_detail = $this->productRepository->insertProductDetails([
-                'product_id' => $idNewProduct,
-                'brand_id' => $request['brand_id'],
-                'qty' => $request['qty'],
-                'base_price' => str_replace('.','',$request['base_price']),
-                'retail_price' => str_replace('.','',$request['retail_price']),
-                'after_discount_price' => str_replace('.','',$request['after_discount_price']),
-                'discount_percentage' => intval($request['discount_percentage'])
-            ]);
+            foreach($request['size_price'] as $item){
+                if(isset($item['update-size'])){
+                    $inserted_product_detail = $this->productRepository->insertProductDetails([
+                        'product_id' => $idNewProduct,
+                        'brand_id' => $request['brand_id'],
+                        'size' => $item['size'],
+                        'qty' => intval($item['qty']),
+                        'base_price' => str_replace('.','',$item['base_price']),
+                        'retail_price' => str_replace('.','',$item['retail_price']),
+                        'after_discount_price' => str_replace('.','',$item['after_discount_price']),
+                        'discount_percentage' => intval($item['discount_percentage'])
+                    ]);
 
-            if(!$inserted_product_detail){
-                return false;
+                    if(!$inserted_product_detail){
+                        return false;
+                    }
+                }
             }
 
-            $sizes = json_decode($request['size']);
+
+            // $sizes = json_decode($request['size']);
             $categories = json_decode($request['category']);
             $tags = json_decode($request['tag']);
             $signatures = json_decode($request['signature']);
 
-            $sizes_id = [];
+            // $sizes_id = [];
             $categories_id = [];
             $tags_id = [];
             $signatures_id = [];
 
-            if(isset($sizes)){
-                foreach($sizes as $item){
-                    $sizes_id[] = $item->id;
-                }
+            // if(isset($sizes)){
+            //     foreach($sizes as $item){
+            //         $sizes_id[] = $item->id;
+            //     }
 
-                $this->productRepository->attachProductSizes($idNewProduct, $sizes_id);
-            }
+            //     $this->productRepository->attachProductSizes($idNewProduct, $sizes_id);
+            // }
 
             if(isset($categories)){
                 foreach($categories as $item){
@@ -143,6 +149,13 @@ class ProductService {
             'is_active' => $request['is_active']
         ];
         $getProduct = $this->productRepository->getProductById($id);
+        $oldDetail = $getProduct->details()->pluck('id')->toArray();
+        $detail_ids = [];
+
+        foreach ($request['size_price'] as $sub_array) {
+            $detail_ids[] = intval($sub_array['detail_id']);
+        }
+
         $beforeProductCode = $getProduct->product_code;
 
         $updatedProduct = $getProduct->update($product);
@@ -208,34 +221,67 @@ class ProductService {
                 }
             }
 
-            $getProduct->detail()->update([
-                'brand_id' => $request['brand_id'],
-                'qty' => $request['qty'],
-                'base_price' => str_replace('.','',$request['base_price']),
-                'retail_price' => str_replace('.','',$request['retail_price']),
-                'after_discount_price' => str_replace('.','',$request['after_discount_price']),
-                'discount_percentage' => intval($request['discount_percentage'])
-            ]);
+            if($diff = array_diff($oldDetail, $detail_ids)){
+                foreach($diff as $itemDiff) {
+                    $this->productRepository->deleteProductDetail($itemDiff);
+                }
+            }
 
-            $sizes = json_decode($request['size']);
+            foreach($request['size_price'] as $item){
+                if(isset($item['update-size'])){
+                    if(isset($item['detail_id'])) {
+                        $this->productRepository->updateProductDetails($item['detail_id'] ,[
+                            'brand_id' => $request['brand_id'],
+                            'size' => $item['size'],
+                            'qty' => intval($item['qty']),
+                            'base_price' => str_replace('.','',$item['base_price']),
+                            'retail_price' => str_replace('.','',$item['retail_price']),
+                            'after_discount_price' => str_replace('.','',$item['after_discount_price']),
+                            'discount_percentage' => intval($item['discount_percentage'])
+                        ]);
+                    } else {
+                        $this->productRepository->insertProductDetails([
+                            'product_id' => $id,
+                            'brand_id' => $request['brand_id'],
+                            'size' => $item['size'],
+                            'qty' => intval($item['qty']),
+                            'base_price' => str_replace('.','',$item['base_price']),
+                            'retail_price' => str_replace('.','',$item['retail_price']),
+                            'after_discount_price' => str_replace('.','',$item['after_discount_price']),
+                            'discount_percentage' => intval($item['discount_percentage'])
+                        ]);
+                    }
+                }
+            }
+
+            // $getProduct->detail()->update([
+            //     'brand_id' => $request['brand_id'],
+            //     'qty' => $request['qty'],
+            //     'base_price' => str_replace('.','',$request['base_price']),
+            //     'retail_price' => str_replace('.','',$request['retail_price']),
+            //     'after_discount_price' => str_replace('.','',$request['after_discount_price']),
+            //     'discount_percentage' => intval($request['discount_percentage'])
+            // ]);
+
+            // $sizes = json_decode($request['size']);
             $categories = json_decode($request['category']);
             $tags = json_decode($request['tag']);
             $signatures = json_decode($request['signature']);
 
-            $sizes_id = [];
+            // $sizes_id = [];
             $categories_id = [];
             $tags_id = [];
             $signatures_id = [];
 
-            if(isset($sizes)){
-                foreach($sizes as $item){
-                    $sizes_id[] = $item->id;
-                }
+            // if(isset($sizes)){
+            //     foreach($sizes as $item){
+            //         $sizes_id[] = $item->id;
+            //     }
 
-                $this->productRepository->syncProductSizes($id, $sizes_id);
-            }   else {
-                $this->productRepository->syncProductSizes($id);
-            }
+            //     $this->productRepository->syncProductSizes($id, $sizes_id);
+            // }   else {
+            //     $this->productRepository->syncProductSizes($id);
+            // }
 
             if(isset($categories)){
                 foreach($categories as $item){

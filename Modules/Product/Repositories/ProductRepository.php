@@ -9,6 +9,7 @@ use Modules\Product\Entities\ProductDetail;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
 use Carbon\Carbon;
+use DB;
 
 class ProductRepository extends Repository implements MasterRepositoryInterface {
 
@@ -55,11 +56,28 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductWhere(){
+        // return $this->model->query()
+        //     ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
+        //     // ->whereHas('details')
+        //     ->join('product_details as pd', function($join){
+        //         $join->on('pd.product_id', '=', 'products.id')
+        //             ->orderBy('pd.retail_price')
+        //             ->limit(1);
+        //     })
+        //     ->select('products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
+        //     ->where(['is_active'=> 1]);
+
         return $this->model->query()
-            ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
-            ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
-            ->select('products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-            ->where('is_active', 1);
+        ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
+        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
+            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        })
+        ->join('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'pd2.product_id')
+                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
+        })
+        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
+        ->where(['is_active'=> 1]);
     }
 
     public function getProductByCode($code){
@@ -96,6 +114,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function insertProductDetails($data){
         return $this->productDetail->create($data);
+    }
+
+    public function updateProductDetails($id, $data){
+        return $this->productDetail->find($id)->update($data);
     }
 
     public function getLatestProductCode(){
@@ -194,6 +216,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     public function syncProductSignatures($id, $signatures = []){
         $product = $this->model->find($id);
         return $product->signatures()->sync($signatures);
+    }
+
+    public function deleteProductDetail($id){
+        return $this->productDetail->find($id)->delete();
     }
 
     public function deleteProductImage($id){

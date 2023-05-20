@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
-    
+
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -23,15 +23,15 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
-    
+
     public function redirectTo() {
-        return '/' . config('ladmin.prefix', 'administrator');
+        return redirect(route('customer.login'));
     }
 
 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('ladmin::auth.passwords.reset')->with(
+        return view('display-store.auth.reset-password')->with(
             ['token' => $token, 'email' => $request->email]
         );
     }

@@ -9,9 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\EmailVerification;
 use Hexters\Ladmin\LadminTrait as LadminLadminTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_email_verified'
     ];
 
     /**
@@ -60,4 +62,14 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+ * Send the email verification notification.
+ *
+ * @return void
+ */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerification); // my notification
+    }
 }

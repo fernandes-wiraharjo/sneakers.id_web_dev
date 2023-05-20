@@ -30,7 +30,7 @@ use Yajra\DataTables\Services\DataTable;
                 if ($item->charts()->count() > 0) {
                     $result = "";
                     foreach($item->charts()->get() as $chart) {
-                        $result .= view('components.chips', [
+                        $result .= view('back-office.components.chips', [
                             'a' => $chart->size_name,
                             'b' => $chart->size_value
                         ]);
@@ -50,7 +50,7 @@ use Yajra\DataTables\Services\DataTable;
                         'url' => route('administrator.master-data.size.destroy', [$item->id, 'back' => request()->fullUrl()]),
                     ];
                 }
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => [
                         'gate' => 'administrator.master-data.size.show',
                         'url' => route('administrator.master-data.size.show', [$item->id, 'back' => request()->fullUrl()])

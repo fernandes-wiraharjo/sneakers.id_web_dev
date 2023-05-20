@@ -23,6 +23,6 @@ class Toolbar extends Component
      */
     public function render()
     {
-        return view('components.toolbar');
+        return view('back-office.components.toolbar');
     }
 }

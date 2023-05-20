@@ -45,7 +45,7 @@
                 </header>
                 <div class="Drawer__Content">
                   <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                    @include('components.filters', $filters)
+                    @include('back-office.components.filters', $filters)
                   </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
             </div>
             <div class="CollectionInner__Products">
                 <div class="ProductListWrapper">
@@ -198,7 +198,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                    {{ $products->links('store-theme._partials._pagination') }}
+                    {{ $products->links('display-store.store-theme._partials._pagination') }}
                 </div>
             </div>
         </div>

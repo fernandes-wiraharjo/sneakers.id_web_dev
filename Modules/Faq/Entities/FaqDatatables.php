@@ -24,7 +24,7 @@ use Yajra\DataTables\Services\DataTable;
             ->addIndexColumn()
             ->rawColumns(['action'])
             ->addColumn('action', function ($item) {
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.faq.update',

@@ -38,6 +38,19 @@ class ProductController extends Controller
      */
     public function index(ProductDatatables $dataTable)
     {
+        ladmin()
+        ->notification()
+            ->setTitle('new Invoice')
+            ->setLink('http://project.test/invoice/31eb6d58-3622-42a4-9206-d36e7a8d6c06')
+            ->setDescription('Pay invoice #123455')
+            ->setImageLink('http://porject.test/icon-invoice.ong') // optional
+            ->setGates(['administrator.accounting', 'administrator.owner']) // optional
+        ->send();
+
+        if(!auth()->user()->can('administrator.product.index')){
+            return redirect()->route('customer.dashboard');
+        }
+
         ladmin()->allow('administrator.product.index');
         return $dataTable->render('product::index');
     }

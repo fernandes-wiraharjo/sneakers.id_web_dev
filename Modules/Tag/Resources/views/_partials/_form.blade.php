@@ -14,7 +14,7 @@
 	<textarea placeholder="Tag Description" class="form-control" name="tag_description" id="tag_description">{{ old('tag_description', $tag->tag_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active', ['is_active' => $tag->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $tag->is_active, 'edit' => $edit])
 
 @push('scripts')
 <script>

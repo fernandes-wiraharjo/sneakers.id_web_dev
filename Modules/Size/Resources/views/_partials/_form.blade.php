@@ -134,7 +134,7 @@
 </div>
 <!--end::Repeater-->
 
-@include('components.is_active', ['is_active' => $size->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $size->is_active, 'edit' => $edit])
 
 @push('scripts')
 <script src="{{ asset('demo1/plugins/custom/formrepeater/formrepeater.bundle.js') }}"></script>

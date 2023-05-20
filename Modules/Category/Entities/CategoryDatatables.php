@@ -41,7 +41,7 @@ use Yajra\DataTables\Services\DataTable;
                     ];
                 }
 
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.category.update',

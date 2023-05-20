@@ -8,7 +8,7 @@
                 <div class="form-group row mb-5">
                     <div class="col-md-2">
                         <label class="form-label">Social Icon :</label>
-                        @include('components.social-selector', ['selected' => $item->social_icon])
+                        @include('back-office.components.social-selector', ['selected' => $item->social_icon])
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Social Name :</label>
@@ -33,7 +33,7 @@
             <div class="form-group row mb-5">
                 <div class="col-md-2">
                     <label class="form-label">Social Icon :</label>
-                    @include('components.social-selector')
+                    @include('back-office.components.social-selector')
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Social Name :</label>

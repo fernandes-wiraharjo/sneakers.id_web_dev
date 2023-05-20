@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Livewire\Category;
+use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
@@ -13,6 +14,7 @@ use Modules\Faq\Repositories\FaqRepository;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class StoreController extends Controller
 {
@@ -36,13 +38,14 @@ class StoreController extends Controller
     }
 
     public function index() {
+        // SlackAlert::message("test");
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['brand'] = $this->brandRepository->getAllBrand();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone Accessing my website');
-        return view('welcome', $data);
+        return view('display-store.landing', $data);
     }
 
     public function productDetail($id){
@@ -50,7 +53,7 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone look into my product');
-        return view('product-detail', $data);
+        return view('display-store.product-detail', $data);
     }
 
     public function search(Request $request){
@@ -136,14 +139,14 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone find a product');
-        return view('search-result', $data);
+        return view('display-store.search-result', $data);
     }
 
     public function collections($keyword){
         $data['keyword'] = $keyword;
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('collections', $data);
+        return view('display-store.collections', $data);
     }
 
     public function lookbook($page){
@@ -152,7 +155,7 @@ class StoreController extends Controller
         $data['lookbook'] = $this->lookBookRepository->getAllLookBookPaginate(20);
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('lookbook', $data);
+        return view('display-store.lookbook', $data);
     }
 
     public function sizeChart(){
@@ -162,19 +165,19 @@ class StoreController extends Controller
         $data['kid_sizes'] = $this->sizeRepository->getAllKidSize();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('size-chart', $data);
+        return view('display-store.size-chart', $data);
     }
 
     public function aboutUs(){
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('about-us', $data);
+        return view('display-store.about-us', $data);
     }
 
     public function faq(){
         $data['faq'] = $this->faqRepository->getAllFaq();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('qna', $data);
+        return view('display-store.qna', $data);
     }
 }

@@ -16,7 +16,7 @@
 	<textarea placeholder="Category Description" class="form-control" name="category_description" id="category_description">{{ old('category_description', $category->category_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active', ['is_active' => $category->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $category->is_active, 'edit' => $edit])
 
 
 @push('scripts')

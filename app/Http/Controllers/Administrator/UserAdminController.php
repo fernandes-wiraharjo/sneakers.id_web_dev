@@ -25,13 +25,7 @@ class UserAdminController extends Controller {
     public function index(Request $request, UserDatatables $dataTable) {
         ladmin()->allow('administrator.account.admin.index');
 
-        return $dataTable->render('ladmin::ladmin.index', [
-            /**
-             * You can catch this data form blade or UserDatatables class
-             * via static property self$data
-             */
-            'foo' => 'bar'
-        ]);
+        return $dataTable->render('back-office.ladmin.users.index');
     }
 
     /**

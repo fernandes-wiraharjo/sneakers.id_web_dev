@@ -18,7 +18,7 @@
 	<textarea placeholder="Signature Player Description" class="form-control" name="signature_description" id="signature_description">{{ old('signature_description', $signature->signature_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active', ['is_active' => $signature->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $signature->is_active, 'edit' => $edit])
 
 @push('scripts')
 <script>

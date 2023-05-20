@@ -37,7 +37,7 @@ class ProductDatatables extends DataTable
                 if ($item->tags()->count() > 0) {
                     $result = "";
                     foreach($item->tags()->get() as $tag) {
-                        $result .= view('components.chips', [
+                        $result .= view('back-office.components.chips', [
                             'a' => $tag->tag_title,
                             'b' => ''
                         ]);
@@ -52,7 +52,7 @@ class ProductDatatables extends DataTable
                 if ($item->categories()->count() > 0) {
                     $result = "";
                     foreach($item->categories()->get() as $category) {
-                        $result .= view('components.chips', [
+                        $result .= view('back-office.components.chips', [
                             'a' => $category->category_title,
                             'b' => ''
                         ]);
@@ -67,7 +67,7 @@ class ProductDatatables extends DataTable
                 if ($item->signatures()->count() > 0) {
                     $result = "";
                     foreach($item->signatures()->get() as $signature) {
-                        $result .= view('components.chips', [
+                        $result .= view('back-office.components.chips', [
                             'a' => $signature->signature_title,
                             'b' => $signature->signature_player_name
                         ]);
@@ -128,7 +128,7 @@ class ProductDatatables extends DataTable
                     $new_release = $item_tag_new_release->tag()->first()->tag_title;
                 }
 
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.product.update',

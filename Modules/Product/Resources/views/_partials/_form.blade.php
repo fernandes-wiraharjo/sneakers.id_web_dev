@@ -233,7 +233,7 @@
 <hr>
 
 
-@include('components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
 @push('top-scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 @endpush

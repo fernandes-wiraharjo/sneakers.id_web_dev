@@ -10,7 +10,7 @@
 	<input type="file" class="form-control" name="image" id="image" value="{{ old('image', $lookbook->look_book_image) }}">
 </x-ladmin-form-group>
 
-@include('components.is_active', ['is_active' => $lookbook->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $lookbook->is_active, 'edit' => $edit])
 
 @push('scripts')
 <script>

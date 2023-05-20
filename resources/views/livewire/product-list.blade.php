@@ -72,7 +72,7 @@
             </header>
             <div class="Drawer__Content">
               <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
               </div>
             </div>
         </div>
@@ -113,7 +113,7 @@
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
             </div>
             <div wire:loading>
                 <div class="PageOverlay is-visible"></div>

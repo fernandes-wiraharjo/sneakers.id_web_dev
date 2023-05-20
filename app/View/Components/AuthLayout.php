@@ -13,6 +13,6 @@ class AuthLayout extends Component
      */
     public function render()
     {
-        return view('auth.layout', ['comment' => 'Sign-in', 'wrapperClass' => 'w-lg-500px']);
+        return view('back-office.auth.layout', ['comment' => 'Sign-in', 'wrapperClass' => 'w-lg-500px']);
     }
 }

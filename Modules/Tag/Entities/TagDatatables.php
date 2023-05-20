@@ -42,7 +42,7 @@ class TagDatatables  extends DataTable
                     ];
                 }
 
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.tag.update',

@@ -24,7 +24,7 @@
 	<textarea placeholder="Banner Description" class="form-control" name="banner_description" id="banner_description">{{ old('banner_description', $banner->banner_description) }}</textarea>
 </x-ladmin-form-group>
 
-@include('components.is_active', ['is_active' => $banner->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $banner->is_active, 'edit' => $edit])
 
 @push('scripts')
 <script>

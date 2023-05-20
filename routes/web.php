@@ -3,7 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Hexters\Ladmin\Routes\Ladmin;
 use App\Http\Controllers\Administrator\LadminLogableController;
+use App\Http\Controllers\Administrator\NotificationController;
+use App\Http\Controllers\Administrator\DashboardController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\Administrator\Auth\LoginController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,15 +38,27 @@ Route::get('/faq', [StoreController::class, 'faq'])->name('faq');
 
 Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
 
 Ladmin::route(function() {
     //Route::resource('/withdrawal', WithdrawalController::class); // Example
+    Route::resource('/notification', NotificationController::class)->only(['index', 'show', 'store']);
 });
 
 Route::group(['as' => 'system.', 'prefix' => 'system'], function() {
     //Route::resource('/log', LogController::class)->only(['index']);
     Route::resource('/activity', LadminLogableController::class)->only(['index', 'destroy']);
-  });
+});
+
+//Customer
+Route::get('/verify-email', [LoginController::class, 'showCustomerVerifyEmailForm'])->name('verification.notice');
+Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
+    Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/login', [LoginController::class, 'showCustomerLoginForm'])->name('login');
+    Route::get('/register', [LoginController::class, 'showCustomerRegisterForm'])->name('register');
+    Route::post('/register', [LoginController::class, 'postRegistration'])->name('submit.register');
+    Route::get('/forgot-password', [LoginController::class, 'showCustomerForgotPasswordForm'])->name('forgot-password');
+    Route::get('/confirm-password', [LoginController::class, 'showCustomerConfirmPasswordForm'])->name('confirm-password');
+    Route::get('/reset-password', [LoginController::class, 'showCustomerResetPasswordForm'])->name('reset-password');
+    Route::get('/verify/{token}', [LoginController::class, 'showCustomerVerifyEmailForm'])->name('verify-email');
+    Route::get('/verify-email/{token}', [LoginController::class, 'verifyAccount'])->name('user.verify');
+});

@@ -74,11 +74,11 @@ class ProductController extends Controller
                 // 'products_image' => 'array|min:1|max:8',
                 // 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
-                'size_prize.0' => 'required',
-                'size_prize.0.size' => 'required',
-                'size_prize.0.base_price' => 'required|gte:0',
-                'size_prize.0.retail_price' => 'required|gte:0',
-                'size_prize.0.after_discount_price' => 'required|lte:retail_price|gte:0',
+                // 'size_prize.0' => 'required',
+                // 'size_prize.0.size' => 'required',
+                // 'size_prize.0.base_price' => 'required|gte:0',
+                // 'size_prize.0.retail_price' => 'required|gte:0',
+                // 'size_prize.0.after_discount_price' => 'required|lte:retail_price|gte:0',
                 'is_main' => 'required',
                 // 'base_price' => 'gte:0',
                 // 'retail_price' => 'gte:0',
@@ -86,11 +86,11 @@ class ProductController extends Controller
             ],[
                 'is_main.required' => 'Main image should be chosen!',
                 'products_image.0.required' => 'Image must be chosen!, at least one image',
-                'size_prize.0.required' => 'Product size must be filled, at least one record!',
-                'size_prize.0.size.required' => 'Size must be filled!',
-                'size_prize.0.base_price.required' => 'Base price must be filled!',
-                'size_prize.0.retail_price.required' => 'Retail price must be filled!',
-                'size_prize.0.after_discount_price.required' => 'After discount price must be filled!',
+                // 'size_prize.0.required' => 'Product size must be filled, at least one record!',
+                // 'size_prize.0.size.required' => 'Size must be filled!',
+                // 'size_prize.0.base_price.required' => 'Base price must be filled!',
+                // 'size_prize.0.retail_price.required' => 'Retail price must be filled!',
+                // 'size_prize.0.after_discount_price.required' => 'After discount price must be filled!',
 
                 'after_discount_price.lt' => 'Discount price must be less than retail price.'
             ]);

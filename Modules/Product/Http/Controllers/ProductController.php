@@ -66,6 +66,21 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+            $size_price = $request->size_price;
+
+            if(isset($request['size_price'])) {
+                foreach($size_price as $index => $item){
+                    if(isset($item['update-size'])){
+                        // dd(intval( str_replace('.','',$item['base_price'])));
+                        $size_price[$index]['base_price'] = intval( str_replace('.','',$item['base_price']));
+                        $size_price[$index]['retail_price'] = intval(str_replace('.','',$item['retail_price'] ));
+                        $size_price[$index]['after_discount_price'] = intval(str_replace('.','',$item['after_discount_price']));
+                    }
+                }
+            }
+
+            $request->merge(['size_price' => $size_price]);
+
             // $request['base_price'] = intval(str_replace('.','', $request['base_price']));
             // $request['retail_price'] = intval(str_replace('.','', $request['retail_price']));
             // $request['after_discount_price'] = intval(str_replace('.','', $request['after_discount_price']));
@@ -74,11 +89,12 @@ class ProductController extends Controller
                 // 'products_image' => 'array|min:1|max:8',
                 // 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
-                // 'size_prize.0' => 'required',
-                // 'size_prize.0.size' => 'required',
-                // 'size_prize.0.base_price' => 'required|gte:0',
-                // 'size_prize.0.retail_price' => 'required|gte:0',
-                // 'size_prize.0.after_discount_price' => 'required|lte:retail_price|gte:0',
+                'size_price.0' => 'required',
+                'size_price.0.update-size' => 'required',
+                'size_price.*.size' => 'required',
+                'size_price.*.base_price' => 'required|gte:0',
+                'size_price.*.retail_price' => 'required|gte:0',
+                'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price|gte:0',
                 'is_main' => 'required',
                 // 'base_price' => 'gte:0',
                 // 'retail_price' => 'gte:0',
@@ -86,13 +102,15 @@ class ProductController extends Controller
             ],[
                 'is_main.required' => 'Main image should be chosen!',
                 'products_image.0.required' => 'Image must be chosen!, at least one image',
-                // 'size_prize.0.required' => 'Product size must be filled, at least one record!',
-                // 'size_prize.0.size.required' => 'Size must be filled!',
-                // 'size_prize.0.base_price.required' => 'Base price must be filled!',
-                // 'size_prize.0.retail_price.required' => 'Retail price must be filled!',
-                // 'size_prize.0.after_discount_price.required' => 'After discount price must be filled!',
-
-                'after_discount_price.lt' => 'Discount price must be less than retail price.'
+                'size_price.0.required' => 'Product size must be filled, at least one record!',
+                'size_price.0.update-size.required' => 'Product Size should be checked at least one size, please consider to checked a size.',
+                'size_price.*.size.required' => 'Size must be filled!',
+                'size_price.*.base_price.required' => 'Base price must be filled!',
+                'size_price.*.base_price.gte' => 'Base price must be not 0',
+                'size_price.*.retail_price.required' => 'Retail price must be filled!',
+                'size_price.*.retail_price.gte' => 'Base price must be not 0',
+                'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
+                'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.'
             ]);
 
             if($validator) {

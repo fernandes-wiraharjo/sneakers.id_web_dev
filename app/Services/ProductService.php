@@ -73,21 +73,23 @@ class ProductService {
                 }
             }
 
-            foreach($request['size_price'] as $item){
-                if(isset($item['update-size'])){
-                    $inserted_product_detail = $this->productRepository->insertProductDetails([
-                        'product_id' => $idNewProduct,
-                        'brand_id' => $request['brand_id'],
-                        'size' => $item['size'],
-                        'qty' => intval($item['qty']),
-                        'base_price' => str_replace('.','',$item['base_price']),
-                        'retail_price' => str_replace('.','',$item['retail_price']),
-                        'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                        'discount_percentage' => intval($item['discount_percentage'])
-                    ]);
+            if(isset($request['size_price'])) {
+                foreach($request['size_price'] as $item){
+                    if(isset($item['update-size'])){
+                        $inserted_product_detail = $this->productRepository->insertProductDetails([
+                            'product_id' => $idNewProduct,
+                            'brand_id' => $request['brand_id'],
+                            'size' => $item['size'],
+                            'qty' => intval($item['qty']),
+                            'base_price' => str_replace('.','',$item['base_price']),
+                            'retail_price' => str_replace('.','',$item['retail_price']),
+                            'after_discount_price' => str_replace('.','',$item['after_discount_price']),
+                            'discount_percentage' => intval($item['discount_percentage'])
+                        ]);
 
-                    if(!$inserted_product_detail){
-                        return false;
+                        if(!$inserted_product_detail){
+                            return false;
+                        }
                     }
                 }
             }

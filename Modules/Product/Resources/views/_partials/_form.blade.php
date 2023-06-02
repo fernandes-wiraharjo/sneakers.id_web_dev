@@ -1,6 +1,7 @@
 <div class="product-images">
     <input type="hidden" id="is_main" name="is_main" value="{{ $edit ? $main_image : ''}}" />
     <input type="hidden" id="product_details" value="{{ $edit ? $product_details : '' }}" />
+    <input type="hidden" id="old_size_price" value="{{ old() != [] ? json_encode(old('size_price')) : '' }}" />
 </div>
 <x-ladmin-form-group name="product_code" label="Article Number *">
     <input type="text" placeholder="Article Number" class="form-control" name="product_code" id="product_code" required
@@ -121,22 +122,22 @@
                             <div class="form-group row">
                                 <div class="col-4">
                                     <label class="form-label">Size :</label>
-                                    <input id="base" type="text" class="form-control" name="size"
-                                        value="{{ old('size', '') }}" aria-label="Product Sizes"/>
+                                    <input id="size" type="text" class="form-control" name="size"
+                                        value="{{ old('size_prize.0.base_price', '') }}" aria-label="Product Sizes"/>
                                 </div>
                                 <div class="col-4">
                                     <label class="form-label">Base Price :</label>
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
                                         <input id="base" type="text" class="form-control base-price" name="base_price" min=1
-                                        value="" aria-label="Amount (to the nearest rupiah)"/>
+                                        value="{{ old('size_prize.0.base_price', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <label class="form-label">Quantity :</label>
                                     <div class="input-group mb-5">
                                         <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
-                                        value=""/>
+                                        value="{{ old('size_prize[0][qty]', '') }}"/>
                                         <span class="input-group-text"> pcs</span>
                                     </div>
                                 </div>
@@ -147,7 +148,7 @@
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
                                         <input id="retail" type="text" class="form-control retail-price" name="retail_price" min="0"
-                                        value="" aria-label="Amount (to the nearest rupiah)"/>
+                                        value="{{ old('size_prize[0][retail_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -155,10 +156,10 @@
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
                                         <input id="discount" type="text" class="form-control after-discount-price" name="after_discount_price" min="0"
-                                        value="" aria-label="Amount (to the nearest rupiah)"/>
+                                        value="{{ old('size_prize[0][after_discount_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                         <span class="input-group-text">%</span>
                                         <input type="text" class="form-control discount-percentage" name="discount_percentage" min="0" max="100"
-                                            value=""
+                                            value="{{ old('size_prize[0][discount_percentage]', '') }}"
                                         placeholder="Percentage" aria-label="Percent"/>
                                     </div>
                                 </div>
@@ -248,6 +249,7 @@
     </script>
     <script>
         const form = document.getElementById('form');
+
         var validator = FormValidation.formValidation(
             form,
             {
@@ -516,6 +518,10 @@
 
             }
         });
+
+        @if(old() != [])
+            repeater.setList(JSON.parse($('#old_size_price').val()));
+        @endif
 
         @if($edit)
             repeater.setList(JSON.parse($('#product_details').val()));

@@ -480,9 +480,11 @@
             initEmpty: false,
 
             defaultValues: {
-                'base_price': '1',
-                'retail_price': '1',
-                'discount_price': '0',
+                'base_price': 1,
+                'retail_price': 1,
+                'after_discount_price': 0,
+                'qty': 0,
+                'discount_percentage': 0,
             },
 
             show: function () {
@@ -525,6 +527,10 @@
 
         @if($edit)
             repeater.setList(JSON.parse($('#product_details').val()));
+
+            @if(old() != [])
+            repeater.setList(JSON.parse($('#old_size_price').val()));
+        @endif
         @endif
     </script>
 @endpush

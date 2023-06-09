@@ -108,7 +108,7 @@ class ProductController extends Controller
                 'size_price.*.base_price.required' => 'Base price must be filled!',
                 'size_price.*.base_price.gte' => 'Base price must be not 0',
                 'size_price.*.retail_price.required' => 'Retail price must be filled!',
-                'size_price.*.retail_price.gte' => 'Base price must be not 0',
+                'size_price.*.retail_price.gte' => 'Retail price must be not 0',
                 'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
                 'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.'
             ]);
@@ -179,28 +179,40 @@ class ProductController extends Controller
             if($old_data->product_code == $data['product_code']){
                 $validation = [
                     'product_code' => 'required|exists:products,product_code|max:255',
-                    // 'size_prize.0' => 'required',
-                    // 'size_prize.0.size' => 'required',
-                    // 'size_prize.0.base_price' => 'gte:0',
-                    // 'size_prize.0.retail_price' => 'gte:0',
-                    // 'size_prize.0.after_discount_price' => 'lte:retail_price|gte:0',
-                    // 'retail_price' => 'gte:0',
-                    // 'after_discount_price' => 'lte:retail_price|gte:0'
+                    'size_price.0' => 'required',
+                    'size_price.0.update-size' => 'required',
+                    'size_price.*.size' => 'required',
+                    'size_price.*.base_price' => 'required',
+                    'size_price.*.retail_price' => 'required',
+                    'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price',
                 ];
             } else {
                 $validation = [
                     'product_code' => 'required|unique:products,product_code|max:255',
-                    // 'size_prize.0' => 'required',
-                    // 'size_prize.0.size' => 'required',
-                    // 'size_prize.0.base_price' => 'gte:0',
-                    // 'size_prize.0.retail_price' => 'gte:0',
-                    // 'size_prize.0.after_discount_price' => 'lte:retail_price|gte:0',
-                    // 'retail_price' => 'gte:0',
-                    // 'after_discount_price' => 'lte:retail_price|gte:0'
+                    'size_price.0' => 'required',
+                    'size_price.0.update-size' => 'required',
+                    'size_price.*.size' => 'required',
+                    'size_price.*.base_price' => 'required|gte:0',
+                    'size_price.*.retail_price' => 'required|gte:0',
+                    'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price|gte:0',
                 ];
             }
 
-            $validator = $request->validate($validation);
+            $validator = $request->validate($validation, [
+                'product_code.required' => 'Product Code must be filled!',
+                'product_code.exists' => 'Product Code must be exist!',
+                'product_code.unique' => 'Product Code must be unique and diffrent from before!',
+                'size_price.0.required' => 'Product size must be filled, at least one record!',
+                'size_price.0.update-size.required' => 'Product Size should be checked at least one size, please consider to checked a size.',
+                'size_price.*.size.required' => 'Size must be filled!',
+                'size_price.*.base_price.required' => 'Base price must be filled!',
+                'size_price.*.base_price.gte' => 'Base price must be not 0',
+                'size_price.*.retail_price.required' => 'Retail price must be filled!',
+                'size_price.*.retail_price.gte' => 'Retail price must be not 0',
+                'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
+                'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.',
+                'size_price.*.after_discount_price.gte' => 'Discount price must be not below 0.'
+            ]);
 
             if($validator) {
                 $updated = $this->service->updateProduct($id ,$request->all());

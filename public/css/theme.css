@@ -7091,8 +7091,8 @@ select::-ms-expand {
     position: absolute;
     top: 2px;
     right: -6px;
-    width: 8px;
-    height: 8px;
+    width: 17px;
+    height: 17px;
     border-radius: 100%;
     background-color: #000;
     box-shadow: 0 0 0 2px #fff;

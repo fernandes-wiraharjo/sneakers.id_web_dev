@@ -27,10 +27,14 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var string[]
      */
     protected $fillable = [
+        'first_name',
+        'last_name',
+        'email_verified_at',
         'name',
         'email',
         'password',
-        'is_email_verified'
+        'is_email_verified',
+        'remember_token'
     ];
 
     /**
@@ -64,12 +68,17 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
- * Send the email verification notification.
- *
- * @return void
- */
+     * Send the email verification notification.
+     *
+     * @return void
+     */
     public function sendEmailVerificationNotification()
     {
         $this->notify(new EmailVerification); // my notification
+    }
+
+    public function user_address()
+    {
+        return $this->hasOne(UserAddress::class)->latestOfMany();
     }
 }

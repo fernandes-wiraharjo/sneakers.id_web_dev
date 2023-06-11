@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5a7d25459b496d146dd06ff241287a6",
+    "content-hash": "55c15b660129fef82bb11df1412a8462",
     "packages": [
         {
             "name": "anlutro/l4-settings",
@@ -1442,6 +1442,53 @@
                 }
             ],
             "time": "2021-12-16T16:49:26+00:00"
+        },
+        {
+            "name": "irfa/raja-ongkir",
+            "version": "v1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/irfaardy/raja-ongkir.git",
+                "reference": "ed54afd0d711a4289ff5257cd5595ca2bc0d8466"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/irfaardy/raja-ongkir/zipball/ed54afd0d711a4289ff5257cd5595ca2bc0d8466",
+                "reference": "ed54afd0d711a4289ff5257cd5595ca2bc0d8466",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Irfa\\RajaOngkir\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Irfa A",
+                    "email": "irfa.backend@protonmail.com"
+                }
+            ],
+            "description": "\"Laravel Raja Ongkir Package\"",
+            "keywords": [
+                "cek ongkir",
+                "laravel",
+                "ongkir",
+                "php",
+                "raja ongkir"
+            ],
+            "support": {
+                "issues": "https://github.com/irfaardy/raja-ongkir/issues",
+                "source": "https://github.com/irfaardy/raja-ongkir/tree/master"
+            },
+            "time": "2020-07-24T12:10:21+00:00"
         },
         {
             "name": "jackiedo/log-reader",

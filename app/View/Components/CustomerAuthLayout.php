@@ -3,6 +3,8 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
+use Illuminate\Support\Facades\Storage;
+use Modules\Brand\Repositories\BrandRepository;
 
 class CustomerAuthLayout extends Component
 {
@@ -11,9 +13,11 @@ class CustomerAuthLayout extends Component
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
+
+    protected $brandRepository;
+
+    public function __construct(BrandRepository $brandRepository) {
+        $this->brandRepository = $brandRepository;
     }
 
     /**
@@ -23,6 +27,10 @@ class CustomerAuthLayout extends Component
      */
     public function render()
     {
-        return view('display-store.auth.layout', ['comment' => 'Sign-in', 'wrapperClass' => 'w-lg-500px']);
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        $data['comment'] = 'Sign-in';
+        $data['wrapperClass'] = 'w-lg-500px';
+        return view('display-store.auth.layout', $data);
     }
 }

@@ -2257,12 +2257,22 @@ body:not(.is-tabbing) .flickity-enabled:focus {
         height: calc(100% - var(--header-height));
         max-height: calc(100% - var(--header-height))
     }
+
+    .Drawer__Content_Livewire {
+        height: calc(100% - var(--header-height));
+        max-height: calc(100% - var(--header-height))
+    }
 }
 
 @supports (width: max(100%)) {
     .Drawer__Content {
         height: max(100% - var(--header-height), 100% - 60px);
-        max-height: max(100% - var(--header-height), 100% - 60px)
+        max-height: max(100% - var(--header-height), 100% - 60px);
+    }
+
+    .Drawer__Content_Livewire {
+        height: max(100% - var(--header-height), 100% - 60px);
+        max-height: max(100% - var(--header-height), 100% - 60px);
     }
 }
 

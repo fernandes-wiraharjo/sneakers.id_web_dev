@@ -1,7 +1,12 @@
-@extends('back-office.base.base')
+@extends('display-store.store-theme._base')
 
-@section('content')
-    <div class="d-flex flex-column flex-root">
+@section('title', 'SNEAKERS.ID')
+
+@section('body')
+<div style="width: 80%;padding: 6% 0 6%; margin:auto;">
+    {{ $slot }}
+</div>
+{{-- <div class="d-flex flex-column flex-root">
         <!--begin::Authentication-->
         <div
             class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed"
@@ -39,11 +44,11 @@
                     <a href="{{ $theme->getOption('general', 'contact') }}" class="text-muted text-hover-primary px-2">{{ __('Contact Us') }}</a>
 
                     <a href="{{ $theme->getOption('product', 'purchase') }}" class="text-muted text-hover-primary px-2">{{ __('Purchase') }}</a> --}}
-                </div>
+                {{-- </div> --}}
                 <!--end::Links-->
-            </div>
+            {{-- </div> --}}
             <!--end::Footer-->
-        </div>
+        {{-- </div> --}}
         <!--end::Authentication-->
-    </div>
+    {{-- </div> --}}
 @endsection

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcheckout_web=self.webpackChunkcheckout_web||[]).push([["checkout-web-packages-packages_checkout-performance_src_utilities_ts"],{DaSs:(e,c,t)=>{function n(){return"undefined"==typeof performance?Date.now():performance.now()}t.d(c,{zO:()=>n})}}]);

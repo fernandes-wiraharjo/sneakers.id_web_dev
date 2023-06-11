@@ -6,6 +6,7 @@ use App\Http\Controllers\Administrator\LadminLogableController;
 use App\Http\Controllers\Administrator\NotificationController;
 use App\Http\Controllers\Administrator\DashboardController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Administrator\Auth\LoginController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -61,4 +62,7 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/reset-password', [LoginController::class, 'showCustomerResetPasswordForm'])->name('reset-password');
     Route::get('/verify/{token}', [LoginController::class, 'showCustomerVerifyEmailForm'])->name('verify-email');
     Route::get('/verify-email/{token}', [LoginController::class, 'verifyAccount'])->name('user.verify');
+    Route::get('/cart', [CartController::class, 'cartCheckout'])->name('cart');
+    Route::post('/checkout/c/{hashID}/order', [CartController::class, 'createOrder'])->name('checkout.order');
+    Route::post('/address/save', [DashboardController::class, 'saveAccount'])->name('address.save');
 });

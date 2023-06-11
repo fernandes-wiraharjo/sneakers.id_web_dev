@@ -19,9 +19,9 @@ class CreateUsersVerifyTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_email_verified')->default(0);
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->boolean('is_email_verified')->default(0);
+        // });
     }
 
     /**

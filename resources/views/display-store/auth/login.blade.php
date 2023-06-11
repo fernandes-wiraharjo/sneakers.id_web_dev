@@ -1,95 +1,98 @@
 <x-customer-auth-layout>
+    <div style="width: 360px;text-align-last: center;padding: 6% 0 6%; margin:auto;">
 
     <!--begin::Signin Form-->
-    <form method="POST"  action="{{ route('login') }}" class="form w-100" novalidate="novalidate"
+    <form method="POST"  action="{{ route('login') }}" novalidate="novalidate"
         id="kt_sign_in_form">
         @csrf
 
         <!--begin::Heading-->
-        <div class="text-center mb-10">
+        <div>
             <!--begin::Title-->
-            <h1 class="text-dark mb-3">
+            <h1 class="">
                 {{ __('Sign In to '. config('app.name')) }}
             </h1>
             <!--end::Title-->
-            <!--begin::Link-->
-            <div class="text-gray-400 fw-bold fs-4">New Here?
-                <a href="{{ route('customer.register') }}" class="link-primary fw-bolder">Create an Account</a>
-            </div>
-                <!--end::Link-->
         </div>
         <!--begin::Heading-->
-        <div class="fv-row mb-10 my-3">
+        <div class="">
             <x-ladmin-alert />
+            {{-- <div class="Form__Alert Alert Alert--error">
+                <ul class="Alert__ErrorList"><li class="Alert__ErrorItem">We have sent an email to aldy.satria07@gmail.com, please click the link included to verify your email address.</li></ul>
+              </div> --}}
 
             @if ($message = Session::get('success'))
-                <div class="alert alert-success alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
+                <div class="">
+                    <button type="button" class="" data-dismiss="alert">×</button>
                     <strong>{{ $message }}</strong>
                 </div>
             @endif
 
             @if ($message = Session::get('message'))
-                <div class="alert alert-success alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
+                <div class="">
+                    <button type="button" class="" data-dismiss="alert">×</button>
                     <strong>{{ $message }}</strong>
                 </div>
             @endif
         </div>
         <!--begin::Input group-->
-        <div class="fv-row mb-10">
+        <div style="padding: 10px 0px;">
             <!--begin::Label-->
-            <label class="form-label fs-6 fw-bolder text-dark">{{ __('Email') }}</label>
+            <label class="Heading u-h6">{{ __('Email') }}</label>
             <!--end::Label-->
 
             <!--begin::Input-->
-            <input class="form-control form-control-lg form-control-solid" type="email" name="email" autocomplete="off"
+            <input class="Form__Input" type="email" name="email" autocomplete="off"
                 required autofocus />
             <!--end::Input-->
         </div>
         <!--end::Input group-->
 
         <!--begin::Input group-->
-        <div class="fv-row mb-10">
+        <div style="padding: 10px 0px;">
             <!--begin::Wrapper-->
-            <div class="d-flex flex-stack mb-2">
+            <div class="">
                 <!--begin::Label-->
-                <label class="form-label fw-bolder text-dark fs-6 mb-0">{{ __('Password') }}</label>
-                <a href="{{ route('customer.forgot-password') }}" class="link-primary fs-6 fw-bolder">Forgot Password ?</a>
+                <label class="Heading u-h6">{{ __('Password') }}</label>
                 <!--end::Label-->
             </div>
             <!--end::Wrapper-->
 
             <!--begin::Input-->
-            <input class="form-control form-control-lg form-control-solid" type="password" name="password"
-                autocomplete="off" required />
+            <input class="Form__Input" type="password" name="password"
+            autocomplete="off" required />
             <!--end::Input-->
         </div>
         <!--end::Input group-->
 
         <!--begin::Input group-->
-        <div class="fv-row mb-10">
-            <label class="form-check form-check-custom form-check-solid">
-                <input class="form-check-input" type="checkbox" name="remember" />
-                <span class="form-check-label fw-bold text-gray-700 fs-6">{{ __('Remember me') }}
+        {{-- <div class="">
+            <label class="">
+                <input class="" type="checkbox" name="remember" />
+                <span class=" fw-bold text-gray-700 fs-6">{{ __('Remember me') }}
                 </span>
             </label>
-        </div>
+        </div> --}}
+        <a href="{{ route('customer.forgot-password') }}" class="l">Forgot Password ?</a>
         <!--end::Input group-->
 
         <!--begin::Actions-->
-        <div class="text-center">
+        <div style="text-align: -webkit-center;">
             <!--begin::Submit button-->
-            <button type="submit" id="kt_sign_in_submit" class="btn btn-lg btn-primary w-100 mb-5">
-                @include('back-office.partials.general._button-indicator', ['label' => __('Continue')])
+            <button type="submit" id="kt_sign_in_submit" class="Form__Submit Button Button--primary Button--full"> Continue
+                {{-- @include('back-office.partials.general._button-indicator', ['label' => __('Continue')]) --}}
             </button>
             <!--end::Submit button-->
-
         </div>
         <!--end::Actions-->
+        <!--begin::Link-->
+        <div class="">Don't have account ?
+            <a href="{{ route('customer.register') }}" class=""><strong>Create one</strong></a>
+        </div>
+            <!--end::Link-->
 
 
     </form>
     <!--end::Signin Form-->
-
+    </div>
 </x-customer-auth-layout>

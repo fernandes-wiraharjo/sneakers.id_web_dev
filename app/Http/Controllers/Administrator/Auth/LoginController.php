@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\UserVerify;
 use App\Repositories\UserRepository;
+use Modules\Brand\Repositories\BrandRepository;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Hexters\Ladmin\Http\Middleware\LadminGuestMiddleware;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class LoginController extends Controller
 {
@@ -40,9 +42,10 @@ class LoginController extends Controller
      */
     protected $repository;
 
-    public function __construct(UserRepository $repository) {
+    public function __construct(UserRepository $repository, BrandRepository $brandRepository) {
         $this->middleware([LadminGuestMiddleware::class])->except('logout');
         $this->repository = $repository;
+        $this->brandRepository = $brandRepository;
     }
 
     /**
@@ -72,7 +75,9 @@ class LoginController extends Controller
      */
     public function showCustomerRegisterForm()
     {
-        return view('display-store.auth.register');
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.register', $data);
     }
 
     /**
@@ -83,7 +88,8 @@ class LoginController extends Controller
     public function postRegistration(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
         ]);
@@ -91,6 +97,7 @@ class LoginController extends Controller
         $token = Str::random(64);
         $request['role_id'] = 2;
         $request['remember_token'] = $token;
+        $request['name'] = $request['first_name'].' '.$request['last_name'];
 
         $createUser = $this->repository->createUserCustomer($request);
 
@@ -119,7 +126,9 @@ class LoginController extends Controller
      */
     public function showCustomerForgotPasswordForm()
     {
-        return view('display-store.auth.forgot-password');
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.forgot-password', $data);
     }
 
     /**
@@ -129,7 +138,9 @@ class LoginController extends Controller
      */
     public function showCustomerConfirmPasswordForm()
     {
-        return view('display-store.auth.confirm-password');
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.confirm-password', $data);
     }
 
     /**
@@ -139,7 +150,9 @@ class LoginController extends Controller
      */
     public function showCustomerResetPasswordForm(Request $request, $token = null)
     {
-        return view('display-store.auth.reset-password')->with(
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.reset-password', $data)->with(
             ['token' => $token, 'email' => $request->email]
         );
     }
@@ -150,7 +163,10 @@ class LoginController extends Controller
      */
     public function showCustomerVerifyEmailForm($token)
     {
-        return view('display-store.auth.verify-email', compact('token'));
+        $data['token'] = $token;
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.verify-email', $data);
     }
 
     public function sendVerificationEmail($token){
@@ -187,6 +203,7 @@ class LoginController extends Controller
 
             if(!$user->is_email_verified) {
                 $update = $this->repository->updateEmailVerifiedAt($user->id);
+                $verifyUser->user->remember_token = $token;
                 $verifyUser->user->is_email_verified = 1;
                 $verifyUser->user->save();
                 $message = "Your e-mail is verified. You can now login.";

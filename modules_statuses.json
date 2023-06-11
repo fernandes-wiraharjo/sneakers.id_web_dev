@@ -8,5 +8,6 @@
     "Tag": true,
     "Faq": true,
     "FooterSetting": true,
-    "LookBook": true
+    "LookBook": true,
+    "Transaction": true
 }

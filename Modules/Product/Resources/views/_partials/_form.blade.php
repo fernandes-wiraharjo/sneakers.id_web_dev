@@ -115,7 +115,7 @@
                 <div data-repeater-item>
                     <div class="form-group row repeater-form">
                         <div class="col-1 form-check"  style="align-self: center !important;">
-                            <input class="form-check-input select-update-size" type="checkbox" name="update-size" value="" id="update_size"/>
+                            <input class="form-check-input select-update-size" type="checkbox" name="update_size" value="1" id="update_size"/>
                             <input style="display: none;" type="text" id="id" name="detail_id" value="" />
                         </div>
                         <div class="col-11">
@@ -526,11 +526,12 @@
         @endif
 
         @if($edit)
+            console.log(JSON.parse($('#product_details').val()));
             repeater.setList(JSON.parse($('#product_details').val()));
 
             @if(old() != [])
-            repeater.setList(JSON.parse($('#old_size_price').val()));
-        @endif
+                repeater.setList(JSON.parse($('#old_size_price').val()));
+            @endif
         @endif
     </script>
 @endpush

@@ -75,7 +75,7 @@ class ProductService {
 
             if(isset($request['size_price'])) {
                 foreach($request['size_price'] as $item){
-                    if(isset($item['update-size'])){
+                    if(isset($item['update_size'])){
                         $inserted_product_detail = $this->productRepository->insertProductDetails([
                             'product_id' => $idNewProduct,
                             'brand_id' => $request['brand_id'],
@@ -230,7 +230,7 @@ class ProductService {
             }
 
             foreach($request['size_price'] as $item){
-                if(isset($item['update-size'])){
+                if(isset($item['update_size'])){
                     if(isset($item['detail_id'])) {
                         $this->productRepository->updateProductDetails($item['detail_id'] ,[
                             'brand_id' => $request['brand_id'],

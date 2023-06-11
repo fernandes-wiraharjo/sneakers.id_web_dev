@@ -103,7 +103,7 @@ class ProductController extends Controller
                 'is_main.required' => 'Main image should be chosen!',
                 'products_image.0.required' => 'Image must be chosen!, at least one image',
                 'size_price.0.required' => 'Product size must be filled, at least one record!',
-                'size_price.0.update-size.required' => 'Product Size should be checked at least one size, please consider to checked a size.',
+                'size_price.0.update_size.required' => 'Product Size should be checked at least one size, please consider to checked a size.',
                 'size_price.*.size.required' => 'Size must be filled!',
                 'size_price.*.base_price.required' => 'Base price must be filled!',
                 'size_price.*.base_price.gte' => 'Base price must be not 0',
@@ -155,7 +155,7 @@ class ProductController extends Controller
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
-        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage')->get()->toJson();
+        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
         cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }
@@ -168,6 +168,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        dd($request->all());
         try {
             $old_data = $this->repository->getProductById($id);
             $data = $request->all();
@@ -179,8 +180,8 @@ class ProductController extends Controller
             if($old_data->product_code == $data['product_code']){
                 $validation = [
                     'product_code' => 'required|exists:products,product_code|max:255',
-                    'size_price.0' => 'required',
-                    'size_price.0.update-size' => 'required',
+                    // 'size_price.0' => 'required',
+                    // 'size_price.0.update_size' => 'required',
                     'size_price.*.size' => 'required',
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
@@ -189,8 +190,8 @@ class ProductController extends Controller
             } else {
                 $validation = [
                     'product_code' => 'required|unique:products,product_code|max:255',
-                    'size_price.0' => 'required',
-                    'size_price.0.update-size' => 'required',
+                    // 'size_price.0' => 'required',
+                    // 'size_price.0.update_size' => 'required',
                     'size_price.*.size' => 'required',
                     'size_price.*.base_price' => 'required|gte:0',
                     'size_price.*.retail_price' => 'required|gte:0',
@@ -203,7 +204,7 @@ class ProductController extends Controller
                 'product_code.exists' => 'Product Code must be exist!',
                 'product_code.unique' => 'Product Code must be unique and diffrent from before!',
                 'size_price.0.required' => 'Product size must be filled, at least one record!',
-                'size_price.0.update-size.required' => 'Product Size should be checked at least one size, please consider to checked a size.',
+                'size_price.0.update_size.required' => 'Product Size should be checked at least one size, please consider to checked a size.',
                 'size_price.*.size.required' => 'Size must be filled!',
                 'size_price.*.base_price.required' => 'Base price must be filled!',
                 'size_price.*.base_price.gte' => 'Base price must be not 0',

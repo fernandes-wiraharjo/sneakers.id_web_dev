@@ -65,4 +65,6 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/cart', [CartController::class, 'cartCheckout'])->name('cart');
     Route::post('/checkout/c/{hashID}/order', [CartController::class, 'createOrder'])->name('checkout.order');
     Route::post('/address/save', [DashboardController::class, 'saveAccount'])->name('address.save');
+    Route::get('/success-payment', [CheckoutController::class, 'successPayments'])->name('payment.success');
+    Route::get('/error-payment', [CheckoutController::class, 'errorPayments'])->name('payment.error');
 });

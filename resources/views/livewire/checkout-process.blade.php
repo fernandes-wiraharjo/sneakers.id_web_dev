@@ -10,6 +10,10 @@
                         <div class="_1fragem15 _1fragem8q _1fragem97 _1fragem89 _1fragem9o _1fragemaf">
                             <div class="T50Pa Layout0 Z5iCK rhUtJ">
                                 <style>
+                                    .iframe-invoice {
+                                        width: -webkit-fill-available;
+                                        height: 800px;
+                                    }
                                     .Layout0>.i602M> :nth-child(1) {
                                         flex: 0 0 100%;
                                     }
@@ -84,7 +88,7 @@
                             </div>
                             <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a _1fragem3b">
                                 <p translate="yes" class="_1x52f9s1 _1fragemaf _1x52f9sp _1fragem1l _1x52f9s2 notranslate">
-                                    Rp {{ rupiah_format($total) }}</p>
+                                    Rp {{ rupiah_format($total + intval($shippingCost)) }}</p>
                             </div>
                         </span>
                     </button>
@@ -197,7 +201,7 @@
                                                         </div>
                                                     </div>
                                                     <div role="cell" class="_1qy6ue6a">
-                                                        <span translate="yes" class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp 0</span>
+                                                        <span translate="yes" class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format(intval($shippingCost)) }}</span>
                                                     </div>
                                                 </div>
                                                 <div role="row" class="_1x41w3p1 _1fragem1b _1fragem4 _1x41w3p8">
@@ -208,7 +212,7 @@
                                                         <div class="_1fragem17 _1fragemaf _1fragem38">
                                                             <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem3 _1fragem38">
                                                                 <abbr translate="yes" class="_19gi7yt0 _19gi7ytc _1fragem1i _19gi7yt7 notranslate _19gi7ytq _1fragemal">IDR</abbr>
-                                                                <strong translate="yes" class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format($total) }}</strong>
+                                                                <strong translate="yes" class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format($total + intval($shippingCost)) }}</strong>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -298,7 +302,9 @@
                                                                                                     autocomplete="shipping email"
                                                                                                     autofocus="true"
                                                                                                     class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n"
+                                                                                                    value="{{ old('email',  $shippingEmail) }}"
                                                                                                     wire:model="shippingEmail">
+                                                                                                <input type="hidden" name="current_url" value="{{ url()->current() }}" wire:model="currentUrl">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -368,7 +374,7 @@
                                                                                                                         aria-required="false"
                                                                                                                         aria-labelledby="TextField26-label"
                                                                                                                         autocomplete="shipping given-name"
-                                                                                                                        class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n">
+                                                                                                                        class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n" wire:model="shippingFirstName">
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -389,7 +395,7 @@
                                                                                                                         aria-required="true"
                                                                                                                         aria-labelledby="TextField27-label"
                                                                                                                         autocomplete="shipping family-name"
-                                                                                                                        class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n">
+                                                                                                                        class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n" wire:model="shippingLastName">
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -456,7 +462,7 @@
                                                                                                                             <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kode Pos</span>
                                                                                                                         </span>
                                                                                                                     </label>
-                                                                                                                    <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd" wire:change="updateDistrict($event.target.value)">
+                                                                                                                    <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd" wire:model="shippingZipCode">
                                                                                                                         <option value="" selected>Pilih Kodepos</option>
                                                                                                                         @if(auth()->check())
                                                                                                                             @if($postalCode == [])
@@ -819,109 +825,67 @@
                                                                     <div class="s_qAq">
                                                                         <section aria-label="Shipping method"
                                                                             class="_1fragem15 _1fragemaf">
-                                                                            <div
-                                                                                class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
-                                                                                <div
-                                                                                    class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
+                                                                            <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
+                                                                                <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
                                                                                     <h2 id="step-section-primary-header"
                                                                                         tabindex="-1"
                                                                                         class="n8k95w1 _1fragemaf n8k95w3">
                                                                                         Shipping method</h2>
                                                                                 </div>
-                                                                                <div
-                                                                                    class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
+                                                                                <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
                                                                                     <fieldset id="shipping_methods">
-                                                                                        <div
-                                                                                            class="_1fragem15 _1fragemah _1fragemaf">
-                                                                                            <legend>Choose a shipping
-                                                                                                method</legend>
+                                                                                        <div class="_1fragem15 _1fragemah _1fragemaf">
+                                                                                            <legend>Choose a shipping method</legend>
                                                                                         </div>
-                                                                                        <div
-                                                                                            class="Wo4qW m5ItP NDMe9 NdTJE PuVf0">
-                                                                                            <div
-                                                                                                class="B4zH6 Zb82w HKtYc OpmPd">
-                                                                                                <label
-                                                                                                    for="shipping_methods-b9c217e514b07424b6b7a84c20168549-bf70360ee54f1d127f508b53f7c21351"
-                                                                                                    class="yL8c2 D1RJr">
-                                                                                                    <div class="hEGyz">
-                                                                                                        <div
-                                                                                                            class="_1fragemaf">
-                                                                                                            <input
-                                                                                                                type="radio"
-                                                                                                                id="shipping_methods-b9c217e514b07424b6b7a84c20168549-bf70360ee54f1d127f508b53f7c21351"
-                                                                                                                name="shipping_methods"
-                                                                                                                class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="f5aCe">
-                                                                                                            <div>
-                                                                                                                <p
-                                                                                                                    class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
-                                                                                                                    FREE
-                                                                                                                    SHIPPING
-                                                                                                                    (Max
-                                                                                                                    Rp.12.000,-)
-                                                                                                                </p>
-                                                                                                            </div>
-                                                                                                            <div><span
-                                                                                                                    translate="yes"
-                                                                                                                    class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">Rp3,000.00</span>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </label>
+                                                                                        @foreach($shippingCourier as $courierVendor)
+                                                                                            <div style="padding: 10px 0px;">
+                                                                                                {{ strtoupper($courierVendor['code']) }}
                                                                                             </div>
-                                                                                            <div class="B4zH6"><label
-                                                                                                    for="shipping_methods-b9c217e514b07424b6b7a84c20168549-848ab1619f64c8e414ee5cc0204ec3be"
-                                                                                                    class="yL8c2 D1RJr">
-                                                                                                    <div class="hEGyz">
-                                                                                                        <div
-                                                                                                            class="_1fragemaf">
-                                                                                                            <input
-                                                                                                                type="radio"
-                                                                                                                id="shipping_methods-b9c217e514b07424b6b7a84c20168549-848ab1619f64c8e414ee5cc0204ec3be"
-                                                                                                                name="shipping_methods"
-                                                                                                                class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="f5aCe">
-                                                                                                            <div>
-                                                                                                                <p
-                                                                                                                    class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
-                                                                                                                    JNE
-                                                                                                                    REG
-                                                                                                                    (3-4
-                                                                                                                    Days)
-                                                                                                                </p>
+                                                                                            <div class="Wo4qW m5ItP NDMe9 NdTJE PuVf0">
+                                                                                                @foreach($courierVendor['costs'] as $serviceCourier)
+                                                                                                <div class="B4zH6">
+                                                                                                    <label class="yL8c2 D1RJr">
+                                                                                                        <div class="hEGyz">
+                                                                                                            <div class="_1fragemaf">
+                                                                                                                <input type="radio" name="shipping_methods" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe" value="{{intval($serviceCourier['cost'][0]['value'])}}" wire:click="updateShippingCost({{ intval($serviceCourier['cost'][0]['value']) }}, '{{ strtoupper($courierVendor['code']) }}', '{{ $serviceCourier['service'] }}', '{{ $serviceCourier['cost'][0]['etd'] }}', '{{ $total }}')" >
                                                                                                             </div>
-                                                                                                            <div><span
-                                                                                                                    translate="yes"
-                                                                                                                    class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">Rp15,000.00</span>
+                                                                                                            <div class="f5aCe">
+                                                                                                                <div>
+                                                                                                                    <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
+                                                                                                                        {{ strtoupper($courierVendor['code']) }} {{ $serviceCourier['service'] }} ({{ $serviceCourier['cost'][0]['etd'] }} Days)
+                                                                                                                    </p>
+                                                                                                                </div>
+                                                                                                                <div>
+                                                                                                                    <span translate="yes" class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">
+                                                                                                                        Rp {{ rupiah_format(intval($serviceCourier['cost'][0]['value'])) }}
+                                                                                                                    </span>
+                                                                                                                </div>
                                                                                                             </div>
                                                                                                         </div>
-                                                                                                    </div>
-                                                                                                </label></div>
-                                                                                        </div>
+                                                                                                    </label>
+                                                                                                </div>
+                                                                                                @endforeach
+                                                                                            </div>
+                                                                                        @endforeach
+
                                                                                     </fieldset>
                                                                                 </div>
                                                                             </div>
                                                                         </section>
                                                                     </div>
                                                                     <div class="oQEAZ WD4IV">
-                                                                        <div><button type="submit"
-                                                                                class="QT4by rqC98 hodFu VDIfJ j6D1f janiy"><span
-                                                                                    class="AjwsM">Continue to
-                                                                                    payment</span></button></div>
-                                                                        <div><a href="https://www.staycoolsocks.com/checkouts/c/77dc866d65964fbe39beb323572042a6/information"
-                                                                                class="QT4by eVFmT j6D1f janiy adBMs"><span
-                                                                                    class="AjwsM">
-                                                                                    <div
-                                                                                        class="_1fragem17 _1fragemaf _1fragem38">
-                                                                                        <div
-                                                                                            class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
-                                                                                            <span
-                                                                                                class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum"><svg
-                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                        <div>
+                                                                            <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy" wire:click="shippingStepSubmit">
+                                                                                <span class="AjwsM">Continue to payment</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div>
+                                                                            <a href="#" class="QT4by eVFmT j6D1f janiy adBMs" wire:click="back(1)">
+                                                                                <span class="AjwsM">
+                                                                                    <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                                        <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum">
+                                                                                                <svg xmlns="http://www.w3.org/2000/svg"
                                                                                                     viewBox="0 0 14 14"
                                                                                                     focusable="false"
                                                                                                     aria-hidden="true"
@@ -931,33 +895,33 @@
                                                                                                         stroke-linejoin="round"
                                                                                                         d="M8.4 11.9 3.748 7.248a.35.35 0 0 1 0-.495L8.4 2.1">
                                                                                                     </path>
-                                                                                                </svg></span><span
-                                                                                                class="_19gi7yt0 _19gi7yte _1fragem1j">Return
-                                                                                                to information</span>
+                                                                                                </svg>
+                                                                                            </span>
+                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j">Return to information</span>
                                                                                         </div>
                                                                                     </div>
-                                                                                </span></a></div>
+                                                                                </span>
+                                                                            </a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="_1fragem15 _1fragemah _1fragemaf"><button
-                                                                type="submit" tabindex="-1" aria-hidden="true">Continue
-                                                                to payment</button></div>
+                                                        <div class="_1fragem15 _1fragemah _1fragemaf">
+                                                            <button type="submit" tabindex="-1" aria-hidden="true">
+                                                                Continue to payment
+                                                            </button>
+                                                        </div>
                                                     </form>
                                                 </main>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-danger" type="button" wire:click="back(1)">Back</button>
-                                <button class="btn btn-primary" type="button"
-                                    wire:click="shippingStepSubmit">Next</button>
                             </div>
 
                             {{-- Step 3 --}}
                             <div id="step3" style="display: {{ $currentStep != 3 ? 'none' : '' }}">
-                                Payment
                                 <div class="I_61l">
                                     <div class="tAyc6">
                                         <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
@@ -967,262 +931,105 @@
                                                         class="Z8Nx4 lT5DX">
                                                         <div role="row" class="NSCO_">
                                                             <div class="Qk5zF">
-                                                                <div role="cell" class="w3cHO"><span
-                                                                        class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Contact</span>
+                                                                <div role="cell" class="w3cHO">
+                                                                    <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Contact</span>
                                                                 </div>
-                                                                <div role="cell" class="nkp8r"><bdo dir="ltr"
-                                                                        class="_19gi7yt0 _19gi7yte _1fragem1j">aldy.satria07@gmail.com</bdo>
+                                                                <div role="cell" class="nkp8r">
+                                                                    <bdo dir="ltr" class="_19gi7yt0 _19gi7yte _1fragem1j">{{ $shippingEmail }}</bdo>
                                                                 </div>
                                                             </div>
-                                                            <div role="cell"><a
-                                                                    href="https://www.staycoolsocks.com/checkouts/c/77dc866d65964fbe39beb323572042a6/information"
-                                                                    aria-label="Change contact information"
-                                                                    class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam"><span
-                                                                        class="_19gi7yt0 _19gi7ytc _1fragem1i">Change</span></a>
+                                                            <div role="cell">
+                                                                <a href="#" wire:click="back(1)" aria-label="Change contact information" class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam">
+                                                                    <span class="_19gi7yt0 _19gi7ytc _1fragem1i">Change</span>
+                                                                </a>
                                                             </div>
                                                         </div>
                                                         <div role="row" class="NSCO_">
                                                             <div class="Qk5zF">
-                                                                <div role="cell" class="w3cHO"><span
-                                                                        class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Ship
-                                                                        to</span></div>
+                                                                <div role="cell" class="w3cHO">
+                                                                    <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Ship to</span>
+                                                                </div>
                                                                 <div role="cell" class="nkp8r">
                                                                     <div
                                                                         class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
                                                                         <address class="_19gi7yt0 _19gi7yte _1fragem1j">
-                                                                            Jl. Kayu Gede 2 ,ex Villa Mutiara RT.2 RW.4,
-                                                                            Kel. Paku Jaya, Serpong Utara (Pintu No.25),
-                                                                            Serpong Utara, Tangerang Selatan, Banten
-                                                                            15324, Indonesia</address>
+                                                                            {{  $shippingAddress }}
+                                                                        </address>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div role="cell"><a
-                                                                    href="https://www.staycoolsocks.com/checkouts/c/77dc866d65964fbe39beb323572042a6/information"
-                                                                    aria-label="Change shipping address"
-                                                                    class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam"><span
-                                                                        class="_19gi7yt0 _19gi7ytc _1fragem1i">Change</span></a>
+                                                            <div role="cell">
+                                                                <a href="#" aria-label="Change shipping address" class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam" wire:click="back(1)">
+                                                                    <span class="_19gi7yt0 _19gi7ytc _1fragem1i">Change</span>
+                                                                </a>
                                                             </div>
                                                         </div>
+                                                        @if($selectedCourier != [])
                                                         <div role="row" class="NSCO_">
                                                             <div class="Qk5zF">
-                                                                <div role="cell" class="w3cHO"><span
-                                                                        class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Method</span>
+                                                                <div role="cell" class="w3cHO">
+                                                                    <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Method</span>
                                                                 </div>
                                                                 <div role="cell" class="nkp8r">
-                                                                    <div
-                                                                        class="_1ip0g651 _1fragem1b _1fragemaf _1fragem24 _1fragem2l">
-                                                                        <div
-                                                                            class="_1ip0g651 _1fragem1b _1fragemaf _1fragem24 _1fragem2l">
-                                                                            <p
-                                                                                class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
-                                                                                FREE SHIPPING (Max Rp.12.000,-) · <span
-                                                                                    class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">Rp3,000.00</span>
+                                                                    <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem24 _1fragem2l">
+                                                                        <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem24 _1fragem2l">
+                                                                            <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
+                                                                                {{ $selectedCourier['courier'] }} {{ $selectedCourier['service'] }} ({{ $selectedCourier['etd'] }} Days)
+                                                                                <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">Rp {{ rupiah_format(intval($selectedCourier['cost'])) }}</span>
                                                                             </p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div role="cell"><a
-                                                                    href="https://www.staycoolsocks.com/checkouts/c/77dc866d65964fbe39beb323572042a6/shipping"
-                                                                    aria-label="Change shipping method"
-                                                                    class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam"><span
-                                                                        class="_19gi7yt0 _19gi7ytc _1fragem1i">Change</span></a>
+                                                            <div role="cell">
+                                                                <a href="#" aria-label="Change shipping method" class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam" wire:click="back(2)">
+                                                                    <span class="_19gi7yt0 _19gi7ytc _1fragem1i">Change</span>
+                                                                </a>
                                                             </div>
                                                         </div>
+                                                        @endif
                                                     </div>
                                                 </section>
                                                 <main id="checkout-main">
                                                     <div>
-                                                        <form action="" method="POST" novalidate="" id="Form13"
-                                                            class="_1fragem16">
+                                                        <form action="" method="POST" novalidate="" id="Form13" class="_1fragem16">
                                                             <div class="_1fragemaf">
                                                                 <div class="VheJw">
                                                                     <div class="s_qAq">
-                                                                        <section aria-label="Gift card or discount code"
-                                                                            class="_1fragem15 _1fragemaf">
-                                                                            <div
-                                                                                class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
-                                                                                <h2 id="step-section-primary-header"
-                                                                                    class="n8k95w1 _1fragemaf n8k95w3">
-                                                                                    Gift card or discount code</h2>
-                                                                                <div
-                                                                                    class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1w _1fragem2d">
-                                                                                    <section
-                                                                                        class="_1fragem15 _1fragemaf">
-                                                                                        <div
-                                                                                            class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
-                                                                                            <div class="_1fragemaf">
-                                                                                                <div class="_1fragemaf _1fragem1b _1mrl40q2 _1fragem1r _1fragem25 _16s97g73 _16s97g75 _16s97g7b _16s97g7d"
-                                                                                                    style="--_16s97g72: 1fr; --_16s97g74: minmax(auto, max-content); --_16s97g7a: minmax(0, 1fr) minmax(auto, max-content); --_16s97g7c: minmax(auto, max-content);">
-                                                                                                    <div class="_7ozb2u2 _1fragem1r _1fragem28 _1fragemaf _1fragem1b _10vrn9p1 _10vrn9p0 _10vrn9p6">
-                                                                                                        <div
-                                                                                                            class="_1fragemaf">
-                                                                                                            <label
-                                                                                                                id="TextField25-label"
-                                                                                                                for="TextField25"
-                                                                                                                class="cektnc3 _1fragemad _1fragemac _1fragem9v _1fragemb4 _1fragemat _1fragemap _1fragemb2"><span
-                                                                                                                    class="cektnc9"><span
-                                                                                                                        class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Gift
-                                                                                                                        card
-                                                                                                                        or
-                                                                                                                        discount
-                                                                                                                        code</span></span></label>
-                                                                                                            <div
-                                                                                                                class="_7ozb2u4 _1fragemaf _1fragem1b _1fragem14 _1fragemat _1fragemap _1fragemb2 _1fragemb3 _7ozb2uc _7ozb2un _7ozb2up _7ozb2uj">
-                                                                                                                <input
-                                                                                                                    id="TextField25"
-                                                                                                                    name="reductions"
-                                                                                                                    placeholder="Gift card or discount code"
-                                                                                                                    type="text"
-                                                                                                                    aria-labelledby="TextField25-label"
-                                                                                                                    form="Form14"
-                                                                                                                    class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2u15 _7ozb2u1n">
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div><button
-                                                                                                        type="submit"
-                                                                                                        form="Form14"
-                                                                                                        disabled=""
-                                                                                                        aria-label="Apply Discount Code"
-                                                                                                        class="QT4by rqC98 EbLsk VDIfJ janiy Fox6W hlBcn"><span class="AjwsM">
-                                                                                                            <div
-                                                                                                                class="_1fragem16 _123qrzt1">
-                                                                                                                Apply
-                                                                                                            </div>
-                                                                                                            <div
-                                                                                                                class="_1fragem16 _123qrzt2 _123qrzt3">
-                                                                                                                <span
-                                                                                                                    class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wui a8x1wuf a8x1wum"><svg
-                                                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                                                        viewBox="0 0 14 14"
-                                                                                                                        focusable="false"
-                                                                                                                        aria-hidden="true"
-                                                                                                                        class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
-                                                                                                                        <path
-                                                                                                                            stroke-linecap="round"
-                                                                                                                            stroke-linejoin="round"
-                                                                                                                            d="M1.4 7h11.2m0 0L7.7 2.1M12.6 7l-4.9 4.9">
-                                                                                                                        </path>
-                                                                                                                    </svg></span>
-                                                                                                            </div>
-                                                                                                        </span></button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div
-                                                                                                class="_1fragem15 _1fragemah _1fragemaf">
-                                                                                                <button type="submit"
-                                                                                                    tabindex="-1"
-                                                                                                    aria-hidden="true"
-                                                                                                    form="Form14">Submit</button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </section>
-                                                                                </div>
-                                                                            </div>
-                                                                        </section>
-                                                                        <section aria-label="Payment"
-                                                                            class="_1fragem15 _1fragemaf">
-                                                                            <div
-                                                                                class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
-                                                                                <div
-                                                                                    class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1r _1fragem28">
+                                                                        <section aria-label="Payment" class="_1fragem15 _1fragemaf">
+                                                                            <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
+                                                                                <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1r _1fragem28">
                                                                                     <h2 id="step-section-primary-header"
                                                                                         tabindex="-1"
                                                                                         class="n8k95w1 _1fragemaf n8k95w3">
                                                                                         Payment</h2>
-                                                                                    <p
-                                                                                        class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j _1x52f9sf">
+                                                                                    <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j _1x52f9sf">
                                                                                         All transactions are secure and
                                                                                         encrypted.</p>
                                                                                 </div>
                                                                                 <fieldset id="basic">
-                                                                                    <div
-                                                                                        class="_1fragem15 _1fragemah _1fragemaf">
-                                                                                        <legend>Choose a payment method
+                                                                                    <div class="_1fragem15 _1fragemah _1fragemaf">
+                                                                                        <legend>
+                                                                                            Choose a payment method
                                                                                         </legend>
                                                                                     </div>
-                                                                                    <div
-                                                                                        class="Wo4qW m5ItP NDMe9 NdTJE PuVf0">
-                                                                                        <div
-                                                                                            class="B4zH6 Zb82w HKtYc OpmPd">
-                                                                                            <label for="basic-NANTIAJA"
-                                                                                                class="yL8c2 D1RJr">
+                                                                                    <div class="Wo4qW m5ItP NDMe9 NdTJE PuVf0">
+                                                                                        <div class="B4zH6">
+                                                                                            <label for="basic-Payments via Midtrans" class="yL8c2 D1RJr">
                                                                                                 <div class="hEGyz">
                                                                                                     <div class="_1fragemaf">
-                                                                                                        <input
-                                                                                                            type="radio"
-                                                                                                            id="basic-NANTIAJA"
-                                                                                                            name="basic"
-                                                                                                            class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
+                                                                                                        <input type="radio" id="basic-Payments via Midtrans" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
                                                                                                     </div>
                                                                                                     <div class="f5aCe">
-                                                                                                        <div><span
-                                                                                                                class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">NANTIAJA</span>
+                                                                                                        <div>
+                                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">
+                                                                                                                Payments via Xendit
+                                                                                                            </span>
                                                                                                         </div>
                                                                                                         <div>
-                                                                                                            <div
-                                                                                                                class="wAAjh">
-                                                                                                                <div
-                                                                                                                    class="_1fragem17 _1fragemaf _1fragem38">
-                                                                                                                    <div
-                                                                                                                        class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1r _1fragem28 _1fragem0 _1fragem4 _1fragem38">
-                                                                                                                        <img alt=""
-                                                                                                                            src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/70a085fd717ea53c5ec7.svg"
-                                                                                                                            role="img"
-                                                                                                                            width="38"
-                                                                                                                            height="24"
-                                                                                                                            class="_1tgdqw61 _1fragem46 _1fragem4b _1fragem4l _1fragem4g _1fragemat _1fragemap _1fragemb2 _1fragem33"><img
-                                                                                                                            alt=""
-                                                                                                                            src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/a6fc5c1724fb332d147f.svg"
-                                                                                                                            role="img"
-                                                                                                                            width="38"
-                                                                                                                            height="24"
-                                                                                                                            class="_1tgdqw61 _1fragem46 _1fragem4b _1fragem4l _1fragem4g _1fragemat _1fragemap _1fragemb2 _1fragem33"><img
-                                                                                                                            alt=""
-                                                                                                                            src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/5e3b05b68f3d31b87e84.svg"
-                                                                                                                            role="img"
-                                                                                                                            width="38"
-                                                                                                                            height="24"
-                                                                                                                            class="_1tgdqw61 _1fragem46 _1fragem4b _1fragem4l _1fragem4g _1fragemat _1fragemap _1fragemb2 _1fragem33"><img
-                                                                                                                            alt=""
-                                                                                                                            src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/0169695890db3db16bfe.svg"
-                                                                                                                            role="img"
-                                                                                                                            width="38"
-                                                                                                                            height="24"
-                                                                                                                            class="_1tgdqw61 _1fragem46 _1fragem4b _1fragem4l _1fragem4g _1fragemat _1fragemap _1fragemb2 _1fragem33">
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </label>
-                                                                                        </div>
-                                                                                        <div class="B4zH6"><label
-                                                                                                for="basic-Payments via Midtrans"
-                                                                                                class="yL8c2 D1RJr">
-                                                                                                <div class="hEGyz">
-                                                                                                    <div class="_1fragemaf">
-                                                                                                        <input
-                                                                                                            type="radio"
-                                                                                                            id="basic-Payments via Midtrans"
-                                                                                                            name="basic"
-                                                                                                            class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
-                                                                                                    </div>
-                                                                                                    <div class="f5aCe">
-                                                                                                        <div><span
-                                                                                                                class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">Payments
-                                                                                                                via
-                                                                                                                Midtrans</span>
-                                                                                                        </div>
-                                                                                                        <div>
-                                                                                                            <div
-                                                                                                                class="wAAjh">
-                                                                                                                <div
-                                                                                                                    class="_1fragem17 _1fragemaf _1fragem38">
-                                                                                                                    <div
-                                                                                                                        class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1r _1fragem28 _1fragem0 _1fragem4 _1fragem38">
+                                                                                                            <div class="wAAjh">
+                                                                                                                <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                                                                    <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1r _1fragem28 _1fragem0 _1fragem4 _1fragem38">
                                                                                                                         <img alt=""
                                                                                                                             src="https://cdn.shopify.com/shopifycloud/checkout-web/assets/a682f971fb8ae9f2351a.svg"
                                                                                                                             role="img"
@@ -1255,37 +1062,13 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </label></div>
-                                                                                        <div class="B4zH6"><label
-                                                                                                for="basic-customManualPayment-6881345581"
-                                                                                                class="yL8c2 D1RJr">
-                                                                                                <div class="hEGyz">
-                                                                                                    <div class="_1fragemaf">
-                                                                                                        <input
-                                                                                                            type="radio"
-                                                                                                            id="basic-customManualPayment-6881345581"
-                                                                                                            name="basic"
-                                                                                                            class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
-                                                                                                    </div>
-                                                                                                    <div class="f5aCe">
-                                                                                                        <div><span
-                                                                                                                class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">BCA</span>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
                                                                                             </label>
-                                                                                            <div id="basic-customManualPayment-6881345581-collapsible"
-                                                                                                hidden=""
-                                                                                                class="_94sxtb1 _1fragem7q _1fragem7s _1fragemaf _1fragemav _1fragemaq _1fragemaz"
-                                                                                                style="height: 0px;">
-                                                                                                <div></div>
-                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </fieldset>
                                                                             </div>
                                                                         </section>
-                                                                        <section aria-label="Billing address"
+                                                                        {{-- <section aria-label="Billing address"
                                                                             class="_1fragem15 _1fragemaf">
                                                                             <div
                                                                                 class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
@@ -1353,22 +1136,21 @@
                                                                                     </div>
                                                                                 </fieldset>
                                                                             </div>
-                                                                        </section>
+                                                                        </section> --}}
                                                                     </div>
                                                                     <div class="oQEAZ WD4IV">
-                                                                        <div><button type="submit"
-                                                                                class="QT4by rqC98 hodFu VDIfJ j6D1f janiy"><span
-                                                                                    class="AjwsM">Pay
-                                                                                    now</span></button></div>
-                                                                        <div><a href="https://www.staycoolsocks.com/checkouts/c/77dc866d65964fbe39beb323572042a6/shipping"
-                                                                                class="QT4by eVFmT j6D1f janiy adBMs"><span
-                                                                                    class="AjwsM">
-                                                                                    <div
-                                                                                        class="_1fragem17 _1fragemaf _1fragem38">
-                                                                                        <div
-                                                                                            class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
-                                                                                            <span
-                                                                                                class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum"><svg
+                                                                        <div>
+                                                                            <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy"  wire:click="paymentStepSubmit">
+                                                                                <span class="AjwsM">Pay now</span>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div>
+                                                                            <a href="#" class="QT4by eVFmT j6D1f janiy adBMs" wire:click="back(2)">
+                                                                                <span class="AjwsM">
+                                                                                    <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                                        <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum">
+                                                                                                <svg
                                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                                     viewBox="0 0 14 14"
                                                                                                     focusable="false"
@@ -1379,24 +1161,27 @@
                                                                                                         stroke-linejoin="round"
                                                                                                         d="M8.4 11.9 3.748 7.248a.35.35 0 0 1 0-.495L8.4 2.1">
                                                                                                     </path>
-                                                                                                </svg></span><span
-                                                                                                class="_19gi7yt0 _19gi7yte _1fragem1j">Return
-                                                                                                to shipping</span>
+                                                                                                </svg>
+                                                                                            </span>
+                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j">Return to shipping</span>
                                                                                         </div>
                                                                                     </div>
-                                                                                </span></a></div>
+                                                                                </span>
+                                                                            </a>
+                                                                        </div>
                                                                     </div>
                                                                     <div class="_1fragem16 _123qrzt1">
                                                                         <div class="_16s97g713"></div>
-                                                                        <p
-                                                                            class="_1x52f9s1 _1fragemaf _1x52f9sj _1fragem1i _1fragemaj _1x52f9sf">
+                                                                        <p class="_1x52f9s1 _1fragemaf _1x52f9sj _1fragem1i _1fragemaj _1x52f9sf">
                                                                         </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="_1fragem15 _1fragemah _1fragemaf"><button
-                                                                    type="submit" tabindex="-1" aria-hidden="true">Pay
-                                                                    now</button></div>
+                                                            <div class="_1fragem15 _1fragemah _1fragemaf">
+                                                                <button type="submit" tabindex="-1" aria-hidden="true" wire:click="paymentStepSubmit">
+                                                                    Pay now
+                                                                </button>
+                                                            </div>
                                                         </form>
                                                     </div>
                                                 </main>
@@ -1404,26 +1189,74 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-danger" type="button" wire:click="back(2)">Back</button>
-                                <button class="btn btn-success" type="button"
-                                    wire:click="paymentStepSubmit">Next</button>
                             </div>
+                            {{-- Step 4 --}}
+                            <div id="step4" style="display: {{ $currentStep != 4 ? 'none' : '' }}">
+                                @if($invoiceUrl != [])
+                                    <div class="I_61l">
+                                        @isset($invoiceUrl['message'])
+                                            {{ $invoiceUrl['message'] }}
+                                            <div class="oQEAZ WD4IV">
+                                                <div>
+                                                    <a href="#" class="QT4by eVFmT j6D1f janiy adBMs" wire:click="back(3)">
+                                                        <span class="AjwsM">
+                                                            <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
+                                                                    <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum">
+                                                                        <svg
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            viewBox="0 0 14 14"
+                                                                            focusable="false"
+                                                                            aria-hidden="true"
+                                                                            class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
+                                                                            <path
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                d="M8.4 11.9 3.748 7.248a.35.35 0 0 1 0-.495L8.4 2.1">
+                                                                            </path>
+                                                                        </svg>
+                                                                    </span>
+                                                                    <span class="_19gi7yt0 _19gi7yte _1fragem1j">Return to payment</span>
+                                                                </div>
+                                                            </div>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
 
+                                        @endisset
+                                        @isset($invoiceUrl['invoice_url'])
+                                            <iframe id="iframe-invoice" class="iframe-invoice" title="Invoice" src="{{ $invoiceUrl['invoice_url'] }}">
+                                            </iframe>
+                                        @endisset
+                                    </div>
+                                @endif
+                            </div>
                             <footer role="contentinfo" class="QDqGb">
                                 <div class="HgABA">
                                     <div class="_1fragem17 _1fragemaf _1fragem38">
-                                        <div
-                                            class="_5uqybw2 _1fragem17 _1fragem9r _1fragem2 _1fragem6 _1fragem1r _1fragem25 _1fragem38">
-                                            <button type="button" aria-haspopup="dialog"
-                                                class="QT4by eVFmT janiy mRJ8x"><span class="AjwsM"><span
-                                                        class="_19gi7yt0 _19gi7ytc _1fragem1i">Refund
-                                                        policy</span></span></button><button type="button"
-                                                aria-haspopup="dialog" class="QT4by eVFmT janiy mRJ8x"><span
-                                                    class="AjwsM"><span class="_19gi7yt0 _19gi7ytc _1fragem1i">Privacy
-                                                        policy</span></span></button><button type="button"
-                                                aria-haspopup="dialog" class="QT4by eVFmT janiy mRJ8x"><span
-                                                    class="AjwsM"><span class="_19gi7yt0 _19gi7ytc _1fragem1i">Terms of
-                                                        service</span></span></button>
+                                        <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem2 _1fragem6 _1fragem1r _1fragem25 _1fragem38">
+                                            <button type="button" aria-haspopup="dialog" class="QT4by eVFmT janiy mRJ8x">
+                                                <span class="AjwsM">
+                                                    <span class="_19gi7yt0 _19gi7ytc _1fragem1i">
+                                                        Refund policy
+                                                    </span>
+                                                </span>
+                                            </button>
+                                            <button type="button" aria-haspopup="dialog" class="QT4by eVFmT janiy mRJ8x">
+                                                <span class="AjwsM">
+                                                    <span class="_19gi7yt0 _19gi7ytc _1fragem1i">
+                                                        Privacy policy
+                                                    </span>
+                                                </span>
+                                            </button>
+                                            <button type="button" aria-haspopup="dialog" class="QT4by eVFmT janiy mRJ8x">
+                                                <span class="AjwsM">
+                                                    <span class="_19gi7yt0 _19gi7ytc _1fragem1i">
+                                                        Terms of service
+                                                    </span>
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -1557,7 +1390,7 @@
                                             </div>
                                         </div>
                                         <div role="cell" class="_1qy6ue6a"><span translate="yes"
-                                                class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp 0</span>
+                                                class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{  rupiah_format(intval($shippingCost)) }}</span>
                                         </div>
                                     </div>
                                     <div role="row" class="_1x41w3p1 _1fragem1b _1fragem4 _1x41w3p8">
@@ -1571,7 +1404,7 @@
                                                     <abbr translate="yes"
                                                         class="_19gi7yt0 _19gi7ytc _1fragem1i _19gi7yt7 notranslate _19gi7ytq _1fragemal">IDR</abbr><strong
                                                         translate="yes"
-                                                        class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format($total) }}</strong>
+                                                        class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format($total + intval($shippingCost)) }}</strong>
                                                 </div>
                                             </div>
                                         </div>

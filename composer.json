@@ -26,6 +26,7 @@
         "realrashid/sweet-alert": "^5.0",
         "spatie/laravel-activitylog": "^4.0",
         "spatie/laravel-slack-alerts": "^1.2",
+        "xendit/xendit-php": "^2.19",
         "yajra/laravel-datatables": "^1.5",
         "yajra/laravel-datatables-buttons": "^4.10",
         "yajra/laravel-datatables-oracle": "^9.19"

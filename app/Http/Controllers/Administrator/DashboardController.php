@@ -24,7 +24,9 @@ class DashboardController extends Controller {
      * @return \Illuminate\Http\Response
      */
   public function index() {
-    dd(CekOngkir::CostCourier());
+    // $resp = CekOngkir::CostCourier();
+    // dump(CekOngkir::CostRangeCourier($resp));
+    // dd($resp);
     if(auth()->user()->can('administrator.product.index')){
         return redirect(route('administrator.product.index'));
     }

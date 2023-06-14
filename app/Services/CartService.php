@@ -130,7 +130,7 @@ class CartService {
     /**
      * Returns total price of the items in the cart.
      *
-     * @return string
+     * @return int
      */
     public function total(): int
     {
@@ -139,6 +139,22 @@ class CartService {
         $total = $content->reduce(function ($total, $item) {
             $price = $item->get('discount_price') != 0 ? $item->get('discount_price') : $item->get('retail_price');
             return $total += $price * $item->get('quantity');
+        });
+
+        return $total ?? 0;
+    }
+
+    /**
+     * Returns total price of the items in the cart.
+     *
+     * @return int
+     */
+    public function totalQuantity(): int
+    {
+        $content = $this->getContent();
+
+        $total = $content->reduce(function ($total, $item) {
+            return $total += $item->get('quantity');
         });
 
         return $total ?? 0;

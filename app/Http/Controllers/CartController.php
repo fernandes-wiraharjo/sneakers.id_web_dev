@@ -42,8 +42,13 @@ class CartController extends Controller
     }
 
     public function createOrder(Request $request) {
+        if(!auth()->check()){
+            return redirect()->route('customer.login');
+        }
+
         $data['total'] = Cart::total();
         $data['items'] = Cart::content();
+        $data['notes'] = $request->note;
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('display-store.cart.checkout-order', $data);

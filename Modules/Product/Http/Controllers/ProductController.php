@@ -168,7 +168,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->all());
         try {
             $old_data = $this->repository->getProductById($id);
             $data = $request->all();

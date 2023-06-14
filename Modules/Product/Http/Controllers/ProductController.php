@@ -70,7 +70,7 @@ class ProductController extends Controller
 
             if(isset($request['size_price'])) {
                 foreach($size_price as $index => $item){
-                    if(isset($item['update-size'])){
+                    if(isset($item['update_size'])){
                         // dd(intval( str_replace('.','',$item['base_price'])));
                         $size_price[$index]['base_price'] = intval( str_replace('.','',$item['base_price']));
                         $size_price[$index]['retail_price'] = intval(str_replace('.','',$item['retail_price'] ));
@@ -90,7 +90,7 @@ class ProductController extends Controller
                 // 'products_image.*' => 'image|max:2048',
                 'products_image.0' => 'required',
                 'size_price.0' => 'required',
-                'size_price.0.update-size' => 'required',
+                'size_price.0.update_size' => 'required',
                 'size_price.*.size' => 'required',
                 'size_price.*.base_price' => 'required|gte:0',
                 'size_price.*.retail_price' => 'required|gte:0',

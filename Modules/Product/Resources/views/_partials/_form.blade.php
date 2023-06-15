@@ -11,7 +11,7 @@
     <input type="text" placeholder="Product Name" class="form-control" name="product_name" id="product_name" required
         value="{{ old('product_name', $product->product_name) }}">
 </x-ladmin-form-group>
-<x-ladmin-form-group name="product_link" label="Link *">
+<x-ladmin-form-group name="product_link" label="Tokopedia Link *">
     <input type="text" placeholder="Product Link" class="form-control" name="product_link" id="product_link" required
     value="{{ old('product_link', $product->product_link) }}">
 </x-ladmin-form-group>

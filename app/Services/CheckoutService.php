@@ -37,7 +37,7 @@ class CheckoutService {
 
         $data = json_decode(json_encode($args), true);
         $defParams['failure_redirect_url'] = $data['error_redirect_url'];
-        $defParams['success_redirect_url'] = $data['success_redirect_url'];
+        $defParams['success_redirect_url'] = $data['success_redirect_url'].'/'.$defParams['external_id'];
         $defParams['customer'] = $data['customer'];
         $defParams['items'] = $data['items'];
         $defParams['fees'] = $data['fees'];

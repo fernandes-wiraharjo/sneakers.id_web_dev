@@ -11,7 +11,7 @@ use App\Http\Facade\Cart as CartService;
 
 class CheckoutController extends BaseController {
 
-    public function successPayments()
+    public function successPayments($id)
     {
         //clear cart
         //after few second redirect to dashboard

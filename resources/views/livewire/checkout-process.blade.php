@@ -40,7 +40,7 @@
                                                 <div class="_1fragemaf _1fragem1b _1mrl40q3 _1fragem24 _1fragem2l _1fragem36 _1fragem3a _16s97g73 _16s97g75 _16s97g7b _16s97g7d" style="--_16s97g72: minmax(0, 20rem); --_16s97g74: minmax(0, 1fr); --_16s97g7a: minmax(0, 20rem); --_16s97g7c: minmax(0, 1fr);">
                                                     <p class="n8k95w1 _1fragemaf n8k95w2">
                                                         <a href="#" class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi3 _1fragemal">
-                                                            <img src="{{ asset('stores-info/logos-black-transparent.png') }}" alt="StayCool" class="hmHjN" style="max-width: min(100%, 200px);">
+                                                            <img src="{{ asset('stores-info/logos-black-transparent.png') }}" alt="sneakers.id" class="hmHjN" style="max-width: min(100%, 200px);">
                                                         </a>
                                                     </p>
                                                 </div>
@@ -283,10 +283,12 @@
                                                                                 <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
                                                                                     <h2 id="step-section-primary-header" class="n8k95w1 _1fragemaf n8k95w3">
                                                                                         Contact</h2>
+                                                                                        @if (!auth()->check())
                                                                                         <span class="_19gi7yt0 _19gi7yte _1fragem1j">
                                                                                             Already have an account?
                                                                                             <a href="{{ route('customer.login') }}" class="s2kwpi1 _1fragemaf _1fragemat _1fragemb2 s2kwpi2 _1fragemam"> Log in</a>
                                                                                         </span>
+                                                                                        @endif
                                                                                 </div>
                                                                                 <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
                                                                                     <div class="_7ozb2u2 _1fragem1r _1fragem28 _1fragemaf _1fragem1b _10vrn9p1 _10vrn9p0 _10vrn9p6">
@@ -304,7 +306,7 @@
                                                                                                     class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n"
                                                                                                     value="{{ old('email',  $shippingEmail) }}"
                                                                                                     wire:model="shippingEmail">
-                                                                                                <input type="hidden" name="current_url" value="{{ url()->current() }}" wire:model="currentUrl">
+                                                                                                    <input type="hidden" name="current_url" value="{{ url()->current() }}" wire:model="currentUrl">
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -463,14 +465,16 @@
                                                                                                                         </span>
                                                                                                                     </label>
                                                                                                                     <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd" wire:model="shippingZipCode">
-                                                                                                                        <option value="" selected>Pilih Kodepos</option>
+                                                                                                                        @if(!auth()->check())
+                                                                                                                            <option value="" selected>Pilih Kodepos</option>
+                                                                                                                        @endif
                                                                                                                         @if(auth()->check())
                                                                                                                             @if($postalCode == [])
                                                                                                                                 <option value="{{ $userRegion->post_code }}" selected>{{ $userRegion->post_code }}</option>
                                                                                                                             @endif
                                                                                                                         @endif
                                                                                                                         @foreach ($postalCode as $item)
-                                                                                                                            <option value="{{$item}}">{{$item}}</option>
+                                                                                                                            <option value="{{$item}}" {{ $item == $shippingZipCode ? 'selected' : ( auth()->check() ? ($item == $userRegion->post_code ? 'selected' : '') : '')}}>{{$item}}</option>
                                                                                                                         @endforeach
                                                                                                                     </select>
                                                                                                                     <div class="TUEJq">
@@ -552,7 +556,9 @@
                                                                                                                         autocomplete="shipping country"
                                                                                                                         class="_b6uH RR8sg vYo81 RGaKd"
                                                                                                                         wire:change="updateArea($event.target.value)">
-                                                                                                                        <option value="" selected>Pilih Kecamatan</option>
+                                                                                                                        @if(!auth()->check())
+                                                                                                                            <option value="" selected>Pilih Kecamatan</option>
+                                                                                                                        @endif
                                                                                                                         @if(auth()->check())
                                                                                                                             @if($subdistrict == [])
                                                                                                                                 <option value="{{ $userRegion->subdistrict }}" selected>{{ $userRegion->subdistrict }}</option>
@@ -595,14 +601,14 @@
                                                                                                                         required=""
                                                                                                                         autocomplete="shipping country"
                                                                                                                         class="_b6uH RR8sg vYo81 RGaKd" wire:model="selectedArea">
-                                                                                                                        <option value="" selected>Pilih Kelurahan</option>
+                                                                                                                        <option value="" {{ !auth()->check() ? 'selected' : '' }}>Pilih Kelurahan</option>
                                                                                                                         @if(auth()->check())
                                                                                                                             @if($area == [])
-                                                                                                                                <option value="{{ $userRegion->area }}" selected>{{ $userRegion->area }}</option>
+                                                                                                                                <option value="{{ $userRegion->region_id }}" selected>{{ $userRegion->area }}</option>
                                                                                                                             @endif
                                                                                                                         @endif
                                                                                                                         @foreach ($area as $index=>$item)
-                                                                                                                            <option value="{{$index}}" {{ $index == $userRegion->area ? 'selected' : '' }}>{{$item}}</option>
+                                                                                                                            <option value="{{$index}}" {{ $index == $userRegion->region_id ? 'selected' : '' }}>{{$item}}</option>
                                                                                                                         @endforeach
                                                                                                                     </select>
                                                                                                                     <div

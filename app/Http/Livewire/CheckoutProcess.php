@@ -48,13 +48,32 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
+        $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->first();
+
         $this->updateCart();
         $this->district = [];
         $this->subdistrict = [];
         $this->area = [];
         $this->postalCode = [];
         $this->currentUrl = url()->current();
-        $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->first();
+
+        if(auth()->check()){
+            $user = auth()->user();
+            $this->shippingEmail = $user->email;
+            $this->shippingFirstName = $user->first_name;
+            $this->shippingLastName = $user->last_name;
+            if($user->user_address) {
+                $this->shippingAddress = $user->user_address->address;
+                $this->shippingPhoneNumber = $user->user_address->phone_number;
+                $this->updateDistrict($this->userRegion->province);
+                $this->updateSubdistrict($this->userRegion->district);
+                $this->updateArea($this->userRegion->subdistrict);
+                $this->selectedArea = $this->userRegion->region_id;
+                $this->shippingZipCode = $this->userRegion->post_code;
+            }
+
+        }
+
         $courier = CekOngkir::CostCourier($this->selectedSubdistrict, 'subdistrict',Cart::totalQuantity() * 1500, 'jne:jnt:pos:ninja:lion:anteraja:sicepat');
         $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
     }

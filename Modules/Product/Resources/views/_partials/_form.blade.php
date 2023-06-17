@@ -12,8 +12,16 @@
         value="{{ old('product_name', $product->product_name) }}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="product_link" label="Tokopedia Link *">
-    <input type="text" placeholder="Product Link" class="form-control" name="product_link" id="product_link" required
+    <input type="text" placeholder="Tokopedia Link" class="form-control" name="product_link" id="product_link" required
     value="{{ old('product_link', $product->product_link) }}">
+</x-ladmin-form-group>
+<x-ladmin-form-group name="shopee_link" label="Shopee Link *">
+    <input type="text" placeholder="Shopee Link" class="form-control" name="shopee_link" id="shopee_link" required
+    value="{{ old('shopee_link', $product->shopee_link) }}">
+</x-ladmin-form-group>
+<x-ladmin-form-group name="blibli_link" label="Blibli Link">
+    <input type="text" placeholder="Blibli Link" class="form-control" name="blibli_link" id="blibli_link"
+    value="{{ old('blibli_link', $product->blibli_link) }}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="brand" label="Brand *">
     <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">

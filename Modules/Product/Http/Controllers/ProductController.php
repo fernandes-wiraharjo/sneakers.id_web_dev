@@ -185,7 +185,7 @@ class ProductController extends Controller
                     'size_price.*.size' => 'required',
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
-                    'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price',
+                    'size_price.*.after_discount_price' => 'required|lte:size_price.*.retail_price',
                 ];
             } else {
                 $validation = [
@@ -193,9 +193,9 @@ class ProductController extends Controller
                     // 'size_price.0' => 'required',
                     // 'size_price.0.update_size' => 'required',
                     'size_price.*.size' => 'required',
-                    'size_price.*.base_price' => 'required|gte:0',
-                    'size_price.*.retail_price' => 'required|gte:0',
-                    'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price|gte:0',
+                    'size_price.*.base_price' => 'required',
+                    'size_price.*.retail_price' => 'required',
+                    'size_price.*.after_discount_price' => 'required|lte:size_price.*.retail_price',
                 ];
             }
 

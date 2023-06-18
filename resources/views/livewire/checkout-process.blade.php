@@ -600,7 +600,7 @@
                                                                                                                         id="Select4"
                                                                                                                         required=""
                                                                                                                         autocomplete="shipping country"
-                                                                                                                        class="_b6uH RR8sg vYo81 RGaKd" wire:model="selectedArea">
+                                                                                                                        class="_b6uH RR8sg vYo81 RGaKd" wire:change="updatedSelectedArea($event.target.value)">
                                                                                                                         <option value="" {{ !auth()->check() ? 'selected' : '' }}>Pilih Kelurahan</option>
                                                                                                                         @if(auth()->check())
                                                                                                                             @if($area == [])

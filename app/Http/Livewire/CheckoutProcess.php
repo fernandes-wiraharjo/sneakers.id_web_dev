@@ -27,6 +27,7 @@ class CheckoutProcess extends Component
     public $shippingProvince = '';
     public $shippingDistrict = '';
     public $shippingSubDistrict = '';
+    public $shippingArea = '';
     public $shippingCost = 0;
     public $shippingCourier;
 
@@ -97,6 +98,7 @@ class CheckoutProcess extends Component
     public function paymentStepSubmit()
     {
         $items = [];
+        $totalQuantity = 0;
         foreach(Cart::content() as $item) {
             $price = $item['retail_price'];
             if($item['discount_price'] != 0){
@@ -110,6 +112,8 @@ class CheckoutProcess extends Component
                 'category' => 'shoes',
                 'url' => $item['url']
             ];
+
+            $totalQuantity += $item['quantity'];
         }
         /**
          * if not logged in
@@ -130,7 +134,6 @@ class CheckoutProcess extends Component
         $this->invoiceUrl = CheckoutXendit::createInvoice([
             'currency' => 'IDR',
             'amount'    => intval($this->grandTotal),
-            'success_redirect_url' => route('customer.payment.success'),
             'error_redirect_url' => route('customer.payment.error'),
             //make new pages for thankyou after success -> to recheck transaction id and update current status and give invoice response,
             'customer' => [
@@ -145,7 +148,7 @@ class CheckoutProcess extends Component
                         'postal_code' => $this->shippingZipCode,
                         'state' => $this->shippingProvince,
                         'street_line1' => $this->shippingAddress,
-                        'street_line2' => $this->shippingSubDistrict.', '.$this->selectedArea
+                        'street_line2' => $this->shippingSubDistrict.', '.$this->shippingArea
                     ]
                 ]
             ],
@@ -158,16 +161,30 @@ class CheckoutProcess extends Component
             ]
         ], [
             'transactions' => [
-
+                'date' => date('Y-m-d'),
+                'gateway' => 'Xendit',
+                'total_quantity' =>  $totalQuantity,
+                'sub_total' => Cart::total(),
+                'grand_total' => $this->grandTotal
             ],
             'transaction_destinations' => [
+                'region_id' => $this->selectedArea,
+                'email' => $this->shippingEmail,
+                'first_mame' => $this->shippingFirstName,
+                'last_name' => $this->shippingLastName,
+                'address' => $this->shippingAddress,
+                'phone_number' => $this->shippingPhoneNumber,
+                'is_user' => auth()->check() ? 1 : 0,
 
             ],
             'transaction_items' => [
-
+                'items' => Cart::content(),
             ],
             'transaction_shippings' => [
-
+                 'shipping_method' => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' ('.$this->selectedCourier['etd'].')',
+                 'shipping_cost' => $this->selectedCourier['cost'],
+                 'origin_ro_id' => 2088,
+                 'destination_ro_id' => $this->selectedSubdistrict,
             ],
         ]);
         $this->currentStep = 4;
@@ -229,6 +246,11 @@ class CheckoutProcess extends Component
         $this->shippingSubDistrict = $value;
         $this->area = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
         $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
+    }
+
+    public function updatedSelectedArea($value) {
+        $this->selectedArea = $value;
+        $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
     }
 
     public function render()

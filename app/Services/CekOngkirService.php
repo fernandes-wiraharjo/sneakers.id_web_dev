@@ -24,7 +24,7 @@ class CekOngkirService {
     }
 
     public function CostRangeCourier($response = []) {
-        return collect($response['rajaongkir']['results']);
+        return collect($response['rajaongkir']['results']) ?? [];
     }
 
 }

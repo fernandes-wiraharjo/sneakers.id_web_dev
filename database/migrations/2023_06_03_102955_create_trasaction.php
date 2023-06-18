@@ -33,9 +33,9 @@ class CreateTrasaction extends Migration
 
         Schema::create('transaction_destinations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
+            $table->foreignId('transaction_id')->constrained()->nullable();
             $table->integer('region_id')->nullable();
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->text('address')->nullable();
@@ -49,7 +49,7 @@ class CreateTrasaction extends Migration
 
         Schema::create('transaction_shippings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
+            $table->foreignId('transaction_id')->constrained()->nullable();
             $table->string('shipping_method')->nullable();
             $table->double('shipping_cost')->default(0);
             $table->integer('origin_ro_id')->default(151);
@@ -69,8 +69,8 @@ class CreateTrasaction extends Migration
 
         Schema::create('transaction_histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
-            $table->foreignId('transaction_history_id')->constrained();
+            $table->foreignId('transaction_id')->constrained()->nullable();
+            $table->foreignId('transaction_history_id')->constrained()->nullable();
             $table->text('response_raw')->nullable();
             $table->string('response_status')->nullable();
             $table->string('response_code')->nullable();

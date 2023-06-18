@@ -155,6 +155,9 @@
     MY ACCOUNT
     <br>
     Welcome back, {{ auth()->user()->name ?? '-' }}
+    @php
+        // dd($transaction);
+    @endphp
     <br>
     <br>
     <div id="Order" class="tabcontent" style="display: block">
@@ -172,12 +175,14 @@
             </div>
         </div>
         <div class="table-content">
+            @foreach ($transaction as $item)
             <div class="table-row">
-                <div class="table-data">#44135</div>
-                <div class="table-data">2 Juni 2023</div>
-                <div class="table-data">PENDING</div>
-                <div class="table-data">RP 1.599.999,-</div>
+                <div class="table-data"><a href="{{ route('customer.transaction.detail', $item->transaction->token) }}"><strong>#{{strtoupper($item->transaction->token)}}</strong></a></div>
+                <div class="table-data">{{ date('d F Y', strtotime($item->transaction->date)) }}</div>
+                <div class="table-data">{{ $item->transaction->status }}</div>
+                <div class="table-data">RP {{ rupiah_format(intval($item->transaction->grand_total)) }}</div>
             </div>
+            @endforeach
         </div>
     </div>
     <div>

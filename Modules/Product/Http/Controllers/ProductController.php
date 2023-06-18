@@ -17,6 +17,7 @@ use App\Services\ProductService;
 use Alert;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Response;
 
 class ProductController extends Controller
 {
@@ -313,5 +314,11 @@ class ProductController extends Controller
         } catch (LadminException $e) {
             return response()->json(['code' => 500, 'message' => $e]);
         }
+    }
+
+    public function downloadfileTemplate()
+    {
+        $filepath = public_path('files/template-sneakers.xlsx');
+        return Response::download($filepath);
     }
 }

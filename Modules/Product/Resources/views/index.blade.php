@@ -73,6 +73,10 @@
                             </form>
                             <!--end::Form-->
 
+                            <div class="m-2 text-end">
+                                <a href="{{ route('administrator.product.downloadFileTemplate') }}" target="_blank" class="btn btn-primary" >Download file tempate</a>
+                            </div>
+
                             <div class="message">
                                 <span class="response-message"></span>
                                 <br>

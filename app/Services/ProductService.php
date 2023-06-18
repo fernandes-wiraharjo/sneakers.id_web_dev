@@ -28,6 +28,8 @@ class ProductService {
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
             'product_link' => $request['product_link'],
+            'shopee_link' => $request['shopee_link'],
+            'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active']
         ];
@@ -147,6 +149,8 @@ class ProductService {
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
             'product_link' => $request['product_link'],
+            'shopee_link' => $request['shopee_link'],
+            'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active']
         ];

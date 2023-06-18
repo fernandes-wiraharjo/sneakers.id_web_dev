@@ -15,6 +15,8 @@ class Product extends Model
         'product_code',
         'product_name',
         'product_link',
+        'shopee_link',
+        'blibli_link',
         'description',
         'is_active'
     ];

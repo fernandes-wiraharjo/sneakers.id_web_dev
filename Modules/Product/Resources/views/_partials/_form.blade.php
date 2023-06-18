@@ -276,10 +276,27 @@
                     'product_link': {
                         validators: {
                             notEmpty: {
-                                message: 'Product Link is required'
+                                message: 'Tokopedia Link is required'
                             },
                             uri: {
-                                message : "Product link not valid"
+                                message : "Tokopedia link not valid"
+                            }
+                        }
+                    },
+                    'shopee_link': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Shopee Link is required'
+                            },
+                            uri: {
+                                message : "Shopee link not valid"
+                            }
+                        }
+                    },
+                    'blibli_link': {
+                        validators: {
+                            uri: {
+                                message : "Blibli link not valid"
                             }
                         }
                     },

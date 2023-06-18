@@ -73,6 +73,10 @@
                             </form>
                             <!--end::Form-->
 
+                            <div class="m-2 text-end">
+                                <a href="{{ route('administrator.product.downloadFileTemplate') }}" target="_blank" class="btn btn-primary" >Download file tempate</a>
+                            </div>
+
                             <div class="message">
                                 <span class="response-message"></span>
                                 <br>
@@ -184,8 +188,8 @@
                         var ukuran = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 2 })].v;
                         var hargaAwal = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 3 })] != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 3 })].v : 0;
                         var persentaseDiskon = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v : 0;
-                        var hargaAkhir = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 5 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v : 0;
-                        var stok = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 6 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 4 })].v : 0;
+                        var hargaAkhir = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 5 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 5 })].v : 0;
+                        var stok = worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 6 })]  != undefined ? worksheet[XLSX.utils.encode_cell({ r: rowNum, c: 6 })].v : 0;
 
                         // validate Harga awal, persentase diskon, harga akhir dan stok kalau tidak diisi auto dibikin 0
 

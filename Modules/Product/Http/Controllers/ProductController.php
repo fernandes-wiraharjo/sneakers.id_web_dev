@@ -318,7 +318,7 @@ class ProductController extends Controller
 
     public function downloadfileTemplate()
     {
-        $filepath = public_path('files/template-sneakers.xlsx');
+        $filepath = public_path('files/template-update-products.xls');
         return Response::download($filepath);
     }
 }

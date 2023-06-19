@@ -241,9 +241,33 @@
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="{{ $product->product_link }}" target="_blank"
                                 class="ProductForm__AddToCart Button Button--primary Button--full">
-                                <span>BUY AT TOKOPEDIA</span>
+                                <span>ORDER VIA TOKOPEDIA</span>
                             </a>
                         </div>
+                        @if($product->shopee_link)
+                            <div style="height: 10px;">
+                                <span class="h-2"></span>
+                            </div>
+                            <div style="width: 100%;">
+                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                    href="{{ $product->shopee_link }}" target="_blank"
+                                    class="ProductForm__AddToCart Button Button--primary Button--full">
+                                    <span>ORDER VIA SHOPEE</span>
+                                </a>
+                            </div>
+                        @endif
+                        @if($product->blibli_link)
+                            <div style="height: 10px;">
+                                <span class="h-2"></span>
+                            </div>
+                            <div style="width: 100%;">
+                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                    href="{{ $product->blibli_link }}" target="_blank"
+                                    class="ProductForm__AddToCart Button Button--primary Button--full">
+                                    <span>ORDER VIA BLIBLI</span>
+                                </a>
+                            </div>
+                        @endif
                         <div style="height: 10px;">
                             <span class="h-2"></span>
                         </div>
@@ -251,7 +275,7 @@
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="http://wa.me/6289617925925" target="_blank"
                                 class="ProductForm__AddToCart Button Button--primary Button--full">
-                                <span>BUY AT WHATSAPP</span>
+                                <span>ORDER VIA WHATSAPP</span>
                             </a>
                         </div>
 

@@ -106,7 +106,7 @@
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                     <span class="input-group-text">%</span>
                                     <input type="number" class="form-control bulk-discount-percentage" name="bulk_discount_percentage" min="0" max="100"
-                                        value=""
+                                        value="" onfocus="countDiscountPercentage(this)"
                                     placeholder="Percentage" aria-label="Percent"/>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                                         value="{{ old('size_prize[0][after_discount_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                         <span class="input-group-text">%</span>
                                         <input type="text" class="form-control discount-percentage" name="discount_percentage" min="0" max="100"
-                                            value="{{ old('size_prize[0][discount_percentage]', '') }}"
+                                            value="{{ old('size_prize[0][discount_percentage]', '') }}" onfocus="countDiscountPercentage(this)"
                                         placeholder="Percentage" aria-label="Percent"/>
                                     </div>
                                 </div>
@@ -498,6 +498,23 @@
             });
         }
 
+        function countDiscountPercentage(param) {
+            let retail_price;
+            let discount_price;
+            let discount_percentage;
+            if (param.name.includes('bulk')) {
+                retail_price = parseInt(document.querySelector('input[name="bulk_retail_price"]').value.replaceAll('.', ''));
+                discount_price = parseInt(document.querySelector('input[name="bulk_discount_price"]').value.replaceAll('.', ''));
+                discount_percentage = parseInt(((retail_price - discount_price) / retail_price) * 100);
+                document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
+            } else {
+                const prefix = param.name.replace('[discount_percentage]', '');
+                retail_price = parseInt(document.querySelector('input[name="' + prefix + '[retail_price]"]').value.replaceAll('.', ''));
+                discount_price = parseInt(document.querySelector('input[name="' + prefix + '[after_discount_price]"]').value.replaceAll('.', ''));
+                discount_percentage = parseInt(((retail_price - discount_price) / retail_price) * 100);
+                document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
+            }
+        }
     </script>
 
     <script>

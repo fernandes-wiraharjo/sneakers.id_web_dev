@@ -185,7 +185,7 @@ class ProductController extends Controller
                     'size_price.*.size' => 'required',
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
-                    'size_price.*.after_discount_price' => 'required|lte:size_price.*.retail_price',
+                    'size_price.*.after_discount_price' => 'required',
                 ];
             } else {
                 $validation = [
@@ -195,7 +195,7 @@ class ProductController extends Controller
                     'size_price.*.size' => 'required',
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
-                    'size_price.*.after_discount_price' => 'required|lte:size_price.*.retail_price',
+                    'size_price.*.after_discount_price' => 'required',
                 ];
             }
 

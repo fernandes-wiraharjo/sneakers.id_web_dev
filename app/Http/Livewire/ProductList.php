@@ -294,6 +294,9 @@ class ProductList extends Component
          * Query debug
          */
         // $data['sql'] = $products->toSql();
+        // dump($products->limit(5)->get());
+        // dump($products->toSql());
+        // dump($products->count());
         $data['products'] = $products->paginate(40);
         // dd($products->toSql());
         return view('livewire.product-list', $data);

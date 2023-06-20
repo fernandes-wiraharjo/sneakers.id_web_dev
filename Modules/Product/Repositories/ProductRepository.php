@@ -69,14 +69,17 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
         return $this->model->query()
         ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
-        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
-            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.min_retail_price','pd.after_discount_price', 'pd.base_price', 'pd.retail_price')
+        // ->join('product_details as pd', function($join) {
+            // $join->on('products.id', '=', 'pd.product_id')
+                // ->where('pd.retail_price', '=', 'pd.min_retail_price')
+        //         ->on('pd.retail_price', '=', 'pd.min_retail_price')
+            // ;
+        // })
+        ->join(DB::raw('(SELECT product_id, base_price, retail_price, after_discount_price, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id, base_price, retail_price, after_discount_price) as pd'), function($join) {
+            $join->on('pd.product_id', '=', 'products.id')->limit(1);
+                //->where('pd.retail_price', '=', 'pd.min_retail_price');
         })
-        ->join('product_details as pd', function($join) {
-            $join->on('pd.product_id', '=', 'pd2.product_id')
-                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
-        })
-        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
         ->where(['is_active'=> 1]);
     }
 

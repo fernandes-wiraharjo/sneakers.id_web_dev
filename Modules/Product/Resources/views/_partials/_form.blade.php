@@ -15,8 +15,8 @@
     <input type="text" placeholder="Tokopedia Link" class="form-control" name="product_link" id="product_link" required
     value="{{ old('product_link', $product->product_link) }}">
 </x-ladmin-form-group>
-<x-ladmin-form-group name="shopee_link" label="Shopee Link *">
-    <input type="text" placeholder="Shopee Link" class="form-control" name="shopee_link" id="shopee_link" required
+<x-ladmin-form-group name="shopee_link" label="Shopee Link">
+    <input type="text" placeholder="Shopee Link" class="form-control" name="shopee_link" id="shopee_link"
     value="{{ old('shopee_link', $product->shopee_link) }}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="blibli_link" label="Blibli Link">
@@ -285,9 +285,6 @@
                     },
                     'shopee_link': {
                         validators: {
-                            notEmpty: {
-                                message: 'Shopee Link is required'
-                            },
                             uri: {
                                 message : "Shopee link not valid"
                             }

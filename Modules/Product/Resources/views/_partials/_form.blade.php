@@ -11,9 +11,17 @@
     <input type="text" placeholder="Product Name" class="form-control" name="product_name" id="product_name" required
         value="{{ old('product_name', $product->product_name) }}">
 </x-ladmin-form-group>
-<x-ladmin-form-group name="product_link" label="Link *">
-    <input type="text" placeholder="Product Link" class="form-control" name="product_link" id="product_link" required
+<x-ladmin-form-group name="product_link" label="Tokopedia Link *">
+    <input type="text" placeholder="Tokopedia Link" class="form-control" name="product_link" id="product_link" required
     value="{{ old('product_link', $product->product_link) }}">
+</x-ladmin-form-group>
+<x-ladmin-form-group name="shopee_link" label="Shopee Link *">
+    <input type="text" placeholder="Shopee Link" class="form-control" name="shopee_link" id="shopee_link" required
+    value="{{ old('shopee_link', $product->shopee_link) }}">
+</x-ladmin-form-group>
+<x-ladmin-form-group name="blibli_link" label="Blibli Link">
+    <input type="text" placeholder="Blibli Link" class="form-control" name="blibli_link" id="blibli_link"
+    value="{{ old('blibli_link', $product->blibli_link) }}">
 </x-ladmin-form-group>
 <x-ladmin-form-group name="brand" label="Brand *">
     <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
@@ -98,7 +106,7 @@
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                     <span class="input-group-text">%</span>
                                     <input type="number" class="form-control bulk-discount-percentage" name="bulk_discount_percentage" min="0" max="100"
-                                        value=""
+                                        value="" onfocus="countDiscountPercentage(this)"
                                     placeholder="Percentage" aria-label="Percent"/>
                                 </div>
                             </div>
@@ -159,7 +167,7 @@
                                         value="{{ old('size_prize[0][after_discount_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                         <span class="input-group-text">%</span>
                                         <input type="text" class="form-control discount-percentage" name="discount_percentage" min="0" max="100"
-                                            value="{{ old('size_prize[0][discount_percentage]', '') }}"
+                                            value="{{ old('size_prize[0][discount_percentage]', '') }}" onfocus="countDiscountPercentage(this)"
                                         placeholder="Percentage" aria-label="Percent"/>
                                     </div>
                                 </div>
@@ -268,10 +276,27 @@
                     'product_link': {
                         validators: {
                             notEmpty: {
-                                message: 'Product Link is required'
+                                message: 'Tokopedia Link is required'
                             },
                             uri: {
-                                message : "Product link not valid"
+                                message : "Tokopedia link not valid"
+                            }
+                        }
+                    },
+                    'shopee_link': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Shopee Link is required'
+                            },
+                            uri: {
+                                message : "Shopee link not valid"
+                            }
+                        }
+                    },
+                    'blibli_link': {
+                        validators: {
+                            uri: {
+                                message : "Blibli link not valid"
                             }
                         }
                     },
@@ -473,6 +498,23 @@
             });
         }
 
+        function countDiscountPercentage(param) {
+            let retail_price;
+            let discount_price;
+            let discount_percentage;
+            if (param.name.includes('bulk')) {
+                retail_price = parseInt(document.querySelector('input[name="bulk_retail_price"]').value.replaceAll('.', ''));
+                discount_price = parseInt(document.querySelector('input[name="bulk_discount_price"]').value.replaceAll('.', ''));
+                discount_percentage = parseInt(((retail_price - discount_price) / retail_price) * 100);
+                document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
+            } else {
+                const prefix = param.name.replace('[discount_percentage]', '');
+                retail_price = parseInt(document.querySelector('input[name="' + prefix + '[retail_price]"]').value.replaceAll('.', ''));
+                discount_price = parseInt(document.querySelector('input[name="' + prefix + '[after_discount_price]"]').value.replaceAll('.', ''));
+                discount_percentage = parseInt(((retail_price - discount_price) / retail_price) * 100);
+                document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
+            }
+        }
     </script>
 
     <script>

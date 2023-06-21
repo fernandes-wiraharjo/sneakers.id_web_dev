@@ -25,7 +25,7 @@ class ProductList extends Component
     public $signature = [];
     public $keyword;
     public $sort_by = 'DESC';
-    public $sort_column = 'products.created_at';
+    public $sort_column = 'created_at';
     public $gender = [];
     public $age_range = [];
 
@@ -66,7 +66,7 @@ class ProductList extends Component
         $this->resetPage();
     }
 
-    public function sort($sort_column = 'products.created_at', $sort_by){
+    public function sort($sort_column = 'created_at', $sort_by){
         $this->sort_by = $sort_by;
         $this->sort_column = $sort_column;
     }
@@ -294,6 +294,9 @@ class ProductList extends Component
          * Query debug
          */
         // $data['sql'] = $products->toSql();
+        // dump($products->limit(5)->get());
+        // dump($products->toSql());
+        // dump($products->count());
         $data['products'] = $products->paginate(40);
         // dd($products->toSql());
         return view('livewire.product-list', $data);

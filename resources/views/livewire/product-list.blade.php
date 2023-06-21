@@ -101,10 +101,10 @@
                     {{-- <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
                     Discount Price
                     </a> --}}
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'ASC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'ASC')">
                     Date, old to new
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'DESC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('created_at', 'DESC')">
                     Date, new to old
                     </a>
                 </div>

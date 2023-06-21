@@ -69,7 +69,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'pd.retail_price', 'pd.after_discount_price');
+        ->groupBy('products.id', 'products.product_code','pd.retail_price', 'pd.after_discount_price');
 
         return $q->distinct();
     }

@@ -216,7 +216,7 @@
                             {{-- <label for="">Size Available : </label> --}}
                             <select name="size" id="size" class="size-select">
                                 <option>Select Size</option>
-                                @foreach ($product->details()->get() as $item)
+                                @foreach ($size as $item)
                                     <option value="{{$item->size}}" data-id="{{$item->id}}"" data-price="{{ rupiah_format(intval($item->retail_price ?? 0))}}"
                                         data-discount-price="{{rupiah_format(intval($item->after_discount_price ?? 0))}}" data-discount="{{$item->discount_percentage}}"
                                         data-qty="{{$item->qty}}">{{$item->size}}</option>

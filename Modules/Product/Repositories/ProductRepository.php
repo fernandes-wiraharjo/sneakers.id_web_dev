@@ -65,6 +65,11 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
                     Select min(retail_price)
                     from product_details
                     where product_id = products.id
+                )'))
+                ->where('pd.after_discount_price', '=', DB::raw('(
+                    Select min(after_discount_price)
+                    from product_details
+                    where product_id = products.id
                 )'));
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
@@ -182,7 +187,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductByIdWithEager($id){
-        return $this->model->with(['detail', 'tags', 'sizes', 'categories', 'signatures', 'images'])->find($id);
+        return $this->model->with(['detail', 'tags', 'sizes', 'categories', 'signatures', 'images', 'details'])->find($id);
     }
 
     public function getProductById($id){

@@ -204,7 +204,7 @@
                 <div class="chip">
                     <div class="chip-content">Waiting for Payment</div>
                 </div>
-            @elseif($transaction->status == 'SETTLED' || $transaction->status == 'SETTLED')
+            @elseif($transaction->status == 'SETTLED' || $transaction->status == 'PAID')
                 <div class="chip">
                     <div class="chip-content">PAID</div>
                 </div>
@@ -223,14 +223,15 @@
             </span>
         </div>
         <div>
-            @if ($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
-                <a href="#" id="edit-my-account" class="Form__Submit Button Button--primary"
-                style="width: 250px;" {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? 'disabled' : ''}}>Continue Payment</a>
-            @elseif($transaction->status == 'SETTLED' || $transaction->status == 'SETTLED')
-                <a href="#" id="edit-my-account" class="Form__Submit Button Button--primary"
-                style="width: 150px;" {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? 'disabled' : ''}}>CEK RESI</a>
-            @endif
+            <a href="#" id="btn-continue-payment" class="Form__Submit Button Button--primary"
+            style="width: 250px; {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? 'display: block;' : 'display: none;'}}" {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? '' : 'disabled'}}>Continue Payment</a>
 
+            {{-- @if ($shipping_waybill) --}}
+            <a href="#" id="{{ $shipping_waybill ? 'btn-check-shipping' : ''}}" class="Form__Submit Button {{ $shipping_waybill ? 'Button--primary' : 'Button--secondary'}} "
+            style="width: 150px; {{ $transaction->status == 'SETTLED' || $transaction->status == 'PAID' ? 'display: block;' : 'display: none;' }}" {{ $transaction->status == 'SETTLED' || $transaction->status == 'PAID' ? ($shipping_waybill ? '' : 'disabled') : 'disabled'}}>CEK RESI</a>
+            {{-- @else
+
+            @endif --}}
         </div>
     </div>
     <br>
@@ -319,42 +320,94 @@
 
     <div>
         <!-- The Modal -->
-        <div id="myModal" class="modal">
+        <div id="modal-continue-payment" class="modal">
             <div class="modal-body">
-                <span class="close">&times;</span>
+                <span class="closePayment">&times;</span>
                 <div style="text-align-last: center;">
                     <h1>Continue Payment</h1>
                 </div>
-
+                @if ($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
+                <iframe id="iframe-invoice" class="iframe-invoice" title="Invoice" src="{{ $transaction->invoice_url }}">
+                </iframe>
+                @endif
             </div>
         </div>
     </div>
+
+    <div>
+        <!-- The Modal -->
+        <div id="modal-check-shipping" class="modal">
+            <div class="modal-body">
+                <span class="closeShipping">&times;</span>
+                <div style="text-align-last: center;">
+                    <h1>Check shipping</h1>
+                </div>
+                @if ($shipping_waybill)
+                @php
+                    // dd($shipping_waybill['rajaongkir']['result']['delivery_status']);
+                @endphp
+                    @if($shipping_waybill['rajaongkir']['status']['code'] == 200)
+                        STATUS : {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['status'] }} <br>
+                        PENERIMA : {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['pod_receiver'] }} <br>
+                        WAKTU DITERIMA : {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['pod_date'] }} {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['pod_time'] }} <br>
+                        <hr>
+                        @foreach ($shipping_waybill['rajaongkir']['result']['manifest'] as $item)
+                            {{ $item['manifest_description']}} : {{  $item['city_name'] }} <br>
+                            TANGGAL : {{ $item['manifest_date']}} {{ $item['manifest_time']}} <br>
+                            <hr>
+                        @endforeach
+                    @else
+                        {{ $shipping_waybill['rajaongkir']['status']['description'] }}
+                    @endif
+                @endif
+            </div>
+        </div>
+    </div>
+
     @push('scripts')
         <script src="{{ asset('js/pages/size-chart.js') }}" defer></script>
         <script>
             // Get the modal
-            var modal = document.getElementById("myModal");
+            var modalPayment = document.getElementById("modal-continue-payment");
+            var modalShipping = document.getElementById("modal-check-shipping");
 
             // Get the button that opens the modal
-            var btn = document.getElementById("edit-my-account");
+            var btnPayment = document.getElementById("btn-continue-payment");
+
+            var btnShipping = document.getElementById("btn-check-shipping");
 
             // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
+            var spanPayment = document.getElementsByClassName("closePayment")[0];
+            var spanShipping = document.getElementsByClassName("closeShipping")[0];
 
             // When the user clicks on the button, open the modal
-            btn.onclick = function() {
-                modal.style.display = "block";
+            btnPayment.onclick = function() {
+                modalPayment.style.display = "block";
+            }
+            btnShipping.onclick = function() {
+                modalShipping.style.display = "block";
             }
 
             // When the user clicks on <span> (x), close the modal
-            span.onclick = function() {
-                modal.style.display = "none";
+            spanPayment.onclick = function() {
+                modalPayment.style.display = "none";
+            }
+
+            spanShipping.onclick = function() {
+                modalShipping.style.display = "none";
             }
 
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
+                if (event.target == modalPayment) {
+                    modalPayment.style.display = "none";
+                }
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modalShipping) {
+                    modalShipping.style.display = "none";
                 }
             }
         </script>

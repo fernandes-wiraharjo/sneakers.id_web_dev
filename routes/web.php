@@ -39,6 +39,7 @@ Route::get('/size-chart', [StoreController::class, 'sizeChart'])->name('size-cha
 Route::get('/faq', [StoreController::class, 'faq'])->name('faq');
 
 Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
+Route::get('/email', [StoreController::class, 'email'])->name('email');
 
 
 Ladmin::route(function() {
@@ -73,5 +74,7 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
         Route::get('/error-payment', [CheckoutController::class, 'errorPayments'])->name('payment.error');
         Route::get('/transaction/c/{external_id}', [DashboardController::class, 'detail'])->name('transaction.detail');
     });
+
+
 
 });

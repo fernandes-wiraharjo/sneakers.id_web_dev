@@ -180,4 +180,8 @@ class StoreController extends Controller
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('display-store.qna', $data);
     }
+
+    public function email(){
+        return view('email.invoice');
+    }
 }

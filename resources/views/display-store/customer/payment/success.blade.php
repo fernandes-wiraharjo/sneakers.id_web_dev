@@ -386,7 +386,9 @@
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        Need help? <a href="#">Contact us</a>
+                                                                                        <div style="margin: 10px 0px;">
+                                                                                            <h4>Need help? <strong><a href="#">Contact us</a></strong></h4>
+                                                                                        </div>
                                                                                     </section>
                                                                                     <div class="oQEAZ WD4IV">
                                                                                         <div>

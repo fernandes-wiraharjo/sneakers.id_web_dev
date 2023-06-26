@@ -50,6 +50,7 @@ class CreateTrasaction extends Migration
         Schema::create('transaction_shippings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id')->constrained()->nullable();
+            $table->string('shipping_waybill')->nullable();
             $table->string('shipping_method')->nullable();
             $table->double('shipping_cost')->default(0);
             $table->integer('origin_ro_id')->default(151);

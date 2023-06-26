@@ -27,4 +27,19 @@ class CekOngkirService {
         return collect($response['rajaongkir']['results']) ?? [];
     }
 
+    public function CheckWaybill($waybill = null, $courier = 'jne') {
+        if (!$waybill) {
+            return null;
+        }
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Key' => env('RAJAONGKIR_API_KEY'),
+        ])->asForm()->post('https://pro.rajaongkir.com/api/waybill', [
+            'waybill' => $waybill,
+            'courier' => $courier,
+        ]);
+
+        return $response->json();
+    }
 }

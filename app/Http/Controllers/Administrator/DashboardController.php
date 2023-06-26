@@ -73,6 +73,7 @@ class DashboardController extends Controller {
         $data['destination'] = $data['transaction']->destination()->select('transaction_destinations.*', 'regions.*')->joinRelationship('region')->first();
         $data['items'] = $data['transaction']->items()->with('detail.product')->select('transaction_items.*', 'product_details.size', 'product_details.product_id')->joinRelationship('detail')->get();
         $data['shipping'] = $data['transaction']->shipping()->first();
+        $data['shipping_waybill'] = CekOngkir::CheckWaybill($data['shipping']->shipping_waybill, 'jnt') ?? null;
         return view('display-store.customer.transaction', $data);
     }
 

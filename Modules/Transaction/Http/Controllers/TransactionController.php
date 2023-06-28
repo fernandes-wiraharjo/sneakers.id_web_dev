@@ -5,6 +5,13 @@ namespace Modules\Transaction\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Transaction\Entities\TransactionDatatables;
+use Modules\Transaction\Entities\TransactionShippings;
+use Alert;
+use App\Facades\CekOngkir;
+use App\Services\CekOngkirService;
+use Modules\Transaction\Entities\TransactionHistories;
+use Modules\Transaction\Entities\TransactionItems;
 
 class TransactionController extends Controller
 {
@@ -12,9 +19,49 @@ class TransactionController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(TransactionDatatables $dataTable)
     {
-        return view('transaction::index');
+        ladmin()->allow('administrator.transaction.index');
+        return $dataTable->render('transaction::index');
+    }
+
+    public function updateResi(Request $request) {
+        if(!$request->id) {
+            Alert::error('invalid shipping id');
+            return redirect()->back()->withErrors('invalid shipping id');
+        }
+
+        $shipping = TransactionShippings::where('id', $request->id)->first();
+        $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $request->status]);
+        if($updated) {
+            //create shipping history and get Raja Ongkir cek resi
+            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
+
+            TransactionHistories::create([
+                'transaction_id' => $shipping->transaction_id,
+                'response_raw' => json_encode($response),
+                'response_status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'ERROR',
+                'response_code' =>  $response['rajaongkir']['status']['code'] ?? '400',
+                'response_message' =>  $response['rajaongkir']['status']['description'] != 'OK' ? $response['rajaongkir']['status']['description'] : 'Update Shipping status',
+                'created_by' =>  auth()->user()->id,
+            ]);
+            //if status complete update quantity
+            if($request->status == 'COMPLETE') {
+                $transaction = TransactionItems::where('transaction_id', $shipping->transaction_id)->get();
+
+                foreach($transaction as $item) {
+                    $qty_sold = $item->quantity;
+                    $current_item = $item->detail;
+                    $current_item->update(['qty' => $current_item->qty - $qty_sold]);
+                }
+            }
+
+            Alert::success('Success update resi & status');
+            return redirect()->back()->withSuccess('Success update resi & status');
+        }
+
+        Alert::error('Failed update resi & status');
+        return redirect()->back()->withErrors('Failed update resi & status');
     }
 
     /**

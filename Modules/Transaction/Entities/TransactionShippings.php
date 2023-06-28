@@ -15,6 +15,7 @@ class TransactionShippings extends Model
 
     protected $fillable = [
         'transaction_id',
+        'shipping_waybill',
         'shipping_method',
         'shipping_cost',
         'origin_ro_id',

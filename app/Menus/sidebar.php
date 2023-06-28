@@ -2,6 +2,26 @@
 
 return [
     [
+        'gate' => 'administrator.transaction.index',
+        'name' => 'Transaction',
+        'route' => ['administrator.transaction.index', []],
+        'isActive' => 'transaction*',
+        'icon' => 'shopping-bag',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.transaction.status',
+                'title' => 'Transaction Status',
+                'description' => 'User can change transaction status'
+            ],
+            [
+                'gate' => 'administrator.transaction.resi',
+                'title' => 'Resi Transaction',
+                'description' => 'User can change resi transaction'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.product.index',
         'name' => 'Product',
         'route' => ['administrator.product.index', []],

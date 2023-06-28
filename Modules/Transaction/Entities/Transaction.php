@@ -48,4 +48,9 @@ class Transaction extends Model
     {
         return $this->hasOne(TransactionDestination::class, 'transaction_id', 'id');
     }
+
+    public function histories()
+    {
+        return $this->hasMany(TransactionHistories::class, 'transaction_id', 'id');
+    }
 }

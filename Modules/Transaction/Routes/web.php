@@ -11,6 +11,7 @@
 |
 */
 
-Route::prefix('transaction')->group(function() {
-    Route::get('/', 'TransactionController@index');
+Route::group(['prefix' => 'administrator/transaction', 'middleware' => 'auth'], function() {
+    Route::get('/', 'TransactionController@index')->name('administrator.transaction.index');
+    Route::post('/update/resi-status', 'TransactionController@updateResi')->name('administrator.transaction.resi');
 });

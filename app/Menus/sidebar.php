@@ -2,11 +2,20 @@
 
 return [
     [
+        'gate' => 'administrator.dashboard.index',
+        'name' => 'Dashboard',
+        'route' => ['administrator.dashboard.index', []],
+        'isActive' => 'summary*',
+        'icon' => 'dashboard',
+        'id' => '',
+        'gates' => [],
+    ],
+    [
         'gate' => 'administrator.transaction.index',
         'name' => 'Transaction',
         'route' => ['administrator.transaction.index', []],
         'isActive' => 'transaction*',
-        'icon' => 'shopping-bag',
+        'icon' => 'cart',
         'id' => '',
         'gates' => [
             [

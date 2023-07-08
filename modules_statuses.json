@@ -9,5 +9,6 @@
     "Faq": true,
     "FooterSetting": true,
     "LookBook": true,
-    "Transaction": true
+    "Transaction": true,
+    "Dashboard": true
 }

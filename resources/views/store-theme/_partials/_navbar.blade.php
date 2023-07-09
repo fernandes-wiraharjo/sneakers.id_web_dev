@@ -441,6 +441,10 @@
                                 </div>
                             </li>
                             <li class="HorizontalList__Item">
+                                <a href="{{ route('collections', 'all.PREOWNED') }}" class="Heading u-h6 main-heading-text">PRE
+                                    OWNED<span class="Header__LinkSpacer">PRE OWNED</span></a>
+                            </li>
+                            <li class="HorizontalList__Item">
                                 <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">SIZE
                                     CHART<span class="Header__LinkSpacer">SIZE CHART</span></a>
                             </li>

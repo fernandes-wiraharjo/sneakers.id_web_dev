@@ -30,6 +30,7 @@
         <meta property="twitter:image" content="https://sneakers.id/stores-info/logos.png">
 
         <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/product-detail.css') }}" />
 
         @include('display-store.store-theme._partials._scripts')
 

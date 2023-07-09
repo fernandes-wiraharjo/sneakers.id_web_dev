@@ -164,11 +164,25 @@
                                  </span>
                              </div>
                          </div>
-                         <div style="margin: 50px;"></div>
+                         <div style="margin: 5px;"></div>
+                         <div class="size-button Heading u-h6" style="text-align: right;">
+                             {{-- <label for="">Size Available : </label> --}}
+                             {{-- <select name="size" id="size" class="size-select">
+                                 <option>Select Size</option>
+                                 @foreach ($sizeList as $item)
+                                     <option value="{{$item->id}}" data-id="{{$item->id}}"" data-price="{{ rupiah_format(intval($item->retail_price ?? 0))}}"
+                                         data-discount-price="{{rupiah_format(intval($item->after_discount_price ?? 0))}}" data-discount="{{$item->discount_percentage}}"
+                                         data-qty="{{$item->qty}}" wire:change="updatePrice($event.target.value)">{{$item->size}}</option>
+                                 @endforeach
+                             </select> --}}
+                             <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
+                         </div>
+                         {{-- <div style="margin: 5px 0"> --}}
+                         <div style="margin: 5px;"></div>
                          <div class="size-button Heading u-h6" style="display: flex; justify-content: space-between;">
                             {{-- <label for="">Size Available : </label> --}}
                             <p id="id_work_days">
-                                @foreach ($product->details()->get() as $index => $item)
+                                @foreach ($sizeList as $index => $item)
                                     <label><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}} {{ $index == 0 ? 'checked' : ''}}><span>{{$item->size ?? 'All Size'}}</span></label>
                                 @endforeach
                               </p>
@@ -211,9 +225,33 @@
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="{{ $product->product_link }}" target="_blank"
                                 class="ProductForm__AddToCart Button Button--primary Button--full">
-                                <span>BUY AT TOKOPEDIA</span>
+                                <span>ORDER VIA TOKOPEDIA</span>
                             </a>
                         </div>
+                        @if($product->shopee_link)
+                            <div style="height: 10px;">
+                                <span class="h-2"></span>
+                            </div>
+                            <div style="width: 100%;">
+                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                    href="{{ $product->shopee_link }}" target="_blank"
+                                    class="ProductForm__AddToCart Button Button--primary Button--full">
+                                    <span>ORDER VIA SHOPEE</span>
+                                </a>
+                            </div>
+                        @endif
+                        @if($product->blibli_link)
+                            <div style="height: 10px;">
+                                <span class="h-2"></span>
+                            </div>
+                            <div style="width: 100%;">
+                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                    href="{{ $product->blibli_link }}" target="_blank"
+                                    class="ProductForm__AddToCart Button Button--primary Button--full">
+                                    <span>ORDER VIA BLIBLI</span>
+                                </a>
+                            </div>
+                        @endif
                         <div style="height: 10px;">
                             <span class="h-2"></span>
                         </div>
@@ -221,12 +259,9 @@
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="http://wa.me/6289617925925" target="_blank"
                                 class="ProductForm__AddToCart Button Button--primary Button--full">
-                                <span>BUY AT WHATSAPP</span>
+                                <span>ORDER VIA WHATSAPP</span>
                             </a>
                         </div>
-                        <div style="height: 10px;">
-                           <span class="h-2"></span>
-                       </div>
 
                          <div class="Product__OffScreen"></div>
 

@@ -70,15 +70,14 @@
                         {{ date('Y') }}</a>
                 </div>
                 <div class="Footer__Copyright">
-                    <a href="/" class="Footer__StoreName Heading u-h7 Link Link--secondary">Developed by : </a>
+                    <span class="Footer__StoreName Heading u-h7 ">Developed by : </span>
                     <br>
-                    <span class="Footer__StoreName Heading u-h8 Link Link--secondary"
-                        style="padding-block-start: 10px">Fernandes Wiraharjo - 089693670282 -
-                        fernandeswiraharjo@gmail.com </span>
+                    <a href="https://fw-wq9n.onrender.com/" class="Footer__StoreName Heading u-h8 Link Link--secondary"
+                        style="padding-block-start: 10px">Fernandes Wiraharjo</a>
                     <br>
-                    <span class="Footer__StoreName Heading u-h8 Link Link--secondary"
-                        style="padding-block-start: 10px">Aldy Satria Gumilar - 089636022489 - aldy.satria07@gmail.com
-                    </span>
+                    <a href="https://aldy-portofolio.vercel.app/" class="Footer__StoreName Heading u-h8 Link Link--secondary"
+                        style="padding-block-start: 10px">Aldy Satria Gumilar
+                    </a>
                 </div>
             </div>
         </div>

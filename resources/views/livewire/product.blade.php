@@ -183,9 +183,9 @@
                             {{-- <label for="">Size Available : </label> --}}
                             <p id="id_work_days">
                                 @foreach ($sizeList as $index => $item)
-                                    <label><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}} {{ $index == 0 ? 'checked' : ''}}><span>{{$item->size ?? 'All Size'}}</span></label>
+                                    <label class="sizes-option"><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}} {{ $index == 0 ? 'checked' : ''}}><span>{{$item->size ?? 'All Size'}}</span></label>
                                 @endforeach
-                              </p>
+                            </p>
                                 {{-- <a href="#" class="Button {{ $item->qty == 0 ? 'Size__Button_Disabled' : 'Size__Button '}}" value="" {{ $item->qty == 0 ? 'disabled' : ''}}></a> --}}
                             {{-- <select name="size" id="size" class="size-select" wire:change="updatePrice($event.target.value)">
                                 <option value="">Select Size</option>
@@ -203,12 +203,9 @@
                             </button>
                         </div>
 
-                        <div style="margin: 20px 0">
-
-                        <div class="size-button Heading u-h6" style="display: flex; justify-content: space-between;">
-                            <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
+                        <div style="height: 10px;">
+                            <span class="h-2"></span>
                         </div>
-                        <div style="margin: 5px 0">
 
                             {{-- @if($product->details()->count() > 1)
                             @foreach ($product->details()->get() as $item)
@@ -220,7 +217,6 @@
                                 </a>
                             @endforeach
                             @endif --}}
-                        </div>
                         <div style="width: 100%;">
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="{{ $product->product_link }}" target="_blank"

@@ -56,28 +56,27 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductWhere(){
-        // return $this->model->query()
-        //     ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
-        //     // ->whereHas('details')
-        //     ->join('product_details as pd', function($join){
-        //         $join->on('pd.product_id', '=', 'products.id')
-        //             ->orderBy('pd.retail_price')
-        //             ->limit(1);
-        //     })
-        //     ->select('products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-        //     ->where(['is_active'=> 1]);
-
-        return $this->model->query()
+        $q = $this->model->query()
         ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
-        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
-            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price')
+        ->leftJoin('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'products.id')
+                ->where('pd.retail_price', '=', DB::raw('(
+                    Select min(retail_price)
+                    from product_details
+                    where product_id = products.id
+                )'))
+                ->where('pd.after_discount_price', '=', DB::raw('(
+                    Select min(after_discount_price)
+                    from product_details
+                    where product_id = products.id
+                )'));
         })
-        ->join('product_details as pd', function($join) {
-            $join->on('pd.product_id', '=', 'pd2.product_id')
-                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
-        })
-        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-        ->where(['is_active'=> 1]);
+        // ->whereRaw('pd.min_retail_price = pd2.retail_price')
+        ->where(['is_active'=> 1])
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'created_at','updated_at','pd.retail_price', 'pd.after_discount_price');
+
+        return $q;
     }
 
     public function getProductByCode($code){
@@ -188,7 +187,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductByIdWithEager($id){
-        return $this->model->with(['detail', 'tags', 'sizes', 'categories', 'signatures', 'images'])->find($id);
+        return $this->model->with(['detail', 'tags', 'sizes', 'categories', 'signatures', 'images', 'details'])->find($id);
     }
 
     public function getProductById($id){

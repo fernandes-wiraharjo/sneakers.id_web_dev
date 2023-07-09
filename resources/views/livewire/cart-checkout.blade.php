@@ -112,9 +112,9 @@
                             <div class="CartItem__LinePriceList Heading Text--subdued" style="text-align: right">
                                 <span class="CartItem__Price Price" data-money-convertible="">
                                     @if($item->get('discount_price') != 0)
-                                    <span class="money">Rp {{ rupiah_format($item->get('discount_price')) }} </span>
+                                    <span class="money">Rp {{ rupiah_format($item->get('quantity') * $item->get('discount_price')) }} </span>
                                     @else
-                                    <span class="money">Rp {{ rupiah_format($item->get('retail_price')) }}
+                                    <span class="money">Rp {{ rupiah_format($item->get('quantity') * $item->get('retail_price')) }}
                                     @endif
                                 </span>
                             </div>

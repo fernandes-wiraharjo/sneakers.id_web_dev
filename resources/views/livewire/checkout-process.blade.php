@@ -144,6 +144,13 @@
                                                                     {{ $item->get('name') }}
                                                                 </p>
                                                                 <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1r _1fragem28">
+                                                                    @if ($item->get('discount_price') != 0)
+                                                                        Rp {{ rupiah_format($item->get('discount_price')) }}
+                                                                    @else
+                                                                        Rp {{ rupiah_format($item->get('retail_price')) }}
+                                                                    @endif
+                                                                </div>
+                                                                <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1r _1fragem28">
                                                                     Size : {{ $item->get('size') }}
                                                                 </div>
                                                             </div>
@@ -160,11 +167,11 @@
                                                                     <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a _1fragem3b">
                                                                         @if ($item->get('discount_price') != 0)
                                                                         <span translate="yes"
-                                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('discount_price'))
+                                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('quantity') * $item->get('discount_price'))
                                                                             }}</span>
                                                                         @else
                                                                         <span translate="yes"
-                                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('retail_price'))
+                                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('quantity') * $item->get('retail_price'))
                                                                             }}</span>
                                                                         @endif
                                                                     </div>
@@ -1337,6 +1344,13 @@
                                                 <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j _1x52f9s2">
                                                     {{ $item->get('name') }}</p>
                                                 <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1r _1fragem28">
+                                                    @if ($item->get('discount_price') != 0)
+                                                        Rp {{ rupiah_format($item->get('discount_price')) }}
+                                                    @else
+                                                        Rp {{ rupiah_format($item->get('retail_price')) }}
+                                                    @endif
+                                                </div>
+                                                <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1r _1fragem28">
                                                     Size : {{ $item->get('size') }}
                                                 </div>
                                             </div>
@@ -1353,14 +1367,12 @@
                                             <div role="cell" class="_6zbcq53y _1fragem17 _1fragem1d _1fragem38">
                                                 <div class="_1fragem17 _1fragem1d _1fragem5 _1fragem36 _1fragemaf _16s97g7r _16s97g7t _16s97g7v bua0H"
                                                     style="--_16s97g7q: 6.4rem; --_16s97g7s: 6.4rem; --_16s97g7u: 6.4rem;">
-                                                    <div
-                                                        class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a _1fragem3b">
+                                                    <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a _1fragem3b">
                                                         @if ($item->get('discount_price') != 0)
                                                         <span translate="yes"
-                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('discount_price')) }}</span>
+                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('quantity') * $item->get('discount_price')) }}</span>
                                                         @else
-                                                        <span translate="yes"
-                                                            class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('retail_price')) }}</span>
+                                                        <span translate="yes"class="_19gi7yt0 _19gi7yte _1fragem1j notranslate">Rp {{ rupiah_format($item->get('quantity') * $item->get('retail_price')) }}</span>
                                                         @endif
                                                     </div>
                                                 </div>

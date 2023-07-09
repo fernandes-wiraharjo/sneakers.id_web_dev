@@ -10,6 +10,7 @@ class Product extends Component
     public $product;
     public $quantity;
     public $size;
+    public $sizeList;
     public $showRetailPrice;
     public $showDiscountPrice;
     public $showDiscountPercentage;

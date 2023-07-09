@@ -44,10 +44,12 @@
         border-radius: inherit;
         }
 </style>
+
+
 @endpush
 
 @section('body')
-   @livewire('product', ['product' => $product])
+   @livewire('product', ['product' => $product,  'sizeList' => $size])
 @endsection
 
 @push('scripts')
@@ -58,6 +60,14 @@
             e.preventDefault();
             // $('#imagemodal').attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
             $('#sizeModal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+        });
+
+        $(document).ready(function() {
+            $('#size').change(function() {
+                $('#retail').text($(this).find(':selected').attr('data-price'));
+                $('#discount').text($(this).find(':selected').attr('data-discount-price'));
+                $('#percentage').text($(this).find(':selected').attr('data-discount'));;
+            });
         });
 
         // $(document).ready(function() {

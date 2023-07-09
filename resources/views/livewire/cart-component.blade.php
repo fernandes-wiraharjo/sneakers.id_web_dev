@@ -29,6 +29,7 @@
                                     <div class="CartItem__PriceList" style="margin-bottom: 0px;">
                                         <span class="CartItem__Price Price" data-money-convertible="">
                                             @if($item->get('discount_price') != 0)
+
                                             <span class="money">Rp
                                                 <del id="retail">
                                                     {{ rupiah_format($item->get('retail_price')) }}

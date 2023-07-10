@@ -651,33 +651,6 @@
                                                                                                                     <div class="_1fragemaf _1fragemb4 _1fragem9 _1fragem11 _7ozb2u1k">
                                                                                                                         <div class="_1fragem17 _1fragemaf _1fragem38">
                                                                                                                             <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1o _1fragem25 _1fragem0 _1fragem4 _1fragem38">
-                                                                                                                                <div class="_1fragemaf">
-                                                                                                                                    <button type="button" aria-pressed="false" class="_1vozb023 _1fragem15">
-                                                                                                                                        <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p a8x1wu5 _1fragem15 a8x1wui a8x1wum"><svg
-                                                                                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                                                                                viewBox="0 0 14 14"
-                                                                                                                                                focusable="false"
-                                                                                                                                                aria-label="More information"
-                                                                                                                                                class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
-                                                                                                                                                <circle
-                                                                                                                                                    cx="7"
-                                                                                                                                                    cy="7"
-                                                                                                                                                    r="5.6">
-                                                                                                                                                </circle>
-                                                                                                                                                <path
-                                                                                                                                                    stroke-linecap="round"
-                                                                                                                                                    stroke-linejoin="round"
-                                                                                                                                                    d="M5.6 5.1c.2-1.3 2.6-1.3 2.8 0 .2 1.3-1.45 1.3-1.45 2.35m.055 2.35H7v.005h.005V9.8Z">
-                                                                                                                                                </path>
-                                                                                                                                                <circle
-                                                                                                                                                    cx="7"
-                                                                                                                                                    cy="9.7"
-                                                                                                                                                    r="0.1">
-                                                                                                                                                </circle>
-                                                                                                                                            </svg>
-                                                                                                                                        </span>
-                                                                                                                                    </button>
-                                                                                                                                </div>
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                     </div>

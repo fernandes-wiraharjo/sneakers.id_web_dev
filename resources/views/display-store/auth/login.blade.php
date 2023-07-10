@@ -16,24 +16,7 @@
         </div>
         <!--begin::Heading-->
         <div class="">
-            <x-ladmin-alert />
-            {{-- <div class="Form__Alert Alert Alert--error">
-                <ul class="Alert__ErrorList"><li class="Alert__ErrorItem">We have sent an email to aldy.satria07@gmail.com, please click the link included to verify your email address.</li></ul>
-              </div> --}}
-
-            @if ($message = Session::get('success'))
-                <div class="">
-                    <button type="button" class="" data-dismiss="alert">×</button>
-                    <strong>{{ $message }}</strong>
-                </div>
-            @endif
-
-            @if ($message = Session::get('message'))
-                <div class="">
-                    <button type="button" class="" data-dismiss="alert">×</button>
-                    <strong>{{ $message }}</strong>
-                </div>
-            @endif
+            <x-alert/>
         </div>
         <!--begin::Input group-->
         <div style="padding: 10px 0px;">

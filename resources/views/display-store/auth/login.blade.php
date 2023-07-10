@@ -16,7 +16,7 @@
         </div>
         <!--begin::Heading-->
         <div class="">
-            <x-alert/>
+
         </div>
         <!--begin::Input group-->
         <div style="padding: 10px 0px;">

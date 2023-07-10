@@ -11,7 +11,7 @@
 
         <!--begin::Heading-->
         <div class="fv-row mb-10 my-3">
-            <x-ladmin-alert />
+            <x-alert/>
         </div>
 
         <form action="{{ route('customer.submit.register') }}" method="post">

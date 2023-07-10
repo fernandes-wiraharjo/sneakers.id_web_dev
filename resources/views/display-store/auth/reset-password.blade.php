@@ -8,7 +8,7 @@
         @csrf
 
         <div class="my-3">
-            <x-ladmin-alert />
+            <x-alert/>
         </div>
 
         <!--begin::Input group-->

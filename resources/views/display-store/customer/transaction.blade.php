@@ -237,7 +237,7 @@
     <br>
 
     <div class="items">
-        <div style="padding-right: 20px;">
+        <div style="width: 80%;padding-right: 20px;">
             <div id="Order" class="tabcontent" style="display: block">
                 <div class="table-header">
                     <div class="header__item"><a id="us" class="filter__link filter__link--number" href="#">PRODUCT</a></div>
@@ -255,10 +255,10 @@
                             </div>
                             {{ $item->detail->product->product_name }} <br>
                             {{ $item->detail->size }}<br>
-                            Rp {{ rupiah_format($item->price / $item->quantity) }}
+                            Rp {{ rupiah_format($item->price) }}
                         </div>
                         <div class="table-data data" style="max-width: 100px;">{{ $item->quantity }}</div>
-                        <div class="table-data data" style="max-width: 150px;text-align-last: end;">Rp {{ rupiah_format($item->price) }}</div>
+                        <div class="table-data data" style="max-width: 150px;text-align-last: end;">Rp {{ rupiah_format($item->quantity * $item->price) }}</div>
                     </div>
                     @endforeach
                     <div class="table-row">
@@ -272,7 +272,7 @@
         <div style="max-width: 25%;">
             <h1>USER ADDRESS</h1>
             <p>
-                <span>{{ $user_info->name ?? '-' }}</span>
+                <span>{{ $user_info->first_name ?? '-' }} {{ $user_info->last_name ?? '' }}</span>
             </p>
             @if($user_address != null)
             <p>

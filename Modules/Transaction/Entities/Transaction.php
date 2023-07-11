@@ -2,6 +2,7 @@
 
 namespace Modules\Transaction\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Kirschbaum\PowerJoins\PowerJoins;
@@ -52,5 +53,14 @@ class Transaction extends Model
     public function histories()
     {
         return $this->hasMany(TransactionHistories::class, 'transaction_id', 'id');
+    }
+
+    public function getUserData()
+    {
+        if ($this->destination) {
+            return $this->destination->user();
+        }
+
+        return null;
     }
 }

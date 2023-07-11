@@ -1,0 +1,205 @@
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chip{
+    display: inline-flex;
+    flex-direction: row;
+    background-color: #e5e5e5;
+    border: none;
+    cursor: default;
+    height: 29px;
+    outline: none;
+    padding: 0;
+    font-size: 14px;
+    font-color: rgb(253, 253, 253);
+    font-family:"Open Sans", sans-serif;
+    font-weight: 400;
+    white-space: nowrap;
+    align-items: center;
+    border-radius: 16px;
+    vertical-align: middle;
+    text-decoration: none;
+    justify-content: center;
+}
+
+.chip-content{
+    cursor: inherit;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    white-space: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #e5e5e5;
+}
+
+.items {
+    width: 100%;
+    display: flex;
+    align-content: center;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+.tabcontent {
+    border: 1px solid #ccc;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.table-row {
+    border-bottom: 1px solid #ccc;
+    align-items: center;
+}
+
+.product {
+    text-align: left;
+    align-items: center;
+    display: inline-flex;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 11;
+    /* Sit on top */
+    padding-top: 20px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-body {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.size-select,
+.size-select::before,
+.size-select::after {
+    box-sizing: border-box;
+}
+
+.size-select {
+    border: 1px solid #e7e7e7;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 400;
+    font-style: normal;
+    cursor: pointer;
+    line-height: normal;
+    transition: border-color .1s ease-in-out;
+    background-color: transparent;
+}
+
+select:focus+.focus {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border: 2px solid var(--select-focus);
+    border-radius: 0;
+}
+
+.Form__Item {
+    margin-bottom: 0;
+}
+
+.back-button {
+    /* Add your desired button styles here */
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #000000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: none;
+}
+
+/* Define styles for the 'pending' status */
+.chip.pending {
+    background-color: #E8833A; /* Yellow */
+}
+
+/* Define styles for the 'paid' status */
+.chip.paid {
+    background-color: #1AAE9F; /* Green */
+}
+
+/* Define styles for the 'expired' status */
+.chip.expired {
+    background-color: #D3455B; /* Red */
+}
+
+/* Define styles for the 'completed' status */
+.chip.completed {
+    background-color: #2C88D9; /* Blue */
+}

@@ -2,180 +2,7 @@
 
     @push('styles')
         <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/size-chart.css') }}" />
-        <style>
-            .header {
-                display: flex;
-                flex-direction: row;
-                align-content: center;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .chip{
-                display: inline-flex;
-                flex-direction: row;
-                background-color: #e5e5e5;
-                border: none;
-                cursor: default;
-                height: 36px;
-                outline: none;
-                padding: 0;
-                font-size: 14px;
-                font-color: #333333;
-                font-family:"Open Sans", sans-serif;
-                white-space: nowrap;
-                align-items: center;
-                border-radius: 16px;
-                vertical-align: middle;
-                text-decoration: none;
-                justify-content: center;
-            }
-
-            .chip-content{
-                cursor: inherit;
-                display: flex;
-                align-items: center;
-                user-select: none;
-                white-space: nowrap;
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .items {
-                width: 100%;
-                display: flex;
-                align-content: center;
-                flex-wrap: nowrap;
-                align-items: stretch;
-            }
-            .tabcontent {
-                border: 1px solid #ccc;
-                margin-left: 0;
-                margin-right: 0;
-            }
-
-            .table-row {
-                border-bottom: 1px solid #ccc;
-                align-items: center;
-            }
-
-            .product {
-                text-align: left;
-                align-items: center;
-                display: inline-flex;
-            }
-
-            /* The Modal (background) */
-            .modal {
-                display: none;
-                /* Hidden by default */
-                position: fixed;
-                /* Stay in place */
-                z-index: 11;
-                /* Sit on top */
-                padding-top: 20px;
-                /* Location of the box */
-                left: 0;
-                top: 0;
-                width: 100%;
-                /* Full width */
-                height: 100%;
-                /* Full height */
-                overflow: auto;
-                /* Enable scroll if needed */
-                background-color: rgb(0, 0, 0);
-                /* Fallback color */
-                background-color: rgba(0, 0, 0, 0.4);
-                /* Black w/ opacity */
-            }
-
-            /* Modal Content */
-            .modal-body {
-                position: relative;
-                background-color: #fefefe;
-                margin: auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 30%;
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-                -webkit-animation-name: animatetop;
-                -webkit-animation-duration: 0.4s;
-                animation-name: animatetop;
-                animation-duration: 0.4s
-            }
-
-            /* Add Animation */
-            @-webkit-keyframes animatetop {
-                from {
-                    top: -300px;
-                    opacity: 0
-                }
-
-                to {
-                    top: 0;
-                    opacity: 1
-                }
-            }
-
-            @keyframes animatetop {
-                from {
-                    top: -300px;
-                    opacity: 0
-                }
-
-                to {
-                    top: 0;
-                    opacity: 1
-                }
-            }
-
-            /* The Close Button */
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-
-            .size-select,
-            .size-select::before,
-            .size-select::after {
-                box-sizing: border-box;
-            }
-
-            .size-select {
-                border: 1px solid #e7e7e7;
-                padding: 12px 14px;
-                font-size: 15px;
-                font-weight: 400;
-                font-style: normal;
-                cursor: pointer;
-                line-height: normal;
-                transition: border-color .1s ease-in-out;
-                background-color: transparent;
-            }
-
-            select:focus+.focus {
-                position: absolute;
-                top: -1px;
-                left: -1px;
-                right: -1px;
-                bottom: -1px;
-                border: 2px solid var(--select-focus);
-                border-radius: 0;
-            }
-
-            .Form__Item {
-                margin-bottom: 0;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/transactions.css') }}" />
     @endpush
 
     @if ($message = Session::get('success'))
@@ -194,26 +21,36 @@
         </div>
     @endif
 
-    <div>
-        <a href="{{ route('customer.dashboard') }}">BACK</a>
-    </div>
+
     <div class="header">
         <div>
             <span>Order <strong>#{{ strtoupper($transaction->token) }}</strong></span>
+            <div class="chip pending">
+                <div class="chip-content">Waiting for Payment</div>
+            </div>
+            <div class="chip paid">
+                <div class="chip-content">PAID</div>
+            </div>
+            <div class="chip expired">
+                <div class="chip-content">EXPIRED / CANCELED</div>
+            </div>
+            <div class="chip completed">
+                <div class="chip-content">COMPLETED</div>
+            </div>
             @if ($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
-                <div class="chip">
+                <div class="chip pending">
                     <div class="chip-content">Waiting for Payment</div>
                 </div>
             @elseif($transaction->status == 'SETTLED' || $transaction->status == 'PAID')
-                <div class="chip">
+                <div class="chip paid">
                     <div class="chip-content">PAID</div>
                 </div>
             @elseif($transaction->status == 'EXPIRED')
-                <div class="chip">
+                <div class="chip expired">
                     <div class="chip-content">EXPIRED / CANCELED</div>
                 </div>
             @elseif($transaction->status == 'COMPLETED')
-                <div class="chip">
+                <div class="chip completed">
                     <div class="chip-content">COMPLETED</div>
                 </div>
             @endif

@@ -1,21 +1,19 @@
-
 <a href="#" class="btn btn-info btn-active-light-primary btn-sm m-1"
-    data-bs-toggle="modal" data-bs-target="#action-3">
+    data-bs-toggle="modal" data-bs-target="#action-detail-{{ $transaction->id }}">
     <i class="fas fa-eye"></i> Detail
 </a>
 
-
 <a href="#" class="btn btn-warning btn-active-light-primary btn-sm m-1"
-    data-bs-toggle="modal" data-bs-target="#action-2">
+    data-bs-toggle="modal" data-bs-target="#action-shipping-{{ $transaction->id }}">
     <i class="fas fa-truck"></i> Shipping
 </a>
 
 <a href="#" class="btn btn-danger btn-active-light-primary btn-sm m-1"
-    data-bs-toggle="modal" data-bs-target="#action-1">
+    data-bs-toggle="modal" data-bs-target="#action-history-{{ $transaction->id }}">
     <i class="fa fa-reply"></i> History
 </a>
 
-<div class="modal fade" tabindex="-1" id="action-2" tabindex="-1" role="dialog" aria-labelledby="action-2Label" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="action-shipping-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-shipping-{{ $transaction->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form action="{{ route('administrator.transaction.resi') }}" method="post">
@@ -112,7 +110,7 @@
     </div>
 </div>
 
-<div class="modal fade" tabindex="-1" id="action-1" tabindex="-1" role="dialog" aria-labelledby="action-1Label" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="action-history-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-history-{{ $transaction->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0">
@@ -156,7 +154,7 @@
     </div>
 </div>
 
-<div class="modal fade" tabindex="-1" id="action-3" tabindex="-1" role="dialog" aria-labelledby="action-3Label" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="action-detail-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-detail-{{ $transaction->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0">
@@ -172,6 +170,56 @@
                 <div class="mb-10">
                     <h5>Item Details</h5>
                     <div class="table-responsive" style="text-align: left;">
+                        <div class="gy-7 gs-7">
+                            @if($shipping)
+                            <div class="table-responsive" style="text-align: left;">
+                                <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 200px;">Transactions Order ID</td>
+                                            <td>{{ $transaction->token?? '-'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 200px;">Transactions Status</td>
+                                            <td>{{ $transaction->status?? '-'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td >Transactions Created At</td>
+                                            <td>{{ $transaction->created_at ? $transaction->created_at->format('d-m-Y H:i') : '-'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 200px;">Payment Type</td>
+                                            <td>{{ $transaction->type ?? '-'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 200px;">Payment Method</td>
+                                            <td>{{ $transaction->method ?? '-'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 200px;">Invoice</td>
+                                            <td><a href="{{ $transaction->invoice_url ?? '-'}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa fa-file-invoice"></i>Invoice Link</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Customer Email</td>
+                                            <td>{{ $user_info->email ?? "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Customer Name</td>
+                                            <td>{{ $user_info->first_name ?? "" }} {{ $user_info->last_name ?? "" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Recipient Email</td>
+                                            <td>{{ $destination->email ?? "-" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Recipient Name</td>
+                                            <td>{{ $destination->first_name ?? "" }} {{ $destination->last_name ?? "" }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                        </div>
                         <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
                             <thead>
                                 <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">

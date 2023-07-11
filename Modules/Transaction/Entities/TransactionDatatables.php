@@ -2,6 +2,7 @@
 
 namespace Modules\Transaction\Entities;
 
+use App\Models\User;
 use Modules\Product\Entities\Product;
 use Modules\Product\Entities\ProductTag;
 use Yajra\DataTables\Html\Button;
@@ -24,7 +25,7 @@ class TransactionDatatables extends DataTable
             ->eloquent($query)
             ->rawColumns(['action', 'doc_no', 'customer_email'])
             ->editColumn('customer_email',  function ($item) {
-                return $item->destination->email ?? '-';
+                return $item->getUserData->email ?? '-';
             })
             ->editColumn('grand_total',  function ($item) {
                 return 'Rp '.rupiah_format(intval($item->grand_total));
@@ -32,12 +33,13 @@ class TransactionDatatables extends DataTable
             ->editColumn('created_at', function ($item) {
                 return $item->created_at->format('d-m-Y H:i');
             })
-            ->editColumn('action', function ($item) {
+            ->addColumn('action', function ($item) {
                 $data['shipping'] = $item->shipping;
                 $data['destination'] = $item->destination;
                 $data['histories'] = $item->histories;
                 $data['transaction'] = $item;
                 $data['items'] = $item->items;
+                $data['user_info'] = $item->getUserData;
                 return view('transaction::_partial.action-burger', $data);
             });
     }

@@ -3,6 +3,7 @@
 namespace Modules\Transaction\Entities;
 
 use App\Models\Region;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Kirschbaum\PowerJoins\PowerJoins;
@@ -38,5 +39,10 @@ class TransactionDestination extends Model
     public function region()
     {
         return $this->hasOne(Region::class, 'region_id', 'region_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }

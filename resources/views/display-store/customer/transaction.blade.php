@@ -25,18 +25,6 @@
     <div class="header">
         <div>
             <span>Order <strong>#{{ strtoupper($transaction->token) }}</strong></span>
-            <div class="chip pending">
-                <div class="chip-content">Waiting for Payment</div>
-            </div>
-            <div class="chip paid">
-                <div class="chip-content">PAID</div>
-            </div>
-            <div class="chip expired">
-                <div class="chip-content">EXPIRED / CANCELED</div>
-            </div>
-            <div class="chip completed">
-                <div class="chip-content">COMPLETED</div>
-            </div>
             @if ($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
                 <div class="chip pending">
                     <div class="chip-content">Waiting for Payment</div>

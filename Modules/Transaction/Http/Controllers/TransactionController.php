@@ -10,6 +10,7 @@ use Modules\Transaction\Entities\TransactionShippings;
 use Alert;
 use App\Facades\CekOngkir;
 use App\Services\CekOngkirService;
+use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionItems;
 
@@ -31,13 +32,25 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors('invalid shipping id');
         }
 
-        $shipping = TransactionShippings::where('id', $request->id)->first();
-        $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $request->status]);
+        $shipping = TransactionShippings::findOrFail($request->id)->first();
+        $status = '';
+
+        if(intval($request->complete)){
+            $status = 'COMPLETED';
+            $update_transactions = Transaction::findOrFail($shipping->transaction_id)->update(['status' => $status]);
+        }
+
+        $status_shipping = 'DIKEMAS';
+        if($request->shipping_waybill != "" || $shipping->status != 'DIKIRIM' || $shipping->status != 'DELIVERED') {
+            $status_shipping = 'DIKIRIM';
+        }
+
+        $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $status_shipping]);
         if($updated) {
             //create shipping history and get Raja Ongkir cek resi
             $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
 
-            TransactionHistories::create([
+            $history_created = TransactionHistories::create([
                 'transaction_id' => $shipping->transaction_id,
                 'response_raw' => json_encode($response),
                 'response_status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'ERROR',
@@ -45,8 +58,13 @@ class TransactionController extends Controller
                 'response_message' =>  $response['rajaongkir']['status']['description'] != 'OK' ? $response['rajaongkir']['status']['description'] : 'Update Shipping status',
                 'created_by' =>  auth()->user()->id,
             ]);
+
+            if($history_created) {
+                $shipping->update(['status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'RESI NOT VALID']);
+            }
+
             //if status complete update quantity
-            if($request->status == 'COMPLETE') {
+            if(intval($request->complete)) {
                 $transaction = TransactionItems::where('transaction_id', $shipping->transaction_id)->get();
 
                 foreach($transaction as $item) {

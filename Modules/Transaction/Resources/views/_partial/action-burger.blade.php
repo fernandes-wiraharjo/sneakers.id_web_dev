@@ -22,7 +22,7 @@
                     <h5 class="modal-title" id="action-1Label">Update Shipping</h5>
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                        <span class="svg-icon svg-icon-2x"></span>
+                        <i class="fa fa-times"><span class="path1"></span><span class="path2"></span></i>
                     </div>
                     <!--end::Close-->
                 </div>
@@ -35,6 +35,45 @@
                     </div>
 
                     <div class="mb-10 text-left">
+                        <label for="select-status" class="form-label">Order Status</label>
+                        <!--begin::Row-->
+                        <div class="row mw-500px mb-5" data-kt-buttons="true" data-kt-buttons-target=".form-check-image, .form-check-input">
+                            <div class="col-4">
+                                <label class="form-check-label">
+                                    Complete
+                                </label>
+                            </div>
+                            <!--begin::Col-->
+                            <div class="col-4">
+                                <label class="form-check-image active">
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="radio" value="1" name="complete" {{ $transaction->status == 'COMPLETED' ? 'checked' : '' }} {{ $transaction->status == 'COMPLETED' ? 'disabled' : '' }}/>
+                                        <div class="form-check-label">
+                                            Yes
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <!--end::Col-->
+
+                            <!--begin::Col-->
+                            <div class="col-4">
+                                <label class="form-check-image">
+                                    <div class="form-check form-check-custom form-check-solid me-10">
+                                        <input class="form-check-input" type="radio" {{ $transaction->status != 'COMPLETED' ? 'checked' : '' }} value="0" name="complete" id="text_wow" {{ $transaction->status == 'COMPLETED' ? 'disabled' : '' }}/>
+                                        <div class="form-check-label">
+                                            No
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <!--end::Col-->
+
+                        </div>
+                        <!--end::Row-->
+                    </div>
+
+                    {{-- <div class="mb-10 text-left">
                         <label for="select-status" class="form-label">Shipping Status</label>
                         <select class="form-select form-select-solid" name="status" aria-label="Select status" id="select-status">
                             <option value="DIKEMAS" {{ $shipping->status ?? '' == 'DIKEMAS' ? 'selected' : ''}}>DIKEMAS</option>
@@ -42,7 +81,7 @@
                             <option value="SEDANG DIKIRIM" {{ $shipping->status ?? '' == 'SEDANG DIKIRIM' ? 'selected' : ''}}>SEDANG DIKIRIM</option>
                             <option value="COMPLETE" {{ $shipping->status ?? '' == 'COMPLETE' ? 'selected' : ''}}>COMPLETE</option>
                         </select>
-                    </div>
+                    </div> --}}
 
                     <div class="mb-10">
                     <h5>Shipping Information</h5>
@@ -53,6 +92,10 @@
                                     <tr>
                                         <td style="width: 200px;">Transactions Status</td>
                                         <td>{{ $transaction->status?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 200px;">Shipping Status</td>
+                                        <td>{{ $shipping->status?? '-'}}</td>
                                     </tr>
                                     <tr>
                                         <td >Transactions Created At</td>
@@ -103,7 +146,7 @@
 
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Update</button>
+                    <button type="submit" class="btn btn-danger" {{ $transaction->status == 'COMPLETED' ? 'disabled' : '' }}>Update</button>
                 </div>
             </form>
         </div>

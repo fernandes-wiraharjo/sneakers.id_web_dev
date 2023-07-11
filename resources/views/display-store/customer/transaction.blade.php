@@ -21,7 +21,9 @@
         </div>
     @endif
 
-
+    <div>
+        <a href="{{ route('customer.dashboard') }}" class="back-button Button Button--primary ">BACK</a>
+    </div>
     <div class="header">
         <div>
             <span>Order <strong>#{{ strtoupper($transaction->token) }}</strong></span>

@@ -13,7 +13,7 @@
     <i class="fa fa-reply"></i> History
 </a>
 
-<div class="modal fade" tabindex="-1" id="action-shipping-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-shipping-{{ $transaction->id }}" aria-hidden="true">
+<div class="modal fade" tabindex="-1" id="action-shipping-{{ $transaction->id }}" aria-labelledby="action-Label-shipping-{{ $transaction->id }}">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form action="{{ route('administrator.transaction.resi') }}" method="post">
@@ -31,7 +31,32 @@
                     <input type="hidden" name="id" value="{{ $shipping->id ?? '' }}">
                     <div class="mb-10 text-left">
                         <label for="exampleFormControlInput1" class="form-label">Resi</label>
-                        <input type="text" name="shipping_waybill" class="form-control form-control-solid" placeholder="Masukkan Resi" value="{{ old('resi', $shipping->shipping_waybill ?? '' )}}"/>
+                        <div class="w-100">
+                            <div class="d-flex">
+                                <input type="text" name="shipping_waybill" class="form-control form-control-solid me-3 flex-grow-1 shipping-waybill-{{ $transaction->id }}" placeholder="Masukkan Resi" value="{{ old('resi', $shipping->shipping_waybill ?? '' )}}"/>
+                                <input type="hidden" class="csrf-token-{{ $transaction->id }}" value="{{ csrf_token() }}">
+                                <a href="#" id="shipping-waybill-{{ $transaction->id }}" class="btn btn-primary fw-bold flex-shrink-0"  onclick="checkResi({{ $transaction->id }})">Cek Resi</a>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="indicator-progress loading-spinner-{{ $transaction->id }} m-10">
+                        Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                    <div class="mb-10 description-check-resi-{{ $transaction->id }}" style="display: none;">
+                        <h5>Check Resi</h5>
+                    </div>
+
+                    <div class="mb-10 check-resi-{{ $transaction->id }}" style="display: none;">
+                        <h5>Check Resi</h5>
+                        <div class="response-container container---{{ $transaction->id }}">
+                            <div class="response-summary summary--{{ $transaction->id }}"></div>
+                            <div class="timeline">
+                                <div class="outer manifest-timeline timeline--{{ $transaction->id }}">
+
+                                </div>
+                              <!-- Manifest items will be appended here -->
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-10 text-left">
@@ -160,7 +185,7 @@
                 <h5 class="modal-title" id="action-1Label">Transaction History Information</h5>
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                    <span class="svg-icon svg-icon-2x"></span>
+                    <i class="fa fa-times"><span class="path1"></span><span class="path2"></span></i>
                 </div>
                 <!--end::Close-->
             </div>
@@ -204,7 +229,7 @@
                 <h5 class="modal-title" id="action-1Label">Transaction Details</h5>
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                    <span class="svg-icon svg-icon-2x"></span>
+                    <i class="fa fa-times"><span class="path1"></span><span class="path2"></span></i>
                 </div>
                 <!--end::Close-->
             </div>

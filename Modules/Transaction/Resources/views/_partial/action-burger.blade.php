@@ -196,7 +196,7 @@
                         <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
                             <thead>
                                 <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
-                                    <td>Status</td>
+                                    <td style="width: 150px;">Order Status</td>
                                     <td>Response Code</td>
                                     <td>Response Message</td>
                                 </tr>
@@ -204,9 +204,9 @@
                             <tbody>
                                 @foreach ($histories as $item)
                                 <tr>
-                                    <td>{{ $item->response_status }}</td>
-                                    <td>{{ $item->response_code }}</td>
-                                    <td>{{ $item->response_message }}</td>
+                                    <td>{{ $item->response_status == 'DELIVERED' ? 'COMPLETED' : $item->response_status}}</td>
+                                    <td>{{ $item->response_code ?? '-'}}</td>
+                                    <td>{{ $item->response_message ?? '-'}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

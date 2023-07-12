@@ -82,6 +82,13 @@ class TransactionController extends Controller
         return redirect()->back()->withErrors('Failed update resi & status');
     }
 
+    public function ajaxCheckResi(Request $request)
+    {
+        $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
+
+        return $response['rajaongkir'];
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable

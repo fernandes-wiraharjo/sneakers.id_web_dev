@@ -28,6 +28,10 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="mb-15">
+                        <h4>ORDER SHIPPING</h4>
+                        <h5>{{ $transaction->token?? '-'}}</h5>
+                    </div>
                     <input type="hidden" name="id" value="{{ $shipping->id ?? '' }}">
                     <div class="mb-10 text-left">
                         <label for="exampleFormControlInput1" class="form-label">Resi</label>
@@ -226,7 +230,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header border-0">
-                <h5 class="modal-title" id="action-1Label">Transaction Details</h5>
+                <h5 class="modal-title" id="action-1Label">Order Detail {{ $transaction->token?? '-'}}</h5>
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                     <i class="fa fa-times"><span class="path1"></span><span class="path2"></span></i>
@@ -243,6 +247,10 @@
                             <div class="table-responsive" style="text-align: left;">
                                 <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
                                     <tbody>
+                                        <tr>
+                                            <td style="width: 200px;">Order Payment ID</td>
+                                            <td>{{ $transaction->doc_no ?? '-'}}</td>
+                                        </tr>
                                         <tr>
                                             <td style="width: 200px;">Order ID</td>
                                             <td>{{ $transaction->token?? '-'}}</td>

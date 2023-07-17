@@ -170,7 +170,7 @@ class CheckoutProcess extends Component
             'transaction_destinations' => [
                 'region_id' => $this->selectedArea,
                 'email' => $this->shippingEmail,
-                'first_mame' => $this->shippingFirstName,
+                'first_name' => $this->shippingFirstName,
                 'last_name' => $this->shippingLastName,
                 'address' => $this->shippingAddress,
                 'phone_number' => $this->shippingPhoneNumber,

@@ -140,24 +140,24 @@
                              <div class="ProductMeta__PriceList Heading">
                                  <span class="ProductMeta__Price Price Text--subdued u-h4"
                                      data-money-convertible>
-                                     @if ($product->detail->discount_percentage > 0)
+                                     @if (intval($showDiscountPrice) > 0)
                                          <span class="money">
                                              RP.
                                              <del id="retail">
-                                                 {{ rupiah_format(intval($showRetailPrice != 0 ? $showRetailPrice : ($product->detail->retail_price ?? 0))) }}
+                                                 {{ rupiah_format(intval($showRetailPrice != 0 ? $showRetailPrice : 0)) }}
                                              </del>
                                              <span style="position:inherit; font-weight: 800;" id="discount">
-                                                 {{ rupiah_format(intval($showDiscountPrice != 0 ? $showDiscountPrice : ($product->detail->after_discount_price ?? 0))) }}
+                                                 {{ rupiah_format(intval($showDiscountPrice != 0 ? $showDiscountPrice : 0)) }}
                                              </span>
                                          </span>
                                          <div style="color: red; font-size: 20px; font-weight: bold;">
-                                             <span id="percentage">{{ $showDiscountPercentage != 0 ? $showDiscountPercentage : ($product->detail->discount_percentage) }}</span>
+                                             <span id="percentage">{{ $showDiscountPercentage != 0 ? $showDiscountPercentage : 0 }}</span>
                                              % OFF
                                          </div>
                                          @else
                                          <span class="money">RP.
                                              <span id="retail">
-                                                 {{ rupiah_format(intval($showRetailPrice != 0 ? $showRetailPrice : ($product->detail->retail_price ?? 0))) }}
+                                                 {{ rupiah_format(intval($showRetailPrice != 0 ? $showRetailPrice : 0)) }}
                                              </span>
                                          </span>
                                      @endif

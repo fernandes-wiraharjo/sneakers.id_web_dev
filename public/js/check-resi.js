@@ -1,3 +1,23 @@
+function openModal(transaction_id){
+    $('.loading-spinner-' + transaction_id).hide();
+    $('.description-check-resi-' + transaction_id).hide();
+    $('.description-check-resi-' + transaction_id).empty();
+    var manifestTimeline = $('.timeline--' + transaction_id);
+    manifestTimeline.empty(); // Clear existing manifest timeline
+    $('.check-resi-' + transaction_id).hide();
+}
+
+function fieldResi(transaction_id){
+    var waybill = $('.shipping-waybill-'+transaction_id).val();
+    var waybillButton = $('#shipping-waybill-'+transaction_id);
+    if(waybill != undefined || waybill != null || waybill != "") {
+        waybillButton.prop('disabled', false);
+    }
+
+    if (waybill == '') {
+        waybillButton.prop("disabled", true);
+    }
+}
 
 function checkResi(transaction_id){
     //ajax here

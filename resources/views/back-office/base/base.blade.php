@@ -112,6 +112,7 @@ License: {{ theme()->getOption('product', 'license') }}
 @livewireScripts
 <script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
+@stack('after-scripts')
 @include('sweetalert::alert')
 </body>
 {{-- end::Body --}}

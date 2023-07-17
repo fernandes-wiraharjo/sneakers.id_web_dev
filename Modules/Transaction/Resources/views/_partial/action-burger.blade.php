@@ -4,7 +4,7 @@
 </a>
 
 <a href="#" class="btn btn-warning btn-active-light-primary btn-sm m-1"
-    data-bs-toggle="modal" data-bs-target="#action-shipping-{{ $transaction->id }}">
+    data-bs-toggle="modal" data-bs-target="#action-shipping-{{ $transaction->id }}" onclick="openModal({{ $transaction->id }})">
     <i class="fas fa-truck"></i> Shipping
 </a>
 
@@ -37,9 +37,9 @@
                         <label for="exampleFormControlInput1" class="form-label">Resi</label>
                         <div class="w-100">
                             <div class="d-flex">
-                                <input type="text" name="shipping_waybill" class="form-control form-control-solid me-3 flex-grow-1 shipping-waybill-{{ $transaction->id }}" placeholder="Masukkan Resi" value="{{ old('resi', $shipping->shipping_waybill ?? '' )}}"/>
+                                <input type="text" name="shipping_waybill" class="form-control form-control-solid me-3 flex-grow-1 shipping-waybill-{{ $transaction->id }}" placeholder="Masukkan Resi" value="{{ old('resi', $shipping->shipping_waybill ?? '' )}}" onkeyup="fieldResi({{ $transaction->id }})" />
                                 <input type="hidden" class="csrf-token-{{ $transaction->id }}" value="{{ csrf_token() }}">
-                                <a href="#" id="shipping-waybill-{{ $transaction->id }}" class="btn btn-primary fw-bold flex-shrink-0"  onclick="checkResi({{ $transaction->id }})">Cek Resi</a>
+                                <button type="button" id="shipping-waybill-{{ $transaction->id }}" class="btn btn-primary fw-bold flex-shrink-0"  onclick="checkResi({{ $transaction->id }})" {{$shipping->shipping_waybill ? '' : 'disabled'}}>Cek Resi</button>
                             </div>
                         </div>
                     </div>

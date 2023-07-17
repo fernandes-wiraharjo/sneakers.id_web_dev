@@ -14,9 +14,10 @@
             </h1>
             <!--end::Title-->
         </div>
-        <!--begin::Heading-->
-        <div class="">
 
+        <!--begin::Heading-->
+        <div class="fv-row mb-10 my-3">
+            <x-alert/>
         </div>
         <!--begin::Input group-->
         <div style="padding: 10px 0px;">

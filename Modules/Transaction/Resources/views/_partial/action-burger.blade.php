@@ -115,7 +115,7 @@
                             <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
                                 <tbody>
                                     <tr>
-                                        <td style="width: 200px;">Transactions Status</td>
+                                        <td style="width: 200px;">Order Status</td>
                                         <td>{{ $transaction->status?? '-'}}</td>
                                     </tr>
                                     <tr>
@@ -244,15 +244,15 @@
                                 <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
                                     <tbody>
                                         <tr>
-                                            <td style="width: 200px;">Transactions Order ID</td>
+                                            <td style="width: 200px;">Order ID</td>
                                             <td>{{ $transaction->token?? '-'}}</td>
                                         </tr>
                                         <tr>
-                                            <td style="width: 200px;">Transactions Status</td>
+                                            <td style="width: 200px;">Order Status</td>
                                             <td>{{ $transaction->status?? '-'}}</td>
                                         </tr>
                                         <tr>
-                                            <td >Transactions Created At</td>
+                                            <td >Order Created At</td>
                                             <td>{{ $transaction->created_at ? $transaction->created_at->format('d-m-Y H:i') : '-'}}</td>
                                         </tr>
                                         <tr>

@@ -125,7 +125,33 @@
                                         </a>
                                         <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
 
-                                        <a href="javascript:void(0)"
+                                        @livewire('product-quantity-modal')
+                                        @if(!$disabledPlus)
+                                            <a href="javascript:void(0)"
+                                            class="QuantitySelector__Button Link Link--primary"
+                                            title="Set quantity to {{ $item->get('quantity') }} + 1"
+                                            wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
+                                                <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
+                                                    <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
+                                                        <path d="M8,1 L8,15"></path>
+                                                        <path d="M1,8 L15,8"></path>
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                        @else
+                                            <a href="javascript:void(0)"
+                                            class="QuantitySelector__Button Link Link--primary"
+                                            title="Set quantity to {{ $item->get('quantity') }} + 1"
+                                            wire:disabled="true" style="cursor: not-allowed;">
+                                                <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
+                                                    <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
+                                                        <path d="M8,1 L8,15"></path>
+                                                        <path d="M1,8 L15,8"></path>
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                        @endif
+                                        {{-- <a href="javascript:void(0)"
                                             class="QuantitySelector__Button Link Link--primary"
                                             title="Set quantity to {{ $item->get('quantity') }} + 1"
                                             wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
@@ -136,7 +162,7 @@
                                                 <path d="M1,8 L15,8"></path>
                                                 </g>
                                             </svg>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </div>
 

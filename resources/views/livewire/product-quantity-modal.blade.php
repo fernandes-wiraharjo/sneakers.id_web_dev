@@ -24,7 +24,7 @@
                     </ul>
                 </div>
                 <div>
-                    <button wire:click="closeModal" class="close">&times;</button> <!-- Add a close button to close the modal -->
+                    <a href="#" wire:click="closeModal" class="close">&times;</a> <!-- Add a close button to close the modal -->
                 </div>
             </div>
         </div>

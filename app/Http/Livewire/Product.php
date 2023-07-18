@@ -38,7 +38,7 @@ class Product extends Component
         $this->showRetailPrice = $productDetails->retail_price;
         $this->showDiscountPrice = $productDetails->after_discount_price;
         $this->showDiscountPercentage = $productDetails->discount_percentage;
-        $this->showSelectedSize = $productDetails->size;
+        $this->showSelectedSize = $productDetails->size ?? 'All size';
     }
         /**
      * Renders the component on the browser.
@@ -59,7 +59,7 @@ class Product extends Component
             $this->emit('modal', ['message' => 'Please select a size']);
         } else {
             $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
-            Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, getImage($this->product->image, 'products/' . $this->product->product_code), $url);
+            Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
             $this->emit('productAddedToCart');
             $this->emit('cartCounter');
         }

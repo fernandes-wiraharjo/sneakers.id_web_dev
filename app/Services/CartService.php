@@ -22,19 +22,9 @@ class CartService {
         $this->session = $session;
     }
 
-    /**
-     * Adds a new item to the cart.
-     *
-     * @param string $id
-     * @param string $name
-     * @param string $price
-     * @param string $quantity
-     * @param array $options
-     * @return void
-     */
-    public function add($id, $size_id, $code ,$name, $retail_price, $discount_price, $size = 'All size', $quantity, $image, $url,$options = []): void
+    public function add($id, $size_id, $code ,$name, $retail_price, $discount_price, $size = 'All size', $quantity, $weight, $image, $url,$options = []): void
     {
-        $cartItem = $this->createCartItem($id, $size_id, $code, $name, str_replace('.','',$retail_price), str_replace('.','',$discount_price),$size ,$quantity, $image , $url, $options);
+        $cartItem = $this->createCartItem($id, $size_id, $code, $name, str_replace('.','',$retail_price), str_replace('.','',$discount_price),$size , $quantity, $weight, $image , $url, $options);
 
         $content = $this->getContent();
 
@@ -47,13 +37,6 @@ class CartService {
         $this->session->put(self::DEFAULT_INSTANCE, $content);
     }
 
-    /**
-     * Updates the quantity of a cart item.
-     *
-     * @param string $id
-     * @param string $action
-     * @return void
-     */
     public function update(string $size_id, string $action): void
     {
         $content = $this->getContent();
@@ -160,6 +143,17 @@ class CartService {
         return $total ?? 0;
     }
 
+    public function totalWeight(): int
+    {
+        $content = $this->getContent();
+
+        $total = $content->reduce(function ($total, $item) {
+            return $total += $item->get('quantity') * $item->get('weight');
+        });
+
+        return $total ?? 0;
+    }
+
     /**
      * Returns the content of the cart.
      *
@@ -179,7 +173,7 @@ class CartService {
      * @param array $options
      * @return Illuminate\Support\Collection
      */
-    protected function createCartItem(int $id, int $size_id,string $code, string $name, string $retail_price, string $discount_price, string $size,string $quantity, string $image , string $url, array $options): Collection
+    protected function createCartItem(int $id, int $size_id,string $code, string $name, string $retail_price, string $discount_price, string $size,string $quantity,string $weight, string $image , string $url, array $options): Collection
     {
         $retail_price = intval($retail_price);
         $discount_price = intval($discount_price);
@@ -198,6 +192,7 @@ class CartService {
             'discount_price' => $discount_price,
             'size' => $size,
             'quantity' => $quantity,
+            'weight' => $weight,
             'image' => $image,
             'url' => $url,
             'options' => $options,

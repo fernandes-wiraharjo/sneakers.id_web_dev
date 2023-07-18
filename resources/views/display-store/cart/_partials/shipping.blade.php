@@ -45,6 +45,16 @@
                                         </span></a>
                                 </div>
                             </div>
+                            <div role="row" class="NSCO_">
+                                <div class="Qk5zF">
+                                    <div role="cell" class="w3cHO"><span
+                                            class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Weight Total</span>
+                                    </div>
+                                    <div role="cell" class="nkp8r"><bdo dir="ltr"
+                                            class="_19gi7yt0 _19gi7yte _1fragem1j">{{ number_format($shippingWeight / 1000, 2) }} Kg</bdo>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                     <main id="checkout-main">
@@ -83,7 +93,12 @@
                                                                                 <div class="f5aCe">
                                                                                     <div>
                                                                                         <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
-                                                                                            {{ strtoupper($courierVendor['code']) }} {{ $serviceCourier['service'] }} ({{ $serviceCourier['cost'][0]['etd'] }} Days)
+                                                                                            {{ strtoupper($courierVendor['code']) }} {{ $serviceCourier['service'] }}
+                                                                                            @if($serviceCourier['cost'][0]['etd'])
+                                                                                            ({{ $serviceCourier['cost'][0]['etd'] }} Days)
+                                                                                            @else
+                                                                                            (2-3 Days)
+                                                                                            @endif
                                                                                         </p>
                                                                                     </div>
                                                                                     <div>

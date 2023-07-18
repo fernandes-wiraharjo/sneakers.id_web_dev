@@ -177,13 +177,15 @@
                              </select> --}}
                              <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
                          </div>
-                         {{-- <div style="margin: 5px 0"> --}}
+                         @livewire('product-selection-modal')
                          <div style="margin: 5px;"></div>
                          <div class="size-button Heading u-h6" style="display: flex; justify-content: space-between;">
                             {{-- <label for="">Size Available : </label> --}}
                             <p id="id_work_days">
                                 @foreach ($sizeList as $index => $item)
-                                    <label class="sizes-option"><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}} {{ $index == 0 ? 'checked' : ''}}><span>{{$item->size ?? 'All Size'}}</span></label>
+                                    <label class="sizes-option"><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}}
+                                        {{-- {{ $index == 0 ? 'checked' : ''}} --}}
+                                        ><span>{{$item->size ?? 'All Size'}}</span></label>
                                 @endforeach
                             </p>
                                 {{-- <a href="#" class="Button {{ $item->qty == 0 ? 'Size__Button_Disabled' : 'Size__Button '}}" value="" {{ $item->qty == 0 ? 'disabled' : ''}}></a> --}}

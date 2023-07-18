@@ -27,7 +27,7 @@ class Product extends Model
     }
 
     public function detail(){
-        return $this->hasOne(ProductDetail::class, 'product_id');
+        return $this->hasOne(ProductDetail::class, 'product_id')->where('qty', '>', 0)->orderBy('qty', 'DESC');
     }
 
     public function details(){

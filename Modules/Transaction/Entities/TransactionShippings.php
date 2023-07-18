@@ -18,6 +18,7 @@ class TransactionShippings extends Model
         'shipping_waybill',
         'shipping_method',
         'shipping_cost',
+        'shipping_weight',
         'origin_ro_id',
         'destination_ro_id',
         'status',

@@ -24,6 +24,7 @@ class Transaction extends Model
         'method',
         'invoice_url',
         'total_quantity',
+        'total_weight',
         'sub_total',
         'grand_total',
         'description',

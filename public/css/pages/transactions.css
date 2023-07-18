@@ -203,3 +203,21 @@ select:focus+.focus {
 .chip.completed {
     background-color: #2C88D9; /* Blue */
 }
+
+.image-with-text {
+    display: flex;
+    align-items: center; /* Vertically align the content */
+}
+
+.image-with-text .CartItem__ImageWrapper {
+    max-width: 100px; /* Set a maximum width for the image wrapper, adjust as needed */
+    max-height: 100px; /* Set a maximum height for the image wrapper, adjust as needed */
+    margin-right: 10px; /* Add some space between the image and the text */
+    overflow: hidden; /* Hide any overflow to prevent distortion */
+}
+
+.image-with-text .CartItem__Image {
+    width: 100%; /* Ensure the image takes up the entire wrapper */
+    height: 100%; /* Ensure the image takes up the entire wrapper */
+    object-fit: cover; /* Scale the image to cover the entire wrapper while maintaining its aspect ratio */
+}

@@ -83,6 +83,14 @@
                                     <span class="input-group-text"> pcs</span>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Weight :</label>
+                                <div class="input-group mb-5">
+                                    <input type="number" id="weight" min="0" class="form-control bulk-weight" name="bulk_weight" aria-label="Amount"
+                                    value=""/>
+                                    <span class="input-group-text"> grams</span>
+                                </div>
+                            </div>
                             {{-- <div class="col-md-2">
                                 <a href="javascript:;" class="btn btn-sm btn-light-danger mt-3 mt-md-8" onclick="updateAll(this)">
                                     Update
@@ -147,6 +155,14 @@
                                         <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
                                         value="{{ old('size_prize[0][qty]', '') }}"/>
                                         <span class="input-group-text"> pcs</span>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <label class="form-label">Weight :</label>
+                                    <div class="input-group mb-5">
+                                        <input type="text" id="weight" class="form-control weight" name="weight" aria-label="Amount"
+                                        value="{{ old('size_prize[0][weight]', '') }}"/>
+                                        <span class="input-group-text"> grams</span>
                                     </div>
                                 </div>
                             </div>
@@ -480,6 +496,10 @@
                         $(this).find('.qty').val($('.bulk-qty').val());
                     }
 
+                    if($('.bulk-weight').val() != "") {
+                        $(this).find('.weight').val($('.bulk-weight').val());
+                    }
+
                     if($('.bulk-retail-price').val() != ""){
                         $(this).find('.retail-price').val($('.bulk-retail-price').val());
                     }
@@ -523,6 +543,7 @@
                 'retail_price': 1,
                 'after_discount_price': 0,
                 'qty': 0,
+                'weight': 0,
                 'discount_percentage': 0,
             },
 

@@ -169,7 +169,7 @@ class ProductController extends Controller
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
-        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
+        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty, weight,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
         cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }

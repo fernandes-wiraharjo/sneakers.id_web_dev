@@ -51,7 +51,13 @@
                                         <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem24 _1fragem2l">
                                             <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem24 _1fragem2l">
                                                 <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
-                                                    {{ $selectedCourier['courier'] }} {{ $selectedCourier['service'] }} ({{ $selectedCourier['etd'] }} Days)
+                                                    {{ $selectedCourier['courier'] }} {{ $selectedCourier['service'] }}
+                                                    @if($selectedCourier['etd'])
+                                                    ({{ $selectedCourier['etd'] }} Days)
+                                                    @else
+                                                    (2-3 Days)
+                                                    @endif
+                                                    ({{ number_format($shippingWeight / 1000, 2) }} Kg)
                                                     <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">Rp {{ rupiah_format(intval($selectedCourier['cost'])) }}</span>
                                                 </p>
                                             </div>

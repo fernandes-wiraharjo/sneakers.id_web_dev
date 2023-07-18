@@ -25,7 +25,7 @@ class Product extends Component
     public function mount(): void
     {
         $this->quantity = 1;
-        $this->size = $this->product->detail->id;
+        // $this->size = $this->product->detail->id;
         $this->showSelectedSize = $this->product->detail->size ?? 'All size';
         $this->showRetailPrice = $this->product->detail->retail_price;
         $this->showDiscountPrice = $this->product->detail->after_discount_price;
@@ -55,9 +55,13 @@ class Product extends Component
      */
     public function addToCart(): void
     {
-        $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
-        Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, getImage($this->product->image, 'products/' . $this->product->product_code), $url);
-        $this->emit('productAddedToCart');
-        $this->emit('cartCounter');
+        if (is_null($this->size)) {
+            $this->emit('modal', ['message' => 'Please select a size']);
+        } else {
+            $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
+            Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, getImage($this->product->image, 'products/' . $this->product->product_code), $url);
+            $this->emit('productAddedToCart');
+            $this->emit('cartCounter');
+        }
     }
 }

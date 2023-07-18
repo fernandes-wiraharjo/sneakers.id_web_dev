@@ -3,10 +3,13 @@ namespace App\Http\Livewire;
 use App\Facades\Cart;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
+use Modules\Product\Entities\ProductDetail;
+
 class CartComponent extends Component
 {
     protected $total;
     protected $content;
+    public $disabledPlus = false;
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
     ];
@@ -62,9 +65,21 @@ class CartComponent extends Component
      * @param string $action
      * @return void
      */
-    public function updateCartItem(string $size_id, string $action): void
+    public function updateCartItem(string $size_id, string $action, string $current_qty): void
     {
-        Cart::update($size_id, $action);
+        $qty = ProductDetail::where('id', $size_id)->first()->qty;
+        if($action == 'plus') {
+            if (intval($current_qty)+1 <= $qty) {
+                Cart::update($size_id, $action);
+            } else {
+                $this->disabledPlus = true;
+                $this->emit('modalQty', ['message' => 'product stock reach the limit!']);
+                // dd('qty Not valid');
+            }
+        } else {
+            $this->disabledPlus = false;
+            Cart::update($size_id, $action);
+        }
         $this->updateCart();
     }
     /**

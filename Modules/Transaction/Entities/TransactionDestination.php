@@ -23,7 +23,8 @@ class TransactionDestination extends Model
         'last_name',
         'address',
         'phone_number',
-        'is_user'
+        'is_user',
+        'user_id',
     ];
 
     protected static function newFactory()

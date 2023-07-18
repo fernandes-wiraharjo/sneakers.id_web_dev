@@ -27,6 +27,9 @@ class TransactionDatatables extends DataTable
             ->editColumn('customer_email',  function ($item) {
                 return $item->getUserData->email ?? '-';
             })
+            ->editColumn('total_weight',  function ($item) {
+                return $item->total_weight / 1000 . 'Kg';
+            })
             ->editColumn('grand_total',  function ($item) {
                 return 'Rp '.rupiah_format(intval($item->grand_total));
             })
@@ -100,6 +103,8 @@ class TransactionDatatables extends DataTable
             Column::make('grand_total')
                 ->width(150),
             Column::make('total_quantity')->width(50)
+                ->searchable(false),
+            Column::make('total_weight')->width(50)
                 ->searchable(false),
             Column::make('type')
                 ->searchable(false),

@@ -75,17 +75,21 @@
                     @foreach ($items as $item)
                     <div class="table-row">
                         <div class="table-data product">
-                            <div class="CartItem__ImageWrapper AspectRatio">
-                                <div class="AspectRatio" style="--aspect-ratio: 1.0">
-                                    <img class="CartItem__Image" src="{{getImage($item->detail->product->image, 'products/'.$item->detail->product->product_code)}}" alt="">
+                            <div class="image-with-text">
+                                <div class="CartItem__ImageWrapper AspectRatio">
+                                    <div class="AspectRatio" style="--aspect-ratio: 1.0">
+                                        <img class="CartItem__Image" src="{{ getImage($item->detail->product->image, 'products/'.$item->detail->product->product_code) }}" alt="">
+                                    </div>
+                                </div>
+                                <div class="text">
+                                    <p>{{ $item->detail->product->product_name }}</p>
+                                    <p>{{ $item->detail->size }}</p>
+                                    <p>Rp {{ rupiah_format($item->price) }}</p>
                                 </div>
                             </div>
-                            {{ $item->detail->product->product_name }} <br>
-                            {{ $item->detail->size }}<br>
-                            Rp {{ rupiah_format($item->price) }}
                         </div>
                         <div class="table-data data" style="max-width: 100px;">{{ $item->quantity }}</div>
-                        <div class="table-data data" style="max-width: 150px;text-align-last: end;">Rp {{ rupiah_format($item->quantity * $item->price) }}</div>
+                        <div class="table-data data" style="max-width: 150px; text-align: end;">Rp {{ rupiah_format($item->quantity * $item->price) }}</div>
                     </div>
                     @endforeach
                     <div class="table-row">

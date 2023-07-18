@@ -42,6 +42,7 @@ class TransactionService {
             'method' => 'PENDING',
             'invoice_url' => $response['invoice_url'],
             'total_quantity' => $transaction['transactions']['total_quantity'],
+            'total_weight' => $transaction['transactions']['total_weight'],
             'sub_total' => $transaction['transactions']['sub_total'],
             'grand_total' => $transaction['transactions']['grand_total'],
             'status' => 'CREATED'
@@ -57,9 +58,10 @@ class TransactionService {
         foreach($transaction['transaction_items']['items'] as $items){
             $transactionItems[] = [
                 'transaction_id' => $creteTransaction->id,
-                'product_detail_id' => $items['id'],
+                'product_detail_id' => $items['size_id'],
                 'quantity' => $items['quantity'],
-                'price' => $items['discount_price'] ?? $items['retail_price']
+                'weight' => $items['weight'],
+                'price' => intval($items['discount_price']) != 0 ? intval($items['discount_price']) : intval($items['retail_price'])
             ];
         }
 

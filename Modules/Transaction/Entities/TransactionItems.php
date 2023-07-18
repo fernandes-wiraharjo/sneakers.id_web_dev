@@ -18,6 +18,7 @@ class TransactionItems extends Model
         'transaction_id',
         'product_detail_id',
         'quantity',
+        'weight',
         'price',
     ];
 

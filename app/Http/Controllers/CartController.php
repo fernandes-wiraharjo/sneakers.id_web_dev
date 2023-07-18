@@ -36,6 +36,12 @@ class CartController extends Controller
     }
 
     public function cartCheckout(Request $request) {
+        foreach(Cart::content() as $item){
+            $get_product = $this->productRepository->getProductDetailByIdAndSize($item['id'], $item['size'])->first();
+            if($get_product->qty - $item['quantity'] < 0) {
+                // dd('qty not valid');
+            }
+        }
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('display-store.cart.checkout', $data);

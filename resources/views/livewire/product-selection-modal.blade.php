@@ -11,6 +11,8 @@
 
         .modal{
             position: absolute;
+            left: 0%;
+            top: 0%;
         }
     </style>
     {{-- Close your eyes. Count to one. That is how long forever feels. --}}

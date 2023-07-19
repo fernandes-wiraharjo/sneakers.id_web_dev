@@ -1374,7 +1374,10 @@ body {
 #shopify-product-reviews input[disabled].spr-button-primary,
 #shopify-product-reviews .spr-pagination-prev>a[disabled],
 #shopify-product-reviews .spr-pagination-next>a[disabled] {
-    cursor: not-allowed
+    cursor: not-allowed;
+    background-color: gray;
+    color: darkgray;
+    border: gray;
 }
 
 .Button--primary,
@@ -1390,6 +1393,13 @@ body {
 #shopify-product-reviews .spr-summary-actions-newreview:before,
 #shopify-product-reviews .spr-button-primary:not(input):before {
     background-color: #000
+}
+
+.Button--primary[disabled]:before,
+.shopify-payment-button__button--unbranded:before,
+#shopify-product-reviews .spr-summary-actions-newreview:before,
+#shopify-product-reviews .spr-button-primary:not(input):before {
+    background-color: #8e8e8e
 }
 
 @media (-moz-touch-enabled: 0),

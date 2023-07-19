@@ -50,7 +50,7 @@ class StoreController extends Controller
 
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
-        $data['size'] = $data['product']->details()->where('product_details.qty', '>' , 0)->get();
+        $data['size'] = $data['product']->details()->get();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone look into my product');

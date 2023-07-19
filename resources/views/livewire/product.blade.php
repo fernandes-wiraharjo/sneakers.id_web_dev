@@ -183,9 +183,11 @@
                             {{-- <label for="">Size Available : </label> --}}
                             <p id="id_work_days">
                                 @foreach ($sizeList as $index => $item)
+                                    @if($item->size != null || $item->size != '')
                                     <label class="sizes-option"><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}}
                                         {{-- {{ $index == 0 ? 'checked' : ''}} --}}
                                         ><span>{{$item->size ?? 'All Size'}}</span></label>
+                                    @endif
                                 @endforeach
                             </p>
                                 {{-- <a href="#" class="Button {{ $item->qty == 0 ? 'Size__Button_Disabled' : 'Size__Button '}}" value="" {{ $item->qty == 0 ? 'disabled' : ''}}></a> --}}
@@ -198,9 +200,15 @@
                         </div>
                         <div style="margin: 5px 0">
                         <div style="width: 100%;">
+                            @php
+                                $can_buy = true;
+                                if( count($sizeList) < 2 && ($sizeList[0]->size == null || $sizeList[0]->size == '')) {
+                                    $can_buy = false;
+                                }
+                            @endphp
                             <input class="mb-2 border-2 rounded" type="hidden" value="1" min="1" wire:model="quantity">
                             <button data-spiff-hide data-product-id="{{ $product->product_code }}" data-product-image="{{ getImage($product->image, 'products/' . $product->product_code) }}"
-                                class="ProductForm__AddToCart Button Button--primary Button--full" wire:click="addToCart">
+                                class="ProductForm__AddToCart Button Button--primary Button--full" wire:click="addToCart" {{ $can_buy ? '' : 'disabled'}} @if (!$can_buy) title="size is not set" @endif>
                                 <span>ADD TO CART</span>
                             </button>
                         </div>

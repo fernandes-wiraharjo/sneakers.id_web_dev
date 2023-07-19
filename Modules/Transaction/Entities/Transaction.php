@@ -58,10 +58,16 @@ class Transaction extends Model
 
     public function getUserData()
     {
+         // Ensure the 'destination' relationship is loaded using 'with'
+        // Eager load the 'destination' relationship if it's not already loaded
+        if (!$this->relationLoaded('destination')) {
+            $this->load('destination');
+        }
+
         if ($this->destination) {
             return $this->destination->user();
         }
 
-        return null;
+        return $this->destination();
     }
 }

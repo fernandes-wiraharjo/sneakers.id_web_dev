@@ -414,7 +414,7 @@
                                                                                                                     </path>
                                                                                                                 </svg>
                                                                                                             </span>
-                                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j">Return to Transaction Status</span>
+                                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j">Go to Transaction Status</span>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </span>
@@ -425,7 +425,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="_1fragem15 _1fragemah _1fragemaf">
-                                                                            <button type="submit" tabindex="-1" aria-hidden="true">Return to Transaction Status</button>
+                                                                            <button type="submit" tabindex="-1" aria-hidden="true">Go to Transaction Status</button>
                                                                         </div>
                                                                     </form>
                                                                 </main>

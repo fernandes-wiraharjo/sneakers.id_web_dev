@@ -52,7 +52,7 @@ class DashboardController extends Controller {
     }
 
 
-    $data['transaction'] = TransactionDestination::with('transaction')->where('email', auth()->user()->email)->get();
+    $data['transaction'] = TransactionDestination::with('transaction')->where('email', auth()->user()->email)->orderBy('created_at', 'DESC')->get();
     $data['user_address'] = auth()->user()->user_address()->first();
     $data['user_info'] = auth()->user();
     $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();

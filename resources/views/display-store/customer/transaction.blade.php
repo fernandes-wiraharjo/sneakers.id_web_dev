@@ -153,7 +153,7 @@
         <!-- The Modal -->
         <div id="modal-continue-payment" class="modal">
             <div class="modal-body">
-                <span class="closePayment">&times;</span>
+                <span class="close closePayment">&times;</span>
                 <div style="text-align-last: center;">
                     <h1>Continue Payment</h1>
                 </div>
@@ -169,7 +169,7 @@
         <!-- The Modal -->
         <div id="modal-check-shipping" class="modal">
             <div class="modal-body">
-                <span class="closeShipping">&times;</span>
+                <span class="close closeShipping">&times;</span>
                 <div style="text-align-last: center;">
                     <h1>Check shipping</h1>
                 </div>

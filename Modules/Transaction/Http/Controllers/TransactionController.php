@@ -35,11 +35,6 @@ class TransactionController extends Controller
         $shipping = TransactionShippings::findOrFail($request->id);
         $status = '';
 
-        if(intval($request->complete)){
-            $status = 'COMPLETED';
-            $update_transactions = Transaction::findOrFail($shipping->transaction_id)->update(['status' => $status]);
-        }
-
         $status_shipping = 'DIKEMAS';
         if($request->shipping_waybill != "" || $request->shipping_waybill != NULL || $shipping->status != 'DIKIRIM' || $shipping->status != 'DELIVERED' ) {
             $status_shipping = 'DIKIRIM';
@@ -51,6 +46,11 @@ class TransactionController extends Controller
             $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
 
             if($response) {
+                if(intval($request->complete)){
+                    $status = 'COMPLETED';
+                    $update_transactions = Transaction::findOrFail($shipping->transaction_id)->update(['status' => $status]);
+                }
+
                 $history_created = TransactionHistories::create([
                     'transaction_id' => $shipping->transaction_id,
                     'response_raw' => json_encode($response),

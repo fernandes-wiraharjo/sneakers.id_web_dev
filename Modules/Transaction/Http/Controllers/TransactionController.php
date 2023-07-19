@@ -32,7 +32,7 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors('invalid shipping id');
         }
 
-        $shipping = TransactionShippings::findOrFail($request->id)->first();
+        $shipping = TransactionShippings::findOrFail($request->id);
         $status = '';
 
         if(intval($request->complete)){

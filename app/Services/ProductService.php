@@ -6,6 +6,7 @@ use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\File;
+use Modules\Transaction\Entities\TransactionItems;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
@@ -146,6 +147,7 @@ class ProductService {
 	}
 
     public function updateProduct($id, $request){
+        $message = '';
         $product = [
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
@@ -230,7 +232,12 @@ class ProductService {
 
             if($diff = array_diff($oldDetail, $detail_ids)){
                 foreach($diff as $itemDiff) {
-                    $this->productRepository->deleteProductDetail($itemDiff);
+                    $check_transactions = TransactionItems::where('product_detail_id', $itemDiff)->first();
+                    if(!$check_transactions) {
+                        $this->productRepository->deleteProductDetail($itemDiff);
+                    } else {
+                        $message = 'Success Update, size is contain transaction';
+                    }
                 }
             }
 
@@ -321,7 +328,7 @@ class ProductService {
                 $this->productRepository->syncProductSignatures($id);
             }
         }
-        return true;
+        return ['status' => true, 'message' => $message];
     }
 
     public function generateProductCode()

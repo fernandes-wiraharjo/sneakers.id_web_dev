@@ -230,10 +230,10 @@ class ProductController extends Controller
 
             if($validator) {
                 $updated = $this->service->updateProduct($id ,$request->all());
-                if($updated){
-                    Alert::success('Product Updated Successfully!');
+                if($updated['status']){
+                    Alert::success('Product Updated Successfully!, '.$updated['message']);
                     return redirect(route('administrator.product.index'))
-                        ->with('success', 'Product Updated Successfully!');
+                        ->with('success', 'Product Updated Successfully!, '.$updated['message']);
                 } else {
                     Alert::error('Failed to updated product, check your info!');
                     return redirect()->back();

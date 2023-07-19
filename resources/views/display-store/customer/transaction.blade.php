@@ -152,7 +152,7 @@
     <div>
         <!-- The Modal -->
         <div id="modal-continue-payment" class="modal">
-            <div class="modal-body">
+            <div class="modal-body modalContinuePayment">
                 <span class="close closePayment">&times;</span>
                 <div style="text-align-last: center;">
                     <h1>Continue Payment</h1>

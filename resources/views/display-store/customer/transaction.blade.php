@@ -153,7 +153,7 @@
         <!-- The Modal -->
         <div id="modal-continue-payment" class="modal">
             <div class="modal-body modalContinuePayment">
-                <span class="close closePayment">&times;</span>
+                <span class="close closePayment" onclick="closePayment()">&times;</span>
                 <div style="text-align-last: center;">
                     <h1>Continue Payment</h1>
                 </div>
@@ -198,6 +198,11 @@
     @push('scripts')
         <script src="{{ asset('js/pages/size-chart.js') }}" defer></script>
         <script>
+            function closePayment() {
+                var modalPayment = document.getElementById("modal-continue-payment");
+                // When the user clicks on <span> (x), close the modal
+                modalPayment.style.display = "none";
+            }
             // Get the modal
             var modalPayment = document.getElementById("modal-continue-payment");
             var modalShipping = document.getElementById("modal-check-shipping");
@@ -208,7 +213,7 @@
             var btnShipping = document.getElementById("btn-check-shipping");
 
             // Get the <span> element that closes the modal
-            var spanPayment = document.getElementsByClassName("closePayment")[0];
+            var spanPayment = document.getElementsByClassName("closePayment");
             var spanShipping = document.getElementsByClassName("closeShipping")[0];
 
             // When the user clicks on the button, open the modal
@@ -222,6 +227,7 @@
             // When the user clicks on <span> (x), close the modal
             spanPayment.onclick = function() {
                 modalPayment.style.display = "none";
+                console.log('closed');
             }
 
             spanShipping.onclick = function() {

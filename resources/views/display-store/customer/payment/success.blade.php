@@ -387,7 +387,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div style="margin: 10px 0px;">
-                                                                                            <h4>Need help? <strong><a href="#">Contact us</a></strong></h4>
+                                                                                            <h4>Need help? <strong><a href="mailto:help@sneakers.id">Contact us</a></strong></h4>
                                                                                         </div>
                                                                                     </section>
                                                                                     <div class="oQEAZ WD4IV">

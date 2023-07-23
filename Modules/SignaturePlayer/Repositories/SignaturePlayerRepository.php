@@ -52,6 +52,14 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
       ->get();
   }
 
+  public function getOneSignatureByName($keyword){
+    return $this->model
+      ->where('signature_title', 'LIKE', '%'.$keyword.'%')
+      ->where('signature_player_name', 'LIKE', '%'.$keyword.'%')
+      ->where('signature_description', 'LIKE', '%'.$keyword.'%')
+      ->first();
+  }
+
   public function deleteSignaturePlayer($id){
       $signature = $this->getSignaturePlayerById($id);
 

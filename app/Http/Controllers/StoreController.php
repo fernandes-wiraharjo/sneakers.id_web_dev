@@ -64,32 +64,6 @@ class StoreController extends Controller
         $this->signature = [];
 
         if(count($keyword_array) >= 2){
-            $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
-            $brand = $this->brandRepository->getBrandByName($keyword_array[1]);
-            $category = $this->categoryRepository->getCategoryByName($keyword_array[1]);
-            $brand_id = $brand ? $brand->id : null;
-            $category_id = $category ? $category->id : null;
-            if($brand_id) {
-                $this->brand[] = $brand_id;
-            }
-
-            if($category_id) {
-                $this->category[] = intval($category_id);
-            }
-
-            if($keyword_array[0] != 'all'){
-                $category = $this->categoryRepository->getCategoryByName($keyword_array[0]);
-                $category_id = $category ? $category->id : null;
-                if($category_id) {
-                    $this->category[] = intval($category_id);
-                }
-
-                $tag = $this->tagRepository->getTagByName($keyword_array[0]);
-                $tag_id = $tag ? $tag->id : null;
-                if($tag_id) {
-                    $this->tag[] = $tag_id;
-                }
-            }
 
             foreach ($keyword_array as $keyword) {
                 $brand = $this->brandRepository->getBrandByName($keyword);

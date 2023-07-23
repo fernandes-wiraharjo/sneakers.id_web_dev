@@ -204,92 +204,95 @@ class ProductList extends Component
         // dump($gender_id);
 
         $products = $productRepository->getProductWhere()
-                                ->when($this->search, function ($query, $search){
-                                    return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                })
-                                ->when($this->brand, function ($query, $brands){
-                                    return $query->whereHas('detail', function ($q) use ($brands){
-                                        rsort($brands);
+                            ->when($this->keyword, function ($query, $search) use ($keyword_array){
+                                foreach ($keyword_array as $keyword) {
+                                    $query->orWhere('product_name', 'LIKE', '%' . $keyword . '%');
+                                }
+                                return $query->orWhere('product_name', 'LIKE', '%'.$search.'%');
+                            })
+                            ->when($this->brand, function ($query, $brands){
+                                return $query->whereHas('detail', function ($q) use ($brands){
+                                    rsort($brands);
 
-                                        return $q->whereIn('brand_id', array_unique($brands))
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
+                                    return $q->whereIn('brand_id', array_unique($brands))
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                         });
-                                })
-                                ->when($this->category, function ($query, $categories){
-                                    return $query->whereHas('categories', function ($q) use ($categories){
-                                        rsort($categories);
+                                    });
+                            })
+                            ->when($this->category, function ($query, $categories){
+                                return $query->whereHas('categories', function ($q) use ($categories){
+                                    rsort($categories);
 
-                                        return $q->whereIn('category_id', array_unique($categories))
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
+                                    return $q->whereIn('category_id', array_unique($categories))
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                         });
-                                })
-                                ->when($this->tag, function ($query, $tags) {
-                                    return $query->whereHas('tags', function ($q) use ($tags){
-                                        rsort($tags);
+                                    });
+                            })
+                            ->when($this->tag, function ($query, $tags) {
+                                return $query->whereHas('tags', function ($q) use ($tags){
+                                    rsort($tags);
 
-                                        return $q->whereIn('tag_id', array_unique($tags))
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
+                                    return $q->whereIn('tag_id', array_unique($tags))
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                         });
-                                    })
-                                ->when($this->signature, function ($query, $signatures){
-                                    return $query->whereHas('signatures', function ($q) use ($signatures){
-                                        rsort($signatures);
-
-                                        return $q->whereIn('signature_player_id', array_unique($signatures))
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
-                                        });
-                                    })
-                                /**
-                                 * Sizes not in filter
-                                 */
-                                // ->when($this->size, function ($query, $sizes){
-                                //     return $query->whereHas('sizes', function ($q) use ($sizes){
-                                //         return $q->orWhereIn('size_id', array_unique($sizes))
-                                //             ->when($this->search, function ($query, $search){
-                                //                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                //             });
-                                //     });
-                                // })
-                                ->when($this->keyword === 'sale' || $this->keyword === 'discount' || in_array($sale_category_id, $this->category) || in_array($sale_tag_id, $this->tag) || in_array($discount_id, $this->tag), function ($query) {
-                                    return $query->where('pd.discount_percentage', '>', 0);
-                                })
-                                ->when($this->gender, function ($query, $gender){
-                                    return $query->whereHas('categories', function ($q) use ($gender){
-                                        rsort($gender);
-
-                                        return $q->whereIn('categories.category_code', array_unique($gender))
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
                                     });
                                 })
-                                ->when($this->age_range, function ($query, $age_range){
-                                    return $query->whereHas('categories', function ($q) use ($age_range){
-                                        rsort($age_range);
+                            ->when($this->signature, function ($query, $signatures){
+                                return $query->whereHas('signatures', function ($q) use ($signatures){
+                                    rsort($signatures);
 
-                                        return $q->whereIn('categories.category_code', array_unique($age_range))
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
+                                    return $q->whereIn('signature_player_id', array_unique($signatures))
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                        });
                                     });
                                 })
-                                ->when($this->keyword === 'new-release', function($query) {
-                                    $date = date('Y-m-d H:i:s');
+                            /**
+                             * Sizes not in filter
+                             */
+                            // ->when($this->size, function ($query, $sizes){
+                            //     return $query->whereHas('sizes', function ($q) use ($sizes){
+                            //         return $q->orWhereIn('size_id', array_unique($sizes))
+                            //             ->when($this->search, function ($query, $search){
+                            //                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                            //             });
+                            //     });
+                            // })
+                            ->when($this->keyword === 'sale' || $this->keyword === 'discount' || in_array($sale_category_id, $this->category) || in_array($sale_tag_id, $this->tag) || in_array($discount_id, $this->tag), function ($query) {
+                                return $query->where('pd.discount_percentage', '>', 0);
+                            })
+                            ->when($this->gender, function ($query, $gender){
+                                return $query->whereHas('categories', function ($q) use ($gender){
+                                    rsort($gender);
 
-                                    return $query->whereHas('tags', function($q) use ($date) {
-                                        $q->where('tag_title', 'NEW RELEASE');
-                                        $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
-                                    });
-                                })
-                                ->orderBy($this->sort_column, $this->sort_by);
+                                    return $q->whereIn('categories.category_code', array_unique($gender))
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                        });
+                                });
+                            })
+                            ->when($this->age_range, function ($query, $age_range){
+                                return $query->whereHas('categories', function ($q) use ($age_range){
+                                    rsort($age_range);
+
+                                    return $q->whereIn('categories.category_code', array_unique($age_range))
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                        });
+                                });
+                            })
+                            ->when($this->keyword === 'new-release', function($query) {
+                                $date = date('Y-m-d H:i:s');
+
+                                return $query->whereHas('tags', function($q) use ($date) {
+                                    $q->where('tag_title', 'NEW RELEASE');
+                                    $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
+                                });
+                            })
+                            ->orderBy($this->sort_column, $this->sort_by);
         /**
          * Query debug
          */

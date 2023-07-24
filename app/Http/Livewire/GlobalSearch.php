@@ -151,7 +151,7 @@ class GlobalSearch extends Component
                 $signature = $signaturePlayerRepository->getOneSignatureByName($keyword_array[0]);
                 $signature_id = $signature ? $signature->id : null;
                 if($signature_id) {
-                    $this->signaure[] = $signature_id;
+                    $this->signature[] = $signature_id;
                 }
             }
         }

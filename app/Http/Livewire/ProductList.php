@@ -152,6 +152,8 @@ class ProductList extends Component
             'category' => $categoryRepository->getAllCategoriesExceptGender(),
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
+        $keyword_array = [];
+
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
             $keyword_array = explode('.', $keyword);

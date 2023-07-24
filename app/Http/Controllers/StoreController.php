@@ -114,7 +114,7 @@ class StoreController extends Controller
             $signature = $this->signaturePlayerRepository->getOneSignatureByName($keyword_array[0]);
             $signature_id = $signature ? $signature->id : null;
             if($signature_id) {
-                $this->signaure[] = $signature_id;
+                $this->signature[] = $signature_id;
             }
         }
 

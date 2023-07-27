@@ -164,7 +164,9 @@ class CartService {
         $content = $this->getContent();
 
         $total = $content->reduce(function ($total, $item) {
-            return $total += $item->get('quantity') * $item->get('weight');
+            $item->get('weight');
+            $item->get('quantity');
+            return $total += intval($item->get('quantity')) * intval($item->get('weight'));
         });
 
         return $total ?? 0;
@@ -194,6 +196,7 @@ class CartService {
         $retail_price = intval($retail_price);
         $discount_price = intval($discount_price);
         $quantity = intval($quantity);
+        $weight = intval($weight);
 
         if ($quantity < self::MINIMUM_QUANTITY) {
             $quantity = self::MINIMUM_QUANTITY;

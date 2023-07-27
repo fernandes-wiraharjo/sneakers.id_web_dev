@@ -15,6 +15,7 @@ class Product extends Component
     public $showDiscountPrice;
     public $showDiscountPercentage;
     public $showSelectedSize;
+    public $showWeight = 0;
     public $inCartPrice;
 
     /**
@@ -35,6 +36,7 @@ class Product extends Component
     public function updatePrice($id) {
         $productDetails = ProductDetail::find($id);
         $this->size = $id;
+        $this->showWeight = $productDetails->weight;
         $this->showRetailPrice = $productDetails->retail_price;
         $this->showDiscountPrice = $productDetails->after_discount_price;
         $this->showDiscountPercentage = $productDetails->discount_percentage;
@@ -72,7 +74,7 @@ class Product extends Component
                 }
             } else {
                 $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
-                Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
+                Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->showWeight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
                 $this->emit('productAddedToCart');
                 $this->emit('cartCounter');
             }

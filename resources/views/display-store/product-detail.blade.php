@@ -56,11 +56,11 @@
     <script>
         var product_variants_removed = [];
 
-        $(".pop").on("click", function(e) {
-            e.preventDefault();
-            // $('#imagemodal').attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
-            $('#sizeModal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
-        });
+        // $(".pop").on("click", function(e) {
+        //     e.preventDefault();
+        //     // $('#imagemodal').attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
+        //     $('#sizeModal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+        // });
 
         $(document).ready(function() {
             $('#size').change(function() {

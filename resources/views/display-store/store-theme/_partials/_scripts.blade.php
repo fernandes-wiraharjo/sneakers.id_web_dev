@@ -1,4 +1,3 @@
-<script src="{{ asset('js/jquery.min.js') }}" async></script>
 <script src="{{ asset('js/theme-config.js') }}"></script>
 <script
     src="https://cdn.polyfill.io/v3/polyfill.min.js?unknown=polyfill&features=fetch,Element.prototype.closest,Element.prototype.remove,Element.prototype.classList,Array.prototype.includes,Array.prototype.fill,Object.assign,CustomEvent,IntersectionObserver,IntersectionObserverEntry,URL"

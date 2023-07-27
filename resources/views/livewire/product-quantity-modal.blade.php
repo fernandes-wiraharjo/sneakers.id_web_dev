@@ -10,14 +10,17 @@
             cursor: pointer;
         }
 
-        .modal{
-            position: absolute;
+        .modal-quantity{
+            position: absolute !important;
+            left: 50% !important;
+            top: unset !important;
         }
     </style>
     {{-- Close your eyes. Count to one. That is how long forever feels. --}}
     @if($showModal)
         <div wire:ignore.self>
-            <div class="Form__Alert Alert Alert--error modal">
+            {{-- quantity modal --}}
+            <div class="Form__Alert Alert Alert--error modal modal-quantity">
                 <div>
                     <ul class="Alert__ErrorList modal-content">
                         <li class="Alert__ErrorItem">{{ $message }}</li>

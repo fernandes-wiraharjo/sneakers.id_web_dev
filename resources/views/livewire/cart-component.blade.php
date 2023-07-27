@@ -57,7 +57,6 @@
                                             </a>
 
                                             <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
-                                            @livewire('product-quantity-modal')
                                             @if(!$disabledPlus)
                                                 <a href="javascript:void(0)"
                                                 class="QuantitySelector__Button Link Link--primary"
@@ -99,6 +98,7 @@
                             </div>
                         </div>
                         @endforeach
+                        @livewire('product-quantity-modal', key('modal-component-1'))
                     </div>
                 </div>
             </div>
@@ -145,3 +145,4 @@
         </div>
         @endif
 </div>
+

@@ -58,10 +58,25 @@ class Product extends Component
         if (is_null($this->size)) {
             $this->emit('modal', ['message' => 'Please select a size']);
         } else {
-            $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
-            Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
-            $this->emit('productAddedToCart');
-            $this->emit('cartCounter');
+            $item = Cart::item(intval($this->size));
+            $current_item = ProductDetail::find($this->size);
+
+            if($item->isNotEmpty()) {
+                if($item['quantity'] + $this->quantity >= $current_item->qty) {
+                    $this->emit('modal', ['message' => 'Product stock is limited!']);
+                } else {
+                    $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
+                    Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
+                    $this->emit('productAddedToCart');
+                    $this->emit('cartCounter');
+                }
+            } else {
+                $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
+                Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
+                $this->emit('productAddedToCart');
+                $this->emit('cartCounter');
+            }
+
         }
     }
 }

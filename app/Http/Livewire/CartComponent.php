@@ -10,6 +10,7 @@ class CartComponent extends Component
     protected $total;
     protected $content;
     public $disabledPlus = false;
+    public $interval = 5; // Interval in seconds (adjust as needed)
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
     ];
@@ -92,4 +93,12 @@ class CartComponent extends Component
         $this->total = Cart::total();
         $this->content = Cart::content();
     }
+
+    // public function hydrate()
+    // {
+    //     while (true) {
+    //         $this->updateCart();
+    //         sleep($this->interval);
+    //     }
+    // }
 }

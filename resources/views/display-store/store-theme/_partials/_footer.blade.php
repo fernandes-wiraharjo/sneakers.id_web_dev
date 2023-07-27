@@ -92,7 +92,7 @@
         <li class="bc-sf-search-suggestion-header-product bc-sf-search-suggestion-header ui-menu-item"
             aria-label="Products">Products</li>
         <li id="item" data-group="products" aria-label="Products"></li>
-        <li class="bc-sf-search-suggestion-header-view-all bc-sf-search-suggestion-header ui-menu-item"
+        <li class="bc-sf-search-suggestion-item bc-sf-search-suggestion-item-product ui-menu-item"
             aria-label="View All"><a href="#" tabindex="-1" class="ui-menu-item-wrapper" id="total_result"></a></li>
     </ul>
 </div>

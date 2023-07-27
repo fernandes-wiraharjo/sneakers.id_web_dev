@@ -18,11 +18,11 @@ class GlobalSearch extends Component
     use WithPagination;
 
     public $search;
-    public $brand;
-    public $size;
-    public $tag;
-    public $category;
-    public $signature;
+    public $brand = [];
+    public $size = [];
+    public $tag = [];
+    public $category = [];
+    public $signature = [];
     public $keyword;
     public $sort_by = 'ASC';
     public $sort_column = 'product_name';
@@ -62,7 +62,7 @@ class GlobalSearch extends Component
                 unset($this->brand[$key]);
             }
 
-            if(empty($this->brand)) $this->brand = null;
+            if(empty($this->brand)) $this->brand = [];
         }
 
         if ($this->size) {
@@ -70,7 +70,7 @@ class GlobalSearch extends Component
                 unset($this->size[$key]);
             }
 
-            if(empty($this->size)) $this->size = null;
+            if(empty($this->size)) $this->size = [];
         }
 
         if ($this->tag) {
@@ -78,7 +78,7 @@ class GlobalSearch extends Component
                 unset($this->tag[$key]);
             }
 
-            if(empty($this->tag)) $this->tag = null;
+            if(empty($this->tag)) $this->tag = [];
         }
 
         if ($this->category) {
@@ -86,7 +86,7 @@ class GlobalSearch extends Component
                 unset($this->category[$key]);
             }
 
-            if(empty($this->category)) $this->category = null;
+            if(empty($this->category)) $this->category = [];
         }
 
         if ($this->signature) {
@@ -94,90 +94,125 @@ class GlobalSearch extends Component
                 unset($this->signature[$key]);
             }
 
-            if(empty($this->signature)) $this->signature = null;
+            if(empty($this->signature)) $this->signature = [];
         }
 
         if($this->keyword != 'all') {
-            $keyword = str_replace('-', ' ', $this->keyword);
+            $keyword = strtoupper($this->keyword ?? '');
+            $keyword = str_replace('-', ' ', $keyword);
             $keyword_array = explode('.', $keyword);
             if(count($keyword_array) >= 2){
-                $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
-                $brand = $brandRepository->getBrandByName($keyword_array[1]);
-                $category = $categoryRepository->getCategoryByName($keyword_array[1]);
-                $brand_id = $brand ? $brand->id : null;
-                $category_id = $category ? $category->id : null;
-                if($brand_id) {
-                    $this->brand[] = $brand_id;
-                }
+                foreach ($keyword_array as $keyword) {
+                    $brand = $brandRepository->getBrandByName($keyword);
+                    $category = $categoryRepository->getCategoryByName($keyword);
+                    $tag = $tagRepository->getTagByName($keyword);
+                    $signature = $signaturePlayerRepository->getOneSignatureByName($keyword);
 
-                if($category_id) {
-                    $this->category[] = strval($category_id);
-                }
-
-                if($keyword_array[0] != 'all'){
-                    $tag = $tagRepository->getTagByName($keyword_array[0]);
+                    $brand_id = $brand ? $brand->id : null;
+                    $category_id = $category ? $category->id : null;
                     $tag_id = $tag ? $tag->id : null;
-                    if($tag_id) {
+                    $signature_id = $signature ? $signature->id : null;
+
+                    if ($brand_id) {
+                        $this->brand[] = $brand_id;
+                    }
+
+                    if ($category_id) {
+                        $this->category[] = intval($category_id);
+                    }
+
+                    if ($tag_id) {
                         $this->tag[] = $tag_id;
+                    }
+
+                    if ($signature_id) {
+                        $this->signature[] = $signature_id;
                     }
                 }
             } else {
-                $tag = $tagRepository->getTagByName($keyword);
+                $category = $categoryRepository->getCategoryByName($keyword_array[0]);
+                $category_id = $category ? $category->id : null;
+                if($category_id) {
+                    $this->category[] = intval($category_id);
+                }
+
+                $brand = $brandRepository->getBrandByName($keyword_array[0]);
+                $brand_id = $brand ? $brand->id : null;
+                if($brand_id) {
+                    $this->brand[] = intval($brand_id);
+                }
+
+                $tag = $tagRepository->getTagByName($keyword_array[0]);
                 $tag_id = $tag ? $tag->id : null;
                 if($tag_id) {
                     $this->tag[] = $tag_id;
                 }
+
+                $signature = $signaturePlayerRepository->getOneSignatureByName($keyword_array[0]);
+                $signature_id = $signature ? $signature->id : null;
+                if($signature_id) {
+                    $this->signature[] = $signature_id;
+                }
             }
         }
 
+        $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? [];
+        $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? [];
+        $discount_id = $tagRepository->getTagByName('discount')->id ?? [];
+
         $products = $productRepository->getProductWhere()
-                                ->when($this->brand, function ($query, $brands){
-                                    return $query->whereHas('detail', function ($q) use ($brands){
-                                        return $q->whereIn('brand_id', $brands)
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
-                                    });
-                                })
-                                ->when($this->size, function ($query, $sizes){
-                                    return $query->whereHas('sizes', function ($q) use ($sizes){
-                                        return $q->whereIn('size_id', $sizes)
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
-                                    });
-                                })
-                                ->when($this->tag, function ($query, $tags) {
-                                    return $query->whereHas('tags', function ($q) use ($tags){
-                                        $tags = array_unique($tags);
-                                        return $q->whereIn('tag_id', $tags)
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
-                                    });
-                                })
-                                ->when($this->category, function ($query, $categories){
-                                    return $query->whereHas('categories', function ($q) use ($categories){
-                                        $categories = array_unique($categories);
-                                        return $q->whereIn('category_id', $categories)
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
-                                    });
-                                })
-                                ->when($this->signature, function ($query, $signatures){
-                                    return $query->whereHas('signatures', function ($q) use ($signatures){
-                                        return $q->whereIn('signature_player_id', $signatures)
-                                            ->when($this->search, function ($query, $search){
-                                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                            });
-                                    });
-                                })
-                                ->when($this->search, function ($query, $search){
-                                    return $query->where('product_name', 'LIKE', '%'.$search.'%')
-                                        ->where('description', 'LIKE', '%'.$search.'%');
-                                })
-                                ->orderBy($this->sort_column, $this->sort_by)->paginate(40);
+            ->when($keyword, function ($query, $search) use ($keyword_array) {
+                $query->where(function ($query) use ($keyword_array) {
+                    foreach ($keyword_array as $keyword) {
+                        $query->orWhere('product_name', 'LIKE', '%' . $keyword . '%');
+                            // ->orWhere('description', 'LIKE', '%' . $keyword . '%');
+                    }
+                });
+            })
+            ->when($this->brand, function ($query, $brands) {
+                return $query->whereHas('detail', function ($q) use ($brands) {
+                    return $q->whereIn('brand_id', $brands);
+                });
+            })
+            ->when($this->tag, function ($query, $tags) {
+                return $query->whereHas('tags', function ($q) use ($tags) {
+                    return $q->whereIn('tag_id', $tags);
+                });
+            })
+            ->when($this->category, function ($query, $categories) {
+                return $query->whereHas('categories', function ($q) use ($categories) {
+                    return $q->whereIn('category_id', $categories);
+                });
+            })
+            ->when($this->signature, function ($query, $signatures) {
+                return $query->whereHas('signatures', function ($q) use ($signatures) {
+                    return $q->whereIn('signature_player_id', $signatures);
+                });
+            })
+            ->when(
+                $keyword === 'sale' ||
+                $keyword === 'discount' ||
+                in_array('sale', $keyword_array) ||
+                in_array('discount', $keyword_array) ||
+                in_array($sale_category_id, $this->category) ||
+                in_array($sale_tag_id, $this->tag) ||
+                in_array($discount_id, $this->tag),
+                function ($query) {
+                    return $query->where('pd.discount_percentage', '>', 0);
+                }
+            )
+            ->when(
+                $keyword === 'new-release',
+                function ($query) {
+                    $date = date('Y-m-d H:i:s');
+                    return $query->whereHas('tags', function ($q) use ($date) {
+                        $q->where('tag_title', 'NEW RELEASE')
+                            ->whereRaw('DATEDIFF(product_tags.created_at, ?) > -30', [$date]);
+                    });
+                }
+            )
+            ->orderBy($this->sort_column, $this->sort_by)
+            ->paginate(40);
 
         $data['products'] = $products;
         return view('livewire.global-search', $data);

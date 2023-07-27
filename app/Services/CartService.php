@@ -110,6 +110,22 @@ class CartService {
         return is_null($this->session->get(self::DEFAULT_INSTANCE)) ? collect([]) : $this->session->get(self::DEFAULT_INSTANCE);
     }
 
+     /**
+     * Returns items detail of the items in the cart.
+     *
+     * @return collect item content
+     */
+    public function item(string $size_id): Collection
+    {
+        $content = $this->getContent();
+
+        if ($content->has($size_id)) {
+            return $cartItem = $content->get($size_id);
+        }
+
+        return collect();
+    }
+
     /**
      * Returns total price of the items in the cart.
      *

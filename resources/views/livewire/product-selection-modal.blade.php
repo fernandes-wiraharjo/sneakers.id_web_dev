@@ -18,6 +18,7 @@
     {{-- Close your eyes. Count to one. That is how long forever feels. --}}
     @if($showModal)
         <div wire:ignore.self>
+            {{-- selection modal --}}
             <div class="Form__Alert Alert Alert--error modal">
                 <div>
                     <ul class="Alert__ErrorList modal-content">

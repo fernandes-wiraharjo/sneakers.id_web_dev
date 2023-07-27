@@ -32,8 +32,6 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/product-detail.css') }}" />
 
-        @include('display-store.store-theme._partials._scripts')
-
         @include('display-store.store-theme._partials._styles')
 
         @stack('styles')
@@ -159,6 +157,11 @@
         </main>
 
         @include('display-store.store-theme._partials._footer')
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{{ asset('js/jquery.min.js') }}" async></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        @include('display-store.store-theme._partials._scripts')
 
         @include('display-store.store-theme._partials._bottom_scripts')
 

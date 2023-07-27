@@ -236,7 +236,7 @@ class ProductService {
                     if(!$check_transactions) {
                         $this->productRepository->deleteProductDetail($itemDiff);
                     } else {
-                        $message = 'Success Update, size is contain transaction';
+                        $message = 'There are sizes that cannot be deleted because they already have transaction data';
                     }
                 }
             }

@@ -165,13 +165,16 @@
                                                                                             </span>
                                                                                         </label>
                                                                                         <select name="province" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd"  wire:change="updateDistrict($event.target.value)">
-                                                                                            @if(!auth()->check())
-                                                                                                <option value="" selected>Pilih Provinsi</option>
+                                                                                            @if ($selectedProvince == "")
+                                                                                                <option value="" {{$selectedProvince == "" ? 'selected' : '' }}>Pilih Provinsi</option>
                                                                                             @endif
                                                                                             @foreach ($province as $item)
-                                                                                                <option value="{{$item}}" {{ $item == $selectedProvince ? 'selected' : ( auth()->check() ? ($item == $userRegion->province ? 'selected' : '') : '')}}>{{$item}}</option>
+                                                                                                <option value="{{$item}}"
+                                                                                                {{ $item == $selectedProvince ? 'selected' : ''}}
+                                                                                                >{{$item}}</option>
                                                                                             @endforeach
                                                                                         </select>
+
                                                                                         <div class="TUEJq">
                                                                                             <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
                                                                                                     xmlns="http://www.w3.org/2000/svg"
@@ -198,20 +201,24 @@
                                                                                                 <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kode Pos</span>
                                                                                             </span>
                                                                                         </label>
-                                                                                        <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd" wire:model="shippingZipCode">
-                                                                                            @if(!auth()->check())
-                                                                                                <option value="" selected>Pilih Kodepos</option>
+                                                                                        <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd" wire:model="shippingZipCode" wire:target="updateArea" wire:loading.attr="disabled">
+                                                                                            @if ($shippingZipCode == "")
+                                                                                                <option value="" {{ !$shippingZipCode == "" ? '' : 'selected'}}>Pilih Kodepos</option>
                                                                                             @endif
-                                                                                            @if(auth()->check())
-                                                                                                @if($postalCode == [])
-                                                                                                    <option value="{{ $userRegion->post_code }}" selected>{{ $userRegion->post_code }}</option>
-                                                                                                @endif
-                                                                                            @endif
+                                                                                            {{-- @if($postalCode == [])
+                                                                                                <option value="{{ $userRegion->post_code }}">{{ $userRegion->post_code }}</option>
+                                                                                            @endif --}}
+
                                                                                             @foreach ($postalCode as $item)
                                                                                                 <option value="{{$item}}" {{ $item == $shippingZipCode ? 'selected' : ( auth()->check() ? ($item == $userRegion->post_code ? 'selected' : '') : '')}}>{{$item}}</option>
                                                                                             @endforeach
                                                                                         </select>
-                                                                                        <div class="TUEJq">
+                                                                                        <div wire:loading wire:target="updateArea" class="TUEJq">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum">
+                                                                                                <div class="loading-spinner"></div>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class="TUEJq"  wire:loading.remove wire:target="updateArea">
                                                                                             <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
                                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                                     viewBox="0 0 14 14"
@@ -239,24 +246,31 @@
                                                                                                 <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kota / Kabupaten</span>
                                                                                             </span>
                                                                                         </label>
+
                                                                                         <select name="district"
                                                                                             id="Select4"
                                                                                             required=""
                                                                                             autocomplete="shipping country"
                                                                                             class="_b6uH RR8sg vYo81 RGaKd"
-                                                                                            wire:change="updateSubdistrict($event.target.value)">
-                                                                                            <option value="" selected>Pilih Kota / Kabupaten</option>
-                                                                                            @if(auth()->check())
-                                                                                                @if($district == [])
-                                                                                                    <option value="{{ $userRegion->district }}" selected>{{ $userRegion->district }}</option>
-                                                                                                @endif
+                                                                                            wire:change="updateSubdistrict($event.target.value)" wire:target="updateDistrict" wire:loading.attr="disabled">
+                                                                                            {{-- <option value="" wire:loading wire:target="updateDistrict">Pilih Kota / Kabupaten</option> --}}
+                                                                                            @if ($selectedDistrict == '')
+                                                                                                <option value="" {{$selectedDistrict ? '' : 'selected'}}>Pilih Kota / Kabupaten</option>
                                                                                             @endif
-                                                                                            @foreach ($district as $item)
-                                                                                                <option value="{{$item}}" {{ $item == $userRegion->district ? 'selected' : '' }}>{{$item}}</option>
+
+                                                                                            {{-- @if($districtList == [])
+                                                                                                <option value="{{ $userRegion->district }}">{{ $userRegion->district }}</option>
+                                                                                            @endif --}}
+                                                                                            @foreach ($districtList as $item)
+                                                                                                <option value="{{$item}}" {{ $item == $selectedDistrict ? 'selected' : '' }}>{{$item}}</option>
                                                                                             @endforeach
                                                                                         </select>
-                                                                                        <div
-                                                                                            class="TUEJq">
+                                                                                        <div wire:loading wire:target="updateDistrict" class="TUEJq">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum">
+                                                                                                <div class="loading-spinner"></div>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class="TUEJq"  wire:loading.remove wire:target="updateDistrict">
                                                                                             <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
                                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                                     viewBox="0 0 14 14"
@@ -289,20 +303,24 @@
                                                                                             required=""
                                                                                             autocomplete="shipping country"
                                                                                             class="_b6uH RR8sg vYo81 RGaKd"
-                                                                                            wire:change="updateArea($event.target.value)">
-                                                                                            @if(!auth()->check())
-                                                                                                <option value="" selected>Pilih Kecamatan</option>
+                                                                                            wire:change="updateArea($event.target.value)" wire:target="updateSubdistrict" wire:loading.attr="disabled">
+                                                                                            {{-- <option value="" wire:loading wire:target="updateDistrict">Pilih Kota / Kabupaten</option> --}}
+                                                                                            @if ($selectedSubdistrict == 0)
+                                                                                                <option value="" {{$selectedSubdistrict ? '' : 'selected'}}>Pilih Kecamatan</option>
                                                                                             @endif
-                                                                                            @if(auth()->check())
-                                                                                                @if($subdistrict == [])
-                                                                                                    <option value="{{ $userRegion->subdistrict }}" selected>{{ $userRegion->subdistrict }}</option>
-                                                                                                @endif
-                                                                                            @endif
-                                                                                            @foreach ($subdistrict as $item)
-                                                                                                <option value="{{$item}}" {{$item == $userRegion->subdistrict ? 'selected' : ''}}>{{$item}}</option>
+                                                                                            {{-- @if($subdistrictList == [])
+                                                                                                <option value="{{ $userRegion->subdistrict }}" >{{ $userRegion->subdistrict }}</option>
+                                                                                            @endif --}}
+                                                                                            @foreach ($subdistrictList as $item)
+                                                                                                <option value="{{$item}}" {{$item == $shippingSubDistrict ? 'selected' : ''}}>{{$item}}</option>
                                                                                             @endforeach
                                                                                         </select>
-                                                                                        <div class="TUEJq">
+                                                                                        <div wire:loading wire:target="updateSubdistrict" class="TUEJq">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum">
+                                                                                                <div class="loading-spinner"></div>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class="TUEJq"  wire:loading.remove wire:target="updateSubdistrict">
                                                                                             <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
                                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                                     viewBox="0 0 14 14"
@@ -330,23 +348,28 @@
                                                                                                 <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kelurahan</span>
                                                                                             </span>
                                                                                         </label>
+
                                                                                         <select name="area"
                                                                                             id="Select4"
                                                                                             required=""
                                                                                             autocomplete="shipping country"
-                                                                                            class="_b6uH RR8sg vYo81 RGaKd" wire:change="updatedSelectedArea($event.target.value)">
-                                                                                            <option value="" {{ !auth()->check() ? 'selected' : '' }}>Pilih Kelurahan</option>
-                                                                                            @if(auth()->check())
-                                                                                                @if($area == [])
-                                                                                                    <option value="{{ $userRegion->region_id }}" selected>{{ $userRegion->area }}</option>
-                                                                                                @endif
+                                                                                            class="_b6uH RR8sg vYo81 RGaKd" wire:change="areaUpdate($event.target.value)" wire:target="updateArea" wire:loading.attr="disabled">
+                                                                                            @if (!$selectedArea)
+                                                                                                <option value="" {{$selectedArea ? '' : 'selected'}}>Pilih Kelurahan</option>
                                                                                             @endif
-                                                                                            @foreach ($area as $index=>$item)
-                                                                                                <option value="{{$index}}" {{ $index == $userRegion->region_id ? 'selected' : '' }}>{{$item}}</option>
+                                                                                            {{-- @if($areaList == [])
+                                                                                                <option value="{{ $userRegion->region_id }}">{{ $userRegion->area }}</option>
+                                                                                            @endif --}}
+                                                                                            @foreach ($areaList as $index=>$item)
+                                                                                                <option value="{{$index}}" {{ $index == $selectedArea ? 'selected' : '' }}>{{$item}}</option>
                                                                                             @endforeach
                                                                                         </select>
-                                                                                        <div
-                                                                                            class="TUEJq">
+                                                                                        <div wire:loading wire:target="updateArea" class="TUEJq">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum">
+                                                                                                <div class="loading-spinner"></div>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class="TUEJq"  wire:loading.remove wire:target="updateArea">
                                                                                             <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
                                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                                     viewBox="0 0 14 14"

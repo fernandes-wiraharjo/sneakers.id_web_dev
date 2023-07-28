@@ -133,8 +133,10 @@
 
         <span>Thank you for signing up for our service! To ensure the security and validity of your account, we kindly
             request you to verify your email address.
-            <span><a href="{{ route('customer.verify-email', $token) }}">here</a></span>.
+            <span><a href="{{ route('customer.verify-email', $token) }}" class="Form__Submit Button Button--primary"
+                style="width: 150px;">VERIFY HERE</a></span>
         </span>
+        <br>
     @endif
 
     @if ($message = Session::get('success'))
@@ -177,6 +179,7 @@
             </div>
         </div>
         <div class="table-content"  style="height: 300px; overflow: auto;">
+        @if ($transaction)
             @foreach ($transaction as $item)
             <div class="table-row">
                 <div class="table-data"><a href="{{ route('customer.transaction.detail', $item->transaction->token) }}"><strong>#{{strtoupper($item->transaction->token)}}</strong></a></div>
@@ -185,6 +188,7 @@
                 <div class="table-data">RP {{ rupiah_format(intval($item->transaction->grand_total)) }}</div>
             </div>
             @endforeach
+        @endif
         </div>
     </div>
     <div>

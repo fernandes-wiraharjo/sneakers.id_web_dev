@@ -13,9 +13,10 @@ class CheckoutProcess extends Component
     public $currentStep = 1;
     public $successMessage = '';
     public $selectedCourier = []; //default jne
-    public $selectedSubdistrict = 1;
+    public $selectedSubdistrict = 0;
+    public $selectedDistrict = '';
     public $selectedProvince = '';
-    public $selectedArea = '';
+    public $selectedArea = 0;
 
     public $shippingEmail = '';
     public $shippingFirstName = '';
@@ -29,13 +30,13 @@ class CheckoutProcess extends Component
     public $shippingSubDistrict = '';
     public $shippingArea = '';
     public $shippingCost = 0;
-    public $shippingCourier;
-    public $shippingWeight = 0;
+    public $shippingCourier = [];
+    public $shippingWeight;
 
     public $userRegion;
-    public $district;
-    public $subdistrict;
-    public $area;
+    public $districtList = [];
+    public $subdistrictList = [];
+    public $areaList = [];
     public $postalCode;
     public $invoiceUrl;
     public $grandTotal = 0;
@@ -50,12 +51,12 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
-        $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->first();
+        $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->where('subdistrict_ro', '<>', 'NULL')->first();
 
         $this->updateCart();
-        $this->district = [];
-        $this->subdistrict = [];
-        $this->area = [];
+        $this->districtList = [];
+        $this->subdistrictList = [];
+        $this->areaList = [];
         $this->postalCode = [];
         $this->currentUrl = url()->current();
 
@@ -65,6 +66,9 @@ class CheckoutProcess extends Component
             $this->shippingFirstName = $user->first_name;
             $this->shippingLastName = $user->last_name;
             if($user->user_address) {
+                $this->selectedProvince = $this->userRegion->province;
+                $this->selectedDistrict = $this->userRegion->district;
+                $this->selectedSubdistrict = $this->userRegion->region_id;
                 $this->shippingAddress = $user->user_address->address;
                 $this->shippingPhoneNumber = $user->user_address->phone_number;
                 $this->updateDistrict($this->userRegion->province);
@@ -72,13 +76,15 @@ class CheckoutProcess extends Component
                 $this->updateArea($this->userRegion->subdistrict);
                 $this->selectedArea = $this->userRegion->region_id;
                 $this->shippingZipCode = $this->userRegion->post_code;
-                $this->shippingWeight = Cart::totalWeight();
             }
+            $this->shippingWeight = Cart::totalWeight();
 
         }
         //courier list 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
-        $courier = CekOngkir::CostCourier($this->selectedSubdistrict, 'subdistrict',Cart::totalWeight(), 'jnt');
-        $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
+        if($this->selectedSubdistrict) {
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, 'subdistrict',Cart::totalWeight(), 'jnt');
+            $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
+        }
     }
 
     public function informationStepSubmit()
@@ -228,33 +234,50 @@ class CheckoutProcess extends Component
     }
 
     public function updateDistrict($value) {
-        $this->district = ModelRegion::selectRaw('DISTINCT(district)')->where('province', $value)->get()->pluck('district');
+        $this->selectedProvince = $value;
+        $this->districtList = ModelRegion::selectRaw('DISTINCT(district)')->where('province', $value)->where('subdistrict_ro', '<>', 'NULL')->get()->pluck('district');
+        // dd($this->district);
         $this->shippingProvince = $value;
+        $this->selectedDistrict = '';
+        $this->selectedSubdistrict = 0;
+        $this->selectedArea = 0;
     }
 
     public function updateSubdistrict($value) {
-        $getDistrict = ModelRegion::where('district', $value)->first();
         $this->shippingDistrict = $value;
-        if($getDistrict->subdistrict_ro){
-            $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
-            $destinationType = 'subdistrict';
-        } else {
-            $this->selectedSubdistrict = $getDistrict->city_ro;
-            $destinationType = 'city';
-        }
-        //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
-        $courier = CekOngkir::CostCourier($this->selectedSubdistrict, $destinationType, Cart::totalWeight(), 'jnt');
-        $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
-        $this->subdistrict = ModelRegion::selectRaw('DISTINCT(subdistrict)')->where('district', $value)->where('area', '<>','-')->get()->pluck('subdistrict');
+        $this->selectedDistrict = $value;
+
+        $this->subdistrictList = ModelRegion::selectRaw('DISTINCT(subdistrict)')->where('district', $value)->where('area', '<>','-')->get()->pluck('subdistrict');
+        $this->selectedSubdistrict = 0;
+        $this->selectedArea = 0;
     }
 
     public function updateArea($value) {
         $this->shippingSubDistrict = $value;
-        $this->area = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
+        $getDistrict = ModelRegion::where('district', $this->selectedDistrict)->first();
+
+        if($getDistrict) {
+            if($getDistrict->subdistrict_ro){
+                $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
+                $destinationType = 'subdistrict';
+            } else {
+                $this->selectedSubdistrict = $getDistrict->city_ro;
+                $destinationType = 'city';
+            }
+            //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
+            if($this->selectedSubdistrict) {
+                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, $destinationType, Cart::totalWeight(), 'jnt');
+                $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
+            }
+        } else {
+            $this->selectedSubdistrict = 0;
+        }
+        $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
         $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
+        $this->selectedArea = 0;
     }
 
-    public function updatedSelectedArea($value) {
+    public function areaUpdate($value) {
         $this->selectedArea = $value;
         $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
     }

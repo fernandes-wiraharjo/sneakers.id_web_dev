@@ -36,6 +36,12 @@ class DashboardController extends Controller {
         return redirect(route('administrator.product.index'));
     }
 
+    $data['transaction'] = TransactionDestination::with('transaction')->where('email', auth()->user()->email)->orderBy('created_at', 'DESC')->get();
+    $data['user_address'] = auth()->user()->user_address()->first();
+    $data['user_info'] = auth()->user();
+    $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
+    $data['province'] = Region::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
+
     if (!auth()->user()->is_email_verified) {
         $verifyUser = UserVerify::where('user_id', Auth::user()->id)->first();
         $token = $verifyUser->token;
@@ -47,16 +53,10 @@ class DashboardController extends Controller {
                 ->with('message', 'You need to confirm your account. We have sent you an activation code, please check your email.');
         }
 
+        $data['token'] = $token;
 
-        return view('display-store.customer.dashboard', compact('token'));
+        return view('display-store.customer.dashboard', $data);
     }
-
-
-    $data['transaction'] = TransactionDestination::with('transaction')->where('email', auth()->user()->email)->orderBy('created_at', 'DESC')->get();
-    $data['user_address'] = auth()->user()->user_address()->first();
-    $data['user_info'] = auth()->user();
-    $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
-    $data['province'] = Region::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
 
     return view('display-store.customer.dashboard', $data);
   }

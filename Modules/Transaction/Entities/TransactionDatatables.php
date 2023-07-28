@@ -2,6 +2,8 @@
 
 namespace Modules\Transaction\Entities;
 
+
+use App\Models\Region;
 use App\Models\User;
 use Modules\Product\Entities\Product;
 use Modules\Product\Entities\ProductTag;
@@ -23,12 +25,15 @@ class TransactionDatatables extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->rawColumns(['action', 'doc_no', 'customer_email'])
+            ->rawColumns(['action'])
+            ->editColumn('method',  function ($item) {
+                return $item->type.'-'.$item->method;
+            })
             ->editColumn('customer_email',  function ($item) {
-                return $item->getUserData->email ?? '-';
+                return $item->email ?? '-';
             })
             ->editColumn('total_weight',  function ($item) {
-                return $item->total_weight / 1000 . 'Kg';
+                return $item->total_weight / 1000 . ' Kg';
             })
             ->editColumn('grand_total',  function ($item) {
                 return 'Rp '.rupiah_format(intval($item->grand_total));
@@ -37,12 +42,15 @@ class TransactionDatatables extends DataTable
                 return $item->created_at->format('d-m-Y H:i');
             })
             ->addColumn('action', function ($item) {
+                // dd($item);
                 $data['shipping'] = $item->shipping;
                 $data['destination'] = $item->destination;
                 $data['histories'] = $item->histories;
                 $data['transaction'] = $item;
                 $data['items'] = $item->items;
                 $data['user_info'] = $item->getUserData;
+                $data['user_address'] = $item->getUserData->user_address()->first();
+                $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
                 return view('transaction::_partial.action-burger', $data);
             });
     }
@@ -55,7 +63,9 @@ class TransactionDatatables extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model
+        return $model->with('destination', 'destination.user')
+            ->select('transactions.*', 'transaction_destinations.email', 'transaction_destinations.transaction_id')
+            ->leftJoin('transaction_destinations','transactions.id','=', 'transaction_destinations.transaction_id')
             ->newQuery();
     }
 
@@ -96,17 +106,24 @@ class TransactionDatatables extends DataTable
                 ->searchable(false)
                 ->width(300)
                 ->addClass('text-center'),
-            Column::make('doc_no')
-                ->title(__('Payment ID')),
+            Column::make('date')
+                ->title(__('Payment date')),
             Column::make('customer_email')
-                ->width(150),
+                ->name('destination.user.email')
+                ->title('Customer Email')
+                ->width(150)
+                ->sortable(true)
+                ->orderable(true) // Allow sorting on this column
+                ->orderColumn('destination.user.email $1'),
             Column::make('grand_total')
-                ->width(150),
+                ->width(150)
+                ->searchable(false),
             Column::make('total_quantity')->width(50)
                 ->searchable(false),
             Column::make('total_weight')->width(50)
                 ->searchable(false),
-            Column::make('type')
+            Column::make('status')
+                ->title('Order status')
                 ->searchable(false),
             Column::make('method')
                 ->width(150)
@@ -130,6 +147,6 @@ class TransactionDatatables extends DataTable
      */
     protected function filename()
     {
-        return 'Product_' . date('YmdHis');
+        return 'Transaction_' . date('YmdHis');
     }
 }

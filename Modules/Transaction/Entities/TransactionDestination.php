@@ -34,7 +34,7 @@ class TransactionDestination extends Model
 
     public function transaction()
     {
-        return $this->hasOne(Transaction::class, 'id', 'transaction_id');
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
 
     public function region()

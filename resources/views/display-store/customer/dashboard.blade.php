@@ -176,7 +176,7 @@
                     href="#">TOTAL</a>
             </div>
         </div>
-        <div class="table-content">
+        <div class="table-content"  style="height: 300px; overflow: auto;">
             @foreach ($transaction as $item)
             <div class="table-row">
                 <div class="table-data"><a href="{{ route('customer.transaction.detail', $item->transaction->token) }}"><strong>#{{strtoupper($item->transaction->token)}}</strong></a></div>

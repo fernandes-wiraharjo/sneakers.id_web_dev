@@ -6,7 +6,7 @@ return [
         'name' => 'Dashboard',
         'route' => ['administrator.dashboard.index', []],
         'isActive' => 'summary*',
-        'icon' => 'dashboard',
+        'icon' => 'percent',
         'id' => '',
         'gates' => [],
     ],
@@ -15,7 +15,7 @@ return [
         'name' => 'Transaction',
         'route' => ['administrator.transaction.index', []],
         'isActive' => 'transaction*',
-        'icon' => 'cart',
+        'icon' => 'shopping-basket',
         'id' => '',
         'gates' => [
             [

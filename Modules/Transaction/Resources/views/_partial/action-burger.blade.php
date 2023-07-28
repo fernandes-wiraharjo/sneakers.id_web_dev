@@ -130,6 +130,13 @@
                                         <td >Transactions Created At</td>
                                         <td>{{ $transaction->created_at ? $transaction->created_at->format('d-m-Y H:i') : '-'}}</td>
                                     </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <h5>Recipient Information</h5>
+                        <div class="table-responsive" style="text-align: left;">
+                            <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                                <tbody>
                                     <tr>
                                         <td>Email</td>
                                         <td>{{ $destination->email ?? "-" }}</td>
@@ -157,6 +164,7 @@
 
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <th>Courier</th>
                                         <th>{{ $shipping->shipping_method ?? '-'}}</th>
@@ -166,6 +174,41 @@
                                         <td>{{ $shipping->shipping_cost ? 'Rp '.rupiah_format($shipping->shipping_cost) : '-' }}</td>
                                     </tr>
 
+                                </tbody>
+                            </table>
+                        </div>
+                        <h5>User Information</h5>
+                        <div class="table-responsive" style="text-align: left;">
+                            <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                                <tbody>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td>{{ $user_info->email ?? "-" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>User Name</td>
+                                        <td>{{ $user_info->first_name ?? "" }} {{ $user_info->last_name ?? "" }}</td>
+                                    </tr>
+                                    @if($user_address != null)
+                                    <tr>
+                                        <td>User Address</td>
+                                        <td>{{ $user_address->address ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>User Region</td>
+                                        <td>
+                                            <span>{{ $region->area ?? '-' }}</span> <br>
+                                            <span>{{ $region->subdistrict ?? '-' }}</span> <br>
+                                            <span>{{ $region->district ?? '-' }}</span> <br>
+                                            <span>{{ $region->province ?? '-' }}</span> <br>
+                                            <span>{{ $region->post_code ?? '-' }}</span> <br>
+                                        </td>
+                                    </tr>
+                                    @else
+                                    <tr>
+                                        Address not set.
+                                    </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

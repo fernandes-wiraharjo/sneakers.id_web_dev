@@ -38,7 +38,7 @@ class CheckoutController extends BaseController {
             if($transaction->status != $data['response']['status']){
                 $updateTransaction = Transaction::where('id', $transaction->id)->first();
                 $updateTransaction->update([
-                    'type' => $data['response']['bank_code'],
+                    'type' => $data['response']['payment_channel'],
                     'method' => $data['response']['payment_method'],
                     'status' => $data['response']['status'],
                 ]);

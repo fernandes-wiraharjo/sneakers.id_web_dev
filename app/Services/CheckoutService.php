@@ -48,7 +48,6 @@ class CheckoutService {
 
         try {
             $response = \Xendit\Invoice::create($params);
-
             //insert into transactions -> $transaction
             Transaction::createTransaction($response, $transactions);
         } catch (\Throwable $e) {

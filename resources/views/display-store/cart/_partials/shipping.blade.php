@@ -55,6 +55,18 @@
                                     </div>
                                 </div>
                             </div>
+                            @if($note != '')
+                                <div role="row" class="NSCO_">
+                                    <div class="Qk5zF">
+                                        <div role="cell" class="w3cHO"><span
+                                                class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt7">Notes</span>
+                                        </div>
+                                        <div role="cell" class="nkp8r"><bdo dir="ltr"
+                                                class="_19gi7yt0 _19gi7yte _1fragem1j">{{ $note }}</bdo>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </section>
                     <main id="checkout-main">

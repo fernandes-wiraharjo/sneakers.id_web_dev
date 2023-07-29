@@ -24,6 +24,9 @@ class CekOngkirService {
     }
 
     public function CostRangeCourier($response = []) {
+        if($response['rajaongkir']['status']['code'] == 400){
+            return collect();
+        }
         if (!is_null($response)){
             if(is_null($response['rajaongkir']['results'])){
                 return collect();

@@ -11,10 +11,13 @@ class CartCheckout extends Component
 {
     protected $total;
     protected $content;
+    public $note;
     public $disabledPlus = false;
     public $interval = 5; // Interval in seconds (adjust as needed)
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
+        'noteUpdated' => 'updateNote',
+        'updateNote' => 'fetchLatestNote',
     ];
 
     /**
@@ -24,6 +27,7 @@ class CartCheckout extends Component
      */
     public function mount(): void
     {
+        $this->note = Cart::getNotes();
         $this->updateCart();
     }
     /**
@@ -33,11 +37,13 @@ class CartCheckout extends Component
      */
     public function render(): View
     {
+        $this->updateCart();
         return view('livewire.cart-checkout', [
             'session_id' => Cart::hashID(),
             'total' => intval($this->total),
             'content' => $this->content,
         ]);
+
     }
     /**
      * Removes a cart item by id.
@@ -95,13 +101,18 @@ class CartCheckout extends Component
     {
         $this->total = Cart::total();
         $this->content = Cart::content();
+        Cart::addNotes($this->note);
     }
 
-    // public function hydrate()
-    // {
-    //     while (true) {
-    //         $this->updateCart();
-    //         sleep($this->interval);
-    //     }
-    // }
+    public function updateNote($newNote)
+    {
+        $this->note = $newNote;
+        $this->updateCart();
+        // Cart::addNotes($newNote);
+    }
+
+    public function fetchLatestNote()
+    {
+        $this->note = Cart::getNotes(); // Fetch the latest note from the backend (assuming 'Cart::getNotes()' fetches the current note)
+    }
 }

@@ -105,7 +105,7 @@
         </div>
         <div class="Drawer__Footer" data-drawer-animated-bottom="">
                 <div class="text-center">
-                    <button type="button" class="Cart__NoteButton" data-action="toggle-cart-note">Add Order Note</button>
+                    <button type="button" class="Cart__NoteButton" data-action="toggle-cart-note">{{ $note == '' ? 'Add Order Note' :' Edit Order Note'}}</button>
                     <a href="javascript:void(0);" class="Cart__Taxes Text--subdued Cart_Clear" wire:click="clearCart">Clear Cart</a>
                 </div>
 
@@ -118,12 +118,12 @@
                     <span class="money">Rp {{ rupiah_format($total) }}</span>
                 </span>
             </a>
-            <div class="Cart__OffscreenNoteContainer" aria-hidden="true"><span class="Cart__NoteButton">Add Order Note</span>
+            <div class="Cart__OffscreenNoteContainer" aria-hidden="true"><span class="Cart__NoteButton">{{ $note == '' ? 'Add Order Note' :' Edit Order Note'}}</span>
                 <div class="Form__Item">
-                    <textarea class="Cart__Note Form__Textarea" name="note" id="cart-note" rows="3" placeholder="How can we help you?" data-scrollable=""></textarea>
+                    <textarea class="Cart__Note Form__Textarea" id="cart-note" rows="3" placeholder="How can we help you?" data-scrollable="">{{$note}}</textarea>
                 </div>
 
-                <button type="button" class="Button Button--primary Button--full" data-action="toggle-cart-note">Save</button>
+                <a href="javascript:void(0);" class="Button Button--primary Button--full" onclick="saveNote()" id="cart-note" data-action="toggle-cart-note">Save</a>
             </div>
         </div>
         @else
@@ -144,5 +144,17 @@
             <a class="Cart__Checkout Button Button--primary Button--full" href="/collections/all">Continue Shopping</a>
         </div>
         @endif
+        <script>
+            function saveNote() {
+                const noteValue = document.getElementById('cart-note').value.trim();
+                // Call the Livewire method to update the note property only when the textarea is not empty
+                if (noteValue !== '') {
+                    console.log(noteValue);
+                    Livewire.emit('noteUpdated', noteValue);
+                    Livewire.emit('noteSaved', noteValue);
+                }
+                // Optionally, you can add further logic or validation here.
+            }
+        </script>
 </div>
 

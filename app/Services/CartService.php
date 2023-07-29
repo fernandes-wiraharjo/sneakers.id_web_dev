@@ -65,6 +65,31 @@ class CartService {
         }
     }
 
+    public function addNotes($text): void
+    {
+        // dd($text);
+        $content = $this->getContent();
+
+        $content->reduce(function ($total, $item) use ($text){
+            $item->put('note', $text);
+        });
+        // // Add notes to existing content or create new array with only note text as value for key "
+        // // $content->put('note', $text);
+        $this->session->put(self::DEFAULT_INSTANCE, $content);
+    }
+
+    public function getNotes()
+    {
+        $content = $this->getContent();
+
+        if ($content->count() > 0) {
+            $get_note = $content->first()->get('note');
+
+            return $get_note;
+        }
+        return '';
+    }
+
     /**
      * Removes an item from the cart.
      *

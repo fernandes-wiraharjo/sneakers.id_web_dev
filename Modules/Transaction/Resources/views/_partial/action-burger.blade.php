@@ -319,6 +319,10 @@
                                             <td><a href="{{ $transaction->invoice_url ?? '-'}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fa fa-file-invoice"></i>Invoice Link</a></td>
                                         </tr>
                                         <tr>
+                                            <td>Customer Note</td>
+                                            <td>{{ $transaction->description ?? "-" }}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Customer Email</td>
                                             <td>{{ $user_info->email ?? "-" }}</td>
                                         </tr>

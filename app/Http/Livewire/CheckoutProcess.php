@@ -41,6 +41,7 @@ class CheckoutProcess extends Component
     public $invoiceUrl;
     public $grandTotal = 0;
     public $currentUrl = '';
+    protected $note;
     protected $total;
     protected $content;
 
@@ -59,6 +60,7 @@ class CheckoutProcess extends Component
         $this->areaList = [];
         $this->postalCode = [];
         $this->currentUrl = url()->current();
+        $this->note = Cart::getNotes();
 
         if(auth()->check()){
             $user = auth()->user();
@@ -93,6 +95,7 @@ class CheckoutProcess extends Component
         $this->currentStep = 2;
         $this->total = Cart::total();
         $this->content = Cart::content();
+        $this->note = Cart::getNotes();
     }
 
     public function shippingStepSubmit()
@@ -100,6 +103,7 @@ class CheckoutProcess extends Component
         $this->currentStep = 3;
         $this->total = Cart::total();
         $this->content = Cart::content();
+        $this->note = Cart::getNotes();
         //submit shipping information into session TransactionSession
     }
 
@@ -174,6 +178,7 @@ class CheckoutProcess extends Component
                 'total_quantity' =>  $totalQuantity,
                 'total_weight' =>  Cart::totalWeight(),
                 'sub_total' => Cart::total(),
+                'description' => Cart::getNotes(),
                 'grand_total' => $this->grandTotal
             ],
             'transaction_destinations' => [
@@ -291,6 +296,7 @@ class CheckoutProcess extends Component
             'total' => intval(Cart::total()),
             'content' => Cart::content(),
             'province' => $province,
+            'note' => $this->note
         ]);
     }
 }

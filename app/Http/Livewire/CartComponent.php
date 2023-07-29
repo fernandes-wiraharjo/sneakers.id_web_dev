@@ -11,8 +11,10 @@ class CartComponent extends Component
     protected $content;
     public $disabledPlus = false;
     public $interval = 5; // Interval in seconds (adjust as needed)
+    public $note = '';
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
+        'noteSaved' => 'saveNote',
     ];
 
     /**
@@ -22,6 +24,7 @@ class CartComponent extends Component
      */
     public function mount(): void
     {
+        $this->note = Cart::getNotes();
         $this->updateCart();
     }
     /**
@@ -31,9 +34,11 @@ class CartComponent extends Component
      */
     public function render(): View
     {
+        $this->updateCart();
         return view('livewire.cart-component', [
             'total' => intval($this->total),
             'content' => $this->content,
+            'note' => Cart::getNotes(),
         ]);
     }
     /**
@@ -92,6 +97,13 @@ class CartComponent extends Component
     {
         $this->total = Cart::total();
         $this->content = Cart::content();
+    }
+
+    public function saveNote($newNote)
+    {
+        $this->note = $newNote;
+        Cart::addNotes($newNote);
+        $this->emit('noteUpdated', $this->note);
     }
 
     // public function hydrate()

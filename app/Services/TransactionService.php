@@ -45,6 +45,7 @@ class TransactionService {
             'total_weight' => $transaction['transactions']['total_weight'],
             'sub_total' => $transaction['transactions']['sub_total'],
             'grand_total' => $transaction['transactions']['grand_total'],
+            'description' => $transaction['transactions']['description'],
             'status' => 'CREATED'
         ]);
 

@@ -270,7 +270,7 @@
 </div>
 
 <div class="modal fade" tabindex="-1" id="action-detail-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-detail-{{ $transaction->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title" id="action-1Label">Order Detail {{ $transaction->token?? '-'}}</h5>
@@ -349,8 +349,9 @@
                                     <td style="width: 50px;">Image</td>
                                     <td>Product Code</td>
                                     <td>Product Name</td>
-                                    <td style="width: 100px;">Quantity</td>
-                                    <td style="width: 100px;">Price</td>
+                                    <td style="width: 100px;">Size</td>
+                                    <td style="width: 200px;">Quantity x Price</td>
+                                    <td style="width: 100px;">Product Subtotal</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -359,22 +360,23 @@
                                     <td><img src="{{ getImage($item->detail->product->image ?? '' , 'products/'.$item->detail->product->product_code) }}" alt="" class="w-6 rounded" style="width: 75px"/></td>
                                     <td>{{ $item->detail->product->product_code }}</td>
                                     <td>{{ $item->detail->product->product_name }}</td>
-                                    <td>{{ $item->quantity }}</td>
-                                    <td>Rp {{ rupiah_format($item->price ?? 0) }}</td>
+                                    <td>{{ $item->detail->size }}</td>
+                                    <td>{{ $item->quantity }} x Rp {{ rupiah_format($item->price ?? 0) }}</td>
+                                    <td>Rp {{ rupiah_format($item->quantity * $item->price ?? 0) }}</td>
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="3"></td>
+                                    <td colspan="4"></td>
                                     <td>Subtotal</td>
                                     <td>Rp {{ rupiah_format($transaction->sub_total ?? 0) }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3"></td>
+                                    <td colspan="4"></td>
                                     <td>Shipping Cost {{ $shipping->shipping_method ?? '-' }}</td>
                                     <td>Rp {{ rupiah_format($shipping->shipping_cost ?? 0) }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3"></td>
+                                    <td colspan="4"></td>
                                     <td>Grand Total</td>
                                     <td>Rp {{ rupiah_format($transaction->grand_total ?? 0) }}</td>
                                 </tr>

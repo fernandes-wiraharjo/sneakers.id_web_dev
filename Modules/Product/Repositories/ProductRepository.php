@@ -132,43 +132,61 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         $date = date('Y-m-d H:i:s');
         $today = Carbon::createFromFormat('Y-m-d H:i:s', $date)->toString();
 
-        $query = $this->model->with(['tags','detail'])->whereHas('tags', function($q) use ($date) {
+        $query = $this->model->with(['tags','detail', 'detail', 'images', 'signatures', 'categories'])
+        ->whereHas('tags', function($q) use ($date) {
             $q->where('tag_title', 'NEW RELEASE');
             $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
         })
-        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
-            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price')
+        ->leftJoin('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'products.id')
+                ->where('pd.retail_price', '=', DB::raw('(
+                    Select min(retail_price)
+                    from product_details
+                    where product_id = products.id
+                )'))
+                ->where('pd.after_discount_price', '=', DB::raw('(
+                    Select min(after_discount_price)
+                    from product_details
+                    where product_id = products.id
+                )'));
         })
-        ->join('product_details as pd', function($join) {
-            $join->on('pd.product_id', '=', 'pd2.product_id')
-                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
-        })
-        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-        ->where('is_active', 1)
+        // ->whereRaw('pd.min_retail_price = pd2.retail_price')
+        ->where(['is_active'=> 1])
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
+        ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)
-        ->orderBy('products.created_at', 'DESC')
         ->get();
 
         return $query;
     }
 
     public function getProductBestSeller($limit = 10, $offset = 0) {
-        return $this->model->whereHas('tags', function($q) {
+        return $this->model->with(['tags','detail', 'detail', 'images', 'signatures', 'categories'])
+        ->whereHas('tags', function($q) {
             $q->where('tag_title', 'BEST SELLER');
         })
-        ->join(DB::raw('(SELECT product_id, MIN(retail_price) as min_retail_price FROM product_details GROUP BY product_id) as pd2'), function($join) {
-            $join->on('pd2.product_id', '=', 'products.id')->limit(1);
+        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price')
+        ->leftJoin('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'products.id')
+                ->where('pd.retail_price', '=', DB::raw('(
+                    Select min(retail_price)
+                    from product_details
+                    where product_id = products.id
+                )'))
+                ->where('pd.after_discount_price', '=', DB::raw('(
+                    Select min(after_discount_price)
+                    from product_details
+                    where product_id = products.id
+                )'));
         })
-        ->join('product_details as pd', function($join) {
-            $join->on('pd.product_id', '=', 'pd2.product_id')
-                ->on('pd.retail_price', '=', 'pd2.min_retail_price')->limit(1);
-        })
-        ->select(DB::raw('DISTINCT products.id') ,'products.*', 'pd.base_price', 'pd.retail_price', 'pd.after_discount_price')
-        ->where('is_active', 1)
+        // ->whereRaw('pd.min_retail_price = pd2.retail_price')
+        ->where(['is_active'=> 1])
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
+        ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)
-        ->orderBy('created_at', 'DESC')
         ->get();
     }
 

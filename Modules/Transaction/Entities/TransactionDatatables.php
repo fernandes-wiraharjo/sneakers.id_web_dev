@@ -26,6 +26,9 @@ class TransactionDatatables extends DataTable
         return datatables()
             ->eloquent($query)
             ->rawColumns(['action'])
+            ->editColumn('shipping_status', function ($item) {
+                return $item->shipping->status ?? '-' ;
+            })
             ->editColumn('method',  function ($item) {
                 return $item->type.'-'.$item->method;
             })
@@ -129,7 +132,7 @@ class TransactionDatatables extends DataTable
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),
-            Column::make('status')
+            Column::make('shipping_status')
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),

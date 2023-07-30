@@ -52,6 +52,9 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
+        $this->total = Cart::total();
+        $this->content = Cart::content();
+
         $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->where('subdistrict_ro', '<>', 'NULL')->first();
 
         $this->updateCart();
@@ -89,21 +92,56 @@ class CheckoutProcess extends Component
         }
     }
 
+    protected function rules()
+    {
+        return [
+            'shippingEmail' => 'required|email',
+            'shippingFirstName' => 'required|min:1',
+            'shippingLastName' => 'required|min:1',
+            'shippingAddress' => 'required',
+            'selectedProvince' => 'required',
+            'selectedDistrict' =>'required',
+            'selectedSubdistrict' => 'required|gt:0',
+            'selectedArea' => 'required|gt:0',
+            'shippingZipCode' => 'required',
+            'shippingPhoneNumber' => 'required'
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'shippingEmail.required' => 'Email pengiriman harus diisi.',
+            'shippingEmail.email' => 'Format email pengiriman tidak valid.',
+            'shippingFirstName.required' => 'Nama depan pengiriman harus diisi.',
+            'shippingFirstName.min' => 'Nama depan pengiriman minimal harus memiliki satu karakter.',
+            'shippingLastName.required' => 'Nama belakang pengiriman harus diisi.',
+            'shippingLastName.min' => 'Nama belakang pengiriman minimal harus memiliki satu karakter.',
+            'shippingAddress.required' => 'Alamat pengiriman harus diisi.',
+            'selectedProvince.required' => 'Provinsi untuk pengiriman harus dipilih.',
+            'selectedDistrict.required' => 'Kabupaten/Kota untuk pengiriman harus dipilih.',
+            'selectedSubdistrict.required' => 'Kecamatan untuk pengiriman harus dipilih.',
+            'selectedSubdistrict.gt' => 'Kecamatan untuk pengiriman harus dipilih.',
+            'selectedArea.required' => 'Area untuk pengiriman harus dipilih.',
+            'selectedArea.gt' => 'Area untuk pengiriman harus dipilih.',
+            'shippingZipCode.required' => 'Kode pos untuk pengiriman harus diisi.',
+            'shippingPhoneNumber.required' => 'Nomor telepon untuk pengiriman harus diisi.',
+        ];
+    }
+
     public function informationStepSubmit()
     {
-
+        $this->validate();
         $this->currentStep = 2;
-        $this->total = Cart::total();
-        $this->content = Cart::content();
-        $this->note = Cart::getNotes();
+        if($this->shippingCourier->count() == 0){
+            $this->back(1);
+            $this->emit('modalMessage', ['message' => 'Mohon coba lagi, Ongkir gagal dibaca dari pihak ke-3']);
+        }
     }
 
     public function shippingStepSubmit()
     {
         $this->currentStep = 3;
-        $this->total = Cart::total();
-        $this->content = Cart::content();
-        $this->note = Cart::getNotes();
         //submit shipping information into session TransactionSession
     }
 
@@ -203,6 +241,8 @@ class CheckoutProcess extends Component
                  'destination_ro_id' => $this->selectedSubdistrict,
             ],
         ]);
+
+        //send mail confimarion payment here
         $this->currentStep = 4;
     }
 
@@ -246,6 +286,7 @@ class CheckoutProcess extends Component
         $this->selectedDistrict = '';
         $this->selectedSubdistrict = 0;
         $this->selectedArea = 0;
+        $this->shippingZipCode = '';
     }
 
     public function updateSubdistrict($value) {
@@ -255,6 +296,11 @@ class CheckoutProcess extends Component
         $this->subdistrictList = ModelRegion::selectRaw('DISTINCT(subdistrict)')->where('district', $value)->where('area', '<>','-')->get()->pluck('subdistrict');
         $this->selectedSubdistrict = 0;
         $this->selectedArea = 0;
+        $this->shippingZipCode = '';
+    }
+
+    public function updateZipCode($value) {
+        $this->shippingZipCode = $value;
     }
 
     public function updateArea($value) {
@@ -280,6 +326,7 @@ class CheckoutProcess extends Component
         $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
         $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
         $this->selectedArea = 0;
+        $this->shippingZipCode = '';
     }
 
     public function areaUpdate($value) {
@@ -296,7 +343,7 @@ class CheckoutProcess extends Component
             'total' => intval(Cart::total()),
             'content' => Cart::content(),
             'province' => $province,
-            'note' => $this->note
+            'note' => Cart::getNotes()
         ]);
     }
 }

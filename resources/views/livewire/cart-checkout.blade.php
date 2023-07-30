@@ -197,7 +197,7 @@
                     <footer class="Cart__Footer">
                         <div class="Cart__NoteContainer">
                             <span class="Cart__NoteButton">{{ $note == '' ? 'Add Order Note' : 'Edit Order Note'}}</span>
-                            <textarea class="Cart__Note Form__Textarea" wire:model="note" id="cart-note" rows="4" placeholder="How can we help you?">{{ $note }}</textarea>
+                            <textarea class="Cart__Note Form__Textarea" wire:model.debounce.1000ms="note" id="cart-note" rows="4" placeholder="How can we help you?">{{ $note }}</textarea>
                         </div>
                         <div class="Cart__Recap">
                             <p class="Cart__Total Heading u-h6">Total:
@@ -230,9 +230,10 @@
     @endif
     <script>
         document.addEventListener('livewire:load', function () {
-            setInterval(function () {
-                Livewire.emit('updateNote'); // Emit an event to fetch the latest note
-            }, {{ $interval * 5000 }}); // Convert seconds to milliseconds
+            Livewire.on('updateNote', () => {
+                const textarea = document.getElementById('cart-note');
+                Livewire.emit('updateNote', textarea.value); // Emit the updated note value to the Livewire component
+            });
         });
     </script>
 </div>

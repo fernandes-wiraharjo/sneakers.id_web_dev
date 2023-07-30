@@ -12,7 +12,7 @@ class CartCheckout extends Component
     protected $total;
     protected $content;
     public $note;
-    public $disabledPlus = false;
+    public $disabledPlus = [];
     public $interval = 5; // Interval in seconds (adjust as needed)
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
@@ -29,6 +29,16 @@ class CartCheckout extends Component
     {
         $this->note = Cart::getNotes();
         $this->updateCart();
+
+
+        foreach(Cart::content() as $item) {
+            $qty = ProductDetail::where('id', $item['size_id'])->first()->qty;
+            if (intval($item['quantity'])+1 <= $qty) {
+                $this->disabledPlus[$item['size_id']] = false;
+            } else {
+                $this->disabledPlus[$item['size_id']] = true;
+            }
+        };
     }
     /**
      * Renders the component on the browser.
@@ -78,18 +88,24 @@ class CartCheckout extends Component
     public function updateCartItem(string $size_id, string $action, string $current_qty): void
     {
         $qty = ProductDetail::where('id', $size_id)->first()->qty;
+
         if($action == 'plus') {
             if (intval($current_qty)+1 <= $qty) {
                 Cart::update($size_id, $action);
             } else {
-                $this->disabledPlus = true;
-                $this->emit('modalQty', ['message' => 'product stock reach the limit!']);
+                $this->disabledPlus[$size_id] = true;
+                $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
                 // dd('qty Not valid');
             }
         } else {
-            $this->disabledPlus = false;
+            $this->disabledPlus[$size_id] = false;
             Cart::update($size_id, $action);
         }
+
+        if((intval($current_qty)+1 >= $qty) && ($action == 'plus')) {
+            $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
+        }
+
         $this->updateCart();
     }
     /**
@@ -102,6 +118,15 @@ class CartCheckout extends Component
         $this->total = Cart::total();
         $this->content = Cart::content();
         Cart::addNotes($this->note);
+
+        foreach(Cart::content() as $item) {
+            $qty = ProductDetail::where('id', $item['size_id'])->first()->qty;
+            if (intval($item['quantity'])+1 <= $qty) {
+                $this->disabledPlus[$item['size_id']] = false;
+            } else {
+                $this->disabledPlus[$item['size_id']] = true;
+            }
+        };
     }
 
     public function updateNote($newNote)

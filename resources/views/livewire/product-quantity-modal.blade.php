@@ -11,9 +11,9 @@
         }
 
         .modal-quantity{
-            position: absolute !important;
+            position: fixed !important;
             left: 50% !important;
-            top: unset !important;
+            top: 50% !important;
         }
     </style>
     {{-- Close your eyes. Count to one. That is how long forever feels. --}}

@@ -70,29 +70,43 @@
 
                                             <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
 
-                                            @if(!$disabledPlus)
+                                            @if($disabledPlus != [])
+                                                @if($disabledPlus[$id])
                                                 <a href="javascript:void(0)"
-                                                class="QuantitySelector__Button Link Link--primary"
-                                                title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                                wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
-                                                    <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                        <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                            <path d="M8,1 L8,15"></path>
-                                                            <path d="M1,8 L15,8"></path>
-                                                        </g>
-                                                    </svg>
+                                                    class="QuantitySelector__Button Link Link--primary"
+                                                    title="product stock has reach the limit"
+                                                    wire:disabled="true" style="cursor: not-allowed;">
+                                                        <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
+                                                            <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
+                                                                <path d="M8,1 L8,15"></path>
+                                                                <path d="M1,8 L15,8"></path>
+                                                            </g>
+                                                        </svg>
                                                 </a>
+                                                @else
+                                                    <a href="javascript:void(0)"
+                                                        class="QuantitySelector__Button Link Link--primary"
+                                                        title="Set quantity to {{ $item->get('quantity') }} + 1"
+                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
+                                                            <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
+                                                                <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
+                                                                    <path d="M8,1 L8,15"></path>
+                                                                    <path d="M1,8 L15,8"></path>
+                                                                </g>
+                                                            </svg>
+                                                    </a>
+                                                @endif
                                             @else
-                                                <a href="javascript:void(0)"
-                                                class="QuantitySelector__Button Link Link--primary"
-                                                title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                                wire:disabled="true" style="cursor: not-allowed;">
-                                                    <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                        <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                            <path d="M8,1 L8,15"></path>
-                                                            <path d="M1,8 L15,8"></path>
-                                                        </g>
-                                                    </svg>
+                                               <a href="javascript:void(0)"
+                                                    class="QuantitySelector__Button Link Link--primary"
+                                                    title="Set quantity to {{ $item->get('quantity') }} + 1"
+                                                    wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
+                                                        <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
+                                                            <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
+                                                                <path d="M8,1 L8,15"></path>
+                                                                <path d="M1,8 L15,8"></path>
+                                                            </g>
+                                                        </svg>
                                                 </a>
                                             @endif
                                             {{-- <a href="javascript:void(0)"
@@ -124,7 +138,7 @@
                                         </a>
                                         <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
 
-                                        @if(!$disabledPlus)
+                                        @if(!$disabledPlus[$id])
                                             <a href="javascript:void(0)"
                                             class="QuantitySelector__Button Link Link--primary"
                                             title="Set quantity to {{ $item->get('quantity') }} + 1"
@@ -139,7 +153,7 @@
                                         @else
                                             <a href="javascript:void(0)"
                                             class="QuantitySelector__Button Link Link--primary"
-                                            title="Set quantity to {{ $item->get('quantity') }} + 1"
+                                            title="product stock has reach the limit"
                                             wire:disabled="true" style="cursor: not-allowed;">
                                                 <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
                                                     <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
@@ -201,12 +215,24 @@
                 </form>
             </div>
         </div>
+    @else
+    <div class="Container">
+        <header class="PageHeader">
+            <div class="SectionHeader SectionHeader--center">
+                <h1 class="SectionHeader__Heading Heading u-h1">Cart</h1>
+            </div>
+        </header>
+
+        <div class="PageContent">
+            <a class="Cart__Checkout Button Button--primary Button--full" href="/collections/all">Continue Shopping</a>
+        </div>
+    </div>
     @endif
     <script>
         document.addEventListener('livewire:load', function () {
             setInterval(function () {
                 Livewire.emit('updateNote'); // Emit an event to fetch the latest note
-            }, {{ $interval * 1000 }}); // Convert seconds to milliseconds
+            }, {{ $interval * 5000 }}); // Convert seconds to milliseconds
         });
     </script>
 </div>

@@ -183,17 +183,32 @@
                                         class="Header__LinkSpacer">LOOKBOOK</span></a>
                         </div> --}}
                         <div class="Collapsible">
+                            <a href="{{ route('collections', 'all.PREOWNED') }}" class="Collapsible__Button Heading Link Link--primary u-h6">PRE OWNED<span
+                                        class="Header__LinkSpacer">PRE
+                                        OWNED</span></a>
+                        </div>
+                        <div class="Collapsible">
                             <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
                                         class="Header__LinkSpacer">SIZE CHART</span></a>
                         </div>
                     </nav>
+
+                    @if(auth()->check())
                     <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
                         <ul class="Linklist Linklist--spacingLoose">
+                            {{-- <li class="Linklist__Item">
+                                <a href="{{ route('customer.dashboard') }}"
+                                class="Link Link--secondary">MY ACCOUNT </a>
+                            </li> --}}
                             <li class="Linklist__Item">
-                                <a href="javascript::void()" class="Text--subdued Link Link--primary">Cart</a>
+                                <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
                             </li>
                         </ul>
                     </nav>
+                    @else
                     <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
                         <ul class="Linklist Linklist--spacingLoose">
                             <li class="Linklist__Item">
@@ -201,6 +216,7 @@
                             </li>
                         </ul>
                     </nav>
+                    @endif
                 </div>
             </div>
         </div>
@@ -476,33 +492,33 @@
                 <div class="Header__FlexItem Header__FlexItem--fill">
                     @if(auth()->check())
 
-                    <nav class="Header__MainNav hidden-pocket hidden-lap" aria-label="Main navigation" style="margin: 0px 31px;">
-                        <ul class="HorizontalList HorizontalList--spacingExtraLoose">
-                            <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="#" class="Heading u-h6 main-heading-text"> {{-- to history transaction --}}
-                                    {{ auth()->user()->name }}
-                                </a>
-                                <div class="DropdownMenu" aria-hidden="true">
-                                    <ul class="Linklist">
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('customer.dashboard') }}"
-                                            class="Link Link--secondary">MY ACCOUNT </a>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="#"
-                                            class="Link Link--secondary">MY TRANSACTION </a>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
-                                                {{ __('SIGN OUT') }}
-                                            </a>
-                                            <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </nav>
+                        <nav class="Header__MainNav hidden-phone account-info" aria-label="Main navigation">
+                            <ul class="HorizontalList HorizontalList--spacingExtraLoose">
+                                <li class="HorizontalList__Item" aria-haspopup="true">
+                                    <a href="#" class="Heading u-h6 main-heading-text"> {{-- to history transaction --}}
+                                        <span>{{ auth()->user()->name }}</span>
+                                    </a>
+                                    <div class="DropdownMenu" aria-hidden="true">
+                                        <ul class="Linklist">
+                                            <li class="Linklist__Item">
+                                                <a href="{{ route('customer.dashboard') }}"
+                                                class="Link Link--secondary">MY ACCOUNT </a>
+                                            </li>
+                                            {{-- <li class="Linklist__Item">
+                                                <a href="#"
+                                                class="Link Link--secondary">MY TRANSACTION </a>
+                                            </li> --}}
+                                            <li class="Linklist__Item">
+                                                <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
+                                                    {{ __('SIGN OUT') }}
+                                                </a>
+                                                <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
 
                     @else
                     <a href="{{ route('customer.login') }}"
@@ -561,6 +577,10 @@
         </header>
 
         <style>
+            .dropdown-account {
+                position: fixed;
+            }
+
             :root {
                 --use-sticky-header: 1;
                 --use-unsticky-header: 0;
@@ -574,6 +594,15 @@
             @media screen and (max-width: 640px) {
                 .Header__LogoImage {
                     max-width: 150px;
+                }
+            }
+
+            @media screen and (min-width: 640px) {
+                .account-info {
+                    position: relative !important;
+                    margin: 30px;
+                    padding: 20px 0px;
+                    text-align-last: right;
                 }
             }
 

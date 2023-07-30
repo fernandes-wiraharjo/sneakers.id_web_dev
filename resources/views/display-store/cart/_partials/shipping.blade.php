@@ -76,6 +76,7 @@
                                 <div>
                                     <div class="VheJw">
                                         <div class="s_qAq">
+                                            @if($shippingCourier != [])
                                             <section aria-label="Shipping method"
                                                 class="_1fragem15 _1fragemaf">
                                                 <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
@@ -130,6 +131,27 @@
                                                     </div>
                                                 </div>
                                             </section>
+                                            @else
+                                            <section aria-label="Shipping method"
+                                                class="_1fragem15 _1fragemaf">
+                                                <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1o _1fragem25">
+                                                    <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
+                                                        <h2 id="step-section-primary-header"
+                                                            tabindex="-1"
+                                                            class="n8k95w1 _1fragemaf n8k95w3">
+                                                            Shipping method</h2>
+                                                    </div>
+                                                    Mohon coba kembali
+                                                    <div class="_1ip0g651 _1fragem1b _1fragemaf _1fragem1t _1fragem2a">
+                                                        <fieldset id="shipping_methods">
+                                                            <div class="_1fragem15 _1fragemah _1fragemaf">
+                                                                <legend>Mohon coba kembali</legend>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                            @endif
                                         </div>
                                         <div class="oQEAZ WD4IV">
                                             <div>

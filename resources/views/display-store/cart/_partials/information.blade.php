@@ -17,6 +17,7 @@
                                                     <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
                                                         <h2 id="step-section-primary-header" class="n8k95w1 _1fragemaf n8k95w3">
                                                             Contact</h2>
+                                                            @livewire('modal-message-checkout')
                                                             @if (!auth()->check())
                                                             <span class="_19gi7yt0 _19gi7yte _1fragem1j">
                                                                 Already have an account?
@@ -42,6 +43,7 @@
                                                                         wire:model="shippingEmail">
                                                                         <input type="hidden" name="current_url" value="{{ url()->current() }}" wire:model="currentUrl">
                                                                 </div>
+                                                                @error('shippingEmail') <span style="color: red;">{{ $message }}</span> @enderror
                                                             </div>
                                                         </div>
                                                     </div>
@@ -111,7 +113,9 @@
                                                                                             aria-labelledby="TextField26-label"
                                                                                             autocomplete="shipping given-name"
                                                                                             class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n" wire:model="shippingFirstName">
+
                                                                                     </div>
+                                                                                    @error('shippingFirstName') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                 </div>
                                                                             </div>
                                                                             <div class="_7ozb2u2 _1fragem1r _1fragem28 _1fragemaf _1fragem1b _10vrn9p1 _10vrn9p0 _10vrn9p6">
@@ -133,6 +137,7 @@
                                                                                             autocomplete="shipping family-name"
                                                                                             class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n" wire:model="shippingLastName">
                                                                                     </div>
+                                                                                    @error('shippingLastName') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -150,6 +155,7 @@
                                                                                                 <input id="TextField28" name="alamat" required="" type="text" aria-required="true" aria-labelledby="TextField28-label" autocomplete="shipping address-line1" class="_7ozb2uu _1fragemaf _1fragemb4 _1fragem34 _1fragemab _7ozb2uv _7ozb2uz _1fragemat _1fragemap _1fragemb2 _7ozb2u15 _7ozb2u1n"
                                                                                                 wire:model="shippingAddress">
                                                                                             </div>
+                                                                                            @error('shippingAddress') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -191,6 +197,7 @@
                                                                                             </span>
                                                                                         </div>
                                                                                     </div>
+                                                                                    @error('selectedProvince') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                 </div>
                                                                             </div>
                                                                             <div class="vTXBW _10vrn9p1 _10vrn9p0 _10vrn9p6">
@@ -201,16 +208,16 @@
                                                                                                 <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kode Pos</span>
                                                                                             </span>
                                                                                         </label>
-                                                                                        <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd" wire:model="shippingZipCode" wire:target="updateArea" wire:loading.attr="disabled">
-                                                                                            @if ($shippingZipCode == "")
-                                                                                                <option value="" {{ !$shippingZipCode == "" ? '' : 'selected'}}>Pilih Kodepos</option>
+                                                                                        <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd"  wire:change="updateZipCode($event.target.value)"wire:target="updateArea" wire:loading.attr="disabled">
+                                                                                            @if ($shippingZipCode == '')
+                                                                                                <option value="" {{ $shippingZipCode != '' ? '' : 'selected'}}>Pilih Kodepos</option>
                                                                                             @endif
                                                                                             {{-- @if($postalCode == [])
                                                                                                 <option value="{{ $userRegion->post_code }}">{{ $userRegion->post_code }}</option>
                                                                                             @endif --}}
 
                                                                                             @foreach ($postalCode as $item)
-                                                                                                <option value="{{$item}}" {{ $item == $shippingZipCode ? 'selected' : ( auth()->check() ? ($item == $userRegion->post_code ? 'selected' : '') : '')}}>{{$item}}</option>
+                                                                                                <option value="{{$item}}" {{ $item == $shippingZipCode ? 'selected' : ''}}>{{$item}}</option>
                                                                                             @endforeach
                                                                                         </select>
                                                                                         <div wire:loading wire:target="updateArea" class="TUEJq">
@@ -234,6 +241,7 @@
                                                                                             </span>
                                                                                         </div>
                                                                                     </div>
+                                                                                    @error('shippingZipCode') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -286,6 +294,8 @@
                                                                                             </span>
                                                                                         </div>
                                                                                     </div>
+                                                                                    @error('selectedProvince') <span style="color: red;">{{ $message }}</span> @enderror
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -335,6 +345,8 @@
                                                                                                 </svg>
                                                                                             </span>
                                                                                         </div>
+                                                                                    @error('selectedSubdistrict') <span style="color: red;">{{ $message }}</span> @enderror
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -385,6 +397,8 @@
                                                                                             </span>
                                                                                         </div>
                                                                                     </div>
+                                                                                    @error('selectedArea') <span style="color: red;">{{ $message }}</span> @enderror
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -405,6 +419,8 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
+                                                                                    @error('shippingPhoneNumber') <span style="color: red;">{{ $message }}</span> @enderror
+
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -459,8 +475,11 @@
                                         </div>
                                         <div class="oQEAZ WD4IV">
                                             <div>
-                                                <a class="QT4by rqC98 hodFu VDIfJ j6D1f janiy" wire:click="informationStepSubmit">
-                                                    <span class="AjwsM">Continue to shipping</span>
+                                                <a class="QT4by rqC98 hodFu VDIfJ j6D1f janiy" style="color: white;" wire:click="informationStepSubmit"
+                                                wire:loading.attr="disabled" wire:target="informationStepSubmit">
+                                                    <!-- Tautan hanya akan menampilkan teks "Loading..." ketika tindakan sedang berlangsung -->
+                                                    <span wire:loading>Loading...</span>
+                                                    <span wire:loading.remove>Continue to shipping</span>
                                                 </a>
                                             </div>
                                             <div>
@@ -492,7 +511,19 @@
                                 </div>
                             </div>
                             <div class="_1fragem15 _1fragemah _1fragemaf">
-                                <button type="submit" tabindex="-1" aria-hidden="true">Continue to shipping</button>
+                                <button type="submit"
+                                        tabindex="-1"
+                                        aria-hidden="true"
+                                        wire:click="informationStepSubmit"
+                                        wire:loading.attr="disabled"
+                                        style="color: white;"
+                                        {{-- <!-- Disable button saat sedang memuat --> --}}
+                                        wire:target="informationStepSubmit">
+                                        <!-- Menunjukkan efek loading saat tindakan 'informationStepSubmit' sedang berlangsung -->
+                                        <!-- Tombol hanya akan menampilkan teks "Loading..." ketika tindakan sedang berlangsung -->
+                                    <span wire:loading.remove>Continue to shipping</span>
+                                    <span wire:loading>Loading...</span>
+                                </button>
                             </div>
                         </form>
                     </main>

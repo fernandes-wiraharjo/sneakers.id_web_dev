@@ -65,7 +65,7 @@ class Product extends Component
 
             if($item->isNotEmpty()) {
                 if($item['quantity'] + $this->quantity >= $current_item->qty) {
-                    $this->emit('modal', ['message' => 'Product stock is limited!']);
+                    $this->emit('modal', ['message' => 'product stock has reach the limit']);
                 } else {
                     $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
                     Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);

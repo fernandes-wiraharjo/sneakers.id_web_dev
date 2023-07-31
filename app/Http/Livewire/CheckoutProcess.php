@@ -72,7 +72,7 @@ class CheckoutProcess extends Component
             if($user->user_address) {
                 $this->selectedProvince = $this->userRegion->province;
                 $this->selectedDistrict = $this->userRegion->district;
-                $this->selectedSubdistrict = $this->userRegion->subdistrict_ro;
+                $this->selectedSubdistrict = $this->userRegion->subdistrict_ro; //unused but safety for not updating data
                 $this->shippingAddress = $user->user_address->address;
                 $this->shippingPhoneNumber = $user->user_address->phone_number;
                 $this->updateDistrict($this->userRegion->province);

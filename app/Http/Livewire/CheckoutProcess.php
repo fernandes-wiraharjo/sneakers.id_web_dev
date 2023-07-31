@@ -56,7 +56,6 @@ class CheckoutProcess extends Component
         $this->content = Cart::content();
 
         $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->where('subdistrict_ro', '<>', 'NULL')->first();
-
         $this->updateCart();
         $this->districtList = [];
         $this->subdistrictList = [];
@@ -305,8 +304,7 @@ class CheckoutProcess extends Component
 
     public function updateArea($value) {
         $this->shippingSubDistrict = $value;
-        $getDistrict = ModelRegion::where('district', $this->selectedDistrict)->first();
-
+        $getDistrict = ModelRegion::where(['district' => $this->selectedDistrict, 'subdistrict' => $value])->first();
         if($getDistrict) {
             if($getDistrict->subdistrict_ro){
                 $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
@@ -323,6 +321,7 @@ class CheckoutProcess extends Component
         } else {
             $this->selectedSubdistrict = 0;
         }
+
         $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
         $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
         $this->selectedArea = 0;

@@ -80,8 +80,9 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         )
         ->leftJoin('product_details as pd', 'pd.product_id', '=', 'products.id')
 
-        ->where(['is_active'=> 1])
+        ->where(['products.is_active'=> 1])
         ->whereRaw('pd.retail_price IS NOT NULL')
+        ->where('pd.qty', '<>', 0)
         ->groupBy(
             'products.id',
             'products.product_code',

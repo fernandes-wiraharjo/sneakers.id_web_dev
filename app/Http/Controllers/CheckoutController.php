@@ -9,6 +9,7 @@ use Xendit\Xendit;
 use App\Facades\CheckoutXendit as Service;
 use App\Facades\Cart as CartService;
 use App\Facades\Transaction as TransactionService;
+use Illuminate\Support\Facades\Mail;
 use Modules\Transaction\Entities\Transaction;
 
 class CheckoutController extends BaseController {
@@ -32,10 +33,22 @@ class CheckoutController extends BaseController {
             $data['items'] = $transaction->items()->with('detail', 'detail.product')->get();
             $data['shipping'] = $transaction->shipping()->first();
             $data['destination'] = $transaction->destination()->with('region')->first();
-
             //check status transaction dgn respose jika status != respose status maka update method, type, status
 
             if($transaction->status != $data['response']['status']){
+                $email = $data['response']['customer']['email'];
+                $data_email = [
+                    'order_url' => $data['response']['success_redirect_url'],
+                    'customer_name' => $data['response']['customer']['given_names']." ".$data['response']['customer']['surname'],
+                    'order_id' => $data['response']['external_id']
+                ];
+
+                $sendMail = Mail::send('email.success-email', $data_email , function($message) use($email){
+                    $message->to($email);
+                    $message->subject('SNEAKERS.ID Order Confirmed.');
+                });
+
+
                 $updateTransaction = Transaction::where('id', $transaction->id)->first();
                 $updateTransaction->update([
                     'type' => $data['response']['payment_channel'],
@@ -52,6 +65,7 @@ class CheckoutController extends BaseController {
                 ]);
             }
             CartService::clear();
+
             return view('display-store.customer.payment.success', $data);
         } catch (\Xendit\Exceptions\ApiException $e) {
             $data['message'] =  $e->getMassage();

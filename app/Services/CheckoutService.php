@@ -18,7 +18,7 @@ class CheckoutService {
             'external_id' => 'sneakers-id-payments-' . $date->getTimestamp(),
             'payer_email' => 'info@sneakers.id',
             'description' => 'Sneakers Invoice payment.',
-            // 'customer_notification_preference' => [
+            'customer_notification_preference' => [
             //     'invoice_created' => [
             //         'whatsapp'
             //     ],
@@ -28,10 +28,11 @@ class CheckoutService {
             //     'invoice_paid' => [
             //         'whatsapp'
             //     ],
-            //     'invoice_expired' => [
-            //         'whatsapp'
-            //     ]
-            // ],
+                'invoice_expired' => [
+                    // 'whatsapp',
+                    'email'
+                ]
+            ],
             'failure_redirect_url' => $redirectUrl,
             'success_redirect_url' => $redirectUrl
         ];

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Facades\Mail;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionHistories;
@@ -87,6 +88,20 @@ class TransactionService {
             'response_code' => 200,
             'response_message' => '',
         ]);
+
+
+
+        $email = $response['customer']['email'];
+        $data = [
+            'invoice_url' => $response['invoice_url'],
+            'customer_name' => $response['customer']['given_names']." ".$response['customer']['surname'],
+            'order_id' => $response['external_id']
+        ];
+        //send email create invoices
+        $sendMail = Mail::send('email.invoice', $data , function($message) use($email){
+            $message->to($email);
+            $message->subject('SNEAKERS.ID Invoice Payment.');
+        });
     }
 
     public function insertHistories($data){

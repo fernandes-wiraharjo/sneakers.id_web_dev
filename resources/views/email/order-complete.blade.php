@@ -162,7 +162,7 @@
 
                                                             <h1
                                                                 style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 22px; font-weight: 400;">
-                                                                ORDER #order-id has been confirmed</h1>
+                                                                ORDER #{{ $order_id }} has been confirmed</h1>
 
                                                         </td>
                                                     </tr>
@@ -198,7 +198,6 @@
                                         <div
                                             style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
                                             <!--<![endif]-->
-
                                             <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                                 cellpadding="0" cellspacing="0" width="100%" border="0">
                                                 <tbody>
@@ -211,12 +210,14 @@
                                                                 <tr>
                                                                     <td style="padding-right: 0px;padding-left: 0px;"
                                                                         align="center">
-
-                                                                        <img align="center" border="0"
-                                                                            src="{{ asset('stores-info/logos-black-transparent.png') }}" alt=""
+                                                                        <a href="https://sneakers.id/">
+                                                                            <img align="center" border="0"
+                                                                            src="https://sneakers.id/stores-info/logos-black-transparent.png" alt=""
                                                                             title=""
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 25%;max-width: 120px;"
                                                                             width="120" />
+                                                                        </a>
+
 
                                                                     </td>
                                                                 </tr>
@@ -227,6 +228,7 @@
                                                 </tbody>
                                             </table>
 
+
                                             <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                                 cellpadding="0" cellspacing="0" width="100%" border="0">
                                                 <tbody>
@@ -236,7 +238,7 @@
 
                                                             <div
                                                                 style="font-family: 'Montserrat',sans-serif; font-size: 14px; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                                <p style="line-height: 140%;">Hi, <strong>Nama</strong></p>
+                                                                <p style="line-height: 140%;">Hi, <strong>{{ $customer_name }}</strong></p>
                                                             </div>
 
                                                         </td>
@@ -253,7 +255,7 @@
 
                                                             <div
                                                                 style="font-family: 'Montserrat',sans-serif; font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                                <p style="line-height: 140%;">Your order with id <strong>#Order-id</strong> has been delivered. Thank you for shopping at our store.</p></p>
+                                                                <p style="line-height: 140%;">Your order with id <strong>#{{ $order_id }}</strong> has been delivered. Thank you for shopping at our store.</p></p>
                                                             </div>
 
                                                         </td>
@@ -301,7 +303,7 @@
                                                             <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
                                                             <div align="right">
                                                                 <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:37px; v-text-anchor:middle; width:171px;" arcsize="2.5%"  stroke="f" fillcolor="#000000"><w:anchorlock/><center style="color:#FFFFFF;font-family:arial,helvetica,sans-serif;"><![endif]-->
-                                                                <a href="#" target="_blank" class="v-button"
+                                                                <a href="{{ $transaction_details }}" target="_blank" class="v-button"
                                                                     style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #000000; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: 'Montserrat',sans-serif; font-size: 14px;">
                                                                     <span
                                                                         style="display:block;padding:10px 8px;line-height:120%;"><span
@@ -374,7 +376,7 @@
                                                             <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
                                                             <div align="left">
                                                                 <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://sneakers.id" style="height:37px; v-text-anchor:middle; width:136px;" arcsize="0%"  stroke="f" fillcolor="#ced4d9"><w:anchorlock/><center style="color:#000000;font-family:arial,helvetica,sans-serif;"><![endif]-->
-                                                                <a href="https://sneakers.id" target="_blank"
+                                                                <a href="{{ route('collections', 'all') }}" target="_blank"
                                                                     class="v-button"
                                                                     style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #000000; background-color: #ced4d9; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: 'Montserrat',sans-serif; font-size: 14px;">
                                                                     <span

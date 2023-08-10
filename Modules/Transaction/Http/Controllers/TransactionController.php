@@ -10,6 +10,7 @@ use Modules\Transaction\Entities\TransactionShippings;
 use Alert;
 use App\Facades\CekOngkir;
 use App\Services\CekOngkirService;
+use Illuminate\Support\Facades\Mail;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionItems;
@@ -48,7 +49,20 @@ class TransactionController extends Controller
             if($response) {
                 if(intval($request->complete)){
                     $status = 'COMPLETED';
-                    $update_transactions = Transaction::findOrFail($shipping->transaction_id)->update(['status' => $status]);
+                    $transaction = Transaction::findOrFail($shipping->transaction_id);
+                    $email = $transaction->destination->email;
+                    $data = [
+                        'transaction_details' => route('customer.transaction.detail', $transaction->token),
+                        'customer_name' => $transaction->destination->first_name." ".$transaction->destination->last_name,
+                        'order_id' => $transaction->token
+                    ];
+                    //send email create invoices
+                    $sendMail = Mail::send('email.order-complete', $data , function($message) use($email){
+                        $message->to($email);
+                        $message->subject('SNEAKERS.ID Your Order is complete.');
+                    });
+
+                    $update_transactions = $transaction->update(['status' => $status]);
                 }
 
                 $history_created = TransactionHistories::create([

@@ -3,12 +3,19 @@
         {{-- <link rel="stylesheet" href="{{ mix('css/custom.css') }}"> --}}
     </x-slot>
     <x-slot name="title">
-        <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Summary</h1>
+        <h1 class="d-flex align-items-center text-dark fw-bolder my-1 fs-3">Dashboard   Summary</h1>
     </x-slot>
     <!--begin::Card-->
     <div class="card">
         <!--begin::Card body-->
         <div class="card-body pt-6">
+             <!--begin::Row-->
+             <div class="row gy-5 g-xl-8">
+                <!--begin::Col-->
+                <div class="col-xxl-6">
+                    {{ theme()->getView('dashboard::partials._widget-1', $data) }}
+                </div>
+             </div>
             <!--begin::Row-->
             <div class="row gy-5 g-xl-8">
                 <!--begin::Col-->

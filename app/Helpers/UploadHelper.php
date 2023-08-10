@@ -169,7 +169,12 @@ if(!function_exists('imageUploadProduct')) {
 if (!function_exists('getImage')) {
     function getImage($filename, $module = ''){
         if ($filename && $module) {
-            return asset('images/'.$module.'/'.$filename);
+            $image_path = public_path('images/'.$module.'/'.$filename);
+            if(File::exists($image_path)) {
+                return asset('images/'.$module.'/'.$filename);
+            } else {
+                return asset('demo1/media/blank/blank-image.png');
+            }
         } else {
             return asset('demo1/media/blank/blank-image.png');
         }

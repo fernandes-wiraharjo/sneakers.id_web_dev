@@ -97,8 +97,9 @@ class DashboardController extends Controller
                 ->get();
 
 
-            $monthlySum = Transaction::selectRaw('DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name, SUM(grand_total) as total_grand')
-                ->groupBy('month_name')
+            $monthlySum = Transaction::selectRaw('DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name, SUM(grand_total) as total_grand, month(str_to_date(date, "%Y-%m-%d")) as month')
+                ->groupBy('month_name', 'month')
+                ->orderBy('month', 'asc')
                 ->get();
             // $monthlySum = Transaction::selectRaw('
             //     DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name,

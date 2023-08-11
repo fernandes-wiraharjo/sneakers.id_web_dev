@@ -6,6 +6,7 @@ use App\Facades\XenditServices;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionItems;
@@ -67,10 +68,74 @@ class DashboardController extends Controller
             )
         );
 
-        $data['data'] = [
+        $brandItem = TransactionItems::selectRaw('brands.brand_title as title, brands.brand_image as image, count(distinct(product_details.product_id)) as total_product,sum(transaction_items.price) as badge')
+            ->leftJoin('product_details', 'product_detail_id', '=', 'product_details.id')
+            ->leftJoin('brands', 'product_details.brand_id', '=', 'brands.id')
+            ->groupBy('brands.id')
+            ->get();
+
+        $totalTransaction = Transaction::get()->count();
+        $trxList = Transaction::selectRaw('
+            transactions.token,
+            transactions.date,
+            transactions.type,
+            transactions.method,
+            transactions.status,
+            transactions.grand_total,
+            transaction_destinations.first_name,
+            transaction_destinations.last_name,
+            transaction_destinations.email,
+            regions.province,
+            regions.district,
+            regions.subdistrict,
+            regions.post_code
+            ')
+                ->leftJoin('transaction_destinations', 'transactions.id', '=', 'transaction_destinations.transaction_id')
+                ->leftJoin('regions', 'regions.region_id', '=', 'transaction_destinations.region_id')
+                ->orderBy('transactions.updated_at', 'desc')
+                ->limit(5)
+                ->get();
+
+            $monthlySum = Transaction::selectRaw('
+                DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name,
+                CASE
+                    WHEN SUM(grand_total) >= 1000000000 THEN CONCAT(ROUND(SUM(grand_total) / 1000000000, 1), " m")
+                    WHEN SUM(grand_total) >= 1000000 THEN CONCAT(ROUND(SUM(grand_total) / 1000000, 1), " jt")
+                    WHEN SUM(grand_total) >= 1000 THEN CONCAT(ROUND(SUM(grand_total) / 1000, 1), " rb")
+                    ELSE SUM(grand_total)
+                END as total_grand')
+                ->groupBy('month_name')
+                // ->orderBy(DB::raw('MONTH(STR_TO_DATE(date, "%Y-%m-%d"))'))
+                ->get();
+
+        $monthlySumArray = $monthlySum->pluck('total_grand', 'month_name')->toArray();
+
+        $data['panel_1'] = [
             'class' => 'card-xxl-stretch',
             'xendit_balance' => XenditServices::getBalance(),
             'listRows' => $listRows
+        ];
+
+        $data['panel_2'] = [
+            'color' => 'primary',
+            'class' => 'card-xxl-stretch',
+            'listRows' => $brandItem->toArray(),
+            'items' => $brandItem->count() ?? 0,
+        ];
+
+        $data['panel_3'] = [
+            'class' => 'card-xxl-stretch',
+            'total_order' => $totalTransaction,
+            'tableRows' => $trxList
+        ];
+
+        $data['panel_5'] = [
+            'total_trx' => $totalTransaction,
+            'class' => 'card-xxl-stretch',
+            'chartColor' => 'danger',
+            'chartHeight' => '200px',
+            'month' => array_keys($monthlySumArray),
+            'values' => array_values($monthlySumArray)
         ];
 
         return view('dashboard::index', $data);

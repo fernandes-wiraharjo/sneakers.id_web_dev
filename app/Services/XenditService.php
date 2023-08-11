@@ -13,6 +13,6 @@ class XenditService {
     public function  getBalance(){
         $getBalance = \Xendit\Balance::getBalance('CASH');
 
-        return $getBalance['balance'];
+        return $getBalance['balance'] ?? '-';
     }
 }

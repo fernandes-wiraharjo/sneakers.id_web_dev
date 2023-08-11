@@ -145,6 +145,9 @@
                                 style: {
                                     colors: labelColor,
                                     fontSize: '12px'
+                                },
+                                formatter: function (value) {
+                                    return formatCurrency(value);
                                 }
                             }
                         },
@@ -175,7 +178,7 @@
                             },
                             y: {
                                 formatter: function (val) {
-                                    return "Rp " + val;
+                                    return "Rp " + formatCurrency(val) ;
                                 }
                             }
                         },
@@ -205,6 +208,18 @@
                     }
                 }
             }();
+
+            function formatCurrency(value) {
+                if (value >= 1000000000) {
+                    return (value / 1000000000).toFixed(1) + ' m';
+                } else if (value >= 1000000) {
+                    return (value / 1000000).toFixed(1) + ' jt';
+                } else if (value >= 1000) {
+                    return (value / 1000).toFixed(1) + ' rb';
+                } else {
+                    return value;
+                }
+            }
 
             // Webpack support
             if (typeof module !== 'undefined') {

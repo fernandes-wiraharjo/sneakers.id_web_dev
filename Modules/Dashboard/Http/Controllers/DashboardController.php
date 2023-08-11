@@ -96,17 +96,21 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get();
 
-            $monthlySum = Transaction::selectRaw('
-                DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name,
-                CASE
-                    WHEN SUM(grand_total) >= 1000000000 THEN CONCAT(ROUND(SUM(grand_total) / 1000000000, 1), " m")
-                    WHEN SUM(grand_total) >= 1000000 THEN CONCAT(ROUND(SUM(grand_total) / 1000000, 1), " jt")
-                    WHEN SUM(grand_total) >= 1000 THEN CONCAT(ROUND(SUM(grand_total) / 1000, 1), " rb")
-                    ELSE SUM(grand_total)
-                END as total_grand')
+
+            $monthlySum = Transaction::selectRaw('DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name, SUM(grand_total) as total_grand')
                 ->groupBy('month_name')
-                // ->orderBy(DB::raw('MONTH(STR_TO_DATE(date, "%Y-%m-%d"))'))
                 ->get();
+            // $monthlySum = Transaction::selectRaw('
+            //     DATE_FORMAT(STR_TO_DATE(date, "%Y-%m-%d"), "%M") as month_name,
+            //     CASE
+            //         WHEN SUM(grand_total) >= 1000000000 THEN CONCAT(ROUND(SUM(grand_total) / 1000000000, 1), " m")
+            //         WHEN SUM(grand_total) >= 1000000 THEN CONCAT(ROUND(SUM(grand_total) / 1000000, 1), " jt")
+            //         WHEN SUM(grand_total) >= 1000 THEN CONCAT(ROUND(SUM(grand_total) / 1000, 1), " rb")
+            //         ELSE SUM(grand_total)
+            //     END as total_grand')
+            //     ->groupBy('month_name')
+            //     // ->orderBy(DB::raw('MONTH(STR_TO_DATE(date, "%Y-%m-%d"))'))
+            //     ->get();
 
         $monthlySumArray = $monthlySum->pluck('total_grand', 'month_name')->toArray();
 

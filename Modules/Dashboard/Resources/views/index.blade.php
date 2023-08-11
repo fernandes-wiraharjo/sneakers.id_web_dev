@@ -31,22 +31,22 @@
                 <!--end::Col-->
 
                 <!--begin::Col-->
-                <div class="col-xxl-6">
+                <div class="col-xxl-12">
                     {{ theme()->getView('dashboard::partials._panel-5', $panel_5) }}
                 </div>
                 <!--end::Col-->
 
-                <!--begin::Col-->
+                {{-- <!--begin::Col-->
                 <div class="col-xxl-6">
                     {{ theme()->getView('dashboard::partials._panel-6', array('class' => 'card-xxl-stretch-50 mb-5 mb-xl-8', 'chartColor' => 'primary', 'chartHeight' => '150px')) }}
 
                     {{ theme()->getView('dashboard::partials._panel-7', array('class' => 'card-xxl-stretch-50 mb-5 mb-xl-8', 'chartColor' => 'primary', 'chartHeight' => '175px')) }}
                 </div>
-                <!--end::Col-->
+                <!--end::Col--> --}}
             </div>
             <!--end::Row-->
         </div>
-        <!--end::Card body-->
+        {{-- <!--end::Card body-->
         <div class="row gy-5 g-xl-8">
             <!--begin::Col-->
             <div class="col-xxl-6">
@@ -59,7 +59,7 @@
                 {{ theme()->getView('dashboard::partials._panel-9', array('class' => 'card-xxl-stretch', 'chartColor' => 'danger', 'chartHeight' => '200px')) }}
             </div>
             <!--end::Col-->
-        </div>
+        </div> --}}
     </div>
     <!--end::Card-->
     @push('scripts')

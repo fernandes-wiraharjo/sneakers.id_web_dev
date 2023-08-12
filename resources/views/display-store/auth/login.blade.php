@@ -14,10 +14,15 @@
             </h1>
             <!--end::Title-->
         </div>
-
         <!--begin::Heading-->
         <div class="fv-row mb-10 my-3">
             <x-alert/>
+
+            @if (session('message'))
+                <p class="Form__Alert Alert Alert--error">
+                    {{ session('message') }}
+                </p>
+            @endif
         </div>
         <!--begin::Input group-->
         <div style="padding: 10px 0px;">

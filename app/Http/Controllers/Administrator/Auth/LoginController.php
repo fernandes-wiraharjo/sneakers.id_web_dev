@@ -116,7 +116,7 @@ class LoginController extends Controller
             $message->subject('Email Verification Mail');
         });
 
-        return redirect(route("customer.login"))->with(['message'=> 'send email verification, pleace check your email to login!']);
+        return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
     }
 
     /**
@@ -184,6 +184,13 @@ class LoginController extends Controller
             } else {
                 $message = "Your e-mail is already verified. You can now login.";
             }
+        } else {
+            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
+                $message->to($verifyUser->user->email);
+                $message->subject('Email Verification Mail');
+            });
+
+            return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
         }
     }
 

@@ -62,7 +62,7 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/forgot-password', [LoginController::class, 'showCustomerForgotPasswordForm'])->name('forgot-password');
     Route::get('/confirm-password', [LoginController::class, 'showCustomerConfirmPasswordForm'])->name('confirm-password');
     Route::get('/reset-password', [LoginController::class, 'showCustomerResetPasswordForm'])->name('reset-password');
-    Route::get('/verify/{token}', [LoginController::class, 'showCustomerVerifyEmailForm'])->name('verify-email');
+    Route::get('/verify/{token}', [LoginController::class, 'sendVerificationEmail'])->name('verify-email');
     Route::get('/verify-email/{token}', [LoginController::class, 'verifyAccount'])->name('user.verify');
     Route::get('/cart', [CartController::class, 'cartCheckout'])->name('cart');
 

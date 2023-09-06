@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Hexters\Ladmin\LadminLogable;
 use Modules\Brand\Entities\Brand;
+use Shetabit\Visitor\Traits\Visitable;
 
 class Product extends Model
 {
-    use HasFactory, LadminLogable;
+    use HasFactory, LadminLogable, Visitable;
 
     protected $fillable = [
         'product_code',

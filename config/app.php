@@ -190,6 +190,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
 
         Irfa\RajaOngkir\RajaOngkirServiceProvider::class,
+        Shetabit\Visitor\Provider\VisitorServiceProvider::class,
     ],
 
     /*
@@ -247,6 +248,7 @@ return [
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'RajaOngkir' => Irfa\RajaOngkir\Facades\Ongkir::class,
+        'Visitor' => Shetabit\Visitor\Facade\Visitor::class,
     ],
 
 ];

@@ -44,7 +44,9 @@ class StoreController extends Controller
         $data['brand'] = $this->brandRepository->getAllBrand();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        activity()->log('Someone Accessing my website');
+        activity('visitor')->log('Landing page visited');
+        visitor()->visit();
+        //visitor info
         return view('display-store.landing', $data);
     }
 
@@ -53,7 +55,8 @@ class StoreController extends Controller
         $data['size'] = $data['product']->details()->get();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        activity()->log('Someone look into my product');
+        activity('visitor')->log($data['product']->product_code.' - Visited');
+        visitor()->visit($data['product']);
         return view('display-store.product-detail', $data);
     }
 
@@ -197,7 +200,7 @@ class StoreController extends Controller
         $data['kid_sizes'] = $this->sizeRepository->getAllKidSize();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        activity()->log('Someone find a product');
+        activity('visitor')->log($keyword.' - Search');
         return view('display-store.search-result', $data);
     }
 

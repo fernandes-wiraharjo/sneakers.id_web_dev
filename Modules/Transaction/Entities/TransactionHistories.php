@@ -4,11 +4,13 @@ namespace Modules\Transaction\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Hexters\Ladmin\LadminLogable;
 use Kirschbaum\PowerJoins\PowerJoins;
 
 class TransactionHistories extends Model
 {
     use HasFactory;
+    use LadminLogable;
     use PowerJoins;
 
     protected $table = 'transaction_histories';

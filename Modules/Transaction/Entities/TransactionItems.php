@@ -5,11 +5,13 @@ namespace Modules\Transaction\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Product\Entities\ProductDetail;
+use Hexters\Ladmin\LadminLogable;
 use Kirschbaum\PowerJoins\PowerJoins;
 
 class TransactionItems extends Model
 {
     use HasFactory;
+    use LadminLogable;
     use PowerJoins;
 
     protected $table = 'transaction_items';

@@ -157,6 +157,7 @@ class ProductDatatables extends DataTable
             ->whereHas('details')
             // ->crossJoin('product_details as pd', 'pd.product_id', '=', 'products.id')
             ->select('products.*')
+            ->orderBy('products.updated_at', 'DESC')
             ->newQuery();
     }
 

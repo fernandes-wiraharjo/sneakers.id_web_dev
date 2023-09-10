@@ -23,6 +23,7 @@
                             <span class="Cart__HeadItem Heading Text--subdued u-h7" style="text-align: right">Total</span>
                         </div>
                         @foreach ($content as $id => $item)
+                        {{ $disabledPlus[$id] ? 'true' : 'false'}}
                         <div class="CartItem">
                             <input type="hidden" name="cart_item[{{ $id }}][id]" value="{{ $id }}">
                             <input type="hidden" name="cart_item[{{ $id }}][product_code]" value="{{ $item->get('product_code') }}">
@@ -70,24 +71,14 @@
 
                                             <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
 
-                                            @if($disabledPlus != [])
-                                                @if($disabledPlus[$id])
-                                                <a href="javascript:void(0)"
-                                                    class="QuantitySelector__Button Link Link--primary"
-                                                    title="product stock has reach the limit"
-                                                    wire:disabled="true" style="cursor: not-allowed;">
-                                                        <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                            <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                                <path d="M8,1 L8,15"></path>
-                                                                <path d="M1,8 L15,8"></path>
-                                                            </g>
-                                                        </svg>
-                                                </a>
-                                                @else
+                                            @isset($disabledPlus)
+                                                @isset($disabledPlus[$id])
                                                     <a href="javascript:void(0)"
                                                         class="QuantitySelector__Button Link Link--primary"
+                                                        wire:disabled="{{ $disabledPlus[$id] ? 'true' : 'false'}}" style="{{ $disabledPlus[$id] ? 'cursor: not-allowed;' : ''}}"
                                                         title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
+                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
+                                                        >
                                                             <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
                                                                 <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
                                                                     <path d="M8,1 L8,15"></path>
@@ -95,32 +86,8 @@
                                                                 </g>
                                                             </svg>
                                                     </a>
-                                                @endif
-                                            @else
-                                               <a href="javascript:void(0)"
-                                                    class="QuantitySelector__Button Link Link--primary"
-                                                    title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                                    wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
-                                                        <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                            <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                                <path d="M8,1 L8,15"></path>
-                                                                <path d="M1,8 L15,8"></path>
-                                                            </g>
-                                                        </svg>
-                                                </a>
-                                            @endif
-                                            {{-- <a href="javascript:void(0)"
-                                            class="QuantitySelector__Button Link Link--primary"
-                                            title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                            wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
-                                            wire:disabled="{{ $disabledPlus }}">
-                                                <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                    <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                    <path d="M8,1 L8,15"></path>
-                                                    <path d="M1,8 L15,8"></path>
-                                                    </g>
-                                                </svg>
-                                            </a> --}}
+                                                @endisset
+                                            @endisset
                                         </div>
                                     </div>
 
@@ -138,43 +105,22 @@
                                         </a>
                                         <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
 
-                                        @if(!$disabledPlus[$id])
-                                            <a href="javascript:void(0)"
-                                            class="QuantitySelector__Button Link Link--primary"
-                                            title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                            wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
-                                                <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                    <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                        <path d="M8,1 L8,15"></path>
-                                                        <path d="M1,8 L15,8"></path>
-                                                    </g>
-                                                </svg>
-                                            </a>
-                                        @else
-                                            <a href="javascript:void(0)"
-                                            class="QuantitySelector__Button Link Link--primary"
-                                            title="product stock has reach the limit"
-                                            wire:disabled="true" style="cursor: not-allowed;">
-                                                <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                    <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                        <path d="M8,1 L8,15"></path>
-                                                        <path d="M1,8 L15,8"></path>
-                                                    </g>
-                                                </svg>
-                                            </a>
-                                        @endif
-                                        {{-- <a href="javascript:void(0)"
-                                            class="QuantitySelector__Button Link Link--primary"
-                                            title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                            wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
-                                            wire:disabled="{{ $disabledPlus }}">
-                                            <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                                <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
-                                                <path d="M8,1 L8,15"></path>
-                                                <path d="M1,8 L15,8"></path>
-                                                </g>
-                                            </svg>
-                                        </a> --}}
+                                        @isset($disabledPlus)
+                                            @isset($disabledPlus[$id])
+                                                <a href="javascript:void(0)"
+                                                class="QuantitySelector__Button Link Link--primary"
+                                                wire:disabled="{{ $disabledPlus[$id] ? 'true' : 'false'}}" style="{{ $disabledPlus[$id] ? 'cursor: not-allowed;' : ''}}"
+                                                title="Set quantity to {{ $item->get('quantity') }} + 1"
+                                                wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
+                                                    <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
+                                                        <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
+                                                            <path d="M8,1 L8,15"></path>
+                                                            <path d="M1,8 L15,8"></path>
+                                                        </g>
+                                                    </svg>
+                                                </a>
+                                            @endisset
+                                        @endisset
                                     </div>
                                 </div>
 

@@ -74,6 +74,7 @@ class CartComponent extends Component
     public function updateCartItem(string $size_id, string $action, string $current_qty): void
     {
         $qty = ProductDetail::where('id', $size_id)->first()->qty;
+        $this->disabledPlus[$size_id] = false;
 
         if($action == 'plus') {
             if (intval($current_qty)+1 <= $qty) {
@@ -81,7 +82,6 @@ class CartComponent extends Component
             } else {
                 $this->disabledPlus[$size_id] = true;
                 $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
-                // dd('qty Not valid');
             }
         } else {
             $this->disabledPlus[$size_id] = false;

@@ -31,14 +31,14 @@ class CartCheckout extends Component
         $this->updateCart();
 
 
-        foreach(Cart::content() as $item) {
-            $qty = ProductDetail::where('id', $item['size_id'])->first()->qty;
-            if (intval($item['quantity'])+1 <= $qty) {
-                $this->disabledPlus[$item['size_id']] = false;
-            } else {
-                $this->disabledPlus[$item['size_id']] = true;
-            }
-        };
+        // foreach(Cart::content() as $item) {
+        //     $qty = ProductDetail::where('id', $item['size_id'])->first()->qty;
+        //     if (intval($item['quantity'])+1 <= $qty) {
+        //         $this->disabledPlus[$item['size_id']] = false;
+        //     } else {
+        //         $this->disabledPlus[$item['size_id']] = true;
+        //     }
+        // };
     }
     /**
      * Renders the component on the browser.
@@ -88,6 +88,7 @@ class CartCheckout extends Component
     public function updateCartItem(string $size_id, string $action, string $current_qty): void
     {
         $qty = ProductDetail::where('id', $size_id)->first()->qty;
+        $this->disabledPlus[$size_id] = false;
 
         if($action == 'plus') {
             if (intval($current_qty)+1 <= $qty) {

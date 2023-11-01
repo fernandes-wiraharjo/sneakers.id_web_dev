@@ -58,7 +58,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     public function getProductWhere(){
         $q = $this->model->query()
         ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
-        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price')
+        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price', DB::raw('IF(pd.after_discount_price = 0, pd.retail_price, pd.after_discount_price) as actual_product_prize'))
         ->leftJoin('product_details as pd', function($join) {
             $join->on('pd.product_id', '=', 'products.id')
                 ->where('pd.retail_price', '=', DB::raw('(

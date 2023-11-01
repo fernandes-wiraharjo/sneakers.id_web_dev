@@ -26,6 +26,7 @@ class ProductList extends Component
     public $keyword;
     public $sort_by = 'DESC';
     public $sort_column = 'products.created_at';
+    public $sort_column_2 = 'pd.after_discount_price';
     public $gender = [];
     public $age_range = [];
 
@@ -290,8 +291,11 @@ class ProductList extends Component
                                 $q->where('tag_title', 'NEW RELEASE');
                                 $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                             });
-                        })
-                            ->orderBy($this->sort_column, $this->sort_by);
+                        });
+
+        // if($this->sort_column == 'pd.retail_price') {
+        //     $products->orderBy('pd.after_discount_price', $this->sort_by);
+        // }
         /**
          * Query debug
          */
@@ -299,7 +303,7 @@ class ProductList extends Component
         // dump($products->limit(5)->get());
         // dump($products->toSql());
         // dump($products->count());
-        $data['products'] = $products->paginate(40);
+        $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         // dd($products->toSql());
         return view('livewire.product-list', $data);
     }

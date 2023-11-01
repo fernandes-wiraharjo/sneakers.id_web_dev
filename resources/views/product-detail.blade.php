@@ -222,7 +222,7 @@
                                         data-qty="{{$item->qty}}">{{$item->size}}</option>
                                 @endforeach
                             </select>
-                            <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
+                            <!-- <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a> -->
                         </div>
                         <div style="margin: 5px 0">
 

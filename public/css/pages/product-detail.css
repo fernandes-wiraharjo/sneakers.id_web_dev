@@ -195,11 +195,28 @@ $color-form-highlight: #EEEEEE;
 }
 
 @media screen and (max-width: 640px) {
+    /*
+        ** MOBILE MODE
+    */
+
     #shopify-section-product-template+.shopify-section--bordered {
         border-top: 0;
     }
 
-    #shopify-section-product-template+.shopify-section--bordered>.Section {
+    #shopify-section-product-template+.shopify-section--bordered.Section {
         padding-top: 0;
+    }
+
+    .Product__ActionList {
+        visibility: hidden;
+    }
+}
+
+@media screen and (max-width: 1007px) and (min-width: 640px){
+    /*
+        ** TAB MODE
+    */
+    .Product__ActionList {
+        visibility: hidden;
     }
 }

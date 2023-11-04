@@ -422,10 +422,11 @@
         });
 
         $(document).ready(function() {
-            $('#size').change(function() {
-                $('#retail').text($(this).find(':selected').attr('data-price'));
-                $('#discount').text($(this).find(':selected').attr('data-discount-price'));
-                $('#percentage').text($(this).find(':selected').attr('data-discount'));;
+            $('.size-item').click(function() {
+                console.log($(this).find('#size:checked').attr('data-price'));
+                $('#retail').text($(this).find('#size:checked').attr('data-price'));
+                $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
+                $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
             });
         });
 

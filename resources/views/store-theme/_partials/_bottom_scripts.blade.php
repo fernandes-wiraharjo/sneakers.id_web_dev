@@ -20,6 +20,7 @@
 
 <script>
     document.getElementById("global_search").oninput = function() {
+        $('html').removeClass('no-scroll');
         $('.bc-sf-search-suggestion-popover').show();
         $('#ui-id-1').show();
         var search_query = this.value;
@@ -61,13 +62,16 @@
         });
     };
 
-    $('.Search__Close').on("click", function() {
-        $('.bc-sf-search-suggestion-popover').hide();
-        $('#ui-id-1').hide();
-
-    });
 
     window.onload = function(){
+        $('.Search__Close ').on("click", function() {
+            $('.bc-sf-search-suggestion-popover').hide();
+            $('.bc-sf-search-suggestion-wrapper ').hide();
+            $('#ui-id-1').hide();
+
+        });
+
+
             document.onclick = function(e){
             if(e.target.id !== '#ui-id-1' ){
                 $('.bc-sf-search-suggestion-popover').hide();

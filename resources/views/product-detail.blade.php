@@ -80,21 +80,31 @@
 
         .donate-now input[type="radio"]:checked+label,
         .checked+label {
-            background: #e0dddd;
+            background: #ffffff;
+            border: 1px solid #999999;
+        }
+
+        .donate-now input[type="radio"]:hover+label,
+        .hover+label {
+            background: #ffffff;
+            border: 1px solid #999999;
         }
 
         .donate-now label {
             padding: 5px;
-            border: 1px solid #000000;
+            /* border: 1px solid #000000; */
             cursor: pointer;
             z-index: 90;
             display: flex;
             justify-content: center;
             align-items: center;
+            border-radius: 5px;
+            background-color: #f1f1f1ff;
         }
 
         .donate-now label:hover {
-            background: #e0dddd;
+            background: #ffffff;
+            border: 1px solid #999999;
         }
 </style>
 @endpush

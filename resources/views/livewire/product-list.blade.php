@@ -92,10 +92,10 @@
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'DESC')">
                     Alphabetically, Z-A
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'ASC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('actual_product_prize', 'ASC')">
                     Price, low to high
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('actual_product_prize', 'DESC')">
                     Price, high to low
                     </a>
                     {{-- <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
@@ -226,8 +226,10 @@
     </div>
 </div>
 @push('scripts')
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
         $(".Popover__Value").click(function() {
+            console.log('clicked');
             $('.PageOverlay').removeClass('is-visible');
             $('html').removeClass('no-scroll');
             $('.PageOverlay').trigger("click");

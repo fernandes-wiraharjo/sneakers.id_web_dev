@@ -88,11 +88,13 @@
         .hover+label {
             background: #ffffff;
             border: 1px solid #999999;
+            background: #e0dddd;
         }
 
         .donate-now label {
             padding: 5px;
             /* border: 1px solid #000000; */
+            border: 1px solid #000000;
             cursor: pointer;
             z-index: 90;
             display: flex;

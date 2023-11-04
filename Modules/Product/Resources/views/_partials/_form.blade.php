@@ -75,6 +75,9 @@
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                 </div>
                             </div>
+                            {{-- <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </button> --}}
                             <div class="col-md-5">
                                 <label class="form-label">Quantity :</label>
                                 <div class="input-group mb-5">
@@ -141,11 +144,13 @@
                                         value="{{ old('size_prize.0.base_price', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-4">
                                     <label class="form-label">Quantity :</label>
                                     <div class="input-group mb-5">
+                                        <button type="button" class="input-group-text" onclick="increment(this)"><i class="fas fa-plus"></i></button>
                                         <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
                                         value="{{ old('size_prize[0][qty]', '') }}"/>
+                                        <button type="button" class="input-group-text" onclick="decrement(this)"><i class="fas fa-minus"></i></button>
                                         <span class="input-group-text"> pcs</span>
                                     </div>
                                 </div>
@@ -512,6 +517,16 @@
                 document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
             }
         }
+
+        function increment(plus) {
+            var input = $(plus).siblings("input");
+            console.log('+');
+            console.log(input.val());
+        }
+
+        function decrement(this) {
+            console.log('-');
+        }
     </script>
 
     <script>
@@ -572,5 +587,17 @@
                 repeater.setList(JSON.parse($('#old_size_price').val()));
             @endif
         @endif
+
+        // $(document).ready(function() {
+        function increment(item) {
+            var input = $(item).siblings("input");
+            input.val(parseInt(input.val()) + 1);
+        }
+
+        function decrement(item) {
+            var input = $(item).siblings("input");
+            input.val(parseInt(input.val()) - 1);
+        }
+        // });
     </script>
 @endpush

@@ -108,6 +108,7 @@
             background: #ffffff;
             border: 1px solid #999999;
         }
+
         .gallery {
             /* display: inline-block;
             position: relative; */

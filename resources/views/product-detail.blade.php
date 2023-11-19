@@ -43,6 +43,69 @@
         border: 2px solid var(--select-focus);
         border-radius: inherit;
         }
+
+        donate-now {
+            list-style-type: none;
+            margin: 25px 0 0 0;
+            padding: 0;
+        }
+
+        .donate-now li {
+            float: left;
+            margin: 5px;
+            width: 100px;
+            height: 40px;
+            position: relative;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .donate-now label,
+        .donate-now input {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .donate-now input[type="radio"] {
+            opacity: 0.01;
+            z-index: 100;
+            height: 40px;
+            width: 100px;
+            cursor: pointer;
+        }
+
+        .donate-now input[type="radio"]:checked+label,
+        .checked+label {
+            background: #ffffff;
+            border: 1px solid #999999;
+        }
+
+        .donate-now input[type="radio"]:hover+label,
+        .hover+label {
+            background: #ffffff;
+            border: 1px solid #999999;
+        }
+
+        .donate-now label {
+            padding: 5px;
+            /* border: 1px solid #000000; */
+            cursor: pointer;
+            z-index: 90;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            background-color: #f1f1f1ff;
+        }
+
+        .donate-now label:hover {
+            background: #ffffff;
+            border: 1px solid #999999;
+        }
 </style>
 @endpush
 
@@ -213,15 +276,26 @@
                         </div>
                         <div style="margin: 50px;"></div>
                         <div class="size-button Heading u-h6" style="display: flex; justify-content: space-between;">
+                            <ul class="donate-now">
+
+                                @foreach ($size as $item)
+                                    <li class="size-item">
+                                        <input type="radio" id="size" name="size" value="{{$item->size}}" data-id="{{$item->id}}" data-price="{{ rupiah_format(intval($item->retail_price ?? 0))}}"
+                                        data-discount-price="{{rupiah_format(intval($item->after_discount_price ?? 0))}}" data-discount="{{$item->discount_percentage}}"
+                                        data-qty="{{$item->qty}}"/>
+                                        <label class="btn btn-default" for="a25">{{ $item->size }}</label>
+                                    </li>
+                                @endforeach
+                            </ul>
                             {{-- <label for="">Size Available : </label> --}}
-                            <select name="size" id="size" class="size-select">
+                            {{-- <select name="size" id="size" class="size-select">
                                 <option>Select Size</option>
                                 @foreach ($size as $item)
                                     <option value="{{$item->size}}" data-id="{{$item->id}}"" data-price="{{ rupiah_format(intval($item->retail_price ?? 0))}}"
                                         data-discount-price="{{rupiah_format(intval($item->after_discount_price ?? 0))}}" data-discount="{{$item->discount_percentage}}"
                                         data-qty="{{$item->qty}}">{{$item->size}}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
                             <!-- <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a> -->
                         </div>
                         <div style="margin: 5px 0">
@@ -366,10 +440,11 @@
         });
 
         $(document).ready(function() {
-            $('#size').change(function() {
-                $('#retail').text($(this).find(':selected').attr('data-price'));
-                $('#discount').text($(this).find(':selected').attr('data-discount-price'));
-                $('#percentage').text($(this).find(':selected').attr('data-discount'));;
+            $('.size-item').click(function() {
+                console.log($(this).find('#size:checked').attr('data-price'));
+                $('#retail').text($(this).find('#size:checked').attr('data-price'));
+                $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
+                $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
             });
         });
     </script>

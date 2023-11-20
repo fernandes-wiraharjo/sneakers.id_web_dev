@@ -233,7 +233,8 @@
                                             <del id="retail">
                                                 {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                             </del>
-                                            <span style="position:inherit; font-weight: 800;" id="discount">
+                                            &nbsp;
+                                            <span style="position:inherit; font-weight: 800; color:maroon;" id="discount">
                                                 {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}
                                             </span>
                                         </span>

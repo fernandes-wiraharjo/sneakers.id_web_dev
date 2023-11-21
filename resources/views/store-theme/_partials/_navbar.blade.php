@@ -45,6 +45,27 @@
                         </div>
                         <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
+                                data-action="toggle-collapsible" aria-expanded="false">SALE<span
+                                    class="Collapsible__Plus"></span></button>
+                            <div class="Collapsible__Inner">
+                                <div class="Collapsible__Content">
+                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.all') }}"
+                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL
+                                            PRODUCTS</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.featured') }}"
+                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
+                                            FEATURED</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.new-release') }}"
+                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
+                                            RELEASES</a></div>
+                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.best-seller') }}"
+                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
+                                            SELLERS</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Collapsible">
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
                                 data-action="toggle-collapsible" aria-expanded="false">MEN'S<span
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
@@ -165,6 +186,27 @@
                         </div>
                         <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
+                                data-action="toggle-collapsible" aria-expanded="false">Signature Athlete<span
+                                    class="Collapsible__Plus"></span></button>
+                            <div class="Collapsible__Inner">
+                                <div class="Collapsible__Content">
+                                    <div class="Collapsible">
+                                        <a href="{{ route('collections', 'all.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            ALL PRODUCTS
+                                        </a>
+                                    </div>
+                                    @foreach ($signature as $item)
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'signatures.'. $item->id) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                {{ $item->signature_title}}
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Collapsible">
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
                                 data-action="toggle-collapsible" aria-expanded="false">BRAND<span
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
@@ -178,14 +220,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="Collapsible">
+                            <a href="{{ route('collections', 'all.PREOWNED') }}" class="Collapsible__Button Heading Link Link--primary u-h6">PREOWNED<span
+                                        class="Header__LinkSpacer">PREOWNED</span></a>
+                        </div>
                         {{-- <div class="Collapsible">
                             <a href="{{ route('lookbook', 1) }}" class="Collapsible__Button Heading Link Link--primary u-h6">LOOKBOOK<span
                                         class="Header__LinkSpacer">LOOKBOOK</span></a>
                         </div> --}}
-                        <div class="Collapsible">
+                        {{-- <div class="Collapsible">
                             <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
                                         class="Header__LinkSpacer">SIZE CHART</span></a>
-                        </div>
+                        </div> --}}
                     </nav>
                     <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
                         <ul class="Linklist Linklist--spacingLoose">
@@ -285,6 +331,30 @@
                                         <li class="Linklist__Item">
                                             <a href="{{ route('collections', 'sale') }}"
                                                 class="Link Link--secondary">SALE </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'sale.all') }}"
+                                    class="Heading u-h6 main-heading-text">SALE</a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.all') }}"
+                                                class="Link Link--secondary">ALL PRODUCTS</a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.featured') }}"
+                                                class="Link Link--secondary">FEATURED </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.new-release') }}"
+                                                class="Link Link--secondary">NEW RELEASES </a>
+                                        </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'sale.best-seller') }}"
+                                                class="Link Link--secondary">BEST SELLERS </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -425,6 +495,29 @@
                                 </div>
                             </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'signatures.all') }}"
+                                    class="Heading u-h6 main-heading-text">Signature Athlete<span
+                                        class="Header__LinkSpacer">Signature Athlete</span></a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'signatures.all') }}"
+                                                class="Link Link--secondary">
+                                                ALL PRODUCTS
+                                            </a>
+                                        </li>
+                                        @foreach ($signature as $item)
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'signatures.'. $item->id) }}"
+                                                class="Link Link--secondary">
+                                                {{ $item->signature_title}}
+                                            </a>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="{{ route('collections', 'all') }}"
                                     class="Heading u-h6 main-heading-text">BRAND<span
                                         class="Header__LinkSpacer">BRAND</span>
@@ -444,10 +537,10 @@
                                 <a href="{{ route('collections', 'all.PREOWNED') }}" class="Heading u-h6 main-heading-text">PRE
                                     OWNED<span class="Header__LinkSpacer">PRE OWNED</span></a>
                             </li>
-                            <li class="HorizontalList__Item">
+                            {{-- <li class="HorizontalList__Item">
                                 <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">SIZE
                                     CHART<span class="Header__LinkSpacer">SIZE CHART</span></a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </nav>
                 </div>

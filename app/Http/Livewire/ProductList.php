@@ -154,22 +154,26 @@ class ProductList extends Component
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
         $keyword_array = [];
+        $sale_keyword = '';
 
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
             $keyword_array = explode('.', $keyword);
             if(count($keyword_array) >= 2){
                 $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
-                $brand = $brandRepository->getBrandByName($keyword_array[1]);
-                $category = $categoryRepository->getCategoryByName($keyword_array[1]);
-                $brand_id = $brand ? $brand->id : null;
-                $category_id = $category ? $category->id : null;
-                if($brand_id) {
-                    $this->brand[] = $brand_id;
-                }
 
-                if($category_id) {
-                    $this->category[] = intval($category_id);
+                if($keyword_array[1] != 'all') {
+                    $brand = $brandRepository->getBrandByName($keyword_array[1]);
+                    $category = $categoryRepository->getCategoryByName($keyword_array[1]);
+                    $brand_id = $brand ? $brand->id : null;
+                    $category_id = $category ? $category->id : null;
+                    if($brand_id) {
+                        $this->brand[] = $brand_id;
+                    }
+
+                    if($category_id) {
+                        $this->category[] = intval($category_id);
+                    }
                 }
 
                 if($keyword_array[0] != 'all'){
@@ -183,6 +187,25 @@ class ProductList extends Component
                     $tag_id = $tag ? $tag->id : null;
                     if($tag_id) {
                         $this->tag[] = $tag_id;
+                    }
+
+                    if($keyword_array[0] == 'sale'){
+                        $this->keyword = 'sale';
+                        $sale_keyword = $keyword_array[1];
+
+                        if ($keyword_array[1] === 'featured') {
+                            $keyword_array[1] = 'feature';
+                        }
+
+                        $tag = $tagRepository->getTagByName(strtoupper($keyword_array[1]));
+                        $tag_id = $tag ? $tag->id : null;
+                        if($tag_id) {
+                            $this->tag[] = $tag_id;
+                        }
+                    }
+
+                    if($keyword_array[0] == 'signatures'){
+                        $this->signature[] = $keyword_array[1];
                     }
                 }
             } else {
@@ -284,7 +307,7 @@ class ProductList extends Component
                                     });
                             });
                         })
-                        ->when($this->keyword === 'new-release', function($query) {
+                        ->when($this->keyword === 'new-release' || $sale_keyword === 'new release', function($query) {
                             $date = date('Y-m-d H:i:s');
 
                             return $query->whereHas('tags', function($q) use ($date) {

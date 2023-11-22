@@ -121,40 +121,43 @@
             top: 40px;
             padding-left: 48px;
             margin-left: 8px;
-            max-height: 35vh;
+            max-height: 80vh;
         }
 
         .main {
-            max-height: 70vh;
+            max-height: 80vh;
         }
 
         .main img{
-            border-top-left-radius: 8px;
+            /* border-top-left-radius: 8px;
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
-            border-bottom-left-radius: 8px;
+            border-bottom-left-radius: 8px; */
             overflow-x: hidden;
             overflow-y: hidden;
             position: relative;
             -webkit-box-flex: 1;
             flex-grow: 1;
             object-fit: contain;
-            max-height: 78vh;
+            max-height: 80vh;
         }
 
         .thumbnails {
-
             display: flex;
             position: relative;
             flex-direction: column;
             -webkit-box-flex: 1;
             flex-grow: 1;
             column-gap: 8px;
-            min-width: 80px;
-            max-width: 80px;
-            height: 100%;
+            width: 90px;
+            height: 80vh;
             max-height: 80vh;
             overflow-y: scroll;
+            align-self: center;
+        }
+
+        .item {
+            align-self: center;
         }
 
         .thumbnails .item img {
@@ -164,9 +167,16 @@
             max-width: 80px;
             max-height: 80px;
             cursor: pointer;
-            padding: 0 0 5px 0;
-            border-radius: 8px 8px 8px 8px;
+            padding: 5px 0 5px 0;
+            /* border-radius: 8px 8px 8px 8px; */
             object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 250ms ease;
+
+        }
+
+        .thumbnails .item img:is(:hover, :focus) {
+            filter: grayscale(0%) drop-shadow(0 8px 8px rgba(0, 0, 0, 0.5));
         }
 
         @media (min-width: 960px) {
@@ -176,8 +186,71 @@
             }
         }
 
-        @media {
+        @media (min-width: 1330px) {
+            .main img{
+                min-height: 80vh;
+                min-width: 80vh;
+                max-width: 80vh;
+            }
+        }
 
+        @media (max-width: 1330px) and (min-width: 1007px) {
+            .main img{
+                /* object-fit: cover; */
+                min-height: 80vh;
+                min-width: auto !important;
+            }
+
+            .main:hover{
+                flex-grow: 4;
+                overflow-y: auto;
+            }
+
+            .main:hover .main-image {
+                min-height: 80vh;
+                max-height: 80vh;
+                width: auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .thumbnails {
+                min-width: 90px;
+                width: 18vh;
+                max-width: 18vh;
+            }
+        }
+
+        @media (max-width: 1007px) {
+            .gallery {
+                align-self: center;
+                justify-content: center;
+                padding-left: unset;
+            }
+
+            .main {
+                align-self: center;
+                justify-content: center;
+            }
+
+            .main img{
+                /* object-fit: cover; */
+                min-height: 80vh;
+                min-width: auto !important;
+            }
+
+            .thumbnails {
+                min-width: 90px;
+                width: 18vh;
+                max-width: 18vh;
+            }
+        }
+
+        @media {
+            #main {
+                padding: unset !important;
+            }
         }
 </style>
 @endpush
@@ -185,7 +258,7 @@
 @section('body')
     <!-- /spurit_sri-added -->
     <div id="shopify-section-product-template" class="shopify-section shopify-section--bordered"
-    style="margin: 5%;">
+    style="margin-top: 12vh; margin-bottom: 16vh;">
     <section class="Product Product--large" data-section-id="product-template" data-section-type="product"
         data-section-settings='{
               "enableHistoryState": true,
@@ -206,13 +279,13 @@
                     <div class="thumbnails">
                         @foreach ($product->images as $item)
                             <div class="item">
-                                <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="">
+                                <img class="image" src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="">
                             </div>
                         @endforeach
                         </div>
 
                     <div class="main">
-                        <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
+                        <img class="main-image" src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
                     </div>
                 </div>
             </div>

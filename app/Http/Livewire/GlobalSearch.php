@@ -36,6 +36,7 @@ class GlobalSearch extends Component
 
     public function mount(): void
     {
+        $this->keyword = str_replace("+", " ", $this->keyword);
         $this->search = request()->query('search', $this->search) ?? $this->keyword;
     }
 
@@ -48,6 +49,7 @@ class GlobalSearch extends Component
         SignaturePlayerRepository $signaturePlayerRepository
         ): View
     {
+        $this->keyword = str_replace("+", " ", $this->keyword);
         $data['filters'] = [
             'brand' => $brandRepository->getAllBrand(),
             'size' => $sizeRepository->getAllSizes(),

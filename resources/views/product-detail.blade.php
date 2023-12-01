@@ -175,6 +175,10 @@
 
         }
 
+        .thumbnails::-webkit-scrollbar {
+            display: none;
+        }
+
         .thumbnails .item img:is(:hover, :focus) {
             filter: grayscale(0%) drop-shadow(0 8px 8px rgba(0, 0, 0, 0.5));
         }
@@ -189,8 +193,8 @@
         @media (min-width: 1330px) {
             .main img{
                 min-height: 80vh;
-                min-width: 80vh;
-                max-width: 80vh;
+                /* min-width: 80vh;
+                max-width: 80vh; */
             }
         }
 

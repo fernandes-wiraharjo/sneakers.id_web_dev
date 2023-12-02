@@ -33,8 +33,8 @@
                     </svg>
                 </a>
             </div>
-            <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
-            Total {{ $total_product }} products found.
+            <div class="Search__SearchBar" style="margin-left: 20px; width: 100%; justify-content: center;">
+            {{ $total_product }} PRODUCTS
             {{--    <div class="Search__InputIconWrapper">
                     <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
                             viewBox="0 0 18 17">

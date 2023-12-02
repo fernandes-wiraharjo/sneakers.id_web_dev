@@ -113,7 +113,8 @@
                     autofocus="" >
             </div>
         </div>
-        <span>Total {{ $total_product }} products found.</span>
+        <div style="text-align: center;"><span class="Text--subdued">{{ $total_product }} PRODUCTS</span></div>
+
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">

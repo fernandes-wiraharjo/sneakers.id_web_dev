@@ -26,6 +26,7 @@ class GlobalSearch extends Component
     public $keyword;
     public $sort_by = 'ASC';
     public $sort_column = 'product_name';
+    public $total_product = 0;
 
     protected $updatesQueryString = ['search'];
 
@@ -212,11 +213,11 @@ class GlobalSearch extends Component
                             ->whereRaw('DATEDIFF(product_tags.created_at, ?) > -30', [$date]);
                     });
                 }
-            )
-            ->orderBy($this->sort_column, $this->sort_by)
-            ->paginate(40);
+            );
 
-        $data['products'] = $products;
+
+        $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
+        $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         return view('livewire.global-search', $data);
     }
 }

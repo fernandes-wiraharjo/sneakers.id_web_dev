@@ -113,6 +113,7 @@
                     autofocus="" >
             </div>
         </div>
+        <span>Total {{ $total_product }} products found.</span>
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
@@ -175,20 +176,30 @@
                                         </h2>
                                         <div class="ProductItem__PriceList Heading">
                                             <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                                                    @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                                                @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                                                    <div class="discount-money">
+                                                        <span style="position:inherit; font-weight: 800; font-size: 16px; color:maroon;">
+                                                            Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="del-price-money">
                                                         <span class="money">
-                                                            RP.
                                                             <del>
-                                                                {{ rupiah_format(intval($product->retail_price ?? 0)) }}
+                                                                RP {{ rupiah_format(intval($product->retail_price ?? 0)) }}
                                                             </del>
-                                                            <span style="position:inherit; font-weight: 800;">
-                                                                {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
                                                         </span>
-                                                    @else
-                                                        <span class="money" >RP.
-                                                            {{ rupiah_format(intval($product->retail_price ?? 0)) }}
-                                                        </span>
-                                                    @endif
+                                                        &nbsp;
+                                                        {{-- @if ($product->discount_percentage > 0) --}}
+                                                            <span class="disc-off" style="font-weight: 400; font-size: 14px; color:maroon;">
+                                                                {{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF
+                                                            </span>
+                                                        {{-- @endif --}}
+                                                    </div>
+                                                @else
+                                                    <span class="money" >RP.
+                                                        {{ rupiah_format(intval($product->retail_price ?? 0)) }}
+                                                    </span>
+                                                @endif
                                             </span>
                                         </div>
                                     </div>

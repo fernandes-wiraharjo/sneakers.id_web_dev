@@ -33,9 +33,9 @@
                     </svg>
                 </a>
             </div>
-
-            {{-- <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
-                <div class="Search__InputIconWrapper">
+            <div class="Search__SearchBar" style="margin-left: 20px; width: 100%; justify-content: center;">
+            {{ $total_product }} PRODUCTS
+            {{--    <div class="Search__InputIconWrapper">
                     <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
                             viewBox="0 0 18 17">
                             <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
@@ -58,8 +58,8 @@
 
                 <input wire:model="search" type="text" class="Search__Input Heading ui-autocomplete-input"
                     autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..."
-                    autofocus="" >
-            </div> --}}
+                    autofocus="" > --}}
+            </div>
         </div>
         <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
             <header class="Drawer__Header Drawer__Header--bordered Drawer__Header--center Drawer__Container">

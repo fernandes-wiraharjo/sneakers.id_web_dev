@@ -29,6 +29,7 @@ class ProductList extends Component
     public $sort_column_2 = 'pd.after_discount_price';
     public $gender = [];
     public $age_range = [];
+    public $total_product = 0;
 
     protected $updatesQueryString = ['search'];
 
@@ -334,6 +335,8 @@ class ProductList extends Component
         // dump($products->limit(5)->get());
         // dump($products->toSql());
         // dump($products->orderBy($this->sort_column, $this->sort_by)->count());
+        // dump($products->count());
+        $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         // dd($products->toSql());
         return view('livewire.product-list', $data);

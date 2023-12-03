@@ -44,25 +44,8 @@
                             </div>
                         </div>
                         <div class="Collapsible">
-                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
-                                data-action="toggle-collapsible" aria-expanded="false">SALE<span
-                                    class="Collapsible__Plus"></span></button>
-                            <div class="Collapsible__Inner">
-                                <div class="Collapsible__Content">
-                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.all') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">ALL
-                                            PRODUCTS</a></div>
-                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.featured') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
-                                            FEATURED</a></div>
-                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.new-release') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">NEW
-                                            RELEASES</a></div>
-                                    <div class="Collapsible"><a href="{{ route('collections', 'sale.best-seller') }}"
-                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">BEST
-                                            SELLERS</a></div>
-                                </div>
-                            </div>
+                            <a href="{{ route('collections', 'sale.all') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SALE<span
+                                        class="Header__LinkSpacer">SALE</span></a>
                         </div>
                         <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"

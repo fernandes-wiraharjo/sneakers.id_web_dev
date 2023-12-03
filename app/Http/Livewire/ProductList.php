@@ -156,6 +156,7 @@ class ProductList extends Component
         ];
         $keyword_array = [];
         $sale_keyword = '';
+        $all_signature = false;
 
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
@@ -206,7 +207,11 @@ class ProductList extends Component
                     }
 
                     if($keyword_array[0] == 'signatures'){
-                        $this->signature[] = $keyword_array[1];
+                        if($keyword_array[1] == 'all'){
+                            $all_signature = true;
+                        } else {
+                            $this->signature[] = $keyword_array[1];
+                        }
                     }
                 }
             } else {
@@ -274,6 +279,9 @@ class ProductList extends Component
                                     });
                                 });
                             })
+                        ->when($all_signature, function ($query){
+                                return $query->whereHas('signatures');
+                            })
                         /**
                          * Sizes not in filter
                          */
@@ -326,6 +334,7 @@ class ProductList extends Component
         // $data['sql'] = $products->toSql();
         // dump($products->limit(5)->get());
         // dump($products->toSql());
+        // dump($products->orderBy($this->sort_column, $this->sort_by)->count());
         // dump($products->count());
         $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);

@@ -307,7 +307,7 @@
                 </div>
                 <div class="mobile-gallery" style="display: none;">
                     <span id="ProductGallery" class="Anchor"></span>
-                    <div class="Product__ActionList hidden-lap-and-up">
+                    {{-- <div class="Product__ActionList hidden-lap-and-up">
                         <div class="Product__ActionItem hidden-lap-and-up">
                             <button class="RoundButton RoundButton--small RoundButton--flat"
                                 data-action="open-product-zoom">
@@ -320,7 +320,7 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="Product__Slideshow Product__Slideshow--zoomable Carousel" data-flickity-config='{
                             "prevNextButtons": false,
                             "pageDots": true,

@@ -4,6 +4,7 @@
 @section('description', strip_tags($product->description))
 
 @push('styles')
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="   crossorigin="anonymous"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/product-detail.css') }}" />
 <style>
@@ -623,8 +624,6 @@
 @endsection
 
 @push('scripts')
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="{{ asset('js/lightslider.min.js') }}" defer></script>
     <script>
         document.querySelectorAll('.thumbnails .item img').forEach(img => {
             img.addEventListener('mouseover', () => {
@@ -648,32 +647,6 @@
                 $('#retail').text($(this).find('#size:checked').attr('data-price'));
                 $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
                 $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
-            });
-        });
-
-        $(document).ready(function() {
-            $('#vertical').lightSlider({
-            gallery:true,
-            item:1,
-            vertical:true,
-            verticalHeight:295,
-            vThumbWidth:50,
-            thumbItem:8,
-            thumbMargin:4,
-            slideMargin:0
-            });
-        });
-
-        $(document).ready(function() {
-            $('#vertical').lightSlider({
-            gallery:true,
-            item:1,
-            vertical:true,
-            verticalHeight:295,
-            vThumbWidth:50,
-            thumbItem:8,
-            thumbMargin:4,
-            slideMargin:0
             });
         });
     </script>

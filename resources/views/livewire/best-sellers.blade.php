@@ -56,14 +56,25 @@
                 <div class="ProductItem__PriceList Heading">
                     <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
                         @if ($item->after_discount_price > 0 && $item->after_discount_price < $item->retail_price)
-                            <span class="money">
-                                RP.
-                                <del>
-                                    {{ rupiah_format(intval($item->retail_price ?? 0)) }}
-                                </del>
-                                <span style="position:inherit; font-weight: 800;">
-                                    {{ rupiah_format(intval($item->after_discount_price ?? 0)) }}</span>
-                            </span>
+                            <div class="discount-money">
+                                <span style="position:inherit; font-weight: 800; font-size: 16px; color:maroon;">
+                                    Rp {{ rupiah_format(intval($item->after_discount_price ?? 0)) }}
+                                </span>
+                            </div>
+                            <div class="del-price-money">
+                                <span class="money">
+                                    <del>
+                                        RP {{ rupiah_format(intval($item->retail_price ?? 0)) }}
+                                    </del>
+                                </span>
+                                &nbsp;
+                                <br>
+                                {{-- @if ($item->discount_percentage > 0) --}}
+                                    <span class="disc-off" style="font-weight: 400; font-size: 14px; color:maroon;">
+                                        {{ 100 - round((intval($item->after_discount_price) / intval($item->retail_price)) * 100, 0) }}% OFF
+                                    </span>
+                                {{-- @endif --}}
+                            </div>
                         @else
                             <span class="money" >RP.
                                 {{ rupiah_format(intval($item->retail_price ?? 0)) }}

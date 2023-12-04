@@ -26,8 +26,10 @@ class ProductList extends Component
     public $keyword;
     public $sort_by = 'DESC';
     public $sort_column = 'products.created_at';
+    public $sort_column_2 = 'pd.after_discount_price';
     public $gender = [];
     public $age_range = [];
+    public $total_product = 0;
 
     protected $updatesQueryString = ['search'];
 
@@ -153,22 +155,27 @@ class ProductList extends Component
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
         $keyword_array = [];
+        $sale_keyword = '';
+        $all_signature = false;
 
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
             $keyword_array = explode('.', $keyword);
             if(count($keyword_array) >= 2){
                 $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
-                $brand = $brandRepository->getBrandByName($keyword_array[1]);
-                $category = $categoryRepository->getCategoryByName($keyword_array[1]);
-                $brand_id = $brand ? $brand->id : null;
-                $category_id = $category ? $category->id : null;
-                if($brand_id) {
-                    $this->brand[] = $brand_id;
-                }
 
-                if($category_id) {
-                    $this->category[] = intval($category_id);
+                if($keyword_array[1] != 'all') {
+                    $brand = $brandRepository->getBrandByName($keyword_array[1]);
+                    $category = $categoryRepository->getCategoryByName($keyword_array[1]);
+                    $brand_id = $brand ? $brand->id : null;
+                    $category_id = $category ? $category->id : null;
+                    if($brand_id) {
+                        $this->brand[] = $brand_id;
+                    }
+
+                    if($category_id) {
+                        $this->category[] = intval($category_id);
+                    }
                 }
 
                 if($keyword_array[0] != 'all'){
@@ -182,6 +189,29 @@ class ProductList extends Component
                     $tag_id = $tag ? $tag->id : null;
                     if($tag_id) {
                         $this->tag[] = $tag_id;
+                    }
+
+                    if($keyword_array[0] == 'sale'){
+                        $this->keyword = 'sale';
+                        $sale_keyword = $keyword_array[1];
+
+                        if ($keyword_array[1] === 'featured') {
+                            $keyword_array[1] = 'feature';
+                        }
+
+                        $tag = $tagRepository->getTagByName(strtoupper($keyword_array[1]));
+                        $tag_id = $tag ? $tag->id : null;
+                        if($tag_id) {
+                            $this->tag[] = $tag_id;
+                        }
+                    }
+
+                    if($keyword_array[0] == 'signatures'){
+                        if($keyword_array[1] == 'all'){
+                            $all_signature = true;
+                        } else {
+                            $this->signature[] = $keyword_array[1];
+                        }
                     }
                 }
             } else {
@@ -249,6 +279,9 @@ class ProductList extends Component
                                     });
                                 });
                             })
+                        ->when($all_signature, function ($query){
+                                return $query->whereHas('signatures');
+                            })
                         /**
                          * Sizes not in filter
                          */
@@ -283,23 +316,28 @@ class ProductList extends Component
                                     });
                             });
                         })
-                        ->when($this->keyword === 'new-release', function($query) {
+                        ->when($this->keyword === 'new-release' || $sale_keyword === 'new release', function($query) {
                             $date = date('Y-m-d H:i:s');
 
                             return $query->whereHas('tags', function($q) use ($date) {
                                 $q->where('tag_title', 'NEW RELEASE');
                                 $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                             });
-                        })
-                            ->orderBy($this->sort_column, $this->sort_by);
+                        });
+
+        // if($this->sort_column == 'pd.retail_price') {
+        //     $products->orderBy('pd.after_discount_price', $this->sort_by);
+        // }
         /**
          * Query debug
          */
         // $data['sql'] = $products->toSql();
         // dump($products->limit(5)->get());
         // dump($products->toSql());
+        // dump($products->orderBy($this->sort_column, $this->sort_by)->count());
         // dump($products->count());
-        $data['products'] = $products->paginate(40);
+        $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
+        $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         // dd($products->toSql());
         return view('livewire.product-list', $data);
     }

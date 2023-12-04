@@ -126,8 +126,7 @@
     /* Media query for tablets */
     @media screen and (max-width: 768px) {
         .donate-now li {
-            min-width: 100px;
-            width: 100px;
+            width: calc((100% / 4) - 5px);
         }
 
         .size-select {
@@ -138,8 +137,8 @@
     /* Media query for smartphones */
     @media screen and (max-width: 480px) {
         .donate-now li {
-            min-width: 80px;
-            width: 80px;
+
+            width: calc((100% / 4) - 5px);
         }
 
         .size-select {

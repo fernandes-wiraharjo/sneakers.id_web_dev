@@ -161,8 +161,8 @@
             max-height: 60vh;
             min-height: 600px;
             /* height: calc(42vh - 100px); */
-            overflow-x: auto;
-            overflow-y: hidden;
+            /* overflow-x: auto;
+            overflow-y: hidden; */
             width: 100%;
         }
 

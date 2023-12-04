@@ -6,6 +6,7 @@
         <meta name="viewport"
             content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0" />
         <meta name="theme-color" content="" />
+        <link rel="apple-touch-icon" href="https://sneakers.id/stores-info/logos.png"/>
 
         <!-- Primary Meta Tags -->
         <title>SNEAKERS.ID - @yield('title')</title>

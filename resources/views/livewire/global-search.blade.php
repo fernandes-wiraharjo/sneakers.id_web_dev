@@ -87,7 +87,9 @@
                 </div>
             </div>
             <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
-                <div class="Search__InputIconWrapper">
+                <div class="Search__SearchBar" style="margin-left: 20px; width: 100%; justify-content: center;">
+                  {{ $total_product }} PRODUCTS ABOUT "{{ strtoupper($keyword) }}"
+                {{-- <div class="Search__InputIconWrapper">
                     <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
                             viewBox="0 0 18 17">
                             <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
@@ -110,11 +112,10 @@
 
                 <input wire:model="search" type="text" class="Search__Input Heading ui-autocomplete-input"
                     autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..."
-                    autofocus="" >
+                    autofocus="" > --}}
+                </div>
             </div>
         </div>
-        <div style="text-align: center;"><span class="Text--subdued">{{ $total_product }} PRODUCTS</span></div>
-
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
@@ -190,6 +191,7 @@
                                                             </del>
                                                         </span>
                                                         &nbsp;
+                                                        <br>
                                                         {{-- @if ($product->discount_percentage > 0) --}}
                                                             <span class="disc-off" style="font-weight: 400; font-size: 14px; color:maroon;">
                                                                 {{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF

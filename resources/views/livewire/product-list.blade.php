@@ -208,6 +208,7 @@
                                                                     </del>
                                                                 </span>
                                                                 &nbsp;
+                                                                <br>
                                                                 {{-- @if ($product->discount_percentage > 0) --}}
                                                                     <span class="disc-off" style="font-weight: 400; font-size: 14px; color:maroon;">
                                                                         {{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF

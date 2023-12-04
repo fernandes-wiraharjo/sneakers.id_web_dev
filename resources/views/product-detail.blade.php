@@ -118,14 +118,19 @@
             column-gap: 16px;
             align-content: center;
             position: sticky;
-            top: 40px;
-            padding-left: 48px;
+            /* top: 40px; */
+            padding-left: 20px;
             margin-left: 8px;
-            max-height: 80vh;
+            max-height: 60vh;
+            min-height: 600px;
+            /* height: calc(42vh - 100px); */
+            overflow-x: auto;
+            overflow-y: hidden;
+            width: 100%;
         }
 
         .main {
-            max-height: 80vh;
+            min-height: 42vh;
         }
 
         .main img{
@@ -140,6 +145,7 @@
             flex-grow: 1;
             object-fit: contain;
             max-height: 80vh;
+            min-height: 600px;
         }
 
         .thumbnails {
@@ -148,12 +154,16 @@
             flex-direction: column;
             -webkit-box-flex: 1;
             flex-grow: 1;
-            column-gap: 8px;
-            width: 90px;
-            height: 80vh;
-            max-height: 80vh;
+            column-gap: 10px;
+            width: 142px;
+            height: 650px;
+            /* max-height: 80vh; */
             overflow-y: scroll;
-            align-self: center;
+        }
+
+        .thumbnails < .main {
+            height: 62vh;
+            min-height: 62vh;
         }
 
         .item {
@@ -195,7 +205,7 @@
 
         @media (min-width: 1330px) {
             .main img{
-                min-height: 80vh;
+                /* min-height: 80vh; */
                 /* min-width: 80vh;
                 max-width: 80vh; */
             }
@@ -204,7 +214,7 @@
         @media (max-width: 1330px) and (min-width: 1007px) {
             .main img{
                 /* object-fit: cover; */
-                min-height: 80vh;
+                /* min-height: 80vh; */
                 min-width: auto !important;
             }
 
@@ -214,16 +224,16 @@
             }
 
             .main:hover .main-image {
-                min-height: 80vh;
-                max-height: 80vh;
+                /* min-height: 80vh;
+                max-height: 80vh; */
                 width: auto;
                 position: absolute;
-                top: 0;
-                left: 0;
+                bottom: 0;
+                right: 0;
             }
 
             .thumbnails {
-                min-width: 90px;
+                min-width: 142px;
                 width: 18vh;
                 max-width: 18vh;
             }
@@ -289,7 +299,7 @@
                                 <img class="image" src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="">
                             </div>
                         @endforeach
-                        </div>
+                    </div>
 
                     <div class="main">
                         <img class="main-image" src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />

@@ -173,11 +173,6 @@
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
-                                    <div class="Collapsible">
-                                        <a href="{{ route('collections', 'all.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
-                                            ALL PRODUCTS
-                                        </a>
-                                    </div>
                                     @foreach ($signature as $item)
                                         <div class="Collapsible">
                                             <a href="{{ route('collections', 'signatures.'. $item->id) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
@@ -318,29 +313,8 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'sale.all') }}"
-                                    class="Heading u-h6 main-heading-text">SALE</a>
-                                <div class="DropdownMenu" aria-hidden="true">
-                                    <ul class="Linklist">
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'sale.all') }}"
-                                                class="Link Link--secondary">ALL PRODUCTS</a>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'sale.featured') }}"
-                                                class="Link Link--secondary">FEATURED </a>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'sale.new-release') }}"
-                                                class="Link Link--secondary">NEW RELEASES </a>
-                                        </li>
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'sale.best-seller') }}"
-                                                class="Link Link--secondary">BEST SELLERS </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <li class="HorizontalList__Item">
+                                <a href="{{ route('collections', 'sale.all') }}" class="Heading u-h6 main-heading-text">SALE<span class="Header__LinkSpacer">SALE</span></a>
                             </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="{{ route('collections', 'all.MENS') }}"
@@ -483,12 +457,6 @@
                                         class="Header__LinkSpacer">Signature Athlete</span></a>
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'signatures.all') }}"
-                                                class="Link Link--secondary">
-                                                ALL PRODUCTS
-                                            </a>
-                                        </li>
                                         @foreach ($signature as $item)
                                         <li class="Linklist__Item">
                                             <a href="{{ route('collections', 'signatures.'. $item->id) }}"

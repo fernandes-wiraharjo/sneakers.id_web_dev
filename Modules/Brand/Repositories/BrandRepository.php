@@ -49,7 +49,7 @@ class BrandRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getActiveMenuBrand(){
-      return $this->model->where(['is_active' => 1, 'is_menu' => 1])->get();
+      return $this->model->where(['is_active' => 1, 'is_menu' => 1])->orderBy('brand_title', 'ASC')->get();
   }
 
   public function getActiveShopByBrand(){

@@ -241,6 +241,9 @@
         }
 
         @media (min-width: 1330px) {
+            .gallery{
+                padding-top: 65px;
+            }
             .main img{
                 /* min-height: 80vh; */
                 /* min-width: 80vh;
@@ -281,6 +284,7 @@
                 align-self: center;
                 justify-content: center;
                 padding-left: unset;
+                padding-top: 65px;
             }
 
             .main {
@@ -328,7 +332,7 @@
               "useAjaxCart": true
             }'>
         <div class="Product__Wrapper">
-            <div class="Product__Gallery Product__Gallery--withThumbnails">
+            <div class="Product__Gallery Product__Gallery--withThumbnails" >
                 <div class="gallery">
                     <div class="thumbnails">
                         @foreach ($product->images as $item)

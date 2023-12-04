@@ -57,7 +57,7 @@
                     <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
                         @if ($item->after_discount_price > 0 && $item->after_discount_price < $item->retail_price)
                             <div class="discount-money">
-                                <span style="position:inherit; font-weight: 800; font-size: 16px; color:maroon;">
+                                <span style="position:inherit; font-weight: 800; font-size: 16px; color:red;">
                                     Rp {{ rupiah_format(intval($item->after_discount_price ?? 0)) }}
                                 </span>
                             </div>
@@ -70,7 +70,7 @@
                                 &nbsp;
                                 <br>
                                 {{-- @if ($item->discount_percentage > 0) --}}
-                                    <span class="disc-off" style="font-weight: 400; font-size: 14px; color:maroon;">
+                                    <span class="disc-off" style="font-weight: 400; font-size: 15px; color:red;">
                                         {{ 100 - round((intval($item->after_discount_price) / intval($item->retail_price)) * 100, 0) }}% OFF
                                     </span>
                                 {{-- @endif --}}

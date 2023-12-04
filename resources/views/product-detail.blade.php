@@ -7,9 +7,10 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/product-detail.css') }}" />
 <style>
-    .Button--selected{
+    .Button--selected {
         color: black;
     }
+
     .Button--selected::before {
         background-color: white !important;
     }
@@ -34,6 +35,10 @@
         background-color: rgb(255, 254, 254);
     }
 
+    .size-button {
+        padding: 0 0 0 5px;
+    }
+
     select:focus + .focus {
         position: absolute;
         top: -1px;
@@ -42,72 +47,105 @@
         bottom: -1px;
         border: 2px solid var(--select-focus);
         border-radius: inherit;
-        }
+    }
 
-        donate-now {
-            list-style-type: none;
-            margin: 25px 0 0 0;
-            padding: 0;
-        }
+    .donate-now{
+        list-style-type: none;
+        margin: 0 0 0 0;
+        padding: 0;
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
 
+    .donate-now ul {
+        margin: 0 0 0 0;
+        padding: 0;
+    }
+
+    .donate-now li {
+        float: left;
+        margin: 0 5px 5px 0;
+        /* min-width: 120px;*/
+        width: calc((100% / 3) - 5px);
+        height: 40px;
+        position: relative;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .donate-now label,
+    .donate-now input {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .donate-now input[type="radio"] {
+        opacity: 0.01;
+        z-index: 100;
+        height: 40px;
+        width: 100px;
+        cursor: pointer;
+    }
+
+    .donate-now input[type="radio"]:checked+label,
+    .checked+label {
+        background: #ffffff;
+        border: 1px solid #999999;
+    }
+
+    .donate-now input[type="radio"]:hover+label,
+    .hover+label {
+        background: #ffffff;
+        border: 1px solid #999999;
+        background: #e0dddd;
+    }
+
+    .donate-now label {
+        padding: 5px;
+        /* border: 1px solid #000000; */
+        border: 1px solid #000000;
+        cursor: pointer;
+        z-index: 90;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        background-color: #f1f1f1ff;
+    }
+
+    .donate-now label:hover {
+        background: #ffffff;
+        border: 1px solid #999999;
+    }
+
+    /* Media query for tablets */
+    @media screen and (max-width: 768px) {
         .donate-now li {
-            float: left;
-            margin: 5px;
+            min-width: 100px;
             width: 100px;
-            height: 40px;
-            position: relative;
-            cursor: pointer;
-            list-style: none;
         }
 
-        .donate-now label,
-        .donate-now input {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+        .size-select {
+            padding: 0.25em 0.5em;
+        }
+    }
+
+    /* Media query for smartphones */
+    @media screen and (max-width: 480px) {
+        .donate-now li {
+            min-width: 80px;
+            width: 80px;
         }
 
-        .donate-now input[type="radio"] {
-            opacity: 0.01;
-            z-index: 100;
-            height: 40px;
-            width: 100px;
-            cursor: pointer;
+        .size-select {
+            padding: 0.25em 0.5em;
         }
-
-        .donate-now input[type="radio"]:checked+label,
-        .checked+label {
-            background: #ffffff;
-            border: 1px solid #999999;
-        }
-
-        .donate-now input[type="radio"]:hover+label,
-        .hover+label {
-            background: #ffffff;
-            border: 1px solid #999999;
-            background: #e0dddd;
-        }
-
-        .donate-now label {
-            padding: 5px;
-            /* border: 1px solid #000000; */
-            border: 1px solid #000000;
-            cursor: pointer;
-            z-index: 90;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-            background-color: #f1f1f1ff;
-        }
-
-        .donate-now label:hover {
-            background: #ffffff;
-            border: 1px solid #999999;
-        }
+    }
 
         .gallery {
             /* display: inline-block;
@@ -435,11 +473,11 @@
                                                 {{ rupiah_format(intval($product->detail->retail_price ?? 0)) }}
                                             </del>
                                             &nbsp;
-                                            <span style="position:inherit; font-weight: 800; color:maroon;" id="discount">
+                                            <span style="position:inherit; font-weight: 800; color:red;" id="discount">
                                                 {{ rupiah_format(intval($product->detail->after_discount_price ?? 0)) }}
                                             </span>
                                         </span>
-                                        <div style="color: red; font-size: 20px; font-weight: bold;">
+                                        <div style="color: red; font-size: 15px; font-weight: bold;">
                                             <span id="percentage">{{ $product->detail->discount_percentage }}</span>
                                             % OFF
                                         </div>
@@ -466,29 +504,8 @@
                                     </li>
                                 @endforeach
                             </ul>
-                            {{-- <label for="">Size Available : </label> --}}
-                            {{-- <select name="size" id="size" class="size-select">
-                                <option>Select Size</option>
-                                @foreach ($size as $item)
-                                    <option value="{{$item->size}}" data-id="{{$item->id}}"" data-price="{{ rupiah_format(intval($item->retail_price ?? 0))}}"
-                                        data-discount-price="{{rupiah_format(intval($item->after_discount_price ?? 0))}}" data-discount="{{$item->discount_percentage}}"
-                                        data-qty="{{$item->qty}}">{{$item->size}}</option>
-                                @endforeach
-                            </select> --}}
-                            <!-- <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a> -->
                         </div>
                         <div style="margin: 5px 0">
-
-                            {{-- @if($product->details()->count() > 1)
-                            @foreach ($product->details()->get() as $item)
-                                <a href="javascript:void(0)" onclick="changePrice(this)" data-id="{{$item->id}}"" data-price="{{$item->retail_price}}"
-                                    data-discount-price="{{$item->after_discount_price}}" data-discount="{{$item->discount_percentage}}"
-                                    data-qty="{{$item->qty}}"
-                                    class="Button Button--primary size" style="font-size: 12px; padding: 5px 15px;" id="size-{{$item->id}}">
-                                    <span>{{$item->size}}</span>
-                                </a>
-                            @endforeach
-                            @endif --}}
                         </div>
                         <div style="width: 100%;">
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"

@@ -524,9 +524,6 @@
             console.log(input.val());
         }
 
-        function decrement(this) {
-            console.log('-');
-        }
     </script>
 
     <script>
@@ -580,6 +577,7 @@
         @endif
 
         @if($edit)
+            console.log('test');
             console.log(JSON.parse($('#product_details').val()));
             repeater.setList(JSON.parse($('#product_details').val()));
 

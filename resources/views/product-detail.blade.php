@@ -316,7 +316,7 @@
 @section('body')
     <!-- /spurit_sri-added -->
     <div id="shopify-section-product-template" class="shopify-section shopify-section--bordered"
-    style="margin-top: 12vh; margin-bottom: 16vh;">
+    style="margin-top: 5vh; margin-bottom: 5vh;">
     <section class="Product Product--large" data-section-id="product-template" data-section-type="product"
         data-section-settings='{
               "enableHistoryState": true,

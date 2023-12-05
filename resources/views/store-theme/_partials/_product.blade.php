@@ -1,3 +1,4 @@
+{{-- "description": "{{ $product->description }}", --}}
 <script type="application/json" data-product-json>
 
     {
@@ -5,7 +6,6 @@
             "id": {{ $product->id }},
             "title": "{{ $product->product_name }}",
             "handle": "-",
-            "description": "{{ $product->description }}",
             "published_at": "2022-02-14T13:24:07+07:00",
             "created_at": "2022-02-14T07:43:19+07:00",
             "vendor": "{{ $product->detail->brand->brand_title }}",

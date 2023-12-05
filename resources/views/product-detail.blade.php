@@ -126,7 +126,7 @@
     /* Media query for tablets */
     @media screen and (max-width: 768px) {
         .donate-now li {
-            width: calc((100% / 4) - 5px);
+            width: calc((100% / 2) - 5px);
         }
 
         .size-select {
@@ -138,7 +138,7 @@
     @media screen and (max-width: 480px) {
         .donate-now li {
 
-            width: calc((100% / 4) - 5px);
+            width: calc((100% / 2) - 5px);
         }
 
         .size-select {

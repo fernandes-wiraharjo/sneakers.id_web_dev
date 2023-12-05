@@ -241,9 +241,9 @@
         }
 
         @media (min-width: 1330px) {
-            .gallery{
+            /* .gallery{
                 padding-top: 65px;
-            }
+            } */
             .main img{
                 /* min-height: 80vh; */
                 /* min-width: 80vh;
@@ -284,7 +284,7 @@
                 align-self: center;
                 justify-content: center;
                 padding-left: unset;
-                padding-top: 65px;
+                /* padding-top: 65px; */
             }
 
             .main {

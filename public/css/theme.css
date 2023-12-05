@@ -8442,8 +8442,8 @@ screen and (min-width: 1008px) and (hover: hover) {
         right: 0;
         width: 375px;
         margin: 0 100px -40px 50px;
-        padding-top: 65px;
-        padding-bottom: 40px
+        /* padding-top: 65px;
+        padding-bottom: 40px */
     }
 
     @supports (--css: variables) {

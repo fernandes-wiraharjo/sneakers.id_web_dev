@@ -217,7 +217,7 @@
             padding: 5px 0 5px 0;
             /* border-radius: 8px 8px 8px 8px; */
             object-fit: cover;
-            filter: grayscale(100%);
+            /* filter: grayscale(100%); */
             transition: filter 250ms ease;
 
         }

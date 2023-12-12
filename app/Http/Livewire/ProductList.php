@@ -261,7 +261,7 @@ class ProductList extends Component
                             return $query->whereHas('categories', function ($q) use ($categories, $gender_id, $keyword_array){
                                 rsort($categories);
 
-                                if(count(array_diff($categories, $gender_id->toArray())) >= 1 && (count($keyword_array) == 2) ){
+                                if(array_intersect($categories, $gender_id->toArray()) && (count($keyword_array) == 2) ){
                                     return $q
                                         ->where('category_id', $categories)
                                         ->when($this->search, function ($query, $search){
@@ -316,7 +316,7 @@ class ProductList extends Component
                             return $query->whereHas('categories', function ($q) use ($gender){
                                 rsort($gender);
 
-                                return $q->whereIn('categories.category_code', array_unique($gender))
+                                return $q->where('categories.category_code', array_unique($gender))
                                     ->when($this->search, function ($query, $search){
                                         return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                     });

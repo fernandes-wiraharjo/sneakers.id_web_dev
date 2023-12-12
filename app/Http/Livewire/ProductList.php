@@ -30,6 +30,7 @@ class ProductList extends Component
     public $gender = [];
     public $age_range = [];
     public $total_product = 0;
+    public $gender_list = ['MENS', 'WOMENS', 'KIDS'];
 
     protected $updatesQueryString = ['search'];
 
@@ -232,8 +233,15 @@ class ProductList extends Component
         $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? null;
         $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? null;
         $discount_id = $tagRepository->getTagByName('discount')->id ?? null;
-        // $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender))->pluck('id');
+        $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender_list))->pluck('id');
         // dump($gender_id);
+        // dump(array_intersect($this->category, $gender_id->toArray()));
+
+        if(array_intersect($this->category, $gender_id->toArray())){
+            foreach(array_intersect($this->category, $gender_id->toArray()) as $gender_from_menu){
+                $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->first()->category_code;
+            };
+        }
 
         $products = $productRepository->getProductWhere()
                         ->when($this->search, function ($query, $search){
@@ -249,14 +257,22 @@ class ProductList extends Component
                                     });
                                 });
                         })
-                        ->when($this->category, function ($query, $categories){
-                            return $query->whereHas('categories', function ($q) use ($categories){
+                        ->when($this->category, function ($query, $categories) use ($gender_id, $keyword_array){
+                            return $query->whereHas('categories', function ($q) use ($categories, $gender_id, $keyword_array){
                                 rsort($categories);
 
-                                return $q->whereIn('category_id', array_unique($categories))
+                                if(count(array_diff($categories, $gender_id->toArray())) >= 1 && (count($keyword_array) == 2) ){
+                                    return $q
+                                        ->where('category_id', $categories)
+                                        ->when($this->search, function ($query, $search){
+                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                        });
+                                } else {
+                                    return $q->whereIn('category_id', array_unique($categories))
                                     ->when($this->search, function ($query, $search){
                                         return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                    });
+                                        });
+                                    }
                                 });
                         })
                         ->when($this->tag, function ($query, $tags) {

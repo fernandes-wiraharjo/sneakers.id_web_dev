@@ -343,6 +343,9 @@ class GlobalSearch extends Component
                         $q->where('tag_title', 'NEW RELEASE');
                         $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                     });
+                })
+                ->when(count($keyword_array) >= 2, function($query) {
+                    return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');
                 });
 
 

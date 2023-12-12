@@ -84,16 +84,15 @@
     </footer>
 </div>
 <div class="bc-sf-search-suggestion-wrapper " style="top: 187.504px; left: 91px; width: 90%;">
-    <div class="bc-sf-search-suggestion-popover" data-direction="left" style="top: -20px; left: 20px;display: none;">
+    <div class="bc-sf-search-suggestion-popover" data-direction="left" style="top: calc(1vh - 20px); left: 20px;display: none; z-index: 0 !important;">
     </div>
-    <ul id="ui-id-1" tabindex="0"
+    <ul id="ui-id-1" tabindex="-1"
         class="ui-menu ui-widget ui-widget-content ui-autocomplete bc-sf-search-suggestion ui-front"
-        style="width: 100%; top: 0px; left: -40px;display: none;" data-search-box="#bc-sf-search-box-0">
+        style="width: 100%; top: 1vh; left: -40px;display: none; z-index: 999999;" data-search-box="#bc-sf-search-box-0">
         <li class="bc-sf-search-suggestion-header-product bc-sf-search-suggestion-header ui-menu-item"
             aria-label="Products">Products</li>
         <li id="item" data-group="products" aria-label="Products"></li>
-        <li class="bc-sf-search-suggestion-item bc-sf-search-suggestion-item-product ui-menu-item"
-            aria-label="View All"><a href="#" tabindex="-1" class="ui-menu-item-wrapper" id="total_result"></a></li>
+        <li class="bc-sf-search-suggestion-item bc-sf-search-suggestion-item-product ui-menu-item" id="total_result_line"
+            aria-label="View All" style="z-index: 9999999;"><a href="#" class="ui-menu-item-wrapper" id="total_result"></a></li>
     </ul>
 </div>
-

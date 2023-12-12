@@ -14,6 +14,10 @@
         .Drawer__Main {
             padding-left: 20px !important;
         }
+
+        .CollectionToolbar {
+            position: inherit !important;
+        }
     </style>
 @endpush
 <div>

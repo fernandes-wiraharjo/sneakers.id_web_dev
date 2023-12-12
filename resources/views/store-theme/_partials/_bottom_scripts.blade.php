@@ -16,6 +16,22 @@
         });
 
         var product_variants_removed = [];
+
+        $("#total_result").click(function() {
+            console.log("clicked a");
+        });
+        $("#total_result_line").click(function() {
+                console.log("clicked li");
+            });
+        $(".bc-sf-search-suggestion-wrapper").click(function() {
+                console.log("clicked warper");
+            });
+        $(".bc-sf-search-suggestion-popover").click(function() {
+                console.log("clicked popover");
+            });
+        $(".bc-sf-search-suggestion").click(function() {
+                console.log("clicked UL");
+            });
     });
 </script>
 <script src="https://use.fontawesome.com/eeb42b6d4d.js"></script>
@@ -39,7 +55,7 @@
                     var image_url = '{{ asset("images/") }}/products/'+item[index].product_code+'/'+item[index].image;
                     searchResult += '' +
                         '<li class="bc-sf-search-suggestion-item bc-sf-search-suggestion-item-product ui-menu-item" aria-label="Products: '+ item[index].product_name +'">' +
-                            '<a href="/product-detail/'+ item[index].id +'/'+ item[index].product_name.replace(/ /g,"_") +'" id="ui-id-25" tabindex="-1" class="ui-menu-item-wrapper">' +
+                            '<a href="/product-detail/'+ item[index].id +'/'+ item[index].product_name.replace(/ /g,"_") +'" id="ui-id-25" class="ui-menu-item-wrapper">' +
                                 '<div class="bc-sf-search-suggestion-left">' +
                                 '<img src="'+image_url+'">'+
                             '</div>'+
@@ -81,5 +97,7 @@
             }
         };
     };
+
+
 </script>
 

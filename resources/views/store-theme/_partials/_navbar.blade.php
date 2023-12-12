@@ -74,7 +74,7 @@
                                         </a>
                                     </div>
                                     <div class="Collapsible">
-                                        <a href="{{ route('collections', 'accesories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                        <a href="{{ route('collections', 'accessories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                             ACCESSORIES
                                         </a>
                                     </div>
@@ -115,7 +115,7 @@
                                             </a>
                                         </div>
                                         <div class="Collapsible">
-                                            <a href="{{ route('collections', 'accesories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            <a href="{{ route('collections', 'accessories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                                 ACCESSORIES
                                             </a>
                                         </div>
@@ -155,7 +155,7 @@
                                         </a>
                                     </div>
                                     <div class="Collapsible">
-                                        <a href="{{ route('collections', 'accesories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                        <a href="{{ route('collections', 'accessories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                             ACCESSORIES
                                         </a>
                                     </div>
@@ -347,7 +347,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accesories.MENS') }}"
+                                            <a href="{{ route('collections', 'accessories.MENS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -392,7 +392,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accesories.WOMENS') }}"
+                                            <a href="{{ route('collections', 'accessories.WOMENS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -437,7 +437,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accesories.KIDS') }}"
+                                            <a href="{{ route('collections', 'accessories.KIDS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>

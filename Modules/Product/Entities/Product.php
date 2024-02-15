@@ -18,7 +18,8 @@ class Product extends Model
         'shopee_link',
         'blibli_link',
         'description',
-        'is_active'
+        'is_active',
+        'updated_at'
     ];
 
     protected static function newFactory()

@@ -233,7 +233,7 @@
                         </div>
                     </div>
                     <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                        {{ $products->links('vendor.livewire.bootstrap') }}
+                        {{ $products->onEachSide(1)->links('vendor.livewire.bootstrap') }}
                     </div>
                 </div>
             </div>

@@ -194,6 +194,7 @@ class ProductList extends Component
                     if($category_id) {
                         $this->category[] = intval($category_id);
                     }
+
                 }
 
                 if($keyword_array[0] != 'all'){
@@ -250,16 +251,20 @@ class ProductList extends Component
         $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? null;
         $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? null;
         $discount_id = $tagRepository->getTagByName('discount')->id ?? null;
-        $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender_list))->pluck('id');
+        $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender_list))->pluck('id', 'category_code');
+        $gender_choosen = $categoryRepository->getCategoryByCode(array_unique($this->gender))->pluck('id', 'category_code');
 
-        // dump($gender_id);
+        // dump($gender_id); // [1,2,3]
+        // dump($gender_choosen); // [1,2,3]
         // dump(array_intersect($this->category, $gender_id->toArray()));
 
         if(array_intersect($this->category, $gender_id->toArray())){
             foreach(array_intersect($this->category, $gender_id->toArray()) as $gender_from_menu){
-                $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->first()->category_code;
+                $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->category_code;
             };
         }
+
+        $this->gender = array_unique($this->gender);
 
         $products = $productRepository->getProductWhere()
                         ->when($this->search, function ($query, $search){

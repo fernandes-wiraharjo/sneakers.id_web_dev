@@ -371,7 +371,7 @@ class ProductList extends Component
                                     $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
                                 }
                             }
-                            return $q;
+                            return $q->where('pd.qty', '>', 0);
                         })
                         ;
 

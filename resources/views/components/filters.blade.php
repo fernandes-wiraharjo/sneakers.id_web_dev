@@ -84,19 +84,19 @@
                     <div class="grid-flow">
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="35" wire:loading.attr="disabled">
-                            <label>35</label>
+                            <label>35.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="36" wire:loading.attr="disabled">
-                            <label>36</label>
+                            <label>36 - 36.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="37" wire:loading.attr="disabled">
-                            <label>37</label>
+                            <label>37.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="38" wire:loading.attr="disabled">
-                            <label>38</label>
+                            <label>38 - 38.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="39" wire:loading.attr="disabled">
@@ -104,7 +104,7 @@
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="40" wire:loading.attr="disabled">
-                            <label>40</label>
+                            <label>40 - 40.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="41" wire:loading.attr="disabled">
@@ -112,7 +112,7 @@
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="42" wire:loading.attr="disabled">
-                            <label>42</label>
+                            <label>42 - 42.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="43" wire:loading.attr="disabled">
@@ -120,7 +120,7 @@
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="44" wire:loading.attr="disabled">
-                            <label>44</label>
+                            <label>44 - 44.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="45" wire:loading.attr="disabled">
@@ -128,18 +128,18 @@
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="46" wire:loading.attr="disabled">
-                            <label>46</label>
+                            <label>46 - 46.5</label>
                         </span>
                         <span>
                             <input type="checkbox" wire:model="size_filter" value="47" wire:loading.attr="disabled">
-                            <label>47</label>
+                            <label>47 - 47.5</label>
                         </span>
                         <span>
-                            <input type="checkbox" wire:model="size" value="48" wire:loading.attr="disabled">
-                            <label>48</label>
+                            <input type="checkbox" wire:model="size_filter" value="48" wire:loading.attr="disabled">
+                            <label>48 - 48.5</label>
                         </span>
                         <span>
-                            <input type="checkbox" wire:model="size" value="49" wire:loading.attr="disabled">
+                            <input type="checkbox" wire:model="size_filter" value="49" wire:loading.attr="disabled">
                             <label>49</label>
                         </span>
                     </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\View\View;
 use Livewire\WithPagination;
@@ -19,7 +20,7 @@ class ProductList extends Component
 
     public $search;
     public $brand = [];
-    public $size = [];
+    public $size_filter = [];
     public $tag = [];
     public $category = [];
     public $signature = [];
@@ -65,6 +66,11 @@ class ProductList extends Component
     }
 
     public function updatingAgeRange()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSize()
     {
         $this->resetPage();
     }
@@ -139,6 +145,16 @@ class ProductList extends Component
         );
     }
 
+    public function updatedSize()
+    {
+        if(!is_array($this->size_filter)) return;
+        $this->size_filter = array_filter($this->size_filter,
+            function ($size_filter) {
+                return $size_filter != false;
+            }
+        );
+    }
+
     public function render(
         ProductRepository $productRepository,
         BrandRepository $brandRepository,
@@ -158,6 +174,7 @@ class ProductList extends Component
         $keyword_array = [];
         $sale_keyword = '';
         $all_signature = false;
+        $size = [];
 
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
@@ -177,6 +194,7 @@ class ProductList extends Component
                     if($category_id) {
                         $this->category[] = intval($category_id);
                     }
+
                 }
 
                 if($keyword_array[0] != 'all'){
@@ -233,15 +251,20 @@ class ProductList extends Component
         $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? null;
         $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? null;
         $discount_id = $tagRepository->getTagByName('discount')->id ?? null;
-        $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender_list))->pluck('id');
-        // dump($gender_id);
+        $gender_id = $categoryRepository->getCategoryByCode(array_unique($this->gender_list))->pluck('id', 'category_code');
+        $gender_choosen = $categoryRepository->getCategoryByCode(array_unique($this->gender))->pluck('id', 'category_code');
+
+        // dump($gender_id); // [1,2,3]
+        // dump($gender_choosen); // [1,2,3]
         // dump(array_intersect($this->category, $gender_id->toArray()));
 
         if(array_intersect($this->category, $gender_id->toArray())){
             foreach(array_intersect($this->category, $gender_id->toArray()) as $gender_from_menu){
-                $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->first()->category_code;
+                $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->category_code;
             };
         }
+
+        $this->gender = array_unique($this->gender);
 
         $products = $productRepository->getProductWhere()
                         ->when($this->search, function ($query, $search){
@@ -339,7 +362,18 @@ class ProductList extends Component
                                 $q->where('tag_title', 'NEW RELEASE');
                                 $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                             });
-                        });
+                        })
+                        ->when($this->size_filter, function ($q, $sizes) {
+                            foreach($sizes as $index => $size){
+                                if($index == 0) {
+                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                } else {
+                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                }
+                            }
+                            return $q->where('pd.qty', '>', 0);
+                        })
+                        ;
 
         // if($this->sort_column == 'pd.retail_price') {
         //     $products->orderBy('pd.after_discount_price', $this->sort_by);
@@ -353,6 +387,7 @@ class ProductList extends Component
         // dump($products->orderBy($this->sort_column, $this->sort_by)->count());
         // dump($products->count());
         $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
+        // dump($products->toSql());
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         // dd($products->toSql());
         return view('livewire.product-list', $data);

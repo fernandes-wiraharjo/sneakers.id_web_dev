@@ -87,6 +87,9 @@
                         <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'DESC')">
                         Date, new to old
                         </a>
+                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.updated_at', 'DESC')">
+                        Date, last updated
+                        </a>
                     </div>
                 </div>
             </div>

@@ -167,7 +167,7 @@
                                                         <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
                                                         {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                                                             data-src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                            data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                            data-widths="[1200]" data-sizes="auto"
                                                             alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
                                                     @endif
                                                 @endforeach
@@ -175,25 +175,11 @@
                                                 <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                                                 {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                                                     data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                    data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                    data-widths="[1200]" data-sizes="auto"
                                                     alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
 
                                                 <span class="Image__Loader"></span>
 
-                                                <noscript>
-                                                    <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                        src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                        alt='{{$product->product_name}}' />
-
-                                                    @foreach ($product->images()->get() as $key => $image)
-                                                    {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                        @if($product->image != $image->image_url)
-                                                            <img class="ProductItem__Image"
-                                                                src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                                alt='{{$product->product_name}}' />
-                                                        @endif
-                                                    @endforeach
-                                                </noscript>
                                             </div>
                                         </a>
                                         <div class="ProductItem__Info ProductItem__Info--center">
@@ -245,44 +231,44 @@
 </div>
 @push('scripts')
     <script>
-        $(".Popover__Value").click(function() {
-            console.log('clicked');
-            $('.PageOverlay').removeClass('is-visible');
-            $('html').removeClass('no-scroll');
-            $('.PageOverlay').trigger("click");
-            // $('#main-overlay').trigger("click");
-            $('#main-overlay').attr("style", "display: none;");
+        // $(".Popover__Value").click(function() {
+        //     console.log('clicked');
+        //     $('.PageOverlay').removeClass('is-visible');
+        //     $('html').removeClass('no-scroll');
+        //     $('.PageOverlay').trigger("click");
+        //     // $('#main-overlay').trigger("click");
+        //     $('#main-overlay').attr("style", "display: none;");
 
 
-            // var evt = document.createEvent("HTMLEvents");
-            // evt.initEvent("click", true, true);
-            // document.getElementById('main-overlay').dispatchEvent(evt);
-        });
+        //     // var evt = document.createEvent("HTMLEvents");
+        //     // evt.initEvent("click", true, true);
+        //     // document.getElementById('main-overlay').dispatchEvent(evt);
+        // });
 
-        $(".CollectionToolbar__Item--sort").click(function() {
-                $('html').removeClass('no-scroll');
-                // $('#main-overlay').trigger("click");
+        // $(".CollectionToolbar__Item--sort").click(function() {
+        //         $('html').removeClass('no-scroll');
+        //         // $('#main-overlay').trigger("click");
 
-                $('#main-overlay').attr("style", "display: none;");
+        //         $('#main-overlay').attr("style", "display: none;");
 
-                // var evt = document.createEvent("HTMLEvents");
-                // evt.initEvent("click", true, true);
-                // document.getElementById('main-overlay').dispatchEvent(evt);
+        //         // var evt = document.createEvent("HTMLEvents");
+        //         // evt.initEvent("click", true, true);
+        //         // document.getElementById('main-overlay').dispatchEvent(evt);
 
 
-            });
+        //     });
 
-        $(".bc-sf-filter-block-content").click(function() {
-            $('.close-filter').trigger("click");
-            $('.PageOverlay').trigger("click");
-            // $('#main-overlay').trigger("click");
+        // $(".bc-sf-filter-block-content").click(function() {
+        //     $('.close-filter').trigger("click");
+        //     $('.PageOverlay').trigger("click");
+        //     // $('#main-overlay').trigger("click");
 
-            $('#main-overlay').attr("style", "display: none;");
+        //     $('#main-overlay').attr("style", "display: none;");
 
-            // var evt = document.createEvent("HTMLEvents");
-            // evt.initEvent("click", true, true);
-            // document.getElementById('main-overlay').dispatchEvent(evt);
-        });
+        //     // var evt = document.createEvent("HTMLEvents");
+        //     // evt.initEvent("click", true, true);
+        //     // document.getElementById('main-overlay').dispatchEvent(evt);
+        // });
     </script>
 @endpush
 

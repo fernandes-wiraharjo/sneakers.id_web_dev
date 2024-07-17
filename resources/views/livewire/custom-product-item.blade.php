@@ -11,20 +11,11 @@
                         <img class="ProductItem__Image {{$key == 0 ? 'ProductItem__Image--alternate' : ''}} Image--lazyLoad Image--fadeIn"
                         {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                             data-src="{{ getImage($image->image_url, 'products') }}"
-                            data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                            data-widths="[1800]" data-sizes="auto"
                             alt='{{$item->product_name}}' data-image-id="{{$image->id}}" />
                         @endforeach
 
                         <span class="Image__Loader"></span>
-
-                        <noscript>
-                            @foreach ($item->images()->get() as $key => $image)
-                            {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                            <img class="ProductItem__Image {{$key == 0 ? 'ProductItem__Image--alternate' : ''}}"
-                                src="{{ getImage($image->image_url, 'products') }}"
-                                alt='{{$item->product_name}}' />
-                            @endforeach
-                        </noscript>
                     </div>
                 </a>
                 <div class="ProductItem__Info ProductItem__Info--center">

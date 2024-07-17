@@ -162,21 +162,6 @@
                                                 alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
 
                                             <span class="Image__Loader"></span>
-
-                                            <noscript>
-                                                <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                    src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                    alt='{{$product->product_name}}' />
-
-                                                @foreach ($product->images()->get() as $key => $image)
-                                                {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                    @if($product->image != $image->image_url)
-                                                        <img class="ProductItem__Image"
-                                                            src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                            alt='{{$product->product_name}}' />
-                                                    @endif
-                                                @endforeach
-                                            </noscript>
                                         </div>
                                     </a>
                                     <div class="ProductItem__Info ProductItem__Info--center">
@@ -227,16 +212,16 @@
 </div>
 @push('scripts')
     <script>
-        $(".Popover__Value").click(function() {
-            $('.PageOverlay').removeClass('is-visible');
-            $('html').removeClass('no-scroll');
-            $('.PageOverlay').trigger("click");
-        });
+        // $(".Popover__Value").click(function() {
+        //     $('.PageOverlay').removeClass('is-visible');
+        //     $('html').removeClass('no-scroll');
+        //     $('.PageOverlay').trigger("click");
+        // });
 
-        $(".bc-sf-filter-block-content").click(function() {
-            $('.close-filter').trigger("click");
-            $('.PageOverlay').trigger("click");
-        });
+        // $(".bc-sf-filter-block-content").click(function() {
+        //     $('.close-filter').trigger("click");
+        //     $('.PageOverlay').trigger("click");
+        // });
     </script>
 @endpush
 

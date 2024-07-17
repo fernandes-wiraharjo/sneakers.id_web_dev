@@ -16,7 +16,7 @@
                             <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
                             {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                                 data-src="{{ getImage($image->image_url, 'products/'.$item->product_code) }}"
-                                data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                data-widths="[1800]" data-sizes="auto"
                                 alt='{{$item->product_name}}' data-image-id="{{$image->id}}" />
                         @endif
                     @endforeach
@@ -24,25 +24,10 @@
                     <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                     {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                         data-src="{{ getImage($item->image, 'products/'.$item->product_code) }}"
-                        data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                        data-widths="[1800]" data-sizes="auto"
                         alt='{{$item->product_name}}' data-image-id="{{$item->id}}" />
 
                     <span class="Image__Loader"></span>
-
-                    <noscript>
-                        @foreach ($item->images()->get() as $key => $image)
-                        {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                            @if($item->image != $image->image_url)
-                                <img class="ProductItem__Image ProductItem__Image--alternate"
-                                    src="{{ getImage($image->image_url, 'products/'.$item->product_code) }}"
-                                    alt='{{$item->product_name}}' />
-                            @endif
-                        @endforeach
-
-                        <img class="ProductItem__Image"
-                            src="{{ getImage($item->image, 'products/'.$item->product_code) }}"
-                            alt='{{$item->product_name}}' />
-                    </noscript>
                 </div>
             </a>
             <div class="ProductItem__Info ProductItem__Info--center">

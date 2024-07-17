@@ -102,15 +102,6 @@
                                             @endforeach
 
                                             <span class="Image__Loader"></span>
-
-                                            <noscript>
-                                                @foreach ($product->images()->get() as $key => $image)
-                                                    {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                    <img class="ProductItem__Image {{ $key == 0 ? 'ProductItem__Image--alternate' : '' }}"
-                                                        src="{{ getImage($image->image_url, 'products') }}"
-                                                        alt='{{ $product->product_name }}' />
-                                                @endforeach
-                                            </noscript>
                                         </div>
                                     </a>
                                     <div class="ProductItem__Info ProductItem__Info--center">

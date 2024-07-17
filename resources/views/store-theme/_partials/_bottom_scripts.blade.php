@@ -1,4 +1,4 @@
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     $(document).ready(function() {
         $('.Product__SlideshowNavImage').click(function(){
             $('.Product__SlideItem').removeClass('is-selected');
@@ -33,8 +33,9 @@
                 console.log("clicked UL");
             });
     });
-</script>
-<script src="https://use.fontawesome.com/eeb42b6d4d.js"></script>
+</script> --}}
+<script src="{{ asset('js/fontawesome.js') }}" defer></script>
+
 
 <script>
     document.getElementById("global_search").oninput = function() {

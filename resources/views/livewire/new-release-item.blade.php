@@ -28,22 +28,6 @@
                         alt='{{$item->product_name}}' data-image-id="{{$item->id}}" />
 
                     <span class="Image__Loader"></span>
-
-                    <noscript>
-                        @foreach ($item->images()->limit(2)->get() as $key => $image)
-                        {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                            @if($item->image != $image->image_url)
-                                <img class="ProductItem__Image ProductItem__Image--alternate"
-                                    src="{{ getImage($image->image_url, 'products/'.$item->product_code) }}"
-                                    alt='{{$item->product_name}}' />
-                            @endif
-                        @endforeach
-
-                        <img class="ProductItem__Image"
-                            src="{{ getImage($item->image, 'products/'.$item->product_code) }}"
-                            alt='{{$item->product_name}}' />
-
-                    </noscript>
                 </div>
             </a>
             <div class="ProductItem__Info ProductItem__Info--center">

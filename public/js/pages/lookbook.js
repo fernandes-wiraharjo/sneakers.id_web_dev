@@ -149,9 +149,9 @@ $(document).ready(function() {
 
 })(jQuery, window, document);
 
-$(".pop").on("click", function(e) {
-    e.preventDefault();
-    var id = $(this).attr('data-id');
-    $('#imagemodal'+id+' #imagepreview'+id).attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
-    $('#imagemodal'+id).modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
-});
+// $(".pop").on("click", function(e) {
+//     e.preventDefault();
+//     var id = $(this).attr('data-id');
+//     $('#imagemodal'+id+' #imagepreview'+id).attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
+//     $('#imagemodal'+id).modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+// });

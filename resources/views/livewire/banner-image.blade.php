@@ -21,7 +21,7 @@
         <div class="Slideshow__Image Container Image--contrast hidden-tablet-and-up"
                 {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
             >
-            <img class="Slideshow__Image "
+            <img fetchpriority="high" class="Slideshow__Image "
                 {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
                 src="{{ getImage($item->banner_image, 'banner') }}"
                 alt="" />

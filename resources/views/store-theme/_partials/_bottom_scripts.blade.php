@@ -34,7 +34,8 @@
             });
     });
 </script> --}}
-<script src="https://use.fontawesome.com/eeb42b6d4d.js"></script>
+<script src="{{ asset('js/fontawesome.js') }}" defer></script>
+
 
 <script>
     document.getElementById("global_search").oninput = function() {

@@ -4,7 +4,6 @@
 @section('description', strip_tags($product->description))
 
 @push('styles')
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/product-detail.css') }}" />
 <style>
     .Button--selected {
@@ -388,10 +387,6 @@
                                     data-original-src="{{ getImageGallery($product->image, 'products/' . $product->product_code) }}" />
 
                                 <span class="Image__Loader"></span>
-                                <noscript>
-                                    <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
-                                        alt='{{ $product->product_name }}' />
-                                </noscript>
                             </div>
                         </div>
                         @foreach ($product->images as $item)
@@ -415,10 +410,6 @@
                                             data-original-src="{{ getImageGallery($item->image_url, 'products/' . $product->product_code) }}" />
 
                                         <span class="Image__Loader"></span>
-                                        <noscript>
-                                            <img src="/{{ getImage($item->image_url, 'products/' . $product->product_code) }}"
-                                                alt='{{ $product->product_name }}' />
-                                        </noscript>
                                     </div>
                                 </div>
                                 @php
@@ -637,20 +628,20 @@
 
         var product_variants_removed = [];
 
-        $(".pop").on("click", function(e) {
-            e.preventDefault();
-            // $('#imagemodal').attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
-            $('#sizeModal').modal(
-            'show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
-        });
+        // $(".pop").on("click", function(e) {
+        //     e.preventDefault();
+        //     // $('#imagemodal').attr('src', $('#imageresource'+id).attr('src')); // here asign the image to the modal when the user click the enlarge link
+        //     $('#sizeModal').modal(
+        //     'show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+        // });
 
-        $(document).ready(function() {
-            $('.size-item').click(function() {
-                console.log($(this).find('#size:checked').attr('data-price'));
-                $('#retail').text($(this).find('#size:checked').attr('data-price'));
-                $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
-                $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
-            });
-        });
+        // $(document).ready(function() {
+        //     $('.size-item').click(function() {
+        //         console.log($(this).find('#size:checked').attr('data-price'));
+        //         $('#retail').text($(this).find('#size:checked').attr('data-price'));
+        //         $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
+        //         $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
+        //     });
+        // });
     </script>
 @endpush

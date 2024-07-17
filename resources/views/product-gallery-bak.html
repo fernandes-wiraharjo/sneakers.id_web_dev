@@ -39,10 +39,6 @@
                                 data-original-src="{{ getImageGallery($product->image, 'products/' . $product->product_code) }}" />
 
                             <span class="Image__Loader"></span>
-                            <noscript>
-                                <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
-                                    alt='{{ $product->product_name }}' />
-                            </noscript>
                         </div>
                     </div>
                     @foreach ($product->images as $item)
@@ -66,10 +62,6 @@
                                         data-original-src="{{ getImageGallery($item->image_url, 'products/' . $product->product_code) }}" />
 
                                     <span class="Image__Loader"></span>
-                                    <noscript>
-                                        <img src="/{{ getImage($item->image_url, 'products/' . $product->product_code) }}"
-                                            alt='{{ $product->product_name }}' />
-                                    </noscript>
                                 </div>
                             </div>
                             @php

@@ -1,4 +1,4 @@
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     $(document).ready(function() {
         $('.Product__SlideshowNavImage').click(function(){
             $('.Product__SlideItem').removeClass('is-selected');
@@ -33,7 +33,7 @@
                 console.log("clicked UL");
             });
     });
-</script>
+</script> --}}
 <script src="https://use.fontawesome.com/eeb42b6d4d.js"></script>
 
 <script>

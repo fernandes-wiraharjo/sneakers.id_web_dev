@@ -78,33 +78,48 @@ if (!function_exists('imageUpload')) {
      * $type => 'public' / 'storage' / 's3'
      * @return $newfilename
      */
-    function imageUpload($file, $path, $type, $queue = false, $number = 0, $custom_name = '')
+    function imageUpload($file, $path, $type, $queue = false, $number = 0, $custom_name = '', $width = null, $height = null)
     {
-        $imageName = time().'.'.$file->extension();
+        $imageName = time() . '.' . $file->extension();
 
-        if($queue){
-            $imageName = $number.'_'.($custom_name != '' ? $custom_name .'_' : '').$imageName;
+        if ($queue) {
+            $imageName = $number . '_' . ($custom_name != '' ? $custom_name . '_' : '') . $imageName;
         }
 
         switch ($type) {
-            case 'public' :
+            case 'public':
                 $path = public_path($path);
-                $stored = $file->move($path, $imageName);
-            break;
-            case 'storage' :
+
+                if (!File::isDirectory($path)) {
+                    File::makeDirectory($path, 0777, true, true);
+                }
+
+                $img = Image::make($file); // Create image object from uploaded file
+
+                // Resize if width and height are provided
+                if ($width && $height) {
+                    $img->resize($width, $height, function ($constraint) {
+                        $constraint->aspectRatio(); // Maintain aspect ratio
+                    });
+                }
+
+                $img->save($path . '/' . $imageName, 80); // Save image with quality 80
+
+                $stored = true; // Flag successful save
+                break;
+            case 'storage':
                 $stored = $file->storeAs($path, $imageName);
-            break;
-            case 's3' :
-                $stored = $file->storeAs($path,$imageName,'s3');
-            break;
+                break;
+            case 's3':
+                $stored = $file->storeAs($path, $imageName, 's3');
+                break;
         }
 
-        if($stored){
+        if ($stored) {
             return $imageName;
         } else {
             return false;
         }
-        //return $imageName;
     }
 }
 
@@ -144,7 +159,7 @@ if(!function_exists('imageUploadProduct')) {
 
                     $img->resize($item, $item, function ($const) {
                         $const->aspectRatio();
-                    })->save($path.'/'.$resize_file_name);
+                    })->save($path.'/'.$resize_file_name, 80);
                 }
 
 

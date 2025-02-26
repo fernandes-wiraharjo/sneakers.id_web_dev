@@ -9,7 +9,8 @@
         <link rel="apple-touch-icon" href="https://sneakers.id/stores-info/logos.png"/>
 
         <!-- Primary Meta Tags -->
-        <title>SNEAKERS.ID - @yield('title')</title>
+        <!-- <title>SNEAKERS.ID - @yield('title')</title> -->
+         <title>SNEAKERS.ID</title>
         <!-- Primary Meta Tags -->
         <meta name="title" content="SNEAKERS.ID — @if(trim($__env->yieldContent('title'))) @yield('title') @else 'WE AIN'T TALKIN' BOUT FAKE' }} @endif">
         <meta name="keyword" content="nike sneakers, new balance sneakers, shoes, sport shoes, sepatu sneakers, sneaker, sepatu sneakers wanita, sepatu sneakers pria, adidas, sepatu adidas, sepatu air jordan, sepatu nike, nike, air jordan, original, sepatu original, sneakers original, sneakers asli, sepatu sneakers original, sepatu original sneakers, sneakers.id, jakarta sneakers day, sepatu sneakers jakarta" >

@@ -81,11 +81,17 @@ class BannerRepository extends Repository implements MasterRepositoryInterface {
     return $this->getBannerById($id)->delete();
   }
 
-  public function getBannerOrdered($limit = 5, $offset = 0){
-      return $this->model->where('is_active', 1)
-        ->offset($offset)
-        ->limit($limit)
-        ->orderBy('order','ASC')
-        ->get();
+  public function getBannerOrdered(){
+    return $this->model->where('is_active', 1)
+      ->orderBy('order','ASC')
+      ->get();
   }
 }
+
+// public function getBannerOrdered($limit = 5, $offset = 0){
+//     return $this->model->where('is_active', 1)
+//       ->offset($offset)
+//       ->limit($limit)
+//       ->orderBy('order','ASC')
+//       ->get();
+// }

@@ -72,11 +72,11 @@
                 <div class="Footer__Copyright">
                     <span class="Footer__StoreName Heading u-h7 ">Developed by : </span>
                     <br>
-                    <a href="https://fw-wq9n.onrender.com/" class="Footer__StoreName Heading u-h8 Link Link--secondary"
-                        style="padding-block-start: 10px">Fernandes Wiraharjo</a>
+                    <a href="https://fernandesdev.com/" class="Footer__StoreName Heading u-h8 Link Link--secondary"
+                        style="padding-block-start: 10px" target="_blank">Fernandes Wiraharjo</a>
                     <br>
                     <a href="https://aldy-portofolio.vercel.app/" class="Footer__StoreName Heading u-h8 Link Link--secondary"
-                        style="padding-block-start: 10px">Aldy Satria Gumilar
+                        style="padding-block-start: 10px" target="_blank">Aldy Satria Gumilar
                     </a>
                 </div>
             </div>

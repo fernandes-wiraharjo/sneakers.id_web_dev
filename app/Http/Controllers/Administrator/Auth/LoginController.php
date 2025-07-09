@@ -175,22 +175,31 @@ class LoginController extends Controller
         $message = 'Sorry your email cannot be identified.';
 
         if(!is_null($verifyUser) ){
-            $user = $verifyUser->user;
-
-            if(!$user->is_email_verified) {
-                $verifyUser->user->is_email_verified = 1;
-                $verifyUser->user->save();
-                $message = "Your e-mail is verified. You can now login.";
-            } else {
-                $message = "Your e-mail is already verified. You can now login.";
-            }
-        } else {
             $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
                 $message->to($verifyUser->user->email);
                 $message->subject('Email Verification Mail');
             });
 
             return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
+
+            // $user = $verifyUser->user;
+
+            // if(!$user->is_email_verified) {
+            //     $verifyUser->user->is_email_verified = 1;
+            //     $verifyUser->user->save();
+            //     $message = "Your e-mail is verified. You can now login.";
+            // } else {
+            //     $message = "Your e-mail is already verified. You can now login.";
+            // }
+        } else {
+            return redirect()->back()->with(['error', $message]);
+
+            // $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
+            //     $message->to($verifyUser->user->email);
+            //     $message->subject('Email Verification Mail');
+            // });
+
+            // return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
         }
     }
 

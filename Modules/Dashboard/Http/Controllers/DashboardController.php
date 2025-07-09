@@ -68,7 +68,11 @@ class DashboardController extends Controller
             )
         );
 
-        $brandItem = TransactionItems::selectRaw('brands.brand_title as title, brands.brand_image as image, count(distinct(product_details.product_id)) as total_product,sum(transaction_items.price) as badge')
+        $brandItem = TransactionItems::selectRaw('
+            MAX(brands.brand_title) as title,
+            MAX(brands.brand_image) as image,
+            COUNT(distinct(product_details.product_id)) as total_product,
+            SUM(transaction_items.price) as badge')
             ->leftJoin('product_details', 'product_detail_id', '=', 'product_details.id')
             ->leftJoin('brands', 'product_details.brand_id', '=', 'brands.id')
             ->groupBy('brands.id')

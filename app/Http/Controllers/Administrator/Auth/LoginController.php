@@ -131,7 +131,8 @@ class LoginController extends Controller
         } catch (\Exception $e) {
             // $mailPort = env('MAIL_PORT', 587);
             // Log::error("Regitration failed: (". $mailPort .") " . $e->getMessage());
-            return back()->with(['message' => 'Failed to register. ' . $e->getMessage()]);
+            // return back()->with(['message' => 'Failed to register. ' . $e->getMessage()]);
+            Log::error("Regitration failed: " . $e->getMessage());
         }
     }
 
@@ -239,12 +240,14 @@ class LoginController extends Controller
                 $verifyUser->user->is_email_verified = 1;
                 $verifyUser->user->save();
                 $message = "Your e-mail is verified. You can now login.";
+                return redirect()->route('customer.login')->with(['success'=> [$message]]);
             } else {
                 $message = "Your e-mail is already verified. You can now login.";
+                return redirect()->route('customer.login')->with(['success'=> [$message]]);
             }
         }
 
-      return redirect()->route('customer.login')->with(['message'=> $message]);
+        return redirect()->route('customer.login')->with(['message'=> $message]);
     }
 
     /**

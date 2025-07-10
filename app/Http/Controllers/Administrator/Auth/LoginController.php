@@ -15,6 +15,8 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 
 class LoginController extends Controller
 {
@@ -87,36 +89,50 @@ class LoginController extends Controller
      */
     public function postRegistration(Request $request)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-
-        $token = Str::random(64);
-        $request['role_id'] = 2;
-        $request['remember_token'] = $token;
-        $request['name'] = $request['first_name'].' '.$request['last_name'];
-
-        $createUser = $this->repository->createUserCustomer($request);
-
-        UserVerify::create([
-              'user_id' => $createUser->id,
-              'token' => $token
+        try {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
             ]);
 
-        $notfiable = [
-            'token' => $token,
-            'request' => $request
-        ];
+            $token = Str::random(64);
+            $request['role_id'] = 2;
+            $request['remember_token'] = $token;
+            $request['name'] = $request['first_name'].' '.$request['last_name'];
 
-        $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $token], function($message) use($request){
-            $message->to($request->email);
-            $message->subject('Email Verification Mail');
-        });
+            $createUser = $this->repository->createUserCustomer($request);
 
-        return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
+            UserVerify::create([
+                'user_id' => $createUser->id,
+                'token' => $token
+                ]);
+
+            $notfiable = [
+                'token' => $token,
+                'request' => $request
+            ];
+
+            // Log::info("Sending email to: " . $request->email);
+            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $token], function($message) use($request){
+                $message->to($request->email);
+                $message->subject('Email Verification Mail');
+            });
+            // Log::info("Mail send result: ", ['result' => $sendMail]);
+
+            // if (count(Mail::failures()) > 0) {
+            //     Log::error('Mail failed: ', Mail::failures());
+            // } else {
+            //     Log::info('Mail sent successfully to ' . $request->email);
+            // }
+
+            return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
+        } catch (\Exception $e) {
+            // $mailPort = env('MAIL_PORT', 587);
+            // Log::error("Regitration failed: (". $mailPort .") " . $e->getMessage());
+            return back()->with(['message' => 'Failed to register. ' . $e->getMessage()]);
+        }
     }
 
     /**

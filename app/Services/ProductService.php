@@ -6,7 +6,6 @@ use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\File;
-use Modules\Transaction\Entities\TransactionItems;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
@@ -84,7 +83,6 @@ class ProductService {
                             'brand_id' => $request['brand_id'],
                             'size' => $item['size'],
                             'qty' => intval($item['qty']),
-                            'weight' => intval($item['weight']),
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
@@ -147,7 +145,6 @@ class ProductService {
 	}
 
     public function updateProduct($id, $request){
-        $message = '';
         $product = [
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
@@ -155,8 +152,10 @@ class ProductService {
             'shopee_link' => $request['shopee_link'],
             'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
-            'is_active' => $request['is_active']
+            'is_active' => $request['is_active'],
+            'updated_at' => Carbon::now()
         ];
+
         $getProduct = $this->productRepository->getProductById($id);
         $oldDetail = $getProduct->details()->pluck('id')->toArray();
         $detail_ids = [];
@@ -187,6 +186,10 @@ class ProductService {
                         $deleted = $this->productRepository->deleteProductImageByImageId($removed_file, $id);
                     }
                 }
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }
 
             if(isset($request['products_image'])){
@@ -219,6 +222,10 @@ class ProductService {
                     $getProduct->image = $request['is_main'];
                     $getProduct->save();
                 }
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }
 
             //sync unused file
@@ -232,13 +239,12 @@ class ProductService {
 
             if($diff = array_diff($oldDetail, $detail_ids)){
                 foreach($diff as $itemDiff) {
-                    $check_transactions = TransactionItems::where('product_detail_id', $itemDiff)->first();
-                    if(!$check_transactions) {
-                        $this->productRepository->deleteProductDetail($itemDiff);
-                    } else {
-                        $message = 'There are sizes that cannot be deleted because they already have transaction data';
-                    }
+                    $this->productRepository->deleteProductDetail($itemDiff);
                 }
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }
 
             foreach($request['size_price'] as $item){
@@ -248,22 +254,29 @@ class ProductService {
                             'brand_id' => $request['brand_id'],
                             'size' => $item['size'],
                             'qty' => intval($item['qty']),
-                            'weight' => intval($item['weight']),
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
                             'discount_percentage' => intval($item['discount_percentage'])
+                        ]);
+
+                        $updateTimestamps = $getProduct->update([
+                            'updated_at' => Carbon::now()
                         ]);
                     } else {
                         $this->productRepository->insertProductDetails([
                             'product_id' => $id,
                             'brand_id' => $request['brand_id'],
                             'size' => $item['size'],
-                            'weight' => intval($item['weight']),
+                            'qty' => intval($item['qty']),
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
                             'discount_percentage' => intval($item['discount_percentage'])
+                        ]);
+
+                        $updateTimestamps = $getProduct->update([
+                            'updated_at' => Carbon::now()
                         ]);
                     }
                 }
@@ -304,8 +317,16 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductCategories($id, $categories_id);
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }  else {
                 $this->productRepository->syncProductCategories($id);
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }
 
             if(isset($tags)){
@@ -314,8 +335,16 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductTags($id, $tags_id);
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             } else {
                 $this->productRepository->syncProductTags($id);
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }
 
             if(isset($signatures)){
@@ -324,11 +353,19 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductSignatures($id, $signatures_id);
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             } else {
                 $this->productRepository->syncProductSignatures($id);
+
+                $updateTimestamps = $getProduct->update([
+                    'updated_at' => Carbon::now()
+                ]);
             }
         }
-        return ['status' => true, 'message' => $message];
+        return true;
     }
 
     public function generateProductCode()

@@ -44,6 +44,10 @@
                             </div>
                         </div>
                         <div class="Collapsible">
+                            <a href="{{ route('collections', 'sale.all') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SALE<span
+                                        class="Header__LinkSpacer">SALE</span></a>
+                        </div>
+                        <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
                                 data-action="toggle-collapsible" aria-expanded="false">MEN'S<span
                                     class="Collapsible__Plus"></span></button>
@@ -70,7 +74,7 @@
                                         </a>
                                     </div>
                                     <div class="Collapsible">
-                                        <a href="{{ route('collections', 'accesories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                        <a href="{{ route('collections', 'accessories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                             ACCESSORIES
                                         </a>
                                     </div>
@@ -111,7 +115,7 @@
                                             </a>
                                         </div>
                                         <div class="Collapsible">
-                                            <a href="{{ route('collections', 'accesories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            <a href="{{ route('collections', 'accessories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                                 ACCESSORIES
                                             </a>
                                         </div>
@@ -151,7 +155,7 @@
                                         </a>
                                     </div>
                                     <div class="Collapsible">
-                                        <a href="{{ route('collections', 'accesories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                        <a href="{{ route('collections', 'accessories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                             ACCESSORIES
                                         </a>
                                     </div>
@@ -160,6 +164,22 @@
                                             SALE
                                         </a>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Collapsible">
+                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
+                                data-action="toggle-collapsible" aria-expanded="false">Signature Athlete<span
+                                    class="Collapsible__Plus"></span></button>
+                            <div class="Collapsible__Inner">
+                                <div class="Collapsible__Content">
+                                    @foreach ($signature as $item)
+                                        <div class="Collapsible">
+                                            <a href="{{ route('collections', 'signatures.'. $item->id) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                                {{ $item->signature_title}}
+                                            </a>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -178,6 +198,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="Collapsible">
+                            <a href="{{ route('collections', 'all.PREOWNED') }}" class="Collapsible__Button Heading Link Link--primary u-h6">PREOWNED<span
+                                        class="Header__LinkSpacer">PREOWNED</span></a>
+                        </div>
                         {{-- <div class="Collapsible">
                             <a href="{{ route('lookbook', 1) }}" class="Collapsible__Button Heading Link Link--primary u-h6">LOOKBOOK<span
                                         class="Header__LinkSpacer">LOOKBOOK</span></a>
@@ -188,9 +212,10 @@
                                         OWNED</span></a>
                         </div>
                         <div class="Collapsible">
+                        {{-- <div class="Collapsible">
                             <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
                                         class="Header__LinkSpacer">SIZE CHART</span></a>
-                        </div>
+                        </div> --}}
                     </nav>
 
                     @if(auth()->check())
@@ -313,6 +338,9 @@
                                     </ul>
                                 </div>
                             </li>
+                            <li class="HorizontalList__Item">
+                                <a href="{{ route('collections', 'sale.all') }}" class="Heading u-h6 main-heading-text">SALE<span class="Header__LinkSpacer">SALE</span></a>
+                            </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="{{ route('collections', 'all.MENS') }}"
                                     class="Heading u-h6 main-heading-text">MEN'S<span
@@ -344,7 +372,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accesories.MENS') }}"
+                                            <a href="{{ route('collections', 'accessories.MENS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -389,7 +417,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accesories.WOMENS') }}"
+                                            <a href="{{ route('collections', 'accessories.WOMENS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -434,7 +462,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accesories.KIDS') }}"
+                                            <a href="{{ route('collections', 'accessories.KIDS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -445,6 +473,23 @@
                                                 SALE
                                             </a>
                                         </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="{{ route('collections', 'signatures.all') }}"
+                                    class="Heading u-h6 main-heading-text">Signature Athlete<span
+                                        class="Header__LinkSpacer">Signature Athlete</span></a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        @foreach ($signature as $item)
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'signatures.'. $item->id) }}"
+                                                class="Link Link--secondary">
+                                                {{ $item->signature_title}}
+                                            </a>
+                                        </li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </li>
@@ -468,10 +513,10 @@
                                 <a href="{{ route('collections', 'all.PREOWNED') }}" class="Heading u-h6 main-heading-text">PRE
                                     OWNED<span class="Header__LinkSpacer">PRE OWNED</span></a>
                             </li>
-                            <li class="HorizontalList__Item">
+                            {{-- <li class="HorizontalList__Item">
                                 <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">SIZE
                                     CHART<span class="Header__LinkSpacer">SIZE CHART</span></a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </nav>
                 </div>

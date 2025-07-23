@@ -8,3 +8,14 @@
 
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('css/fonts.css') }}" />
 <link rel="stylesheet" type="text/css" media="all" href="{{ asset('css/extra.css') }}" />
+
+<style>
+    #total_result_line {
+        padding: 0 5px !important;
+    }
+    #total_result {
+        display: inline-block;
+        line-height: 3;
+        margin: 8px;
+    }
+</style>

@@ -14,6 +14,10 @@
         .Drawer__Main {
             padding-left: 20px !important;
         }
+
+        .CollectionToolbar {
+            position: inherit !important;
+        }
     </style>
 @endpush
 <div>
@@ -33,9 +37,9 @@
                     </svg>
                 </a>
             </div>
-
-            <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
-                <div class="Search__InputIconWrapper">
+            <div class="Search__SearchBar" style="margin-left: 20px; width: 100%; justify-content: center;">
+            {{ $total_product }} PRODUCTS
+            {{--    <div class="Search__InputIconWrapper">
                     <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
                             viewBox="0 0 18 17">
                             <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
@@ -58,7 +62,7 @@
 
                 <input wire:model="search" type="text" class="Search__Input Heading ui-autocomplete-input"
                     autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..."
-                    autofocus="" >
+                    autofocus="" > --}}
             </div>
         </div>
         <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
@@ -92,10 +96,10 @@
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('product_name', 'DESC')">
                     Alphabetically, Z-A
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'ASC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('actual_product_prize', 'ASC')">
                     Price, low to high
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.retail_price', 'DESC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('actual_product_prize', 'DESC')">
                     Price, high to low
                     </a>
                     {{-- <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
@@ -106,6 +110,9 @@
                     </a>
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.created_at', 'DESC')">
                     Date, new to old
+                    </a>
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.updated_at', 'DESC')">
+                    Date, last updated
                     </a>
                 </div>
             </div>
@@ -160,7 +167,7 @@
                                                         <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
                                                         {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                                                             data-src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                            data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                            data-widths="[1200]" data-sizes="auto"
                                                             alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
                                                     @endif
                                                 @endforeach
@@ -168,25 +175,11 @@
                                                 <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                                                 {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
                                                     data-src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                    data-widths="[200,300,400,600,800,900,1000,1200]" data-sizes="auto"
+                                                    data-widths="[1200]" data-sizes="auto"
                                                     alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
 
                                                 <span class="Image__Loader"></span>
 
-                                                <noscript>
-                                                    <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                        src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                        alt='{{$product->product_name}}' />
-
-                                                    @foreach ($product->images()->get() as $key => $image)
-                                                    {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                        @if($product->image != $image->image_url)
-                                                            <img class="ProductItem__Image"
-                                                                src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                                alt='{{$product->product_name}}' />
-                                                        @endif
-                                                    @endforeach
-                                                </noscript>
                                             </div>
                                         </a>
                                         <div class="ProductItem__Info ProductItem__Info--center">
@@ -196,14 +189,25 @@
                                             <div class="ProductItem__PriceList Heading">
                                                 <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
                                                         @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
-                                                            <span class="money">
-                                                                RP.
-                                                                <del>
-                                                                    {{ rupiah_format(intval($product->retail_price ?? 0)) }}
-                                                                </del>
-                                                                <span style="position:inherit; font-weight: 800;">
-                                                                    {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
-                                                            </span>
+                                                            <div class="discount-money">
+                                                                <span style="position:inherit; font-weight: 800; font-size: 16px; color:red;">
+                                                                    Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}
+                                                                </span>
+                                                            </div>
+                                                            <div class="del-price-money">
+                                                                <span class="money">
+                                                                    <del>
+                                                                        RP {{ rupiah_format(intval($product->retail_price ?? 0)) }}
+                                                                    </del>
+                                                                </span>
+                                                                &nbsp;
+                                                                <br>
+                                                                {{-- @if ($product->discount_percentage > 0) --}}
+                                                                    <span class="disc-off" style="font-weight: 400; font-size: 15px; color:red;">
+                                                                        {{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF
+                                                                    </span>
+                                                                {{-- @endif --}}
+                                                            </div>
                                                         @else
                                                             <span class="money" >RP.
                                                                 {{ rupiah_format(intval($product->retail_price ?? 0)) }}
@@ -218,7 +222,7 @@
                         </div>
                     </div>
                     <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                        {{ $products->links('vendor.livewire.bootstrap') }}
+                        {{ $products->onEachSide(1)->links('vendor.livewire.bootstrap') }}
                     </div>
                 </div>
             </div>
@@ -227,43 +231,44 @@
 </div>
 @push('scripts')
     <script>
-        $(".Popover__Value").click(function() {
-            $('.PageOverlay').removeClass('is-visible');
-            $('html').removeClass('no-scroll');
-            $('.PageOverlay').trigger("click");
-            // $('#main-overlay').trigger("click");
-            $('#main-overlay').attr("style", "display: none;");
+        // $(".Popover__Value").click(function() {
+        //     console.log('clicked');
+        //     $('.PageOverlay').removeClass('is-visible');
+        //     $('html').removeClass('no-scroll');
+        //     $('.PageOverlay').trigger("click");
+        //     // $('#main-overlay').trigger("click");
+        //     $('#main-overlay').attr("style", "display: none;");
 
 
-            // var evt = document.createEvent("HTMLEvents");
-            // evt.initEvent("click", true, true);
-            // document.getElementById('main-overlay').dispatchEvent(evt);
-        });
+        //     // var evt = document.createEvent("HTMLEvents");
+        //     // evt.initEvent("click", true, true);
+        //     // document.getElementById('main-overlay').dispatchEvent(evt);
+        // });
 
-        $(".CollectionToolbar__Item--sort").click(function() {
-                $('html').removeClass('no-scroll');
-                // $('#main-overlay').trigger("click");
+        // $(".CollectionToolbar__Item--sort").click(function() {
+        //         $('html').removeClass('no-scroll');
+        //         // $('#main-overlay').trigger("click");
 
-                $('#main-overlay').attr("style", "display: none;");
+        //         $('#main-overlay').attr("style", "display: none;");
 
-                // var evt = document.createEvent("HTMLEvents");
-                // evt.initEvent("click", true, true);
-                // document.getElementById('main-overlay').dispatchEvent(evt);
+        //         // var evt = document.createEvent("HTMLEvents");
+        //         // evt.initEvent("click", true, true);
+        //         // document.getElementById('main-overlay').dispatchEvent(evt);
 
 
-            });
+        //     });
 
-        $(".bc-sf-filter-block-content").click(function() {
-            $('.close-filter').trigger("click");
-            $('.PageOverlay').trigger("click");
-            // $('#main-overlay').trigger("click");
+        // $(".bc-sf-filter-block-content").click(function() {
+        //     $('.close-filter').trigger("click");
+        //     $('.PageOverlay').trigger("click");
+        //     // $('#main-overlay').trigger("click");
 
-            $('#main-overlay').attr("style", "display: none;");
+        //     $('#main-overlay').attr("style", "display: none;");
 
-            // var evt = document.createEvent("HTMLEvents");
-            // evt.initEvent("click", true, true);
-            // document.getElementById('main-overlay').dispatchEvent(evt);
-        });
+        //     // var evt = document.createEvent("HTMLEvents");
+        //     // evt.initEvent("click", true, true);
+        //     // document.getElementById('main-overlay').dispatchEvent(evt);
+        // });
     </script>
 @endpush
 

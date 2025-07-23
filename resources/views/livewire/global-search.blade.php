@@ -15,6 +15,10 @@
         .Drawer__Main {
             padding-left: 20px !important;
         }
+
+        .CollectionToolbar {
+            position: inherit !important;
+        }
     </style>
 @endpush
 <div>
@@ -83,11 +87,16 @@
                         <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'DESC')">
                         Date, new to old
                         </a>
+                        <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.updated_at', 'DESC')">
+                        Date, last updated
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="Search__SearchBar" style="margin-left: 20px; width: 100%;">
-                <div class="Search__InputIconWrapper">
+                <div class="Search__SearchBar" style="margin-left: 20px; width: 100%; justify-content: center;">
+                  {{ $total_product }} PRODUCTS ABOUT "{{ strtoupper($keyword) }}"
+                {{-- <div class="Search__InputIconWrapper">
                     <span class="hidden-tablet-and-up"><svg class="Icon Icon--search" role="presentation"
                             viewBox="0 0 18 17">
                             <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
@@ -110,7 +119,8 @@
 
                 <input wire:model="search" type="text" class="Search__Input Heading ui-autocomplete-input"
                     autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..."
-                    autofocus="" >
+                    autofocus="" > --}}
+                </div>
             </div>
         </div>
         <div class="CollectionInner">
@@ -152,21 +162,6 @@
                                                 alt='{{$product->product_name}}' data-image-id="{{$product->id}}" />
 
                                             <span class="Image__Loader"></span>
-
-                                            <noscript>
-                                                <img class="ProductItem__Image ProductItem__Image--alternate"
-                                                    src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                                                    alt='{{$product->product_name}}' />
-
-                                                @foreach ($product->images()->get() as $key => $image)
-                                                {{-- BOX-A2_600x.jpg?v=1644800500 --}}
-                                                    @if($product->image != $image->image_url)
-                                                        <img class="ProductItem__Image"
-                                                            src="{{ getImage($image->image_url, 'products/'.$product->product_code) }}"
-                                                            alt='{{$product->product_name}}' />
-                                                    @endif
-                                                @endforeach
-                                            </noscript>
                                         </div>
                                     </a>
                                     <div class="ProductItem__Info ProductItem__Info--center">
@@ -175,20 +170,31 @@
                                         </h2>
                                         <div class="ProductItem__PriceList Heading">
                                             <span class="ProductItem__Price Price Text--subdued" data-money-convertible>
-                                                    @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                                                @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                                                    <div class="discount-money">
+                                                        <span style="position:inherit; font-weight: 800; font-size: 16px; color:red;">
+                                                            Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="del-price-money">
                                                         <span class="money">
-                                                            RP.
                                                             <del>
-                                                                {{ rupiah_format(intval($product->retail_price ?? 0)) }}
+                                                                RP {{ rupiah_format(intval($product->retail_price ?? 0)) }}
                                                             </del>
-                                                            <span style="position:inherit; font-weight: 800;">
-                                                                {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
                                                         </span>
-                                                    @else
-                                                        <span class="money" >RP.
-                                                            {{ rupiah_format(intval($product->retail_price ?? 0)) }}
-                                                        </span>
-                                                    @endif
+                                                        &nbsp;
+                                                        <br>
+                                                        {{-- @if ($product->discount_percentage > 0) --}}
+                                                            <span class="disc-off" style="font-weight: 400; font-size: 15px; color:red;">
+                                                                {{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF
+                                                            </span>
+                                                        {{-- @endif --}}
+                                                    </div>
+                                                @else
+                                                    <span class="money" >RP.
+                                                        {{ rupiah_format(intval($product->retail_price ?? 0)) }}
+                                                    </span>
+                                                @endif
                                             </span>
                                         </div>
                                     </div>
@@ -206,16 +212,16 @@
 </div>
 @push('scripts')
     <script>
-        $(".Popover__Value").click(function() {
-            $('.PageOverlay').removeClass('is-visible');
-            $('html').removeClass('no-scroll');
-            $('.PageOverlay').trigger("click");
-        });
+        // $(".Popover__Value").click(function() {
+        //     $('.PageOverlay').removeClass('is-visible');
+        //     $('html').removeClass('no-scroll');
+        //     $('.PageOverlay').trigger("click");
+        // });
 
-        $(".bc-sf-filter-block-content").click(function() {
-            $('.close-filter').trigger("click");
-            $('.PageOverlay').trigger("click");
-        });
+        // $(".bc-sf-filter-block-content").click(function() {
+        //     $('.close-filter').trigger("click");
+        //     $('.PageOverlay').trigger("click");
+        // });
     </script>
 @endpush
 

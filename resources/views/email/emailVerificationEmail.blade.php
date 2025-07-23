@@ -213,7 +213,7 @@
                                                                         align="center">
 
                                                                         <img align="center" border="0"
-                                                                            src="{{ $message->embed(asset('stores-info/logos-black-transparent.png')) }}" alt=""
+                                                                            src="{{ $message->embed(public_path('stores-info/logos-black-transparent.png')) }}" alt=""
                                                                             title=""
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 25%;max-width: 120px;"
                                                                             width="120" />

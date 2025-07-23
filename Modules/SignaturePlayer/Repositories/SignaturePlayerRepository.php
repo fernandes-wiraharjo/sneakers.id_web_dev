@@ -37,7 +37,7 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
   }
 
   public function getAllSignatures() {
-      return $this->model->where('is_active', 1)->get();
+      return $this->model->where('is_active', 1)->orderBy('signature_title', 'ASC')->get();
   }
 
   public function getSignaturePlayerById($id){

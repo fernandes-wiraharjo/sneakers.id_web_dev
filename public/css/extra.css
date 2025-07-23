@@ -67,8 +67,19 @@
     display: flex;
     list-style-type: none;
     justify-content: center;
-    gap: 40px; /*(ditambahin gap 40px)*/
-}
+    gap: 40px;
+
+    @media (max-width: 768px) {
+      gap: 20px;
+    }
+
+    @media (max-width: 480px) {
+      gap: 10px;
+    }
+
+    /* Add flex-wrap if you want items to wrap automatically: */
+    flex-wrap: wrap;
+  }
 
 li.page-item.active {
     font-size: 25px;

@@ -44,10 +44,6 @@
                             </div>
                         </div>
                         <div class="Collapsible">
-                            <a href="{{ route('collections', 'sale.all') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SALE<span
-                                        class="Header__LinkSpacer">SALE</span></a>
-                        </div>
-                        <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
                                 data-action="toggle-collapsible" aria-expanded="false">MEN'S<span
                                     class="Collapsible__Plus"></span></button>
@@ -74,7 +70,7 @@
                                         </a>
                                     </div>
                                     <div class="Collapsible">
-                                        <a href="{{ route('collections', 'accessories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                        <a href="{{ route('collections', 'accesories.MENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                             ACCESSORIES
                                         </a>
                                     </div>
@@ -115,7 +111,7 @@
                                             </a>
                                         </div>
                                         <div class="Collapsible">
-                                            <a href="{{ route('collections', 'accessories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                            <a href="{{ route('collections', 'accesories.WOMENS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                                 ACCESSORIES
                                             </a>
                                         </div>
@@ -155,7 +151,7 @@
                                         </a>
                                     </div>
                                     <div class="Collapsible">
-                                        <a href="{{ route('collections', 'accessories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
+                                        <a href="{{ route('collections', 'accesories.KIDS') }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
                                             ACCESSORIES
                                         </a>
                                     </div>
@@ -169,83 +165,62 @@
                         </div>
                         <div class="Collapsible">
                             <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
-                                data-action="toggle-collapsible" aria-expanded="false">Signature Athlete<span
-                                    class="Collapsible__Plus"></span></button>
-                            <div class="Collapsible__Inner">
-                                <div class="Collapsible__Content">
-                                    @foreach ($signature as $item)
-                                        <div class="Collapsible">
-                                            <a href="{{ route('collections', 'signatures.'. $item->id) }}" class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">
-                                                {{ $item->signature_title}}
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <div class="Collapsible">
-                            <button class="Collapsible__Button_ Collapsible__Button Heading u-h6"
                                 data-action="toggle-collapsible" aria-expanded="false">BRAND<span
                                     class="Collapsible__Plus"></span></button>
                             <div class="Collapsible__Inner">
                                 <div class="Collapsible__Content">
                                     @foreach ($brand_menu as $item)
-                                        <div class="Collapsible"><a
-                                                href="{{ route('collections', 'all.' . $item->brand_code) }}"
-                                                class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">{{ $item->brand_title }}</a>
-                                        </div>
+                                    <div class="Collapsible"><a
+                                            href="{{ route('collections', 'all.' . $item->brand_code) }}"
+                                            class="Collapsible__Button Heading Text--subdued Link Link--primary u-h7">{{ $item->brand_title }}</a>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
                         </div>
-                        <div class="Collapsible">
-                            <a href="{{ route('collections', 'all.PREOWNED') }}" class="Collapsible__Button Heading Link Link--primary u-h6">PREOWNED<span
-                                        class="Header__LinkSpacer">PREOWNED</span></a>
-                        </div>
                         {{-- <div class="Collapsible">
                             <a href="{{ route('lookbook', 1) }}" class="Collapsible__Button Heading Link Link--primary u-h6">LOOKBOOK<span
-                                        class="Header__LinkSpacer">LOOKBOOK</span></a>
-                        </div> --}}
-                        <div class="Collapsible">
-                            <a href="{{ route('collections', 'all.PREOWNED') }}" class="Collapsible__Button Heading Link Link--primary u-h6">PRE OWNED<span
-                                        class="Header__LinkSpacer">PRE
-                                        OWNED</span></a>
-                        </div>
-                        <div class="Collapsible">
-                        {{-- <div class="Collapsible">
-                            <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
-                                        class="Header__LinkSpacer">SIZE CHART</span></a>
-                        </div> --}}
-                    </nav>
-
-                    @if(auth()->check())
-                    <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
-                        <ul class="Linklist Linklist--spacingLoose">
-                            {{-- <li class="Linklist__Item">
-                                <a href="{{ route('customer.dashboard') }}"
-                                class="Link Link--secondary">MY ACCOUNT </a>
-                            </li> --}}
-                            <li class="Linklist__Item">
-                                <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
-                                    {{ __('Logout') }}
-                                </a>
-                                <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
-                            </li>
-                        </ul>
-                    </nav>
-                    @else
-                    <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
-                        <ul class="Linklist Linklist--spacingLoose">
-                            <li class="Linklist__Item">
-                                <a href="{{ route('customer.login') }}" class="Text--subdued Link Link--primary">Login</a>
-                            </li>
-                        </ul>
-                    </nav>
-                    @endif
+                            class="Header__LinkSpacer">LOOKBOOK</span></a>
+                </div> --}}
+                <div class="Collapsible">
+                    <a href="{{ route('collections', 'all.PREOWNED') }}" class="Collapsible__Button Heading Link Link--primary u-h6">PRE OWNED<span
+                            class="Header__LinkSpacer">PRE
+                            OWNED</span></a>
                 </div>
+                <div class="Collapsible">
+                    <a href="{{ route('size-chart') }}" class="Collapsible__Button Heading Link Link--primary u-h6">SIZE CHART<span
+                            class="Header__LinkSpacer">SIZE CHART</span></a>
+                </div>
+                </nav>
+
+                @if(auth()->check())
+                <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
+                    <ul class="Linklist Linklist--spacingLoose">
+                        {{-- <li class="Linklist__Item">
+                                <a href="{{ route('customer.dashboard') }}"
+                        class="Link Link--secondary">MY ACCOUNT </a>
+                        </li> --}}
+                        <li class="Linklist__Item">
+                            <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
+                                {{ __('Logout') }}
+                            </a>
+                            <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
+                        </li>
+                    </ul>
+                </nav>
+                @else
+                <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
+                    <ul class="Linklist Linklist--spacingLoose">
+                        <li class="Linklist__Item">
+                            <a href="{{ route('customer.login') }}" class="Text--subdued Link Link--primary">Login</a>
+                        </li>
+                    </ul>
+                </nav>
+                @endif
             </div>
         </div>
-    </section>
+</div>
+</section>
 </div>
 @include('display-store.store-theme._partials._cart')
 <div class="PageContainer">
@@ -254,28 +229,28 @@
             <div class="Search__Inner">
                 <div class="Search__SearchBar">
                     {{-- <form action="{{ route('search') }}" class="Search__Form"> --}}
-                        <div class="Search__InputIconWrapper">
-                            <span class="hidden-tablet-and-up">
-                                <svg class="Icon Icon--search" role="presentation" viewBox="0 0 18 17">
-                                    <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
-                                        stroke-linecap="square">
-                                        <path d="M16 16l-5.0752-5.0752"></path>
-                                        <circle cx="6.4" cy="6.4" r="6.4"></circle>
-                                    </g>
-                                </svg>
-                            </span>
-                            <span class="hidden-phone">
-                                <svg class="Icon Icon--search-desktop" role="presentation" viewBox="0 0 21 21">
-                                    <g transform="translate(1 1)" stroke="currentColor" stroke-width="2" fill="none"
-                                        fill-rule="evenodd" stroke-linecap="square">
-                                        <path d="M18 18l-5.7096-5.7096"></path>
-                                        <circle cx="7.2" cy="7.2" r="7.2"></circle>
-                                    </g>
-                                </svg>
-                            </span>
-                        </div>
+                    <div class="Search__InputIconWrapper">
+                        <span class="hidden-tablet-and-up">
+                            <svg class="Icon Icon--search" role="presentation" viewBox="0 0 18 17">
+                                <g transform="translate(1 1)" stroke="currentColor" fill="none" fill-rule="evenodd"
+                                    stroke-linecap="square">
+                                    <path d="M16 16l-5.0752-5.0752"></path>
+                                    <circle cx="6.4" cy="6.4" r="6.4"></circle>
+                                </g>
+                            </svg>
+                        </span>
+                        <span class="hidden-phone">
+                            <svg class="Icon Icon--search-desktop" role="presentation" viewBox="0 0 21 21">
+                                <g transform="translate(1 1)" stroke="currentColor" stroke-width="2" fill="none"
+                                    fill-rule="evenodd" stroke-linecap="square">
+                                    <path d="M18 18l-5.7096-5.7096"></path>
+                                    <circle cx="7.2" cy="7.2" r="7.2"></circle>
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
 
-                        <input type="search" class="Search__Input Heading ui-autocomplete-input" name="q" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." autofocus="" id="global_search">
+                    <input type="search" class="Search__Input Heading ui-autocomplete-input" name="q" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." autofocus="" id="global_search">
 
                     {{-- </form> --}}
 
@@ -338,9 +313,6 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="HorizontalList__Item">
-                                <a href="{{ route('collections', 'sale.all') }}" class="Heading u-h6 main-heading-text">SALE<span class="Header__LinkSpacer">SALE</span></a>
-                            </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="{{ route('collections', 'all.MENS') }}"
                                     class="Heading u-h6 main-heading-text">MEN'S<span
@@ -372,7 +344,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accessories.MENS') }}"
+                                            <a href="{{ route('collections', 'accesories.MENS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -417,7 +389,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accessories.WOMENS') }}"
+                                            <a href="{{ route('collections', 'accesories.WOMENS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -462,7 +434,7 @@
                                             </a>
                                         </li>
                                         <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'accessories.KIDS') }}"
+                                            <a href="{{ route('collections', 'accesories.KIDS') }}"
                                                 class="Link Link--secondary">
                                                 ACCESSORIES
                                             </a>
@@ -477,23 +449,6 @@
                                 </div>
                             </li>
                             <li class="HorizontalList__Item" aria-haspopup="true">
-                                <a href="{{ route('collections', 'signatures.all') }}"
-                                    class="Heading u-h6 main-heading-text">Signature Athlete<span
-                                        class="Header__LinkSpacer">Signature Athlete</span></a>
-                                <div class="DropdownMenu" aria-hidden="true">
-                                    <ul class="Linklist">
-                                        @foreach ($signature as $item)
-                                        <li class="Linklist__Item">
-                                            <a href="{{ route('collections', 'signatures.'. $item->id) }}"
-                                                class="Link Link--secondary">
-                                                {{ $item->signature_title}}
-                                            </a>
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="HorizontalList__Item" aria-haspopup="true">
                                 <a href="{{ route('collections', 'all') }}"
                                     class="Heading u-h6 main-heading-text">BRAND<span
                                         class="Header__LinkSpacer">BRAND</span>
@@ -501,10 +456,10 @@
                                 <div class="DropdownMenu" aria-hidden="true">
                                     <ul class="Linklist">
                                         @foreach ($brand_menu as $item)
-                                            <li class="Linklist__Item">
-                                                <a href="{{ route('collections', 'all.' . $item->brand_code) }}"
-                                                    class="Link Link--secondary">{{ strtoupper($item->brand_title) }}</a>
-                                            </li>
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('collections', 'all.' . $item->brand_code) }}"
+                                                class="Link Link--secondary">{{ strtoupper($item->brand_title) }}</a>
+                                        </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -513,10 +468,10 @@
                                 <a href="{{ route('collections', 'all.PREOWNED') }}" class="Heading u-h6 main-heading-text">PRE
                                     OWNED<span class="Header__LinkSpacer">PRE OWNED</span></a>
                             </li>
-                            {{-- <li class="HorizontalList__Item">
+                            <li class="HorizontalList__Item">
                                 <a href="{{ route('size-chart') }}" class="Heading u-h6 main-heading-text">SIZE
                                     CHART<span class="Header__LinkSpacer">SIZE CHART</span></a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -524,11 +479,11 @@
                     <div class="Header__Logo">
                         <a href="/" class="Header__LogoLink">
                             @if (config('ladmin.logo'))
-                                <img class="Header__LogoImage Header__LogoImage--primary"
-                                    src="{{ config('ladmin.logo') }}"
-                                    srcset="{{ config('ladmin.logo') }} 1x, {{ config('ladmin.logo') }} 2x"
-                                    height="100px" width="auto" style="max-height: 90px !important;"
-                                    alt="{{ config('app.name') }}" />
+                            <img class="Header__LogoImage Header__LogoImage--primary"
+                                src="{{ config('ladmin.logo') }}"
+                                srcset="{{ config('ladmin.logo') }} 1x, {{ config('ladmin.logo') }} 2x"
+                                height="100px" width="auto" style="max-height: 90px !important;"
+                                alt="{{ config('app.name') }}" />
                             @endif
                         </a>
                     </div>
@@ -537,37 +492,37 @@
                 <div class="Header__FlexItem Header__FlexItem--fill">
                     @if(auth()->check())
 
-                        <nav class="Header__MainNav hidden-phone account-info" aria-label="Main navigation">
-                            <ul class="HorizontalList HorizontalList--spacingExtraLoose">
-                                <li class="HorizontalList__Item" aria-haspopup="true">
-                                    <a href="#" class="Heading u-h6 main-heading-text"> {{-- to history transaction --}}
-                                        <span>{{ auth()->user()->name }}</span>
-                                    </a>
-                                    <div class="DropdownMenu" aria-hidden="true">
-                                        <ul class="Linklist">
-                                            <li class="Linklist__Item">
-                                                <a href="{{ route('customer.dashboard') }}"
+                    <nav class="Header__MainNav hidden-phone account-info" aria-label="Main navigation">
+                        <ul class="HorizontalList HorizontalList--spacingExtraLoose">
+                            <li class="HorizontalList__Item" aria-haspopup="true">
+                                <a href="#" class="Heading u-h6 main-heading-text"> {{-- to history transaction --}}
+                                    <span>{{ auth()->user()->name }}</span>
+                                </a>
+                                <div class="DropdownMenu" aria-hidden="true">
+                                    <ul class="Linklist">
+                                        <li class="Linklist__Item">
+                                            <a href="{{ route('customer.dashboard') }}"
                                                 class="Link Link--secondary">MY ACCOUNT </a>
-                                            </li>
-                                            {{-- <li class="Linklist__Item">
+                                        </li>
+                                        {{-- <li class="Linklist__Item">
                                                 <a href="#"
                                                 class="Link Link--secondary">MY TRANSACTION </a>
                                             </li> --}}
-                                            <li class="Linklist__Item">
-                                                <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
-                                                    {{ __('SIGN OUT') }}
-                                                </a>
-                                                <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
-                        </nav>
+                                        <li class="Linklist__Item">
+                                            <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
+                                                {{ __('SIGN OUT') }}
+                                            </a>
+                                            <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
 
                     @else
                     <a href="{{ route('customer.login') }}"
-                    class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable hidden-phone">
+                        class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable hidden-phone">
                         <svg class="Icon Icon--account" role="presentation" viewBox="0 0 20 20">
                             <g transform="translate(1 1)" stroke="currentColor" stroke-width="2" fill="none"
                                 fill-rule="evenodd" stroke-linecap="square">
@@ -655,13 +610,11 @@
                 --header-is-not-transparent: 1;
                 --header-is-transparent: 0;
             }
-
         </style>
 
         <script>
             document.documentElement.style.setProperty("--header-height", document.getElementById("shopify-section-header")
                 .offsetHeight + "px");
-
         </script>
 
         <script src="{{ asset('js/pages/cart.js') }}"></script>

@@ -50,7 +50,7 @@
             .my-float{
                 margin-top:17px;
             }
-            }
+            
             .float {
                 position: fixed;
                 width: 100px;

@@ -23,6 +23,10 @@
     <input type="text" placeholder="Blibli Link" class="form-control" name="blibli_link" id="blibli_link"
     value="{{ old('blibli_link', $product->blibli_link) }}">
 </x-ladmin-form-group>
+<x-ladmin-form-group name="tiktok_link" label="TikTok Link">
+    <input type="text" placeholder="TikTok Link" class="form-control" name="tiktok_link" id="tiktok_link"
+    value="{{ old('tiktok_link', $product->tiktok_link) }}">
+</x-ladmin-form-group>
 <x-ladmin-form-group name="brand" label="Brand *">
     <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
         <option value=""></option>
@@ -75,6 +79,9 @@
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                 </div>
                             </div>
+                            {{-- <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </button> --}}
                             <div class="col-md-5">
                                 <label class="form-label">Quantity :</label>
                                 <div class="input-group mb-5">
@@ -149,11 +156,13 @@
                                         value="{{ old('size_prize.0.base_price', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-4">
                                     <label class="form-label">Quantity :</label>
                                     <div class="input-group mb-5">
+                                        <button type="button" class="input-group-text" onclick="increment(this)"><i class="fas fa-plus"></i></button>
                                         <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
                                         value="{{ old('size_prize[0][qty]', '') }}"/>
+                                        <button type="button" class="input-group-text" onclick="decrement(this)"><i class="fas fa-minus"></i></button>
                                         <span class="input-group-text"> pcs</span>
                                     </div>
                                 </div>
@@ -532,6 +541,13 @@
                 document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
             }
         }
+
+        function increment(plus) {
+            var input = $(plus).siblings("input");
+            console.log('+');
+            console.log(input.val());
+        }
+
     </script>
 
     <script>
@@ -586,6 +602,7 @@
         @endif
 
         @if($edit)
+            console.log('test');
             console.log(JSON.parse($('#product_details').val()));
             repeater.setList(JSON.parse($('#product_details').val()));
 
@@ -593,5 +610,17 @@
                 repeater.setList(JSON.parse($('#old_size_price').val()));
             @endif
         @endif
+
+        // $(document).ready(function() {
+        function increment(item) {
+            var input = $(item).siblings("input");
+            input.val(parseInt(input.val()) + 1);
+        }
+
+        function decrement(item) {
+            var input = $(item).siblings("input");
+            input.val(parseInt(input.val()) - 1);
+        }
+        // });
     </script>
 @endpush

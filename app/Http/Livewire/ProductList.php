@@ -33,7 +33,16 @@ class ProductList extends Component
     public $total_product = 0;
     public $gender_list = ['MENS', 'WOMENS', 'KIDS'];
 
-    protected $updatesQueryString = ['search'];
+     protected $queryString = [
+        'search'      => ['except' => ''],
+        'brand'       => ['except' => []],
+        'gender'      => ['except' => []],
+        'age_range'   => ['except' => []],
+        'category'    => ['except' => []],
+        'signature'   => ['except' => []],
+        'size_filter' => ['except' => []],
+        'tag'         => ['except' => []],
+    ];
 
     public function updatingSearch()
     {

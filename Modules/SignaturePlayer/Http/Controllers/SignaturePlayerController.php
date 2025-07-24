@@ -53,6 +53,9 @@ class SignaturePlayerController extends Controller
         try {
             $validator = $request->validate([
                 'signature_code' => 'required|unique:signature_players|max:255',
+                'image' => 'required|mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
+            ],  [
+                'image.dimensions' => 'Signature image must be more than 500p, below 1500p and aspect ratio 1:1!'
             ]);
 
             if($validator) {
@@ -114,14 +117,21 @@ class SignaturePlayerController extends Controller
             if($old_data->signature_code == $data['signature_code']){
                 $validation = [
                     'signature_code' => 'required|exists:signature_players,signature_code|max:255',
+                    'image' => 'mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
                 ];
             } else {
                 $validation = [
                     'signature_code' => 'required|unique:signature_players,signature_code|max:255',
+                    'image' => 'mimes:jpeg,jpg,png,gif|max:10000|dimensions:min_width=500,max_width=1500,ratio=1/1',
                 ];
             }
 
-            $validator = $request->validate($validation);
+            $message = [
+                //'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
+                'image.dimensions' => 'Brand image must be more than 500p, below 1500p and aspect ratio 1:1!'
+            ];
+
+            $validator = $request->validate($validation, $message);
 
             if($validator) {
             $updated = $this->repository->updateSignaturePlayer($request, $id);

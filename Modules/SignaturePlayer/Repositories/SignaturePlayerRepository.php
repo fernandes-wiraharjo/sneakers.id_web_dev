@@ -7,6 +7,7 @@ use Modules\SignaturePlayer\Entities\SignaturePlayer;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
 use App\Services\SignaturePlayerService;
+use Illuminate\Support\Facades\File;
 
 class SignaturePlayerRepository extends Repository implements MasterRepositoryInterface {
 
@@ -23,9 +24,15 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
    * @return Void
    */
   public function updateSignaturePlayer(Request $request, $id) {
-    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
-
     $get_signaturePlayer = $this->model->findOrFail($id);
+    $existingPath = 'images/signature/'.$get_signaturePlayer->signature_code.'/'.$get_signaturePlayer->signature_image;
+
+    // Remove previous image if it exists
+    if ($get_signaturePlayer->signature_image && File::exists(public_path($existingPath)) && $request['image'] != null) {
+        File::delete(public_path($existingPath));
+    }
+
+    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request, $id);
 
     return $get_signaturePlayer->update($signaturePlayer);
   }

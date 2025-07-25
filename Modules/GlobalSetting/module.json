@@ -1,0 +1,13 @@
+{
+    "name": "GlobalSetting",
+    "alias": "globalsetting",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\GlobalSetting\\Providers\\GlobalSettingServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

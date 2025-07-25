@@ -23,6 +23,10 @@
     <input type="text" placeholder="Blibli Link" class="form-control" name="blibli_link" id="blibli_link"
     value="{{ old('blibli_link', $product->blibli_link) }}">
 </x-ladmin-form-group>
+<x-ladmin-form-group name="tiktok_link" label="TikTok Link">
+    <input type="text" placeholder="TikTok Link" class="form-control" name="tiktok_link" id="tiktok_link"
+    value="{{ old('tiktok_link', $product->tiktok_link) }}">
+</x-ladmin-form-group>
 <x-ladmin-form-group name="brand" label="Brand *">
     <select class="form-control form-select" data-control="select2" name="brand_id" data-placeholder="Select an option">
         <option value=""></option>

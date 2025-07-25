@@ -501,6 +501,18 @@
                         </div>
                         <div style="margin: 5px 0">
                         </div>
+                        @if($product->shopee_link)
+                            <div style="width: 100%;">
+                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                    href="{{ $product->shopee_link }}" target="_blank"
+                                    class="ProductForm__AddToCart Button Button--primary Button--full">
+                                    <span>ORDER VIA SHOPEE</span>
+                                </a>
+                            </div>
+                            <div style="height: 10px;">
+                                <span class="h-2"></span>
+                            </div>
+                        @endif
                         <div style="width: 100%;">
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="{{ $product->product_link }}" target="_blank"
@@ -508,15 +520,15 @@
                                 <span>ORDER VIA TOKOPEDIA</span>
                             </a>
                         </div>
-                        @if($product->shopee_link)
+                        @if($product->tiktok_link)
                             <div style="height: 10px;">
                                 <span class="h-2"></span>
                             </div>
                             <div style="width: 100%;">
                                 <a data-spiff-hide data-product-id="{{ $product->product_code }}"
-                                    href="{{ $product->shopee_link }}" target="_blank"
+                                    href="{{ $product->tiktok_link }}" target="_blank"
                                     class="ProductForm__AddToCart Button Button--primary Button--full">
-                                    <span>ORDER VIA SHOPEE</span>
+                                    <span>ORDER VIA TIKTOK</span>
                                 </a>
                             </div>
                         @endif

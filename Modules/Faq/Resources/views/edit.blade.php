@@ -11,7 +11,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('faq::_partials._form', ['faq' => $faq, 'edit' => false])
+                @include('faq::_partials._form', ['faq' => $faq, 'edit' => true])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary" id="form-submit">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\View\View;
 use Livewire\WithPagination;
@@ -19,7 +20,7 @@ class GlobalSearch extends Component
 
     public $search;
     public $brand = [];
-    public $size = [];
+    public $size_filter = [];
     public $tag = [];
     public $category = [];
     public $signature = [];
@@ -169,12 +170,12 @@ class GlobalSearch extends Component
             if(empty($this->brand)) $this->brand = [];
         }
 
-        if ($this->size) {
-            if (($key = array_search(false, $this->size)) !== false) {
-                unset($this->size[$key]);
+        if ($this->size_filter) {
+            if (($key = array_search(false, $this->size_filter)) !== false) {
+                unset($this->size_filter[$key]);
             }
 
-            if(empty($this->size)) $this->size = [];
+            if(empty($this->size_filter)) $this->size_filter = [];
         }
 
         if ($this->tag) {
@@ -343,6 +344,16 @@ class GlobalSearch extends Component
                         $q->where('tag_title', 'NEW RELEASE');
                         $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                     });
+                })
+                ->when($this->size_filter, function ($q, $sizes) {
+                            foreach($sizes as $index => $size){
+                                if($index == 0) {
+                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                } else {
+                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                }
+                            }
+                            return $q->where('pd.qty', '>', 0);
                 })
                 ->when(count($keyword_array) >= 2, function($query) {
                     return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');

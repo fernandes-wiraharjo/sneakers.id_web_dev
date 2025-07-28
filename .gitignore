@@ -4,6 +4,7 @@
 /public/images
 /storage/*.key
 /vendor
+storage/debugbar
 .env
 .env.backup
 .phpunit.result.cache

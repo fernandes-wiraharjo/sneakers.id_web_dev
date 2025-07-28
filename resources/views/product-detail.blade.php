@@ -635,13 +635,13 @@
         //     'show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
         // });
 
-        // $(document).ready(function() {
-        //     $('.size-item').click(function() {
-        //         console.log($(this).find('#size:checked').attr('data-price'));
-        //         $('#retail').text($(this).find('#size:checked').attr('data-price'));
-        //         $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
-        //         $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
-        //     });
-        // });
+        $(document).ready(function() {
+            $('.size-item').click(function() {
+                // console.log($(this).find('#size:checked').attr('data-price'));
+                $('#retail').text($(this).find('#size:checked').attr('data-price'));
+                $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
+                $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
+            });
+        });
     </script>
 @endpush

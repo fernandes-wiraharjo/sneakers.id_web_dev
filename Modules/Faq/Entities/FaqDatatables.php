@@ -22,7 +22,10 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'home display'])
+            ->addColumn('home display', function ($item) {
+              return $item->is_home ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+            })
             ->addColumn('action', function ($item) {
                 return view('back-office.components.action-burger', [
                     'show' => null,
@@ -52,6 +55,11 @@ use Yajra\DataTables\Services\DataTable;
             Column::make('faq_title'),
             Column::make('faq_question'),
             Column::make('faq_answer'),
+             Column::make('home display')
+                ->searchable(false)
+                ->sortable(false)
+                ->width(100)
+                ->addClass('text-center'),
             Column::computed('action')
                 ->sortable(false)
                 ->searchable(false)

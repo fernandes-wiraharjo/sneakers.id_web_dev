@@ -154,7 +154,7 @@ class GlobalSearch extends Component
             'brand' => $brandRepository->getAllBrand(),
             'size' => $sizeRepository->getAllSizes(),
             'tag' => $tagRepository->getAllTags(),
-            'category' => $categoryRepository->getAllCategories(),
+            'category' => $categoryRepository->getAllCategoriesExceptGender(),
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
         $where_column = ['product_code', 'product_name', 'description'];

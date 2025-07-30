@@ -33,6 +33,9 @@
         @endforeach
     </select>
 </x-ladmin-form-group>
+<x-ladmin-form-group name="products_size_chart_image" label="Size-chart Image *">
+	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="">
+</x-ladmin-form-group>
 <hr>
 <h3>Product Details</h3>
 <br>
@@ -325,6 +328,19 @@
                             notEmpty: {
                                 message: 'Brand must be selected'
                             }
+                        }
+                    },
+                    'products_size_chart_image': {
+                        validators: {
+                            // notEmpty: {
+                            //     message: 'Image is required'
+                            // },
+                            file: {
+                                extension: 'jpeg,jpg,png',
+                                type: 'image/jpeg,image/png',
+                                maxSize: 2097152, // 2048 * 1024
+                                message: 'The selected file is not valid',
+                            },
                         }
                     },
                     'category': {

@@ -143,7 +143,7 @@
                 <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar">
                     <span>
                         <input type="checkbox" wire:model="size_filter" value="45" wire:loading.attr="disabled">
-                        <label>45</label>
+                        <label>45 - 45.5</label>
                     </span>
                 </div>
                 <div class="Check__Box__Container bc-sf-filter-block-content no-scrollbar">

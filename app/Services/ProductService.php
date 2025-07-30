@@ -29,6 +29,7 @@ class ProductService {
             'product_name' => $request['product_name'],
             'product_link' => $request['product_link'],
             'shopee_link' => $request['shopee_link'],
+            'tiktok_link' => $request['tiktok_link'],
             'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active']
@@ -48,6 +49,10 @@ class ProductService {
                     $checkFileExists = imageIsExist($beforePath, $image);
                     $checkFile1200isExists = imageIsExist($beforePath, str_replace("1800x1800", "1200x1200", $image));
                     if ($checkFileExists && $checkFile1200isExists) {
+
+                        if (!File::exists($afterPath)) {
+                            File::makeDirectory($afterPath, 0755, true);
+                        }
                         $do_move = moveImage($beforePath, $afterPath, $image);
                         $do_move = moveImage($beforePath, $afterPath, str_replace("1800x1800", "1200x1200", $image));
 
@@ -150,6 +155,7 @@ class ProductService {
             'product_name' => $request['product_name'],
             'product_link' => $request['product_link'],
             'shopee_link' => $request['shopee_link'],
+            'tiktok_link' => $request['tiktok_link'],
             'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active'],

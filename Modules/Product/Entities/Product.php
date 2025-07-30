@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Hexters\Ladmin\LadminLogable;
 use Modules\Brand\Entities\Brand;
+use Modules\Size\Entities\SizeChart;
 
 class Product extends Model
 {
@@ -44,6 +45,10 @@ class Product extends Model
 
     public function sizes(){
         return $this->belongsToMany(\Modules\Size\Entities\Size::class, 'product_sizes', 'product_id', 'size_id');
+    }
+
+     public function sizeCharts(){
+        return $this->hasMany(ProductSizeChart::class, 'product_id')->OrderBy('product_size_charts.size_chart_image_url');
     }
 
     public function categories(){

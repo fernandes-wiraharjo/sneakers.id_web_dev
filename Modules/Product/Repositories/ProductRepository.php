@@ -10,21 +10,25 @@ use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
 use Carbon\Carbon;
 use DB;
+use Modules\Product\Entities\ProductSizeChart;
 
 class ProductRepository extends Repository implements MasterRepositoryInterface {
 
     protected $model;
     protected $modelProductImage;
     protected $modelProductDetail;
+    protected $modelProductSizeChart;
 
     public function __construct(
         Product $model,
         ProductImage $modelProductImage,
-        ProductDetail $modelProductDetail) {
-        parent::__construct($model, $modelProductImage, $modelProductDetail);
+        ProductDetail $modelProductDetail,
+        ProductSizeChart $modelProductSizeChart) {
+        parent::__construct($model, $modelProductImage, $modelProductDetail, $modelProductSizeChart);
         $this->model = $model;
         $this->productImage = $modelProductImage;
         $this->productDetail = $modelProductDetail;
+        $this->productSizeChart = $modelProductSizeChart;
     }
 
     public function getAllPagination($pagination = 10){
@@ -115,6 +119,10 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function insertProductImage($data){
         return $this->productImage->create($data);
+    }
+
+    public function insertProductSizeChart($data){
+        return $this->productSizeChart->create($data);
     }
 
     public function insertProductDetails($data){

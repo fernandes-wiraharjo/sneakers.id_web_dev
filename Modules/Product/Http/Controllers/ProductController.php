@@ -39,6 +39,19 @@ class ProductController extends Controller
      */
     public function index(ProductDatatables $dataTable)
     {
+        ladmin()
+        ->notification()
+            ->setTitle('new Invoice')
+            ->setLink('http://project.test/invoice/31eb6d58-3622-42a4-9206-d36e7a8d6c06')
+            ->setDescription('Pay invoice #123455')
+            ->setImageLink('http://porject.test/icon-invoice.ong') // optional
+            ->setGates(['administrator.accounting', 'administrator.owner']) // optional
+        ->send();
+
+        if(!auth()->user()->can('administrator.product.index')){
+            return redirect()->route('customer.dashboard');
+        }
+
         ladmin()->allow('administrator.product.index');
         return $dataTable->render('product::index');
     }
@@ -156,7 +169,7 @@ class ProductController extends Controller
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
-        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
+        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty, weight,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
         cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }
@@ -217,10 +230,10 @@ class ProductController extends Controller
 
             if($validator) {
                 $updated = $this->service->updateProduct($id ,$request->all());
-                if($updated){
-                    Alert::success('Product Updated Successfully!');
+                if($updated['status']){
+                    Alert::success('Product Updated Successfully!, '.$updated['message']);
                     return redirect(route('administrator.product.index'))
-                        ->with('success', 'Product Updated Successfully!');
+                        ->with('success', 'Product Updated Successfully!, '.$updated['message']);
                 } else {
                     Alert::error('Failed to updated product, check your info!');
                     return redirect()->back();

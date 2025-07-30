@@ -32,7 +32,7 @@ class BannerDatatables  extends DataTable
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
             ->addColumn('action', function ($item) {
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.banner.update',

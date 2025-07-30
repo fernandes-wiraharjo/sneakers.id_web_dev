@@ -76,7 +76,7 @@
             </header>
             <div class="Drawer__Content">
               <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
               </div>
             </div>
         </div>
@@ -105,10 +105,10 @@
                     {{-- <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
                     Discount Price
                     </a> --}}
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'ASC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.created_at', 'ASC')">
                     Date, old to new
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'DESC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.created_at', 'DESC')">
                     Date, new to old
                     </a>
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.updated_at', 'DESC')">
@@ -120,7 +120,7 @@
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
             </div>
             <div wire:loading>
                 <div class="PageOverlay is-visible"></div>

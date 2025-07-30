@@ -30,7 +30,7 @@ use Yajra\DataTables\Services\DataTable;
                 if($item->products()->count() > 0){
                     $type = 'restrict';
                 }
-                return view('components.action-burger', [
+                return view('back-office.components.action-burger', [
                     'show' => null,
                     'edit' => [
                       'gate' => 'administrator.master-data.signature-player.update',

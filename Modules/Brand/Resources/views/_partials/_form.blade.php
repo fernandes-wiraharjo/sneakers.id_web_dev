@@ -40,7 +40,7 @@
 </div>
 <!--end::Input group-->
 
-@include('components.is_active', ['is_active' => $brand->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $brand->is_active, 'edit' => $edit])
 
 @push('scripts')
 <script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Livewire\Category;
+use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
@@ -13,6 +14,7 @@ use Modules\Faq\Repositories\FaqRepository;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class StoreController extends Controller
 {
@@ -36,22 +38,25 @@ class StoreController extends Controller
     }
 
     public function index() {
+        // SlackAlert::message("test");
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['brand'] = $this->brandRepository->getAllBrand();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('welcome', $data);
+        activity()->log('Someone Accessing my website');
+        return view('display-store.landing', $data);
     }
 
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
-        $data['size'] = $data['product']->details()->where('product_details.qty', '>' , 0)->get();
+        $data['size'] = $data['product']->details()->get();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('product-detail', $data);
+        activity()->log('Someone look into my product');
+        return view('display-store.product-detail', $data);
     }
 
     public function search(Request $request){
@@ -195,7 +200,8 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('search-result', $data);
+        activity()->log('Someone find a product');
+        return view('display-store.search-result', $data);
     }
 
     public function collections($keyword){
@@ -203,7 +209,7 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('collections', $data);
+        return view('display-store.collections', $data);
     }
 
     public function lookbook($page){
@@ -213,7 +219,7 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('lookbook', $data);
+        return view('display-store.lookbook', $data);
     }
 
     public function sizeChart(){
@@ -224,14 +230,14 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('size-chart', $data);
+        return view('display-store.size-chart', $data);
     }
 
     public function aboutUs(){
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('about-us', $data);
+        return view('display-store.about-us', $data);
     }
 
     public function faq(){
@@ -239,6 +245,10 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('qna', $data);
+        return view('display-store.qna', $data);
+    }
+
+    public function email(){
+        return view('email.invoice');
     }
 }

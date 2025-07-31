@@ -34,7 +34,7 @@
     </select>
 </x-ladmin-form-group>
 <x-ladmin-form-group name="products_size_chart_image" label="Size-chart Image">
-	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="{{ old('products_size_chart_image', $size_chart_image) }}">
+	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="{{ old('products_size_chart_image', $edit ? $size_chart_image : '') }}">
 </x-ladmin-form-group>
 <hr>
 <h3>Product Details</h3>

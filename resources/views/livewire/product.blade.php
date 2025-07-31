@@ -176,7 +176,7 @@
                                 data-qty="{{$item->qty}}" wire:change="updatePrice($event.target.value)">{{$item->size}}</option>
                                 @endforeach
                                 </select> --}}
-                                <a href="{{ route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
+                                <a href="{{ $size_chart_image ? $size_chart_image : route('size-chart') }}" target="_blank" style="align-self: center">Size Chart</a>
                             </div>
                             @livewire('product-selection-modal')
                             <div style="margin: 5px;"></div>

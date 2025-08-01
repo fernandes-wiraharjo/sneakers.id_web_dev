@@ -1,0 +1,13 @@
+{
+    "name": "HeaderImage",
+    "alias": "headerimage",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\HeaderImage\\Providers\\HeaderImageServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -208,8 +208,11 @@ if (!function_exists('getImageGallery')) {
 }
 
 if(!function_exists('removeImageFromStorage')) {
-    function removeImageFromStorage($path = '', $filename = ''){
-        $image_path = public_path($path."/".$filename);
+    function removeImageFromStorage($path = '', $filename = '', $customBasePath = null){
+        // $image_path = public_path($path."/".$filename);
+        $basePath = $customBasePath ?? public_path();
+        $imagePath = rtrim($basePath, '/') . '/' . trim($path, '/') . '/' . trim($filename, '/');
+
         if(File::exists($image_path)) {
             File::delete($image_path);
         }
@@ -219,8 +222,11 @@ if(!function_exists('removeImageFromStorage')) {
 }
 
 if(!function_exists('removeFolderFromStorage')) {
-    function removeFolderFromStorage($path = ''){
-        $new_path = public_path($path);
+    function removeFolderFromStorage($path = '', $basePath = null){
+        // $new_path = public_path($path);
+        $base = $basePath ?? public_path();
+        $new_path = $base . '/' . $path;
+
         if(File::isDirectory($new_path)) {
             File::deleteDirectory($new_path);
         }
@@ -228,7 +234,6 @@ if(!function_exists('removeFolderFromStorage')) {
         return true;
     }
 }
-
 
 if(!function_exists('moveImage')) {
     function moveImage($beforePath = '', $afterPath = '', $filename = ''){

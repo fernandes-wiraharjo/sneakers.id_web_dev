@@ -245,7 +245,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         try {
-            $deleted = $this->repository->deleteProduct($id);
+            $deleted = $this->repository->deleteProduct($id, 'cms');
 
             if($deleted){
                 Alert::success('Product Deleted Successfully!');

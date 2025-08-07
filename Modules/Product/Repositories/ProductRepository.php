@@ -269,15 +269,20 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
        return $this->productImage->where(['image_url' => $image_url, 'product_id' => $product_id])->delete();
     }
 
-    public function deleteProduct($id){
+    public function deleteProduct($id, $source){
         $product = $this->model->find($id);
         $path = 'images/products/'.$product->product_code;
 
-        foreach($product->images()->get() as $image){
-            removeImageFromStorage($path, $image->image_url);
+        if ($source == 'cms') {
+            foreach($product->images()->get() as $image){
+                removeImageFromStorage($path, $image->image_url);
+            }
+        } else { // from artisan command (run from repositories, not public_html on cpanel)
+            $actualPublicPath = base_path('../../public_html');
+            foreach($product->images()->get() as $image){
+                removeImageFromStorage($path, $image->image_url, $actualPublicPath);
+            }
         }
-
-
 
         $product->images()->delete();
         $product->detail()->delete();
@@ -288,7 +293,12 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
         if($product->images()->count() == 0) {
             //delete folder
-            removeFolderFromStorage($path);
+            if ($source == 'cms') {
+                removeFolderFromStorage($path);
+            } else { // from artisan command (run from repositories, not public_html on cpanel)
+                $actualPublicPath = base_path('../../public_html');
+                removeFolderFromStorage($path, $actualPublicPath);
+            }
         }
 
         return $product->delete();

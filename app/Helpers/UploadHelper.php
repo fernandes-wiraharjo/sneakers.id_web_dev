@@ -213,8 +213,8 @@ if(!function_exists('removeImageFromStorage')) {
         $basePath = $customBasePath ?? public_path();
         $imagePath = rtrim($basePath, '/') . '/' . trim($path, '/') . '/' . trim($filename, '/');
 
-        if(File::exists($image_path)) {
-            File::delete($image_path);
+        if(File::exists($imagePath)) {
+            File::delete($imagePath);
         }
 
         return true;

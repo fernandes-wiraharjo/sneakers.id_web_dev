@@ -47,7 +47,7 @@ class DeleteOldProducts extends Command
 
         foreach ($products as $product) {
             $this->info("Deleting product ID {$product->id} ({$product->product_name})...");
-            $this->repository->deleteProduct($product->id);
+            $this->repository->deleteProduct($product->id, 'command');
         }
 
         $this->info("Deleted {$limit} product(s) successfully.");

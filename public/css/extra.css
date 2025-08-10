@@ -158,3 +158,53 @@ li.page-item.active {
     margin: 0;
     font-size: 16px;
 }
+
+.Size__Button {
+    border-color: black;
+    color: white;
+    background: black;
+    padding: 15px 13px;
+    border-radius: 26px;
+}
+
+.Size__Button_Disabled {
+    border: solid;
+    border-color: black;
+    color: black;
+    background: white;
+    padding: 15px 13px;
+    border-radius: 26px;
+}
+
+#id_work_days input[type="radio"] {
+    display: none;
+}
+
+#id_work_days span {
+    cursor: pointer;
+    margin-bottom: 5px;
+    display: inline-block;
+    width: auto;
+    height: 40px;
+    padding: 1px;
+    text-align: -webkit-center;
+    line-height: 32px;
+    text-transform: uppercase;
+    border: 2px solid black;
+    border-radius: 50%;
+    color: black;
+    min-width: 40px;
+}
+
+#id_work_days input[type="radio"]:checked + span {
+    background-color: black;
+    color: white;
+}
+
+#id_work_days input[type="radio"]:disabled + span {
+    background-color: gray;
+    color: black;
+    border: 2px solid gray;
+    cursor: not-allowed;
+}
+

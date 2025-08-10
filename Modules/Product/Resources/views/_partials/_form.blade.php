@@ -110,7 +110,7 @@
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">Rp</span>
                                     <input id="discount" type="text" class="form-control bulk-after-discount-price" name="bulk_discount_price" min="0"
-                                    value="" aria-label="Amount (to the nearest rupiah)"/>
+                                    value="" aria-label="Amount (to the nearest rupiah)" onfocus="countDiscountPrice(this)"/>
                                     <span class="input-group-text">%</span>
                                     <input type="number" class="form-control bulk-discount-percentage" name="bulk_discount_percentage" min="0" max="100"
                                         value="" onfocus="countDiscountPercentage(this)"
@@ -173,7 +173,7 @@
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
                                         <input id="discount" type="text" class="form-control after-discount-price" name="after_discount_price" min="0"
-                                        value="{{ old('size_prize[0][after_discount_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
+                                        value="{{ old('size_prize[0][after_discount_price]', '') }}" aria-label="Amount (to the nearest rupiah)" onfocus="countDiscountPrice(this)"/>
                                         <span class="input-group-text">%</span>
                                         <input type="text" class="form-control discount-percentage" name="discount_percentage" min="0" max="100"
                                             value="{{ old('size_prize[0][discount_percentage]', '') }}" onfocus="countDiscountPercentage(this)"
@@ -397,41 +397,20 @@
         var bulkAfterDiscount = document.getElementsByClassName("bulk-after-discount-price");
 
         // base = [].slice.call(base, 0);
-        for (var i = 0; i < base.length; ++i){
-            base[i].addEventListener("keyup", function(e) {
-                this.value = formatRupiah(this.value);
+        function attachRupiahFormatter(elements) {
+            elements.forEach(function(input) {
+                input.addEventListener("keyup", function() {
+                    this.value = formatRupiah(this.value);
+                });
             });
         }
 
-        for (var i = 0; i < retail.length; ++i){
-            retail[i].addEventListener("keyup", function(e) {
-                this.value = formatRupiah(this.value);
-            });
-        }
-
-        for (var i = 0; i < after_discount.length; ++i){
-            after_discount[i].addEventListener("keyup", function(e) {
-                this.value = formatRupiah(this.value);
-            });
-        }
-
-        for (var i = 0; i < bulkBase.length; ++i){
-            bulkBase[i].addEventListener("keyup", function(e) {
-                this.value = formatRupiah(this.value);
-            });
-        }
-
-        for (var i = 0; i < bulkRetail.length; ++i){
-            bulkRetail[i].addEventListener("keyup", function(e) {
-                this.value = formatRupiah(this.value);
-            });
-        }
-
-        for (var i = 0; i < bulkAfterDiscount.length; ++i){
-            bulkAfterDiscount[i].addEventListener("keyup", function(e) {
-                this.value = formatRupiah(this.value);
-            });
-        }
+        attachRupiahFormatter(base);
+        attachRupiahFormatter(retail);
+        attachRupiahFormatter(after_discount);
+        attachRupiahFormatter(bulkBase);
+        attachRupiahFormatter(bulkRetail);
+        attachRupiahFormatter(bulkAfterDiscount);
 
         /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {
@@ -519,6 +498,24 @@
                 discount_price = parseInt(document.querySelector('input[name="' + prefix + '[after_discount_price]"]').value.replaceAll('.', ''));
                 discount_percentage = parseInt(((retail_price - discount_price) / retail_price) * 100);
                 document.querySelector('input[name="'+param.name+'"]').value = discount_percentage;
+            }
+        }
+
+        function countDiscountPrice(param) {
+            let retail_price;
+            let discount_price;
+            let discount_percentage;
+            if (param.name.includes('bulk')) {
+                retail_price = parseInt(document.querySelector('input[name="bulk_retail_price"]').value.replaceAll('.', ''));
+                discount_percentage = parseInt(document.querySelector('input[name="bulk_discount_percentage"]').value);
+                discount_price = parseInt(retail_price - (discount_percentage / 100 * retail_price));
+                document.querySelector('input[name="'+param.name+'"]').value = formatRupiah(discount_price.toString());
+            } else {
+                const prefix = param.name.replace('[after_discount_price]', '');
+                retail_price = parseInt(document.querySelector('input[name="' + prefix + '[retail_price]"]').value.replaceAll('.', ''));
+                discount_percentage = parseInt(document.querySelector('input[name="' + prefix + '[discount_percentage]"]').value);
+                discount_price = parseInt(retail_price - (discount_percentage / 100 * retail_price));
+                document.querySelector('input[name="'+param.name+'"]').value = formatRupiah(discount_price.toString());
             }
         }
 

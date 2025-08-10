@@ -20,20 +20,37 @@ class ProductList extends Component
 
     public $search;
     public $brand = [];
+    public $brand_string = '';
     public $size_filter = [];
+    public $size_filter_string = '';
     public $tag = [];
+    public $tag_string = '';
     public $category = [];
+    public $category_string = '';
     public $signature = [];
+    public $signature_string = '';
     public $keyword;
     public $sort_by = 'DESC';
     public $sort_column = 'products.created_at';
     public $sort_column_2 = 'pd.after_discount_price';
     public $gender = [];
+    public $gender_string = '';
     public $age_range = [];
+    public $age_range_string = '';
     public $total_product = 0;
     public $gender_list = ['MENS', 'WOMENS', 'KIDS'];
 
-    protected $updatesQueryString = ['search'];
+    // Use *_string to prevent escaped array in URL
+    protected $queryString = [
+        'search'             => ['except' => ''],
+        'brand_string'       => ['as' => 'brand', 'except' => ''],
+        'gender_string'      => ['as' => 'gender', 'except' => ''],
+        'age_range_string'   => ['as' => 'age_range', 'except' => ''],
+        'category_string'    => ['as' => 'category', 'except' => ''],
+        'signature_string'   => ['as' => 'signature', 'except' => ''],
+        'size_filter_string' => ['as' => 'size_filter', 'except' => ''],
+        'tag_string'         => ['as' => 'tag', 'except' => ''],
+    ];
 
     public function updatingSearch()
     {
@@ -83,6 +100,14 @@ class ProductList extends Component
     public function mount(): void
     {
         $this->search = request()->query('search', $this->search);
+
+        $this->brand = $this->brand_string ? explode(',', $this->brand_string) : [];
+        $this->gender = $this->gender_string ? explode(',', $this->gender_string) : [];
+        $this->category = $this->category_string ? explode(',', $this->category_string) : [];
+        $this->tag = $this->tag_string ? explode(',', $this->tag_string) : [];
+        $this->age_range = $this->age_range_string ? explode(',', $this->age_range_string) : [];
+        $this->signature = $this->signature_string ? explode(',', $this->signature_string) : [];
+        $this->size_filter = $this->size_filter_string ? explode(',', $this->size_filter_string) : [];
     }
 
     public function updatedBrand()
@@ -93,6 +118,13 @@ class ProductList extends Component
                 return $brand != false;
             }
         );
+
+        $this->brand_string = implode(',', $this->brand);
+    }
+
+    public function updatedBrandString()
+    {
+        $this->brand = array_filter(explode(',', $this->brand_string));
     }
 
     public function updatedCategory()
@@ -103,6 +135,13 @@ class ProductList extends Component
                 return $category != false;
             }
         );
+
+        $this->category_string = implode(',', $this->category);
+    }
+
+    public function updatedCategoryString()
+    {
+        $this->category = array_filter(explode(',', $this->category_string));
     }
 
     public function updatedTag()
@@ -113,6 +152,13 @@ class ProductList extends Component
                 return $tag != false;
             }
         );
+
+        $this->tag_string = implode(',', $this->tag);
+    }
+
+    public function updatedTagString()
+    {
+        $this->tag = array_filter(explode(',', $this->tag_string));
     }
 
     public function updatedSignature()
@@ -123,6 +169,13 @@ class ProductList extends Component
                 return $signature != false;
             }
         );
+
+        $this->signature_string = implode(',', $this->signature);
+    }
+
+    public function updatedSignatureString()
+    {
+        $this->signature = array_filter(explode(',', $this->signature_string));
     }
 
     public function updatedGender()
@@ -133,6 +186,13 @@ class ProductList extends Component
                 return $gender != false;
             }
         );
+
+        $this->gender_string = implode(',', $this->gender);
+    }
+
+    public function updatedGenderString()
+    {
+        $this->gender = array_filter(explode(',', $this->gender_string));
     }
 
     public function updatedAgeRange()
@@ -143,9 +203,16 @@ class ProductList extends Component
                 return $age_range != false;
             }
         );
+
+        $this->age_range_string = implode(',', $this->age_range);
     }
 
-    public function updatedSize()
+    public function updatedAgeRangeString()
+    {
+        $this->age_range = array_filter(explode(',', $this->age_range_string));
+    }
+
+    public function updatedSizeFilter()
     {
         if(!is_array($this->size_filter)) return;
         $this->size_filter = array_filter($this->size_filter,
@@ -153,6 +220,13 @@ class ProductList extends Component
                 return $size_filter != false;
             }
         );
+
+        $this->size_filter_string = implode(',', $this->size_filter);
+    }
+
+    public function updatedSizeFilterString()
+    {
+        $this->size_filter = array_filter(explode(',', $this->size_filter_string));
     }
 
     public function render(

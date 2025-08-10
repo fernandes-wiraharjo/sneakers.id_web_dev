@@ -212,7 +212,7 @@ class ProductList extends Component
         $this->age_range = array_filter(explode(',', $this->age_range_string));
     }
 
-    public function updatedSize()
+    public function updatedSizeFilter()
     {
         if(!is_array($this->size_filter)) return;
         $this->size_filter = array_filter($this->size_filter,

@@ -78,7 +78,9 @@ class ProductService {
                                 $getProduct = $this->productRepository->getProductById($idNewProduct);
 
                                 if($getProduct) {
-                                    $getProduct->image = $request['is_main'];
+                                    $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
+                                    // $getProduct->image = $request['is_main'];
+                                    $getProduct->image = $webpMain;
                                     $getProduct->save();
                                 }
                             }
@@ -240,7 +242,9 @@ class ProductService {
                 $getProduct = $this->productRepository->getProductById($id);
 
                 if($getProduct) {
-                    $getProduct->image = $request['is_main'];
+                    $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
+                    // $getProduct->image = $request['is_main'];
+                    $getProduct->image = $webpMain;
                     $getProduct->save();
                 }
 
@@ -417,7 +421,7 @@ class ProductService {
         //get data images
         $directory = 'images/products/'.$request['product_code'];
         $files_info = [];
-        $file_ext = array('png','jpg','jpeg','pdf');
+        $file_ext = array('png','jpg','jpeg','pdf','webp');
 
         // Read files
         foreach (File::allFiles(public_path($directory)) as $file) {

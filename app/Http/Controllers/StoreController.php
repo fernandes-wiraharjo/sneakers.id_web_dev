@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Livewire\Category;
 use App\Notifications\SendNotification;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
@@ -26,7 +27,8 @@ class StoreController extends Controller
         FaqRepository $faqRepository,
         CategoryRepository $categoryRepository,
         TagRepository $tagRepository,
-        SignaturePlayerRepository $signaturePlayerRepository) {
+        SignaturePlayerRepository $signaturePlayerRepository,
+        ProductService $productService) {
             $this->brandRepository = $brandRepository;
             $this->productRepository = $productRepository;
             $this->lookBookRepository = $lookBookRepository;
@@ -35,6 +37,7 @@ class StoreController extends Controller
             $this->categoryRepository = $categoryRepository;
             $this->tagRepository = $tagRepository;
             $this->signaturePlayerRepository = $signaturePlayerRepository;
+            $this->productService = $productService;
     }
 
     public function index() {
@@ -54,6 +57,7 @@ class StoreController extends Controller
         $data['size'] = $data['product']->details()->get();
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
+        $data['related_products'] = $this->productService->getRelatedProducts($id);
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone look into my product');
         return view('display-store.product-detail', $data);

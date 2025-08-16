@@ -496,4 +496,20 @@ class ProductService {
 
         return ['status' => 200, 'data' => json_encode($data_match)];
     }
+
+    public function getRelatedProducts(int $id)
+    {
+        $price = $this->productRepository->getProductPrice($id);
+
+        if (!$price) {
+            return collect(); // empty if product not found
+        }
+
+        $tolerance = 0.1; // 10%
+        $min   = $price * (1 - $tolerance);
+        $max   = $price * (1 + $tolerance);
+        $limit = 5;
+
+        return $this->productRepository->getProductsByRange($price, $min, $max, $limit);
+    }
 }

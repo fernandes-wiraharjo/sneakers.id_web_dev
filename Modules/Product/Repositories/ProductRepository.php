@@ -9,6 +9,7 @@ use Modules\Product\Entities\ProductDetail;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
 use Carbon\Carbon;
+use App\Services\ProductService;
 use DB;
 
 class ProductRepository extends Repository implements MasterRepositoryInterface {
@@ -208,6 +209,33 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     public function getProductByIdWithEager($id){
         return $this->model->with(['detail', 'tags', 'sizes', 'categories', 'signatures', 'images', 'details'])->find($id);
     }
+
+    public function getProductPrice(int $id) {
+        return $this->model
+            ->where('products.id', $id)
+            ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
+            ->selectRaw('CASE
+                            WHEN pd.after_discount_price = 0.00
+                            THEN pd.retail_price
+                            ELSE pd.after_discount_price
+                         END as price')
+            ->value('price');
+    }
+
+
+    public function getProductsByRange(float $price, float $min, float $max, int $limit) {
+        return $this->model
+            ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
+            ->whereBetween('pd.after_discount_price', [$min, $max])
+            ->orderByRaw("CASE WHEN pd.after_discount_price = ? THEN 0 ELSE 1 END", [$price]) // exact price first
+            ->orderBy('pd.after_discount_price', 'asc') // then cheapest
+            ->limit($limit)
+            ->get([
+                'products.*',
+                'pd.after_discount_price'
+            ]);
+    }
+
 
     public function getProductById($id){
         return $this->model->find($id);

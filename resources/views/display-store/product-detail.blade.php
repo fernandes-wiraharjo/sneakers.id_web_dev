@@ -49,7 +49,7 @@
 @endpush
 
 @section('body')
-   @livewire('product', ['product' => $product,  'sizeList' => $size])
+   @livewire('product', ['product' => $product,  'sizeList' => $size, 'related_products' => $related_products])
 @endsection
 
 @push('scripts')

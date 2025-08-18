@@ -10,6 +10,98 @@ $color-form-highlight: #EEEEEE;
     box-sizing: border-box;
 }
 
+.RelatedProductsWrapper {
+    margin: 20px 0;
+}
+
+.RelatedProductsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.ViewAllBtn {
+    font-size: 16px;
+    color: #000000CC;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.RelatedProductsSlider {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+}
+
+.RelatedProductTitle {
+    font-weight: 700;
+    font-style: bold;
+    font-size: 20px;
+}
+
+.RelatedProductsSlider::-webkit-scrollbar {
+    height: 6px;
+}
+.RelatedProductsSlider::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.ProductCard {
+    flex: 0 0 auto;
+    width: 180px; /* Adjust for your layout */
+    scroll-snap-align: start;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+}
+
+.ProductImageWrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: calc(100% / var(--aspect-ratio, 1));
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.ProductImageWrapper img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ProductInfo {
+    margin-top: 8px;
+    text-align: center;
+}
+
+.ProductPrice {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.PriceDiscounted {
+    font-weight: bold;
+    color: red;
+}
+.PriceOriginal {
+    font-size: 12px;
+    color: #777;
+}
+.PriceOff {
+    font-size: 12px;
+    color: red;
+    margin-left: 5px;
+}
+
+
 .table-container {
     /* max-width: 1000px; */
     margin-right: auto;
@@ -215,6 +307,91 @@ $color-form-highlight: #EEEEEE;
     #shopify-section-product-template+.shopify-section--bordered.Section {
         padding-top: 0;
     }
+
+    .RelatedProductsWrapper {
+    margin: 20px 0;
+    }
+
+    .RelatedProductsHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .ViewAllBtn {
+        font-size: 14px;
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .RelatedProductsSlider {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 10px;
+    }
+
+    .RelatedProductsSlider::-webkit-scrollbar {
+        height: 6px;
+    }
+    .RelatedProductsSlider::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 3px;
+    }
+
+    .ProductCard {
+        flex: 0 0 auto;
+        width: 180px; /* Adjust for your layout */
+        scroll-snap-align: start;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 10px;
+        background: #fff;
+    }
+
+    .ProductImageWrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: calc(100% / var(--aspect-ratio, 1));
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .ProductImageWrapper img {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .ProductInfo {
+        margin-top: 8px;
+        text-align: center;
+    }
+
+    .ProductPrice {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .PriceDiscounted {
+        font-weight: bold;
+        color: red;
+    }
+    .PriceOriginal {
+        font-size: 12px;
+        color: #777;
+    }
+    .PriceOff {
+        font-size: 12px;
+        color: red;
+        margin-left: 5px;
+    }
+
 
     .Cart_Container {
         height: max(100% - var(--header-height), 100% - 60px);

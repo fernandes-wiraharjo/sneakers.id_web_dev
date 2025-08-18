@@ -356,4 +356,41 @@
             </div>
         </div>
     </div>
+
+   <div class="RelatedProductsWrapper">
+    <div class="RelatedProductsHeader">
+        <h3 class="RelatedProductTitle">Related Products</h3>
+        <a href="" class="ViewAllBtn">View All</a>
+    </div>
+
+    <div class="RelatedProductsSlider">
+        @foreach ($related_products as $product)
+            @php
+                $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
+                $ratio = $image_size[0] / $image_size[1];
+            @endphp
+            <div class="ProductCard">
+                <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">
+                    <div class="ProductImageWrapper" style="--aspect-ratio: {{ $ratio }}">
+                        <img src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
+                             alt="{{ $product->product_name }}">
+                    </div>
+                </a>
+                <div class="ProductInfo">
+                    <h4>{{ $product->product_name }}</h4>
+                    <div class="ProductPrice">
+                        @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
+                            <span class="PriceDiscounted">Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
+                            <span class="PriceOriginal"><del>Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</del></span>
+                            <span class="PriceOff">{{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF</span>
+                        @else
+                            <span class="PriceNormal">Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
 </div>

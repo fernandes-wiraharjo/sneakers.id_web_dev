@@ -226,14 +226,24 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     public function getProductsByRange(float $price, float $min, float $max, int $limit) {
         return $this->model
             ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
-            ->whereBetween('pd.after_discount_price', [$min, $max])
-            ->orderByRaw("CASE WHEN pd.after_discount_price = ? THEN 0 ELSE 1 END", [$price]) // exact price first
+            ->whereBetween(
+                \DB::raw('COALESCE(pd.after_discount_price, pd.retail_price)'),
+                [$min, $max]
+            )
+            ->orderByRaw(
+                "CASE WHEN pd.after_discount_price = ? THEN 0 ELSE 1 END",
+                [$price]
+            ) // exact price first
             ->orderBy('pd.after_discount_price', 'asc') // then cheapest
             ->limit($limit)
+            ->distinct('products.id')
             ->get([
                 'products.*',
-                'pd.after_discount_price'
+                'pd.after_discount_price',
+                'pd.retail_price',
             ]);
+
+
     }
 
 

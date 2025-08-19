@@ -360,7 +360,7 @@
     <div class="RelatedProductsWrapper">
         <div class="RelatedProductsHeader">
             <h3 class="RelatedProductTitle">Related Products</h3>
-            <a href="" class="ViewAllBtn">View All</a>
+            <a href="{{ url('/collections/all') }}" class="ViewAllBtn">View All</a>
         </div>
 
         <div class="RelatedProductsSlider">

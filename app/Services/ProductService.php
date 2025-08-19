@@ -510,6 +510,6 @@ class ProductService {
         $max   = $price * (1 + $tolerance);
         $limit = 5;
 
-        return $this->productRepository->getProductsByRange($price, $min, $max, $limit);
+        return $this->productRepository->getProductsByRange($price, $min, $max, $limit, $id);
     }
 }

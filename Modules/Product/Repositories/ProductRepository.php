@@ -224,27 +224,36 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
 
     public function getProductsByRange(float $price, float $min, float $max, int $limit, int $id) {
+
+        // dd([
+        //     "min" => $min,
+        //     "max" => $max,
+        //     "price" => $price
+        // ]);
         return $this->model
             ->join('product_details as pd', 'pd.product_id', '=', 'products.id')
+            ->select(
+                'products.*',
+                'pd.after_discount_price',
+                'pd.retail_price'
+            )
             ->whereBetween(
-                \DB::raw('COALESCE(pd.after_discount_price, pd.retail_price)'),
+                \DB::raw('COALESCE(NULLIF(pd.after_discount_price, 0.00), pd.retail_price)'),
                 [$min, $max]
             )
             ->where('products.id', '!=', $id)
-            ->orderByRaw(
-                "CASE WHEN pd.after_discount_price = ? THEN 0 ELSE 1 END",
-                [$price]
-            ) // exact price first
-            ->orderBy('pd.after_discount_price', 'asc') // then cheapest
-            ->limit($limit)
+            ->whereRaw(
+                'COALESCE(NULLIF(pd.after_discount_price, 0.00), pd.retail_price) = (
+                    SELECT MIN(COALESCE(NULLIF(pd2.after_discount_price, 0.00), pd2.retail_price))
+                    FROM product_details pd2
+                    WHERE pd2.product_id = products.id
+                )'
+            ) // Subquery
             ->distinct('products.id')
-            ->get([
-                'products.*',
-                'pd.after_discount_price',
-                'pd.retail_price',
-            ]);
-
-
+            ->orderByRaw("CASE WHEN pd.after_discount_price = ? THEN 0 ELSE 1 END", [$price])
+            ->orderBy('pd.after_discount_price', 'asc')
+            ->limit($limit)
+            ->get();
     }
 
 

@@ -60,9 +60,17 @@ class ProductService {
                         if(!$do_move){
                             abort(500, 'Failed upload image');
                         } else {
+                            // Convert both to WebP and delete original
+                            convertToWebpAndDelete(public_path($afterPath . '/' . $image));
+                            convertToWebpAndDelete(public_path($afterPath . '/' . str_replace("1800x1800", "1200x1200", $image)));
+
+                            // Save WebP name instead of original extension
+                            $webpName = pathinfo($image, PATHINFO_FILENAME) . '.webp';
+
                             $productImage = [
                                 'product_id' => $idNewProduct,
-                                'image_url' => $image
+                                // 'image_url' => $image
+                                'image_url' => $webpName
                             ];
 
                             $this->productRepository->insertProductImage($productImage);
@@ -71,7 +79,9 @@ class ProductService {
                                 $getProduct = $this->productRepository->getProductById($idNewProduct);
 
                                 if($getProduct) {
-                                    $getProduct->image = $request['is_main'];
+                                    $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
+                                    // $getProduct->image = $request['is_main'];
+                                    $getProduct->image = $webpMain;
                                     $getProduct->save();
                                 }
                             }
@@ -211,9 +221,16 @@ class ProductService {
                         if(!$do_move){
                             abort(500, 'Failed upload image');
                         } else {
+                            // Convert to WebP and delete original
+                            convertToWebpAndDelete(public_path($afterPath . '/' . $image));
+                            convertToWebpAndDelete(public_path($afterPath . '/' . str_replace("1800x1800", "1200x1200", $image)));
+
+                            $webpName = pathinfo($image, PATHINFO_FILENAME) . '.webp';
+
                             $productImage = [
                                 'product_id' => $id,
-                                'image_url' => $image
+                                'image_url' => $webpName
+                                // 'image_url' => $image
                             ];
 
                             $this->productRepository->insertProductImage($productImage);
@@ -227,7 +244,9 @@ class ProductService {
                 $getProduct = $this->productRepository->getProductById($id);
 
                 if($getProduct) {
-                    $getProduct->image = $request['is_main'];
+                    $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
+                    // $getProduct->image = $request['is_main'];
+                    $getProduct->image = $webpMain;
                     $getProduct->save();
                 }
 
@@ -408,7 +427,7 @@ class ProductService {
         //get data images
         $directory = 'images/products/'.$request['product_code'];
         $files_info = [];
-        $file_ext = array('png','jpg','jpeg','pdf');
+        $file_ext = array('png','jpg','jpeg','pdf','webp');
 
         // Read files
         foreach (File::allFiles(public_path($directory)) as $file) {

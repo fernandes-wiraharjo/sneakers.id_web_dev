@@ -251,3 +251,37 @@ if(!function_exists('moveImage')) {
         return true;
     }
 }
+
+if(!function_exists('convertToWebpAndDelete')) {
+    function convertToWebpAndDelete($sourcePath, $quality = 80) {
+        if (!file_exists($sourcePath)) {
+            return false;
+        }
+
+        $info = getimagesize($sourcePath);
+        $ext = strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
+        $webpPath = preg_replace('/\.[^.]+$/', '.webp', $sourcePath);
+
+        switch ($info['mime']) {
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($sourcePath);
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($sourcePath);
+                imagepalettetotruecolor($image);
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+                break;
+            default:
+                return false; // skip unsupported
+        }
+
+        imagewebp($image, $webpPath, $quality);
+        imagedestroy($image);
+
+        // Delete original after conversion
+        unlink($sourcePath);
+
+        return true;
+    }
+}

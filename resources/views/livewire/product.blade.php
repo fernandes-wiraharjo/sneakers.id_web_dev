@@ -357,23 +357,24 @@
         </div>
     </div>
 
-   <div class="RelatedProductsWrapper">
-    <div class="RelatedProductsHeader">
-        <h3 class="RelatedProductTitle">Related Products</h3>
-        <a href="" class="ViewAllBtn">View All</a>
-    </div>
+    <div class="RelatedProductsWrapper">
+        <div class="RelatedProductsHeader">
+            <h3 class="RelatedProductTitle">Related Products</h3>
+            <a href="" class="ViewAllBtn">View All</a>
+        </div>
 
-    <div class="RelatedProductsSlider">
-        @foreach ($related_products as $product)
+        <div class="RelatedProductsSlider">
+            @if ($related_products->count() > 0)
+            @foreach ($related_products as $product)
             @php
-                $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                $ratio = $image_size[0] / $image_size[1];
+            $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
+            $ratio = $image_size[0] / $image_size[1];
             @endphp
             <div class="ProductCard">
                 <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">
                     <div class="ProductImageWrapper" style="--aspect-ratio: {{ $ratio }}">
                         <img src="{{ getImage($product->image, 'products/'.$product->product_code) }}"
-                             alt="{{ $product->product_name }}">
+                            alt="{{ $product->product_name }}">
                     </div>
                 </a>
                 <div class="ProductInfo">
@@ -383,14 +384,17 @@
                             <span class="PriceDiscounted">Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
                             <span class="PriceOriginal"><del>Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</del></span>
                             <span class="PriceOff">{{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF</span>
-                        @else
+                            @else
                             <span class="PriceNormal">Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</span>
-                        @endif
+                            @endif
                     </div>
                 </div>
             </div>
-        @endforeach
+            @endforeach
+            @else
+            <p>No Data Available</p>
+            @endif
+        </div>
     </div>
-</div>
 
 </div>

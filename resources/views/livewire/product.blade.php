@@ -378,12 +378,12 @@
                     </div>
                 </a>
                 <div class="ProductInfo">
-                    <h4>{{ $product->product_name }}</h4>
                     <div class="ProductPrice">
+                        <h4 class="ProductName">{{ $product->product_name }}</h4>
                         @if ($product->after_discount_price > 0 && $product->after_discount_price < $product->retail_price)
-                            <span class="PriceDiscounted">Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
-                            <span class="PriceOriginal"><del>Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</del></span>
+                         <span class="PriceOriginal"><del>Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</del></span>
                             <span class="PriceOff">{{ 100 - round((intval($product->after_discount_price) / intval($product->retail_price)) * 100, 0) }}% OFF</span>
+                            <span class="PriceDiscounted">Rp {{ rupiah_format(intval($product->after_discount_price ?? 0)) }}</span>
                             @else
                             <span class="PriceNormal">Rp {{ rupiah_format(intval($product->retail_price ?? 0)) }}</span>
                             @endif

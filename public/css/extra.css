@@ -186,12 +186,13 @@ li.page-item.active {
     display: inline-block;
     width: auto;
     height: 40px;
-    padding: 1px;
+    padding: 3px;
     text-align: -webkit-center;
     line-height: 32px;
     text-transform: uppercase;
     border: 2px solid black;
-    border-radius: 50%;
+    background-color: #F2F2F2;
+    border-radius: 10px;
     color: black;
     min-width: 40px;
 }

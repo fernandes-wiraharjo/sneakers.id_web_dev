@@ -51,34 +51,62 @@ $color-form-highlight: #EEEEEE;
     border-radius: 3px;
 }
 
+.SizeLabel {
+    display: flex;
+    justify-content: space-between;
+}
+
+.SelectSizeLabel {
+    font-weight: bold;
+}
+
+.SizeChartLabel {
+    text-decoration: underline;
+}
+
 .ProductCard {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* ensures bottom alignment */
-    flex: 0 0 auto;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 8px;
     width: 215px; /* Adjust for your layout */
     height: 343px; /* Adjust for your layout */
-    scroll-snap-align: start;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    padding: 10px;
-    background: #fff;
 }
 
 .ProductImageWrapper {
-    position: relative;
     width: 100%;
-    padding-bottom: calc(100% / var(--aspect-ratio, 1));
+    aspect-ratio: 1 / 1; /* keep square, or adjust as needed */
     overflow: hidden;
-    border-radius: 8px;
+    position: relative;
+}
+
+.CartIconBtn {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.CartIconBtn:hover {
+  background: #f2f2f2;
+}
+
+.CartIconBtn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
 .ProductImageWrapper img {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
+     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* makes image fill without distortion */
+    display: block;
 }
 
 .ProductInfo {
@@ -122,6 +150,63 @@ $color-form-highlight: #EEEEEE;
     font-weight: bolder;
     font-size: 20px;
     color: #000;
+}
+
+.Button--cart {
+    background-color: #EA501F;
+    color: white;
+    border-radius: 100px;
+}
+
+.Button--shop {
+    border-radius: 100px;
+    background-color: #000;
+    color: white;
+}
+
+/* .Product__SlideshowWrapper {
+    display: flex;
+    gap: 1px;
+    align-items: flex-start;
+}
+
+.Product__Slideshow {
+  flex: 1;
+  max-width: 600px;
+} */
+
+/* .ProductSlideshowNavScroller {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+} */
+
+.ProductSlideshowWrapper {
+  display: flex;
+  /* width: 600px; */
+  align-items: center;
+  align-items: flex-start; /* thumbnails align to top of main image */
+  gap: 1rem; /* spacing between thumbnails and main image */
+}
+
+.ProductSlideshowNav {
+  flex: 0 0 100px; /* fixed width for thumbnail column */
+}
+
+.ProductSlideshowNavScroller {
+  display: flex;
+  flex-direction: column; /* stack thumbnails vertically */
+  gap: 0.5rem;
+}
+
+.ProductSlideshow {
+  flex: 1; /* main image takes remaining space */
+  max-width: 600px; /* optional: limit main image width */
+}
+
+.PriceWrapper {
+    display: flex;
+    gap: 10px;
 }
 
 

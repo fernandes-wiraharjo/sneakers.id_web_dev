@@ -8664,7 +8664,7 @@ screen and (min-width: 1008px) and (hover: hover) {
 }
 
 .ProductMeta {
-    text-align: center
+    text-align: left
 }
 
 .ProductMeta__ImageWrapper {
@@ -8689,9 +8689,10 @@ screen and (min-width: 1008px) and (hover: hover) {
 }
 
 .ProductMeta__Description {
-    margin: 24px 0;
-    padding-top: 24px;
-    border-top: 1px solid #e7e7e7;
+    margin: 1px 0;
+    padding-top: 1px;
+    padding-bottom: 10px;
+    /* border-top: 1px solid #e7e7e7; */
     text-align: left
 }
 

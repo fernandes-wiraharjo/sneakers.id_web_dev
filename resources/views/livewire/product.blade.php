@@ -19,8 +19,22 @@
              }'>
             <div class="Product__Wrapper">
                 <div class="Product__Gallery Product__Gallery--withThumbnails">
-                    <span id="ProductGallery" class="Anchor"></span>
-                    <div class="Product__ActionList hidden-lap-and-up">
+                    <div class="gallery">
+                        <div class="thumbnails">
+                            @foreach ($product->images as $item)
+                            <div class="item">
+                                <img class="image" src="{{ getImage($product->image, 'products/' . $product->product_code) }}" alt="">
+                            </div>
+                            @endforeach
+                        </div>
+
+                        <div class="main">
+                            <img class="main-image" style="border-radius: 33px;" src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
+                        </div>
+                    </div>
+                    <div class="mobile-gallery" style="display: none;">
+                        <span id="ProductGallery" class="Anchor"></span>
+                        {{-- <div class="Product__ActionList hidden-lap-and-up">
                         <div class="Product__ActionItem hidden-lap-and-up">
                             <button class="RoundButton RoundButton--small RoundButton--flat"
                                 data-action="open-product-zoom">
@@ -33,67 +47,33 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
-                    <div class="ProductSlideshowWrapper">
-                        <div class="ProductSlideshowNav Product__SlideshowNav--thumbnails">
-                            <div class="Product__SlideshowNavScroller">
-                                @php
-                                $index = 1;
-                                $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
-                                $ratio_main_image = $image_size[0] / $image_size[1];
-                                @endphp
-                                <span data-index="0" data-image-id="0"
-                                    class="Product__SlideshowNavImage AspectRatio is-selected"
-                                    style="--aspect-ratio: {{ $ratio_main_image }};">
-                                    <img src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg" />
-                                </span>
-                                @foreach ($product->images as $key => $item)
-                                @if ($product->image != $item->image_url)
-                                @php
-                                $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                                $ratio_image = $image_size[0] / $image_size[1];
-                                @endphp
-                                <span data-index="{{ $index }}" data-image-id="image-{{ $product->product_code }}-{{ $index }}"
-                                    class="Product__SlideshowNavImage AspectRatio"
-                                    style="--aspect-ratio: {{ $ratio_image }};">
-                                    <img
-                                        src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg" />
-                                </span>
-                                @php
-                                $index++;
-                                @endphp
-                                @endif
-                                @endforeach
-                            </div>
-                        </div>
+                    </div> --}}
                         <div class="Product__Slideshow Product__Slideshow--zoomable Carousel" data-flickity-config='{
-                         "prevNextButtons": false,
-                         "pageDots": true,
-                         "adaptiveHeight": true,
-                         "watchCSS": true,
-                         "dragThreshold": 8,
-                         "initialIndex": 0,
-                         "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
-                       }' wire:ignore>
+                            "prevNextButtons": false,
+                            "pageDots": true,
+                            "adaptiveHeight": true,
+                            "watchCSS": true,
+                            "dragThreshold": 8,
+                            "initialIndex": 0,
+                            "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
+                        }'>
                             @php
                             $index = 1;
+                            $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
+                            $ratio_main_image = $image_size[0] / $image_size[1];
                             @endphp
                             <div id="image-{{ $product->product_code }}-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
                                 data-image-position-ignoring-video="0" data-image-position="0" data-image-id="image-{{ $product->product_code }}-0">
                                 <div class="AspectRatio AspectRatio--withFallback"
                                     style="padding-bottom: 100%; --aspect-ratio: {{ $ratio_main_image }};">
                                     <img class="Image--lazyLoad Image--fadeIn"
-                                        data-src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg"
+                                        data-src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
                                         data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]" data-sizes="auto"
                                         data-expand="-100" alt='{{ $product->product_name }}' data-max-width="2000"
                                         data-max-height="2000"
                                         data-original-src="{{ getImageGallery($product->image, 'products/' . $product->product_code) }}" />
 
                                     <span class="Image__Loader"></span>
-                                    <noscript>
-                                        <img src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg"
-                                            alt='{{ $product->product_name }}' />
-                                    </noscript>
                                 </div>
                             </div>
                             @foreach ($product->images as $item)
@@ -109,7 +89,7 @@
                                 <div class="AspectRatio AspectRatio--withFallback"
                                     style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
                                     <img class="Image--lazyLoad Image--fadeIn"
-                                        data-src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg"
+                                        data-src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}"
                                         data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]"
                                         data-sizes="auto" data-expand="-100"
                                         alt='{{ $product->product_name }}' data-max-width="2000"
@@ -117,10 +97,6 @@
                                         data-original-src="{{ getImageGallery($item->image_url, 'products/' . $product->product_code) }}" />
 
                                     <span class="Image__Loader"></span>
-                                    <noscript>
-                                        <img src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg"
-                                            alt='{{ $product->product_name }}' />
-                                    </noscript>
                                 </div>
                             </div>
                             @php
@@ -129,8 +105,36 @@
                             @endif
                             @endforeach
                         </div>
+                        <div class="Product__SlideshowNav Product__SlideshowNav--thumbnails">
+                            <div class="Product__SlideshowNavScroller">
+                                @php
+                                $index = 1;
+                                @endphp
+                                <span data-index="0" data-image-id="0"
+                                    class="Product__SlideshowNavImage AspectRatio is-selected"
+                                    style="--aspect-ratio: {{ $ratio_main_image }};">
+                                    <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
+                                </span>
+                                @foreach ($product->images as $key => $item)
+                                @if ($product->image != $item->image_url)
+                                @php
+                                $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
+                                $ratio_image = $image_size[0] / $image_size[1];
+                                @endphp
+                                <span data-index="{{ $index }}" data-image-id="image-{{ $product->product_code }}-{{ $index }}"
+                                    class="Product__SlideshowNavImage AspectRatio"
+                                    style="--aspect-ratio: {{ $ratio_image }};">
+                                    <img
+                                        src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" />
+                                </span>
+                                @php
+                                $index++;
+                                @endphp
+                                @endif
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
             <div class="Product__InfoWrapper">
@@ -381,10 +385,18 @@
     </div>
 
     <div class="RelatedProductsWrapper">
+        <button class="pswp__button pswp__button--prev RoundButton arrow left hidden" data-animate-left
+            title="Previous (left arrow)">
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.245897 8.10589C0.0877485 7.94628 -0.000976562 7.73068 -0.000976562 7.50599C-0.000976562 7.2813 0.0877485 7.0657 0.245897 6.90609L5.90533 1.24666C5.98305 1.16325 6.07677 1.09636 6.1809 1.04996C6.28503 1.00356 6.39745 0.978614 6.51143 0.976603C6.62541 0.974591 6.73864 0.995558 6.84434 1.03825C6.95005 1.08095 7.04607 1.1445 7.12668 1.22511C7.20729 1.30572 7.27084 1.40175 7.31354 1.50745C7.35623 1.61316 7.3772 1.72638 7.37519 1.84036C7.37318 1.95434 7.34823 2.06676 7.30183 2.17089C7.25543 2.27502 7.18853 2.36874 7.10513 2.44646L2.89451 6.65708L14.4284 6.65708C14.6536 6.65708 14.8695 6.74652 15.0287 6.90572C15.1879 7.06492 15.2773 7.28085 15.2773 7.50599C15.2773 7.73114 15.1879 7.94706 15.0287 8.10627C14.8695 8.26547 14.6536 8.35491 14.4284 8.35491H2.89451L7.10513 12.5655C7.25508 12.7265 7.33672 12.9393 7.33284 13.1592C7.32896 13.3792 7.23986 13.589 7.08433 13.7445C6.92879 13.9001 6.71896 13.9892 6.49903 13.993C6.2791 13.9969 6.06626 13.9153 5.90533 13.7653L0.245897 8.10589Z" fill="black" />
+            </svg>
+
+        </button>
+
         <div class="RelatedProductsHeader">
             <h3 class="RelatedProductTitle">Related Products</h3>
             <a href="{{ url('/collections/all') }}" class="ViewAllBtn">
-                <span>View All</span>
+                <span style="color: #000;">View All</span>
                 <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15.8088 7.59954C15.9669 7.43994 16.0557 7.22434 16.0557 6.99964C16.0557 6.77495 15.9669 6.55935 15.8088 6.39974L10.1494 0.740312C10.0716 0.656907 9.97792 0.590011 9.87379 0.543612C9.76965 0.497213 9.65724 0.472266 9.54326 0.470255C9.42927 0.468244 9.31605 0.48921 9.21035 0.531906C9.10464 0.574602 9.00862 0.638152 8.92801 0.718763C8.8474 0.799376 8.78385 0.895398 8.74115 1.0011C8.69846 1.10681 8.67749 1.22003 8.6795 1.33401C8.68151 1.448 8.70646 1.56041 8.75286 1.66454C8.79926 1.76867 8.86615 1.8624 8.94956 1.94011L13.1602 6.15073L1.62625 6.15073C1.40111 6.15073 1.18518 6.24017 1.02598 6.39937C0.866776 6.55857 0.777338 6.7745 0.777338 6.99964C0.777338 7.22479 0.866776 7.44072 1.02598 7.59992C1.18518 7.75912 1.40111 7.84856 1.62625 7.84856L13.1602 7.84856L8.94956 12.0592C8.79961 12.2201 8.71797 12.433 8.72185 12.6529C8.72573 12.8728 8.81482 13.0826 8.97036 13.2382C9.1259 13.3937 9.33573 13.4828 9.55566 13.4867C9.77559 13.4906 9.98843 13.4089 10.1494 13.259L15.8088 7.59954Z" fill="black" />
                 </svg>
@@ -401,7 +413,7 @@
             <div class="ProductCard">
                 <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}">
                     <div class="ProductImageWrapper" style="--aspect-ratio: {{ $ratio }}">
-                        <img src="https://development.sneakers.id/images/products/SNEAKERS_0001/0_1_1800x1800.jpg"
+                        <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
                             alt="{{ $product->product_name }}">
 
                         <button type="" class="CartIconBtn">
@@ -431,6 +443,41 @@
             <p>No Data Available</p>
             @endif
         </div>
+
+        <button class="pswp__button pswp__button--prev RoundButton arrow right hidden" data-animate-right
+            title="Previous (right arrow)">
+            <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.8977 8.10589C16.0558 7.94628 16.1445 7.73068 16.1445 7.50599C16.1445 7.2813 16.0558 7.0657 15.8977 6.90609L10.2382 1.24666C10.1605 1.16325 10.0668 1.09636 9.96265 1.04996C9.85852 1.00356 9.74611 0.978614 9.63212 0.976603C9.51814 0.974591 9.40492 0.995558 9.29921 1.03825C9.19351 1.08095 9.09749 1.1445 9.01688 1.22511C8.93626 1.30572 8.87271 1.40175 8.83002 1.50745C8.78732 1.61316 8.76636 1.72638 8.76837 1.84036C8.77038 1.95434 8.79533 2.06676 8.84172 2.17089C8.88812 2.27502 8.95502 2.36874 9.03843 2.44646L13.249 6.65708L1.71512 6.65708C1.48997 6.65708 1.27405 6.74652 1.11485 6.90572C0.955644 7.06492 0.866205 7.28085 0.866205 7.50599C0.866205 7.73114 0.955644 7.94706 1.11485 8.10627C1.27405 8.26547 1.48997 8.35491 1.71512 8.35491H13.249L9.03843 12.5655C8.88847 12.7265 8.80684 12.9393 8.81072 13.1592C8.8146 13.3792 8.90369 13.589 9.05923 13.7445C9.21476 13.9001 9.4246 13.9892 9.64453 13.993C9.86445 13.9969 10.0773 13.9153 10.2382 13.7653L15.8977 8.10589Z" fill="black" />
+            </svg>
+
+        </button>
     </div>
+
+    @push('scripts')
+  <script>
+     function initRelatedSlider() {
+        const slider = document.querySelector(".RelatedProductsSlider");
+
+        // Use querySelector with your classes
+        const leftBtn = document.querySelector(".pswp__button.pswp__button--prev.RoundButton.arrow.left");
+        const rightBtn = document.querySelector(".pswp__button.pswp__button--prev.RoundButton.arrow.right");
+
+        if (slider && leftBtn && rightBtn) {
+            // Only show arrows if more than 5 products
+            if (slider.children.length > 5) {
+                leftBtn.classList.remove("hidden");
+                rightBtn.classList.remove("hidden");
+            }
+
+            leftBtn.onclick = () => slider.scrollBy({ left: -250, behavior: "smooth" });
+            rightBtn.onclick = () => slider.scrollBy({ left: 250, behavior: "smooth" });
+        }
+    }
+
+    // Run when Livewire loads & re-renders
+    document.addEventListener("livewire:load", initRelatedSlider);
+    Livewire.hook("message.processed", initRelatedSlider);
+</script>
+    @endpush
 
 </div>

@@ -23,7 +23,8 @@
                         <div class="thumbnails">
                             @foreach ($product->images as $item)
                             <div class="item">
-                                <img class="image" src="{{ getImage($product->image, 'products/' . $product->product_code) }}" alt="">
+                                <img class="image" src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
+                                    alt="{{ $product->product_name }}" />
                             </div>
                             @endforeach
                         </div>
@@ -34,107 +35,90 @@
                     </div>
                     <div class="mobile-gallery" style="display: none;">
                         <span id="ProductGallery" class="Anchor"></span>
-                        {{-- <div class="Product__ActionList hidden-lap-and-up">
-                        <div class="Product__ActionItem hidden-lap-and-up">
-                            <button class="RoundButton RoundButton--small RoundButton--flat"
-                                data-action="open-product-zoom">
-                                <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
-                                    <g stroke="currentColor" fill="none" fill-rule="evenodd"
-                                        stroke-linecap="square">
-                                        <path d="M8,1 L8,15"></path>
-                                        <path d="M1,8 L15,8"></path>
-                                    </g>
-                                </svg>
-                            </button>
-                        </div>
-                    </div> --}}
-                        <div class="Product__Slideshow Product__Slideshow--zoomable Carousel" data-flickity-config='{
-                            "prevNextButtons": false,
-                            "pageDots": true,
-                            "adaptiveHeight": true,
-                            "watchCSS": true,
-                            "dragThreshold": 8,
-                            "initialIndex": 0,
-                            "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
-                        }'>
-                            @php
-                            $index = 1;
-                            $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
-                            $ratio_main_image = $image_size[0] / $image_size[1];
-                            @endphp
-                            <div id="image-{{ $product->product_code }}-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
-                                data-image-position-ignoring-video="0" data-image-position="0" data-image-id="image-{{ $product->product_code }}-0">
-                                <div class="AspectRatio AspectRatio--withFallback"
-                                    style="padding-bottom: 100%; --aspect-ratio: {{ $ratio_main_image }};">
-                                    <img class="Image--lazyLoad Image--fadeIn"
-                                        data-src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
-                                        data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]" data-sizes="auto"
-                                        data-expand="-100" alt='{{ $product->product_name }}' data-max-width="2000"
-                                        data-max-height="2000"
-                                        data-original-src="{{ getImageGallery($product->image, 'products/' . $product->product_code) }}" />
 
-                                    <span class="Image__Loader"></span>
-                                </div>
-                            </div>
+                        <!-- Main Image -->
+                        <div class="MobileGallery__MainImage">
+                            <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
+                                alt="{{ $product->product_name }}" />
+                        </div>
+
+                        <!-- Thumbnail Row -->
+                        <div class="MobileGallery__Thumbnails">
                             @foreach ($product->images as $item)
                             @if ($product->image != $item->image_url)
-                            <div id="image-{{ $product->product_code }}-{{ $index}}"
-                                class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
-                                data-image-position-ignoring-video="{{ $index }}" data-image-position="{{ $index }}"
-                                data-image-id="image-{{ $product->product_code }}-{{ $index }}">
-                                @php
-                                $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                                $ratio = $image_size[0] / $image_size[1];
-                                @endphp
-                                <div class="AspectRatio AspectRatio--withFallback"
-                                    style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
-                                    <img class="Image--lazyLoad Image--fadeIn"
-                                        data-src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}"
-                                        data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]"
-                                        data-sizes="auto" data-expand="-100"
-                                        alt='{{ $product->product_name }}' data-max-width="2000"
-                                        data-max-height="2000"
-                                        data-original-src="{{ getImageGallery($item->image_url, 'products/' . $product->product_code) }}" />
-
-                                    <span class="Image__Loader"></span>
-                                </div>
+                            <div class="MobileGallery__Thumbnail">
+                                <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
+                                    alt="{{ $product->product_name }}" />
                             </div>
-                            @php
-                            $index++;
-                            @endphp
                             @endif
                             @endforeach
                         </div>
-                        <div class="Product__SlideshowNav Product__SlideshowNav--thumbnails">
-                            <div class="Product__SlideshowNavScroller">
-                                @php
-                                $index = 1;
-                                @endphp
-                                <span data-index="0" data-image-id="0"
-                                    class="Product__SlideshowNavImage AspectRatio is-selected"
-                                    style="--aspect-ratio: {{ $ratio_main_image }};">
-                                    <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
-                                </span>
-                                @foreach ($product->images as $key => $item)
-                                @if ($product->image != $item->image_url)
-                                @php
-                                $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                                $ratio_image = $image_size[0] / $image_size[1];
-                                @endphp
-                                <span data-index="{{ $index }}" data-image-id="image-{{ $product->product_code }}-{{ $index }}"
-                                    class="Product__SlideshowNavImage AspectRatio"
-                                    style="--aspect-ratio: {{ $ratio_image }};">
-                                    <img
-                                        src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" />
-                                </span>
-                                @php
-                                $index++;
-                                @endphp
-                                @endif
-                                @endforeach
+                    </div>
+
+                    <!-- Modal -->
+                    <div id="ImageModal" class="ImageModal">
+                        <div class="modal-box">
+                            <!-- Header -->
+                            <div class="modal-header">
+                                <h2 class="modal-title">{{ $product -> product_name }}</h2>
+
+                                <svg class="close-btn" id="closeBtn" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="34" height="34" rx="10" fill="black" fill-opacity="0.05" />
+                                    <path d="M11.4 24L10 22.6L15.6 17L10 11.4L11.4 10L17 15.6L22.6 10L24 11.4L18.4 17L24 22.6L22.6 24L17 18.4L11.4 24Z" fill="black" fill-opacity="0.6" />
+                                </svg>
+                            </div>
+
+                            <!-- Image Content -->
+                            <div class="modal-content">
+                                <svg width="68" height="67" viewBox="0 0 68 67" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowModal left">
+                                    <g filter="url(#filter0_d_821_25711)">
+                                        <circle cx="34.0718" cy="28.9282" r="22.0718" transform="rotate(-90 34.0718 28.9282)" fill="white" />
+                                    </g>
+                                    <path d="M27.2464 28.9623C27.0882 28.8027 26.9995 28.5871 26.9995 28.3624C26.9995 28.1377 27.0882 27.9221 27.2464 27.7625L32.9058 22.1031C32.9835 22.0197 33.0773 21.9528 33.1814 21.9064C33.2855 21.86 33.3979 21.8351 33.5119 21.833C33.6259 21.831 33.7391 21.852 33.8448 21.8947C33.9505 21.9374 34.0466 22.0009 34.1272 22.0816C34.2078 22.1622 34.2713 22.2582 34.314 22.3639C34.3567 22.4696 34.3777 22.5828 34.3757 22.6968C34.3737 22.8108 34.3487 22.9232 34.3023 23.0273C34.2559 23.1315 34.189 23.2252 34.1056 23.3029L29.895 27.5135H41.4289C41.6541 27.5135 41.87 27.603 42.0292 27.7622C42.1884 27.9214 42.2778 28.1373 42.2778 28.3624C42.2778 28.5876 42.1884 28.8035 42.0292 28.9627C41.87 29.1219 41.6541 29.2114 41.4289 29.2114H29.895L34.1056 33.422C34.2556 33.5829 34.3372 33.7957 34.3333 34.0157C34.3294 34.2356 34.2404 34.4454 34.0848 34.601C33.9293 34.7565 33.7194 34.8456 33.4995 34.8495C33.2796 34.8534 33.0667 34.7717 32.9058 34.6218L27.2464 28.9623Z" fill="black" />
+                                    <defs>
+                                        <filter id="filter0_d_821_25711" x="0.681135" y="0.0651264" width="66.7813" height="66.7813" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                                            <feOffset dy="4.52755" />
+                                            <feGaussianBlur stdDeviation="5.65943" />
+                                            <feComposite in2="hardAlpha" operator="out" />
+                                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
+                                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_821_25711" />
+                                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_821_25711" result="shape" />
+                                        </filter>
+                                    </defs>
+                                </svg>
+
+                                <img id="modalImage" src="" alt="Preview">
+
+                                <svg width="68" height="67" viewBox="0 0 68 67" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrowModal right">
+                                    <g filter="url(#filter0_d_821_25715)">
+                                        <circle cx="22.0718" cy="22.0718" r="22.0718" transform="matrix(0 -1 -1 0 56.1436 51)" fill="white" />
+                                    </g>
+                                    <path d="M40.8972 28.9623C41.0553 28.8027 41.144 28.5871 41.144 28.3624C41.144 28.1377 41.0553 27.9221 40.8972 27.7625L35.2377 22.1031C35.16 22.0197 35.0663 21.9528 34.9622 21.9064C34.858 21.86 34.7456 21.8351 34.6316 21.833C34.5177 21.831 34.4044 21.852 34.2987 21.8947C34.193 21.9374 34.097 22.0009 34.0164 22.0816C33.9358 22.1622 33.8722 22.2582 33.8295 22.3639C33.7868 22.4696 33.7659 22.5828 33.7679 22.6968C33.7699 22.8108 33.7948 22.9232 33.8412 23.0273C33.8876 23.1315 33.9545 23.2252 34.0379 23.3029L38.2486 27.5135H26.7146C26.4895 27.5135 26.2736 27.603 26.1144 27.7622C25.9552 27.9214 25.8657 28.1373 25.8657 28.3624C25.8657 28.5876 25.9552 28.8035 26.1144 28.9627C26.2736 29.1219 26.4895 29.2114 26.7146 29.2114H38.2486L34.0379 33.422C33.888 33.5829 33.8063 33.7957 33.8102 34.0157C33.8141 34.2356 33.9032 34.4454 34.0587 34.601C34.2143 34.7565 34.4241 34.8456 34.644 34.8495C34.864 34.8534 35.0768 34.7717 35.2377 34.6218L40.8972 28.9623Z" fill="black" />
+                                    <defs>
+                                        <filter id="filter0_d_821_25715" x="0.681135" y="0.0651264" width="66.7813" height="66.7813" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                                            <feOffset dy="4.52755" />
+                                            <feGaussianBlur stdDeviation="5.65943" />
+                                            <feComposite in2="hardAlpha" operator="out" />
+                                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
+                                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_821_25715" />
+                                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_821_25715" result="shape" />
+                                        </filter>
+                                    </defs>
+                                </svg>
+
+                                <!-- Footer -->
+                                <div class="modal-footer">
+                                    <span id="modalPagination">1 / 6</span>
+                                </div>
+
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="Product__InfoWrapper">
@@ -454,30 +438,103 @@
     </div>
 
     @push('scripts')
-  <script>
-     function initRelatedSlider() {
-        const slider = document.querySelector(".RelatedProductsSlider");
+    <script>
+        // Related Product Slider Handler
+        function initRelatedSlider() {
+            const slider = document.querySelector(".RelatedProductsSlider");
 
-        // Use querySelector with your classes
-        const leftBtn = document.querySelector(".pswp__button.pswp__button--prev.RoundButton.arrow.left");
-        const rightBtn = document.querySelector(".pswp__button.pswp__button--prev.RoundButton.arrow.right");
+            // Use querySelector with your classes
+            const leftBtn = document.querySelector(".pswp__button.pswp__button--prev.RoundButton.arrow.left");
+            const rightBtn = document.querySelector(".pswp__button.pswp__button--prev.RoundButton.arrow.right");
 
-        if (slider && leftBtn && rightBtn) {
-            // Only show arrows if more than 5 products
-            if (slider.children.length > 5) {
-                leftBtn.classList.remove("hidden");
-                rightBtn.classList.remove("hidden");
+            if (slider && leftBtn && rightBtn) {
+                // Only show arrows if more than 5 products
+                if (slider.children.length > 5) {
+                    leftBtn.classList.remove("hidden");
+                    rightBtn.classList.remove("hidden");
+                }
+
+                leftBtn.onclick = () => slider.scrollBy({
+                    left: -250,
+                    behavior: "smooth"
+                });
+                rightBtn.onclick = () => slider.scrollBy({
+                    left: 250,
+                    behavior: "smooth"
+                });
             }
-
-            leftBtn.onclick = () => slider.scrollBy({ left: -250, behavior: "smooth" });
-            rightBtn.onclick = () => slider.scrollBy({ left: 250, behavior: "smooth" });
         }
-    }
 
-    // Run when Livewire loads & re-renders
-    document.addEventListener("livewire:load", initRelatedSlider);
-    Livewire.hook("message.processed", initRelatedSlider);
-</script>
+        // Image Modal Handler
+      document.addEventListener("DOMContentLoaded", function() {
+        const modal = document.getElementById("ImageModal");
+        const modalImage = document.getElementById("modalImage");
+        const closeBtn = modal.querySelector(".close-btn"); // make sure button exists in HTML
+        const prevBtn = modal.querySelector(".arrowModal.left");
+        const nextBtn = modal.querySelector(".arrowModal.right");
+        const pagination = document.getElementById("modalPagination");
+
+        // Collect all images except the main image
+        const desktopThumbnails = Array.from(document.querySelectorAll(".thumbnails .image"));
+        const mobileThumbnails = Array.from(document.querySelectorAll(".MobileGallery__Thumbnail img"));
+        const allThumbnails = [...desktopThumbnails, ...mobileThumbnails];
+
+        let currentIndex = 0;
+
+        function updateModal() {
+            modalImage.src = allThumbnails[currentIndex].src;
+            if (pagination) {
+                pagination.textContent = `${currentIndex + 1} / ${allThumbnails.length - 1}`;
+            }
+        }
+
+        function openModal(index) {
+            currentIndex = index;
+            updateModal();
+            modal.classList.add("show");
+            document.body.style.overflow = "hidden"; // disable scroll
+        }
+
+        function closeModal() {
+            modal.classList.remove("show");
+            document.body.style.overflow = ""; // re-enable scroll
+        }
+
+        function showNext() {
+            currentIndex = (currentIndex + 1) % allThumbnails.length;
+            updateModal();
+        }
+
+        function showPrev() {
+            currentIndex = (currentIndex - 1 + allThumbnails.length) % allThumbnails.length;
+            updateModal();
+        }
+
+        // Attach click events to thumbnails
+        allThumbnails.forEach((thumb, index) => {
+            thumb.addEventListener("click", () => openModal(index));
+        });
+
+        if (closeBtn) closeBtn.addEventListener("click", closeModal);
+        if (nextBtn) nextBtn.addEventListener("click", showNext);
+        if (prevBtn) prevBtn.addEventListener("click", showPrev);
+
+        // Close on outside click
+        window.addEventListener("click", function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ESC key support
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && modal.classList.contains("show")) {
+                closeModal();
+            }
+        });
+    });
+
+    </script>
     @endpush
 
 </div>

@@ -55,78 +55,78 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             ->where('is_active', 1);
     }
 
-    // public function getProductWhere(){
-    //     $q = $this->model->query()
-    //     ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
-    //     ->select('products.*', 'pd.retail_price', 'pd.after_discount_price', DB::raw('IF(pd.after_discount_price = 0, pd.retail_price, pd.after_discount_price) as actual_product_prize'))
-    //     ->leftJoin('product_details as pd', function($join) {
-    //         $join->on('pd.product_id', '=', 'products.id')
-    //             ->where('pd.retail_price', '=', DB::raw('(
-    //                 Select min(retail_price)
-    //                 from product_details
-    //                 where product_id = products.id
-    //             )'))
-    //             ->where('pd.after_discount_price', '=', DB::raw('(
-    //                 Select min(after_discount_price)
-    //                 from product_details
-    //                 where product_id = products.id
-    //             )'));
-    //     })
-    //     // ->whereRaw('pd.min_retail_price = pd2.retail_price')
-    //     ->where(['products.is_active'=> 1])
-    //     ->where('pd.qty', '<>', 0)
-    //     ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
-
-    //     return $q;
-    // }
-
-    public function getProductWhere() {
-        $minPrices = DB::table('product_details')
-            ->select(
-                'product_id',
-                DB::raw('MIN(retail_price) as min_retail_price'),
-                DB::raw('MIN(after_discount_price) as min_after_discount_price')
-            )
-            ->groupBy('product_id');
-
+    public function getProductWhere(){
         $q = $this->model->query()
-            ->with(['images:id,product_id,image_url']) // only load what you need
-            ->joinSub($minPrices, 'pd', function($join) {
-                $join->on('pd.product_id', '=', 'products.id');
-            })
-            ->select(
-                'products.*',
-                'pd.min_retail_price as retail_price',
-                'pd.min_after_discount_price as after_discount_price',
-                DB::raw('IF(pd.min_after_discount_price = 0, pd.min_retail_price, pd.min_after_discount_price) as actual_product_prize')
-            )
-            ->where('products.is_active', 1)
-            ->whereExists(function($q) {
-                $q->select(DB::raw(1))
-                ->from('product_details')
-                ->whereColumn('product_details.product_id', 'products.id')
-                ->where('product_details.qty', '<>', 0);
-            })
-            ->groupBy(
-                'products.id',
-                'products.product_code',
-                'products.product_name',
-                'products.product_link',
-                'products.shopee_link',
-                'products.tiktok_link',
-                'products.blibli_link',
-                'products.description',
-                'products.image',
-                'products.product_visit',
-                'products.is_active',
-                'products.created_at',
-                'products.updated_at',
-                'pd.min_retail_price',
-                'pd.min_after_discount_price'
-            );
+        ->with(['detail', 'images', 'signatures', 'categories', 'tags'])
+        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price', DB::raw('IF(pd.after_discount_price = 0, pd.retail_price, pd.after_discount_price) as actual_product_prize'))
+        ->leftJoin('product_details as pd', function($join) {
+            $join->on('pd.product_id', '=', 'products.id')
+                ->where('pd.retail_price', '=', DB::raw('(
+                    Select min(retail_price)
+                    from product_details
+                    where product_id = products.id
+                )'))
+                ->where('pd.after_discount_price', '=', DB::raw('(
+                    Select min(after_discount_price)
+                    from product_details
+                    where product_id = products.id
+                )'));
+        })
+        // ->whereRaw('pd.min_retail_price = pd2.retail_price')
+        ->where(['products.is_active'=> 1])
+        ->where('pd.qty', '<>', 0)
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
 
         return $q;
     }
+
+    // public function getProductWhere() {
+    //     $minPrices = DB::table('product_details')
+    //         ->select(
+    //             'product_id',
+    //             DB::raw('MIN(retail_price) as min_retail_price'),
+    //             DB::raw('MIN(after_discount_price) as min_after_discount_price')
+    //         )
+    //         ->groupBy('product_id');
+
+    //     $q = $this->model->query()
+    //         ->with(['images:id,product_id,image_url']) // only load what you need
+    //         ->joinSub($minPrices, 'pd', function($join) {
+    //             $join->on('pd.product_id', '=', 'products.id');
+    //         })
+    //         ->select(
+    //             'products.*',
+    //             'pd.min_retail_price as retail_price',
+    //             'pd.min_after_discount_price as after_discount_price',
+    //             DB::raw('IF(pd.min_after_discount_price = 0, pd.min_retail_price, pd.min_after_discount_price) as actual_product_prize')
+    //         )
+    //         ->where('products.is_active', 1)
+    //         ->whereExists(function($q) {
+    //             $q->select(DB::raw(1))
+    //             ->from('product_details')
+    //             ->whereColumn('product_details.product_id', 'products.id')
+    //             ->where('product_details.qty', '<>', 0);
+    //         })
+    //         ->groupBy(
+    //             'products.id',
+    //             'products.product_code',
+    //             'products.product_name',
+    //             'products.product_link',
+    //             'products.shopee_link',
+    //             'products.tiktok_link',
+    //             'products.blibli_link',
+    //             'products.description',
+    //             'products.image',
+    //             'products.product_visit',
+    //             'products.is_active',
+    //             'products.created_at',
+    //             'products.updated_at',
+    //             'pd.min_retail_price',
+    //             'pd.min_after_discount_price'
+    //         );
+
+    //     return $q;
+    // }
 
     public function getProductByCode($code){
         return $this->model->query()

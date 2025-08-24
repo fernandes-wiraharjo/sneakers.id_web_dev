@@ -432,6 +432,17 @@ class ProductList extends Component
                         ->when($this->keyword === 'sale' || $this->keyword === 'discount' || in_array($sale_category_id, $this->category) || in_array($sale_tag_id, $this->tag) || in_array($discount_id, $this->tag), function ($query) {
                             return $query->where('pd.discount_percentage', '>', 0);
                         })
+                        // ->when(
+                        //     $this->keyword === 'sale' || $this->keyword === 'discount' ||
+                        //     in_array($sale_category_id, $this->category) ||
+                        //     in_array($sale_tag_id, $this->tag) ||
+                        //     in_array($discount_id, $this->tag),
+                        //     function ($query) {
+                        //         return $query->whereHas('detail', function ($q) {
+                        //             $q->where('discount_percentage', '>', 0);
+                        //         });
+                        //     }
+                        // )
                         // ->when($this->gender, function ($query, $gender){
                         //     return $query->whereHas('categories', function ($q) use ($gender){
                         //         rsort($gender);
@@ -468,24 +479,24 @@ class ProductList extends Component
                                 $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                             });
                         })
+                        // ->when($this->size_filter, function ($query, $sizes) {
+                        //     return $query->whereHas('detail', function($q) use ($sizes) {
+                        //         foreach ($sizes as $size) {
+                        //             $q->orWhere('size', 'LIKE', "%$size%");
+                        //         }
+                        //         $q->where('qty', '>', 0);
+                        //     });
+                        // });
                         ->when($this->size_filter, function ($q, $sizes) {
-                            $q->where(function ($sub) use ($sizes) {
-                                foreach ($sizes as $size) {
-                                    $sub->orWhere('pd.size', 'LIKE', "%$size%");
+                            foreach($sizes as $index => $size){
+                                if($index == 0) {
+                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                } else {
+                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
                                 }
-                            });
+                            }
                             return $q->where('pd.qty', '>', 0);
                         });
-                        // ->when($this->size_filter, function ($q, $sizes) {
-                        //     foreach($sizes as $index => $size){
-                        //         if($index == 0) {
-                        //             $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
-                        //         } else {
-                        //             $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
-                        //         }
-                        //     }
-                        //     return $q->where('pd.qty', '>', 0);
-                        // });
 
         // if($this->sort_column == 'pd.retail_price') {
         //     $products->orderBy('pd.after_discount_price', $this->sort_by);

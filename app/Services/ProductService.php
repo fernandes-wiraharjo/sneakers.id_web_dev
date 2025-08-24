@@ -243,8 +243,14 @@ class ProductService {
 
                 if($getProduct) {
                     $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
-                    // $getProduct->image = $request['is_main'];
-                    $getProduct->image = $webpMain;
+                    $webpPath = public_path($afterPath . '/' . $webpMain);
+
+                    if (File::exists($webpPath)) {
+                        $getProduct->image = $webpMain; // use converted webp
+                    } else {
+                        $getProduct->image = $request['is_main']; // fallback to original
+                    }
+
                     $getProduct->save();
                 }
 

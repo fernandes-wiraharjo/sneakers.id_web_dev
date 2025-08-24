@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\View\View;
@@ -92,7 +93,7 @@ class ProductList extends Component
         $this->resetPage();
     }
 
-    public function sort($sort_column = 'products.created_at', $sort_by){
+    public function sort($sort_column = 'products.created_at', $sort_by = 'desc'){
         $this->sort_by = $sort_by;
         $this->sort_column = $sort_column;
     }
@@ -238,13 +239,29 @@ class ProductList extends Component
         SignaturePlayerRepository $signaturePlayerRepository
         ): View
     {
-        $data['filters'] = [
-            'brand' => $brandRepository->getAllBrand(),
-            'size' => $sizeRepository->getAllSizes(),
-            'tag' => $tagRepository->getAllTags(),
-            'category' => $categoryRepository->getAllCategoriesExceptGender(),
-            'signature_player' => $signaturePlayerRepository->getAllSignatures()
-        ];
+        // $data['filters'] = [
+        //     'brand' => $brandRepository->getAllBrand(),
+        //     'size' => $sizeRepository->getAllSizes(),
+        //     'tag' => $tagRepository->getAllTags(),
+        //     'category' => $categoryRepository->getAllCategoriesExceptGender(),
+        //     'signature_player' => $signaturePlayerRepository->getAllSignatures()
+        // ];
+        // Cache for 1 hour (3600 seconds)
+        $data['filters'] = Cache::remember('product_filters', 3600, function () use (
+            $brandRepository,
+            $sizeRepository,
+            $tagRepository,
+            $categoryRepository,
+            $signaturePlayerRepository,
+        ) {
+            return [
+                'brand' => $brandRepository->getAllBrand(),
+                'size' => $sizeRepository->getAllSizes(),
+                'tag' => $tagRepository->getAllTags(),
+                'category' => $categoryRepository->getAllCategoriesExceptGender(),
+                'signature_player' => $signaturePlayerRepository->getAllSignatures(),
+            ];
+        });
         $keyword_array = [];
         $sale_keyword = '';
         $all_signature = false;
@@ -332,13 +349,19 @@ class ProductList extends Component
         // dump($gender_choosen); // [1,2,3]
         // dump(array_intersect($this->category, $gender_id->toArray()));
 
-        if(array_intersect($this->category, $gender_id->toArray())){
-            foreach(array_intersect($this->category, $gender_id->toArray()) as $gender_from_menu){
-                $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->category_code;
-            };
+        // if(array_intersect($this->category, $gender_id->toArray())){
+        //     foreach(array_intersect($this->category, $gender_id->toArray()) as $gender_from_menu){
+        //         $this->gender[] = $categoryRepository->getCategoryById($gender_from_menu)->category_code;
+        //     };
+        // }
+        // $this->gender = array_unique($this->gender);
+        $gender_codes = $this->gender;
+        if ($ids = array_intersect($this->category, $gender_id->toArray())) {
+            foreach ($ids as $gender_from_menu) {
+                $gender_codes[] = $categoryRepository->getCategoryById($gender_from_menu)->category_code;
+            }
         }
-
-        $this->gender = array_unique($this->gender);
+        $gender_codes = array_unique($gender_codes);
 
         $products = $productRepository->getProductWhere()
                         ->when($this->search, function ($query, $search){
@@ -346,50 +369,50 @@ class ProductList extends Component
                         })
                         ->when($this->brand, function ($query, $brands){
                             return $query->whereHas('detail', function ($q) use ($brands){
-                                rsort($brands);
+                                // rsort($brands);
 
-                                return $q->whereIn('brand_id', array_unique($brands))
-                                    ->when($this->search, function ($query, $search){
-                                        return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                    });
-                                });
+                                return $q->whereIn('brand_id', array_unique($brands));
+                                    // ->when($this->search, function ($query, $search){
+                                    //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                    // });
+                            });
                         })
                         ->when($this->category, function ($query, $categories) use ($gender_id, $keyword_array){
                             return $query->whereHas('categories', function ($q) use ($categories, $gender_id, $keyword_array){
-                                rsort($categories);
+                                // rsort($categories);
 
                                 if(array_intersect($categories, $gender_id->toArray()) && (count($keyword_array) == 2) ){
                                     return $q
-                                        ->where('category_id', $categories)
-                                        ->when($this->search, function ($query, $search){
-                                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                        });
+                                        ->where('category_id', $categories);
+                                        // ->when($this->search, function ($query, $search){
+                                        //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                        // });
                                 } else {
-                                    return $q->whereIn('category_id', array_unique($categories))
-                                    ->when($this->search, function ($query, $search){
-                                        return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                        });
+                                    return $q->whereIn('category_id', array_unique($categories));
+                                    // ->when($this->search, function ($query, $search){
+                                    //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                    //     });
                                     }
                                 });
                         })
                         ->when($this->tag, function ($query, $tags) {
                             return $query->whereHas('tags', function ($q) use ($tags){
-                                rsort($tags);
+                                // rsort($tags);
 
-                                return $q->whereIn('tag_id', array_unique($tags))
-                                    ->when($this->search, function ($query, $search){
-                                        return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                    });
+                                return $q->whereIn('tag_id', array_unique($tags));
+                                    // ->when($this->search, function ($query, $search){
+                                    //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                    // });
                                 });
                             })
                         ->when($this->signature, function ($query, $signatures){
                             return $query->whereHas('signatures', function ($q) use ($signatures){
-                                rsort($signatures);
+                                // rsort($signatures);
 
-                                return $q->whereIn('signature_player_id', array_unique($signatures))
-                                    ->when($this->search, function ($query, $search){
-                                        return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                    });
+                                return $q->whereIn('signature_player_id', array_unique($signatures));
+                                    // ->when($this->search, function ($query, $search){
+                                    //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                    // });
                                 });
                             })
                         ->when($all_signature, function ($query){
@@ -409,24 +432,32 @@ class ProductList extends Component
                         ->when($this->keyword === 'sale' || $this->keyword === 'discount' || in_array($sale_category_id, $this->category) || in_array($sale_tag_id, $this->tag) || in_array($discount_id, $this->tag), function ($query) {
                             return $query->where('pd.discount_percentage', '>', 0);
                         })
-                        ->when($this->gender, function ($query, $gender){
-                            return $query->whereHas('categories', function ($q) use ($gender){
-                                rsort($gender);
+                        // ->when($this->gender, function ($query, $gender){
+                        //     return $query->whereHas('categories', function ($q) use ($gender){
+                        //         rsort($gender);
 
-                                return $q->where('categories.category_code', array_unique($gender))
-                                    ->when($this->search, function ($query, $search){
-                                        return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                    });
+                        //         return $q->where('categories.category_code', array_unique($gender))
+                        //             ->when($this->search, function ($query, $search){
+                        //                 return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                        //             });
+                        //     });
+                        // })
+                        ->when($gender_codes, function ($query, $gender_codes) {
+                            return $query->whereHas('categories', function ($q) use ($gender_codes) {
+                                return $q->whereIn('categories.category_code', $gender_codes);
+                                        // ->when($this->search, function ($query, $search) {
+                                        //     return $query->where('product_name', 'LIKE', "%$search%");
+                                        // });
                             });
                         })
                         ->when($this->age_range, function ($query, $age_range){
                             return $query->whereHas('categories', function ($q) use ($age_range){
-                                rsort($age_range);
+                                // rsort($age_range);
 
-                                return $q->whereIn('categories.category_code', array_unique($age_range))
-                                    ->when($this->search, function ($query, $search){
-                                        return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                                    });
+                                return $q->whereIn('categories.category_code', array_unique($age_range));
+                                    // ->when($this->search, function ($query, $search){
+                                    //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
+                                    // });
                             });
                         })
                         ->when($this->keyword === 'new-release' || $sale_keyword === 'new release', function($query) {
@@ -438,16 +469,23 @@ class ProductList extends Component
                             });
                         })
                         ->when($this->size_filter, function ($q, $sizes) {
-                            foreach($sizes as $index => $size){
-                                if($index == 0) {
-                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
-                                } else {
-                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                            $q->where(function ($sub) use ($sizes) {
+                                foreach ($sizes as $size) {
+                                    $sub->orWhere('pd.size', 'LIKE', "%$size%");
                                 }
-                            }
+                            });
                             return $q->where('pd.qty', '>', 0);
-                        })
-                        ;
+                        });
+                        // ->when($this->size_filter, function ($q, $sizes) {
+                        //     foreach($sizes as $index => $size){
+                        //         if($index == 0) {
+                        //             $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                        //         } else {
+                        //             $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                        //         }
+                        //     }
+                        //     return $q->where('pd.qty', '>', 0);
+                        // });
 
         // if($this->sort_column == 'pd.retail_price') {
         //     $products->orderBy('pd.after_discount_price', $this->sort_by);
@@ -460,9 +498,10 @@ class ProductList extends Component
         // dump($products->toSql());
         // dump($products->orderBy($this->sort_column, $this->sort_by)->count());
         // dump($products->count());
-        $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
+        // $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         // dump($products->toSql());
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
+        $this->total_product = $data['products']->total();
         // dd($products->toSql());
         return view('livewire.product-list', $data);
     }

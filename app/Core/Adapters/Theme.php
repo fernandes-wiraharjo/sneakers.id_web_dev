@@ -160,7 +160,7 @@ class Theme extends \App\Core\Theme
 
         // Append demo folder for layout view
         if (Str::startsWith($path, 'layout')) {
-            $path = str_replace('layout', 'layout/'.self::$demo, $path);
+            $path = str_replace('layout', 'back-office/layout/'.self::$demo, $path);
         }
 
         $view = view($path, $params);

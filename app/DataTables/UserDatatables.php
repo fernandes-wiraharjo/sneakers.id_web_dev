@@ -15,7 +15,7 @@
                 app(config('ladmin.user', App\Models\User::class))->with(['roles'])
             )
             ->addColumn('avatar', function($item) {
-                return view('components.table-image-avatar', compact('item'));
+                return view('back-office.components.table-image-avatar', compact('item'));
             })
             ->editColumn('roles.name', function($item) {
                 return $item->roles->pluck('name');

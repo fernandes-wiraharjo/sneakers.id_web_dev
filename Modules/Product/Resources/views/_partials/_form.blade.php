@@ -79,15 +79,20 @@
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                 </div>
                             </div>
-                            {{-- <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger">
-                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                            </button> --}}
                             <div class="col-md-5">
                                 <label class="form-label">Quantity :</label>
                                 <div class="input-group mb-5">
                                     <input type="number" id="qty" min="0" class="form-control bulk-qty" name="bulk_qty" aria-label="Amount"
                                     value=""/>
                                     <span class="input-group-text"> pcs</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Weight :</label>
+                                <div class="input-group mb-5">
+                                    <input type="number" id="weight" min="0" class="form-control bulk-weight" name="bulk_weight" aria-label="Amount"
+                                    value=""/>
+                                    <span class="input-group-text"> grams</span>
                                 </div>
                             </div>
                             {{-- <div class="col-md-2">
@@ -148,14 +153,20 @@
                                         value="{{ old('size_prize.0.base_price', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-2">
                                     <label class="form-label">Quantity :</label>
                                     <div class="input-group mb-5">
-                                        <button type="button" class="input-group-text" onclick="increment(this)"><i class="fas fa-plus"></i></button>
                                         <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
                                         value="{{ old('size_prize[0][qty]', '') }}"/>
-                                        <button type="button" class="input-group-text" onclick="decrement(this)"><i class="fas fa-minus"></i></button>
                                         <span class="input-group-text"> pcs</span>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <label class="form-label">Weight :</label>
+                                    <div class="input-group mb-5">
+                                        <input type="text" id="weight" class="form-control weight" name="weight" aria-label="Amount"
+                                        value="{{ old('size_prize[0][weight]', '') }}"/>
+                                        <span class="input-group-text"> grams</span>
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +262,7 @@
 <hr>
 
 
-@include('components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
 @push('top-scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 @endpush
@@ -468,6 +479,10 @@
                         $(this).find('.qty').val($('.bulk-qty').val());
                     }
 
+                    if($('.bulk-weight').val() != "") {
+                        $(this).find('.weight').val($('.bulk-weight').val());
+                    }
+
                     if($('.bulk-retail-price').val() != ""){
                         $(this).find('.retail-price').val($('.bulk-retail-price').val());
                     }
@@ -536,6 +551,7 @@
                 'retail_price': 1,
                 'after_discount_price': 0,
                 'qty': 0,
+                'weight': 0,
                 'discount_percentage': 0,
             },
 
@@ -578,7 +594,6 @@
         @endif
 
         @if($edit)
-            console.log('test');
             console.log(JSON.parse($('#product_details').val()));
             repeater.setList(JSON.parse($('#product_details').val()));
 
@@ -586,17 +601,5 @@
                 repeater.setList(JSON.parse($('#old_size_price').val()));
             @endif
         @endif
-
-        // $(document).ready(function() {
-        function increment(item) {
-            var input = $(item).siblings("input");
-            input.val(parseInt(input.val()) + 1);
-        }
-
-        function decrement(item) {
-            var input = $(item).siblings("input");
-            input.val(parseInt(input.val()) - 1);
-        }
-        // });
     </script>
 @endpush

@@ -188,10 +188,10 @@ if (!function_exists('getImage')) {
             if(File::exists($image_path)) {
                 return asset('images/'.$module.'/'.$filename);
             } else {
-                return asset('demo1/media/blank/blank-image.png');
+                return public_path('demo1/media/blank/blank-image.png');
             }
         } else {
-            return asset('demo1/media/blank/blank-image.png');
+            return public_path('demo1/media/blank/blank-image.png');
         }
     }
 }

@@ -4,9 +4,19 @@ namespace App\Http\Controllers\Administrator\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\UserVerify;
+use App\Repositories\UserRepository;
+use Modules\Brand\Repositories\BrandRepository;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Hexters\Ladmin\Http\Middleware\LadminGuestMiddleware;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 
 class LoginController extends Controller
 {
@@ -32,8 +42,12 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct() {
+    protected $repository;
+
+    public function __construct(UserRepository $repository, BrandRepository $brandRepository) {
         $this->middleware([LadminGuestMiddleware::class])->except('logout');
+        $this->repository = $repository;
+        $this->brandRepository = $brandRepository;
     }
 
     /**
@@ -43,7 +57,197 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('back-office.auth.login');
+    }
+
+        /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCustomerLoginForm()
+    {
+        return view('display-store.auth.login');
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCustomerRegisterForm()
+    {
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.register', $data);
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function postRegistration(Request $request)
+    {
+        try {
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:6',
+            ]);
+
+            $token = Str::random(64);
+            $request['role_id'] = 2;
+            $request['remember_token'] = $token;
+            $request['name'] = $request['first_name'].' '.$request['last_name'];
+
+            $createUser = $this->repository->createUserCustomer($request);
+
+            UserVerify::create([
+                'user_id' => $createUser->id,
+                'token' => $token
+                ]);
+
+            $notfiable = [
+                'token' => $token,
+                'request' => $request
+            ];
+
+            // Log::info("Sending email to: " . $request->email);
+            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $token], function($message) use($request){
+                $message->to($request->email);
+                $message->subject('Email Verification Mail');
+            });
+            // Log::info("Mail send result: ", ['result' => $sendMail]);
+
+            // if (count(Mail::failures()) > 0) {
+            //     Log::error('Mail failed: ', Mail::failures());
+            // } else {
+            //     Log::info('Mail sent successfully to ' . $request->email);
+            // }
+
+            return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
+        } catch (\Exception $e) {
+            // $mailPort = env('MAIL_PORT', 587);
+            // Log::error("Regitration failed: (". $mailPort .") " . $e->getMessage());
+            // return back()->with(['message' => 'Failed to register. ' . $e->getMessage()]);
+            Log::error("Regitration failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCustomerForgotPasswordForm()
+    {
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.forgot-password', $data);
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCustomerConfirmPasswordForm()
+    {
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.confirm-password', $data);
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCustomerResetPasswordForm(Request $request, $token = null)
+    {
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.reset-password', $data)->with(
+            ['token' => $token, 'email' => $request->email]
+        );
+    }
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showCustomerVerifyEmailForm($token)
+    {
+        $data['token'] = $token;
+        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        return view('display-store.auth.verify-email', $data);
+    }
+
+    public function sendVerificationEmail($token){
+        $verifyUser = UserVerify::where('token', $token)->first();
+
+        $message = 'Sorry your email cannot be identified.';
+
+        if(!is_null($verifyUser) ){
+            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
+                $message->to($verifyUser->user->email);
+                $message->subject('Email Verification Mail');
+            });
+
+            return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
+
+            // $user = $verifyUser->user;
+
+            // if(!$user->is_email_verified) {
+            //     $verifyUser->user->is_email_verified = 1;
+            //     $verifyUser->user->save();
+            //     $message = "Your e-mail is verified. You can now login.";
+            // } else {
+            //     $message = "Your e-mail is already verified. You can now login.";
+            // }
+        } else {
+            return redirect()->back()->with(['error', $message]);
+
+            // $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
+            //     $message->to($verifyUser->user->email);
+            //     $message->subject('Email Verification Mail');
+            // });
+
+            // return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
+        }
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function verifyAccount($token)
+    {
+        $verifyUser = UserVerify::where('token', $token)->first();
+
+        $message = 'Sorry your email cannot be identified.';
+
+        if(!is_null($verifyUser) ){
+            $user = $verifyUser->user;
+
+            if(!$user->is_email_verified) {
+                $update = $this->repository->updateEmailVerifiedAt($user->id);
+                $verifyUser->user->remember_token = $token;
+                $verifyUser->user->is_email_verified = 1;
+                $verifyUser->user->save();
+                $message = "Your e-mail is verified. You can now login.";
+                return redirect()->route('customer.login')->with(['success'=> [$message]]);
+            } else {
+                $message = "Your e-mail is already verified. You can now login.";
+                return redirect()->route('customer.login')->with(['success'=> [$message]]);
+            }
+        }
+
+        return redirect()->route('customer.login')->with(['message'=> $message]);
     }
 
     /**

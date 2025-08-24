@@ -6,6 +6,7 @@ use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\File;
+use Modules\Transaction\Entities\TransactionItems;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
@@ -160,6 +161,7 @@ class ProductService {
 	}
 
     public function updateProduct($id, $request){
+        $message = '';
         $product = [
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
@@ -269,10 +271,14 @@ class ProductService {
             }
 
             if($diff = array_diff($oldDetail, $detail_ids)){
-                foreach($diff as $itemDiff) {
-                    $this->productRepository->deleteProductDetail($itemDiff);
+              foreach($diff as $itemDiff) {
+                    $check_transactions = TransactionItems::where('product_detail_id', $itemDiff)->first();
+                    if(!$check_transactions) {
+                        $this->productRepository->deleteProductDetail($itemDiff);
+                    } else {
+                        $message = 'There are sizes that cannot be deleted because they already have transaction data';
+                    }
                 }
-
                 $updateTimestamps = $getProduct->update([
                     'updated_at' => Carbon::now()
                 ]);
@@ -396,7 +402,7 @@ class ProductService {
                 ]);
             }
         }
-        return true;
+        return ['status' => true, 'message' => $message];
     }
 
     public function generateProductCode()

@@ -19,8 +19,7 @@ class Product extends Model
         'blibli_link',
         'tiktok_link',
         'description',
-        'is_active',
-        'updated_at'
+        'is_active'
     ];
 
     protected static function newFactory()
@@ -29,7 +28,7 @@ class Product extends Model
     }
 
     public function detail(){
-        return $this->hasOne(ProductDetail::class, 'product_id');
+        return $this->hasOne(ProductDetail::class, 'product_id')->orderBy('qty', 'DESC');
     }
 
     public function details(){

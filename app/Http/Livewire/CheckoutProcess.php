@@ -86,7 +86,7 @@ class CheckoutProcess extends Component
         }
         //courier list 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
         if($this->selectedSubdistrict) {
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, 'subdistrict',Cart::totalWeight(), 'jnt');
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), 'jnt');
             $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
         }
     }
@@ -306,16 +306,21 @@ class CheckoutProcess extends Component
         $this->shippingSubDistrict = $value;
         $getDistrict = ModelRegion::where(['district' => $this->selectedDistrict, 'subdistrict' => $value])->first();
         if($getDistrict) {
-            if($getDistrict->subdistrict_ro){
-                $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
-                $destinationType = 'subdistrict';
-            } else {
-                $this->selectedSubdistrict = $getDistrict->city_ro;
-                $destinationType = 'city';
-            }
+            // V1 uses subdistrict / city RO
+            // if($getDistrict->subdistrict_ro){
+            //     $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
+            //     $destinationType = 'subdistrict';
+            // } else {
+            //     $this->selectedSubdistrict = $getDistrict->city_ro;
+            //     $destinationType = 'city';
+            // }
+
+            // V2 uses region_id
+            $this->selectedSubdistrict = $getDistrict->region_id;
+
             //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
             if($this->selectedSubdistrict) {
-                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, $destinationType, Cart::totalWeight(), 'jnt');
+                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), 'jnt');
                 $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
             }
         } else {

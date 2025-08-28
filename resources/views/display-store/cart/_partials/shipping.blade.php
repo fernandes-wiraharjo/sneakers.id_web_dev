@@ -96,19 +96,18 @@
                                                                     {{ strtoupper($courierVendor['code']) }}
                                                                 </div>
                                                                 <div class="Wo4qW m5ItP NDMe9 NdTJE PuVf0">
-                                                                    @foreach($courierVendor['costs'] as $serviceCourier)
                                                                     <div class="B4zH6">
                                                                         <label class="yL8c2 D1RJr">
                                                                             <div class="hEGyz">
                                                                                 <div class="_1fragemaf">
-                                                                                    <input type="radio" name="shipping_methods" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe" value="{{intval($serviceCourier['cost'][0]['value'])}}" wire:click="updateShippingCost({{ intval($serviceCourier['cost'][0]['value']) }}, '{{ strtoupper($courierVendor['code']) }}', '{{ $serviceCourier['service'] }}', '{{ $serviceCourier['cost'][0]['etd'] }}', '{{ $total }}')" >
+                                                                                    <input type="radio" name="shipping_methods" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe" value="{{intval($courierVendor['cost'])}}" wire:click="updateShippingCost({{ intval($courierVendor['cost']) }}, '{{ strtoupper($courierVendor['code']) }}', '{{ $courierVendor['service'] }}', '{{ $courierVendor['etd'] }}', '{{ $total }}')" >
                                                                                 </div>
                                                                                 <div class="f5aCe">
                                                                                     <div>
                                                                                         <p class="_1x52f9s1 _1fragemaf _1x52f9sl _1fragem1j">
-                                                                                            {{ strtoupper($courierVendor['code']) }} {{ $serviceCourier['service'] }}
-                                                                                            @if($serviceCourier['cost'][0]['etd'])
-                                                                                            ({{ $serviceCourier['cost'][0]['etd'] }} Days)
+                                                                                            {{ strtoupper($courierVendor['code']) }} {{ $courierVendor['service'] }}
+                                                                                            @if($courierVendor['etd'])
+                                                                                            ({{ $courierVendor['etd'] }} Days)
                                                                                             @else
                                                                                             (2-3 Days)
                                                                                             @endif
@@ -116,14 +115,13 @@
                                                                                     </div>
                                                                                     <div>
                                                                                         <span translate="yes" class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">
-                                                                                            Rp {{ rupiah_format(intval($serviceCourier['cost'][0]['value'])) }}
+                                                                                            Rp {{ rupiah_format(intval($courierVendor['cost'])) }}
                                                                                         </span>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </label>
                                                                     </div>
-                                                                    @endforeach
                                                                 </div>
                                                             @endforeach
 

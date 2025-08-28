@@ -37,7 +37,7 @@ class CartController extends Controller
 
     public function cartCheckout(Request $request) {
         foreach(Cart::content() as $item){
-                $get_product = $this->productRepository->getProductDetailById($item['size_id']);
+                $get_product = $this->productRepository->getProductDetailByIdAndSize($item['id'], $item['size']);
                 if($get_product->qty - $item['quantity'] < 0) {
                     // dd('qty not valid');
                 }

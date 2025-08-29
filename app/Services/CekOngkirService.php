@@ -39,17 +39,18 @@ class CekOngkirService {
         return collect();
     }
 
-    public function CheckWaybill($waybill = null, $courier = 'jne') {
+    public function CheckWaybill($waybill = null, $courier = 'jne', $lastFiveDigitPhoneNumber) {
         if (!$waybill) {
             return null;
         }
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'Key' => env('RAJAONGKIR_API_KEY'),
-        ])->asForm()->post('https://pro.rajaongkir.com/api/waybill', [
-            'waybill' => $waybill,
+            'key' => env('RAJAONGKIR_API_KEY'),
+        ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/track/waybill', [
+            'awb' => $waybill,
             'courier' => $courier,
+            'last_phone_number' => $lastFiveDigitPhoneNumber,
         ]);
 
         return $response->json();

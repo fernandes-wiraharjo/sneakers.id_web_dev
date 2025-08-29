@@ -17,6 +17,8 @@ use Modules\Transaction\Entities\Transaction;
 
 class DashboardController extends Controller {
 
+    public $lastFiveDigitPhoneNumber;
+
     public function __construct(BrandRepository $brandRepository) {
             $this->brandRepository = $brandRepository;
     }
@@ -66,6 +68,8 @@ class DashboardController extends Controller {
             return redirect()->route('customer.login')->with('error', 'Session has been expired, please re-login.');
         }
         $data['user_address'] = auth()->user()->user_address()->first();
+        $this->lastFiveDigitPhoneNumber = substr($data['user_address']['phone_number'], -5);
+
         $data['user_info'] = auth()->user();
         $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
         $data['province'] = Region::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
@@ -73,7 +77,7 @@ class DashboardController extends Controller {
         $data['destination'] = $data['transaction']->destination()->select('transaction_destinations.*', 'regions.*')->joinRelationship('region')->first();
         $data['items'] = $data['transaction']->items()->with('detail.product')->select('transaction_items.*', 'product_details.size', 'product_details.product_id')->joinRelationship('detail')->get();
         $data['shipping'] = $data['transaction']->shipping()->first();
-        $data['shipping_waybill'] = CekOngkir::CheckWaybill($data['shipping']->shipping_waybill, 'jnt') ?? null;
+        $data['shipping_waybill'] = CekOngkir::CheckWaybill($data['shipping']->shipping_waybill, 'jnt', $this->lastFiveDigitPhoneNumber) ?? null;
         return view('display-store.customer.transaction', $data);
     }
 

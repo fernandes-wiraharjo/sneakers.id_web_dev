@@ -12,6 +12,7 @@ use App\Facades\CekOngkir;
 use App\Services\CekOngkirService;
 use Illuminate\Support\Facades\Mail;
 use Modules\Transaction\Entities\Transaction;
+use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionItems;
 
@@ -43,9 +44,10 @@ class TransactionController extends Controller
 
         $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $status_shipping]);
         if($updated) {
-            //create shipping history and get Raja Ongkir cek resi
-            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
+            $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)->value('phone_number');
 
+            //create shipping history and get Raja Ongkir cek resi
+            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt',  substr($phoneNumber, -5));
             if($response) {
                 if(intval($request->complete)){
                     $status = 'COMPLETED';
@@ -65,17 +67,21 @@ class TransactionController extends Controller
                     $update_transactions = $transaction->update(['status' => $status]);
                 }
 
+                dd([
+                    "resp" => $response
+                ]);
+
                 $history_created = TransactionHistories::create([
                     'transaction_id' => $shipping->transaction_id,
                     'response_raw' => json_encode($response),
-                    'response_status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'ERROR',
-                    'response_code' =>  $response['rajaongkir']['status']['code'] ?? '400',
-                    'response_message' =>  $response['rajaongkir']['status']['description'] != 'OK' ? $response['rajaongkir']['status']['description'] : 'Update Shipping status',
+                    'response_status' => $response['data']['delivered'] ?? 'ERROR',
+                    'response_code' =>  $response['meta']['code'] ?? '400',
+                    'response_message' =>  $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Update Shipping status',
                     'created_by' =>  auth()->user()->id,
                 ]);
 
                 if($history_created) {
-                    $shipping->update(['status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'RESI NOT VALID']);
+                    $shipping->update(['status' => $response['data']['delivered'] ?? 'RESI NOT VALID']);
                 }
 
                 //if status complete update quantity
@@ -103,9 +109,13 @@ class TransactionController extends Controller
 
     public function ajaxCheckResi(Request $request)
     {
-        $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
+        $shipping = TransactionShippings::findOrFail($request->id);
+        $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)
+        ->value('phone_number');
+        $lastFiveDigitPhoneNumber = substr($phoneNumber, -5);
+        $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt', $lastFiveDigitPhoneNumber);
 
-        return $response['rajaongkir'];
+        return $response['data'];
     }
 
     /**

@@ -70,4 +70,16 @@ class Transaction extends Model
 
         return $this->destination();
     }
+
+    public function user()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            TransactionDestination::class,
+            'transaction_id', // Foreign key on TransactionDestination
+            'id',             // Foreign key on User
+            'id',             // Local key on Transaction
+            'user_id'         // Local key on TransactionDestination
+        );
+    }
 }

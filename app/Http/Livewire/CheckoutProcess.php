@@ -5,8 +5,11 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Facades\Cart;
 use App\Facades\CekOngkir;
+use App\Facades\CheckoutMidtrans;
 use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
+use App\Services\MidtransService;
+use Xendit\Transaction;
 
 class CheckoutProcess extends Component
 {
@@ -146,6 +149,8 @@ class CheckoutProcess extends Component
 
     public function paymentStepSubmit()
     {
+        $date = new \DateTime();
+        $orderID = 'sneakers-id-payments-' . $date->getTimestamp();
         $items = [];
         $totalQuantity = 0;
         foreach(Cart::content() as $item) {
@@ -155,6 +160,7 @@ class CheckoutProcess extends Component
             }
 
             $items[] = [
+                'id' => $item['id'],
                 'name' => $item['name'],
                 'quantity' => $item['quantity'],
                 'price' => $price,
@@ -180,66 +186,82 @@ class CheckoutProcess extends Component
         //shippingcost
         //subtotal
         //grandtotal
-        $this->invoiceUrl = CheckoutXendit::createInvoice([
-            'currency' => 'IDR',
-            'amount'    => intval($this->grandTotal),
-            'error_redirect_url' => route('customer.payment.error'),
-            //make new pages for thankyou after success -> to recheck transaction id and update current status and give invoice response,
-            'customer' => [
-                'given_names' => $this->shippingFirstName,
-                'surname' => $this->shippingLastName,
-                'email' => $this->shippingEmail,
-                'mobile_number' => $this->shippingPhoneNumber,
-                'addresses' => [
-                    [
-                        'city' => $this->shippingDistrict,
-                        'country' => 'indonesia',
-                        'postal_code' => $this->shippingZipCode,
-                        'state' => $this->shippingProvince,
-                        'street_line1' => $this->shippingAddress,
-                        'street_line2' => $this->shippingSubDistrict.', '.$this->shippingArea
-                    ]
-                ]
-            ],
-            'items' => $items,
-            'fees' => [
-                [
-                    'type' => 'Shipping',
-                    'value' => $this->shippingCost
-                ]
-            ]
-        ], [
-            'transactions' => [
-                'date' => date('Y-m-d'),
-                'gateway' => 'Xendit',
-                'total_quantity' =>  $totalQuantity,
-                'total_weight' =>  Cart::totalWeight(),
-                'sub_total' => Cart::total(),
-                'description' => Cart::getNotes(),
-                'grand_total' => $this->grandTotal
-            ],
-            'transaction_destinations' => [
-                'region_id' => $this->selectedArea,
-                'email' => $this->shippingEmail,
-                'first_name' => $this->shippingFirstName,
-                'last_name' => $this->shippingLastName,
-                'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingPhoneNumber,
-                'is_user' => auth()->check() ? 1 : 0,
-                'user_id' => auth()->user()->id ?? 0,
 
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderID,
+                'gross_amount'  => intval($this->grandTotal),
             ],
+            'customer_details' => [
+                'first_name'    => $this->shippingFirstName,
+                'last_name'     => $this->shippingLastName,
+                'email'         => $this->shippingEmail,
+                'phone'         => $this->shippingPhoneNumber,
+                'billing_address' => [
+                    'first_name'   => $this->shippingFirstName,
+                    'last_name'    => $this->shippingLastName,
+                    'address'      => $this->shippingAddress,
+                    'city'         => $this->shippingDistrict,
+                    'postal_code'  => $this->shippingZipCode,
+                    'phone'        => $this->shippingPhoneNumber,
+                    'country_code' => 'IDN',
+                ],
+                'shipping_address' => [
+                    'first_name'   => $this->shippingFirstName,
+                    'last_name'    => $this->shippingLastName,
+                    'address'      => $this->shippingAddress,
+                    'city'         => $this->shippingDistrict,
+                    'postal_code'  => $this->shippingZipCode,
+                    'phone'        => $this->shippingPhoneNumber,
+                    'country_code' => 'IDN',
+                ]
+            ],
+            'item_details' => $items,
+            'callbacks' => [
+                'error'  => route('customer.payment.error'),
+                'finish' => route('customer.payment.success', $orderID),
+            ],
+            'custom_field1' => 'Gateway: Midtrans', // optional metadata
+            'custom_field2' => Cart::getNotes() ?? '',
+        ];
+
+        $transactions = [
+            'transactions' => [
+                'date'            => date('Y-m-d'),
+                'gateway'         => 'Midtrans',
+                'total_quantity'  => $totalQuantity,
+                'total_weight'    => Cart::totalWeight(),
+                'sub_total'       => Cart::total(),
+                'description'     => Cart::getNotes(),
+                'grand_total'     => $this->grandTotal,
+            ],
+
+            'transaction_destinations' => [
+                'region_id'    => $this->selectedArea,
+                'email'        => $this->shippingEmail,
+                'first_name'   => $this->shippingFirstName,
+                'last_name'    => $this->shippingLastName,
+                'address'      => $this->shippingAddress,
+                'phone_number' => $this->shippingPhoneNumber,
+                'is_user'      => auth()->check() ? 1 : 0,
+                'user_id'      => auth()->user()->id ?? 0,
+            ],
+
             'transaction_items' => [
                 'items' => Cart::content(),
             ],
+
             'transaction_shippings' => [
-                 'shipping_method' => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
-                 'shipping_cost' => $this->selectedCourier['cost'],
-                 'shipping_weight' => $this->shippingWeight,
-                 'origin_ro_id' => 2088,
-                 'destination_ro_id' => $this->selectedSubdistrict,
+                'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
+                'shipping_cost'      => $this->selectedCourier['cost'],
+                'shipping_weight'    => $this->shippingWeight,
+                'origin_ro_id'       => 2088,
+                'destination_ro_id'  => $this->selectedSubdistrict,
             ],
-        ]);
+        ];
+
+
+        $this->invoiceUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
 
         //send mail confimarion payment here
         $this->currentStep = 4;

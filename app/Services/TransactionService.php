@@ -28,20 +28,20 @@ class TransactionService {
         $this->session = $session;
     }
 
-    public function createTransaction($response, $transaction) : void{
+    public function createTransaction($data, $transaction) : void{
         /**
          * parsing parsing dan insert via modules Transaction models
          */
         // dd($response, $transaction);
         $creteTransaction = Transaction::create([
             'uuid' => Uuid::uuid4(),
-            'doc_no' => $response['id'],
-            'token' => $response['external_id'],
+            'doc_no' => Uuid::uuid4(),
+            'token' => $data['args']['transaction_details']['order_id'],
             'date' => $transaction['transactions']['date'],
             'gateway' => $transaction['transactions']['gateway'],
             'type' => 'PENDING',
             'method' => 'PENDING',
-            'invoice_url' => $response['invoice_url'],
+            'invoice_url' => $data['invoice_url'],
             'total_quantity' => $transaction['transactions']['total_quantity'],
             'total_weight' => $transaction['transactions']['total_weight'],
             'sub_total' => $transaction['transactions']['sub_total'],
@@ -74,7 +74,7 @@ class TransactionService {
         //insert histories
         $this->insertHistories([
             'transaction_id' => $creteTransaction->id,
-            'response_raw' => $response,
+            'response_raw' => '',
             'response_status' => 'CREATED',
             'response_code' => 200,
             'response_message' => '',
@@ -83,19 +83,19 @@ class TransactionService {
         //insert histories again with status
         $this->insertHistories([
             'transaction_id' => $creteTransaction->id,
-            'response_raw' => $response,
-            'response_status' => $response['status'],
+            'response_raw' => '',
+            'response_status' => '',
             'response_code' => 200,
             'response_message' => '',
         ]);
 
 
 
-        $email = $response['customer']['email'];
+        $email = $data['args']['customer_details']['email'];
         $data = [
-            'invoice_url' => $response['invoice_url'],
-            'customer_name' => $response['customer']['given_names']." ".$response['customer']['surname'],
-            'order_id' => $response['external_id']
+            'invoice_url' => $data['invoice_url'],
+            'customer_name' => $data['args']['customer_details']['first_name']." ".$data['args']['customer_details']['last_name'],
+            'order_id' => $data['args']['transaction_details']['order_id']
         ];
         //send email create invoices
         $sendMail = Mail::send('email.invoice', $data , function($message) use($email){

@@ -57,11 +57,12 @@ class CheckoutService {
 
             $response = $transactionData;
         } catch (\Throwable $e) {
-            dd([
-                "datas" => $args,
-                "e" => $e,
-                "transaction" => $transactions,
-            ]);
+            // dd([
+            //     "datas" => $args,
+            //     "e" => $e,
+            //     "transaction" => $transactions,
+            // ]);
+            
             $response['message'] = $e->getMessage();
         }
 

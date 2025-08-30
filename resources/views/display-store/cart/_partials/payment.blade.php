@@ -118,7 +118,7 @@
                                                                         <div class="f5aCe">
                                                                             <div>
                                                                                 <span class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1">
-                                                                                    Payments via Xendit
+                                                                                    Payments via Midtrans
                                                                                 </span>
                                                                             </div>
                                                                             <div>

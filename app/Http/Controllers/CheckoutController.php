@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Cart;
 use App\Services\MidtransService;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\View;
@@ -10,10 +11,15 @@ use Xendit\Xendit;
 use App\Facades\CheckoutXendit as Service;
 use App\Facades\Cart as CartService;
 use App\Facades\Transaction as TransactionService;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Midtrans\Config;
 use Midtrans\Transaction as MidtransTransaction;
 use Modules\Transaction\Entities\Transaction;
+use Modules\Transaction\Entities\TransactionHistories;
+
+use function App\Services\cancelMidtransTransaction;
 
 class CheckoutController extends BaseController {
     function __construct() {
@@ -54,9 +60,9 @@ class CheckoutController extends BaseController {
 
                 $updateTransaction = Transaction::where('id', $transaction->id)->first();
                 $updateTransaction->update([
-                    'type' => data_get($data, 'response.payment_type'),
-                    'method' => data_get($data, 'response.bank'),
-                    'status' => data_get($data, 'response.transaction_status'),
+                    'type'   => strtoupper(data_get($data, 'response.payment_type')),
+                    'method' => strtoupper(data_get($data, 'response.bank')),
+                    'status' => strtoupper(data_get($data, 'response.transaction_status')),
                 ]);
 
                 TransactionService::insertHistories([
@@ -68,10 +74,11 @@ class CheckoutController extends BaseController {
                 ]);
             }
             CartService::clear();
+            // CartService::clearOrderId();
 
             return view('display-store.customer.payment.success', $data);
         } catch (\Xendit\Exceptions\ApiException $e) {
-            $data['message'] =  $e->getMassage();
+            $data['message'] =  $e->getMessage();
             return view('display-store.customer.payment.error', $data);
         }
 
@@ -84,5 +91,84 @@ class CheckoutController extends BaseController {
         }
         //after few second redirect to cart
         return view('display-store.customer.payment.error');
+    }
+
+     public function handle(Request $request)
+    {
+        $payload = $request->all();
+        Log::info('Midtrans Webhook:', $payload);
+
+        $transactionId = $payload['transaction_id'] ?? null;
+        $orderId = $payload['order_id'] ?? null;
+        $status = $payload['transaction_status'] ?? null;
+        $fraudStatus = $payload['fraud_status'] ?? null;
+
+        if (!$transactionId) {
+            return response()->json(['message' => 'Invalid webhook'], 400);
+        }
+
+        $transaction = Transaction::where('token', $orderId)->first();
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+        switch ($status) {
+            case 'settlement':
+                $transaction->status = 'SUCCESS';
+                $transaction->paid_at = now();
+                break;
+
+            case 'expire':
+                $transaction->status = 'EXPIRED';
+                break;
+
+            case 'cancel':
+                $transaction->status = 'CANCELLED';
+                break;
+
+            case 'deny':
+                $transaction->status = 'DENIED';
+                break;
+
+            default:
+                $transaction->status = strtoupper($status);
+                break;
+        }
+
+        $transaction->save();
+
+        return response()->json(['message' => 'Webhook handled'], 200);
+    }
+
+
+    public function cancelTransaction($orderId)
+    {
+        $transaction = Transaction::where('token', $orderId)->first();
+
+        if (!$transaction) {
+            return redirect()->route('customer.cart')
+                ->with('error', 'Transaction not found.');
+        }
+
+        if (in_array($transaction->status, ['CANCELLED', 'SUCCESS'])) {
+            return redirect()->route('customer.cart')
+                ->with('error', 'Transaction cannot be cancelled.');
+        }
+
+        // Only local cancel (not yet recorded in Midtrans)
+        $transaction->update([
+            'status' => 'CANCELLED',
+            'updated_at' => now(),
+        ]);
+
+        TransactionHistories::where('transaction_id', $transaction->id)->update([
+            'response_status' => 'CANCELLED',
+            'updated_at' => now(),
+        ]);
+
+        Cart::clearOrderId();
+
+        return redirect()->route('store')
+            ->with('success', 'Transaction successfully cancelled.');
     }
 }

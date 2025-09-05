@@ -40,6 +40,7 @@ Route::get('/faq', [StoreController::class, 'faq'])->name('faq');
 
 Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
 Route::get('/email', [StoreController::class, 'email'])->name('email');
+Route::post('/midtrans/webhook', [CheckoutController::class, 'handle']);
 
 
 Ladmin::route(function() {
@@ -73,6 +74,8 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
         Route::get('/success-payment/{external_id}', [CheckoutController::class, 'successPayments'])->name('payment.success');
         Route::get('/error-payment', [CheckoutController::class, 'errorPayments'])->name('payment.error');
         Route::get('/transaction/c/{external_id}', [DashboardController::class, 'detail'])->name('transaction.detail');
+        Route::post('/transaction/cancel/{orderId}', [CheckoutController::class, 'cancelTransaction'])->name('transaction.cancel');
+
     });
 
 

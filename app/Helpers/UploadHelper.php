@@ -183,17 +183,21 @@ if(!function_exists('imageUploadProduct')) {
 
 if (!function_exists('getImage')) {
     function getImage($filename, $module = ''){
-        if ($filename && $module) {
-            $image_path = public_path('images/'.$module.'/'.$filename);
-            if(File::exists($image_path)) {
-                return asset('images/'.$module.'/'.$filename);
-            } else {
-                return public_path('demo1/media/blank/blank-image.png');
-            }
+    if ($filename && $module) {
+        // Encode filename
+        $safeFilename = str_replace(' ', '%20', $filename);
+
+        $image_path = public_path('images/'.$module.'/'.$filename);
+        if(File::exists($image_path)) {
+            return asset('images/'.$module.'/'.$safeFilename);
         } else {
-            return public_path('demo1/media/blank/blank-image.png');
+            return asset('demo1/media/blank/blank-image.png');
         }
+    } else {
+        return asset('demo1/media/blank/blank-image.png');
     }
+}
+
 }
 
 if (!function_exists('getImageGallery')) {

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\Brand\Repositories\BrandRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(BrandRepository $brandRepository)
     {
+
+        \Midtrans\Config::$serverKey    = config('services.midtrans.serverKey');
+        \Midtrans\Config::$clientKey    = config('services.midtrans.clientKey');
+        \Midtrans\Config::$isProduction = config('services.midtrans.environment') === 'Production' ? true : false;
         $theme = theme();
 
         // Share theme adapter class

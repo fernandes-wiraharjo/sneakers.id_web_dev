@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Facades\Cart;
 use Xendit\Xendit;
 use App\Facades\Transaction;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Modules\Transaction\Entities\Transaction as EntitiesTransaction;
 
 class CheckoutService {
 
@@ -18,8 +20,8 @@ class CheckoutService {
         Config::$is3ds        = true;
     }
 
-    public function createInvoiceMidtrans($args, $transactions)
-    {
+    public function createInvoiceMidtrans($args, $transactions){
+        $snapBaseURL = config('services.midtrans.snapURL');
         $response = [];
 
         try {
@@ -27,42 +29,23 @@ class CheckoutService {
                 $args = json_decode($args, true);
             }
 
-            if (!is_array($args)) {
-                throw new \Exception("Args is not valid array, got: " . gettype($args));
+            if (!is_array($args) || !isset($args['transaction_details'])) {
+                throw new \Exception("Invalid args: " . gettype($args));
             }
 
-            if (!isset($args['transaction_details']['order_id'])) {
-                throw new \Exception("Missing order_id in args['transaction_details']");
-            }
-
+            // get snap token
             $snapToken = Snap::getSnapToken($args);
 
-            // $statusResponse = MidtransTransaction::status($args['transaction_details']['order_id']);
-
-            //  dd(
-            //     [
-            //         "snap" => $snapToken,
-            //         "args" => $args['transaction_details']['order_id'],
-            //         "stats" => $statusResponse,
-            //     ]
-            // );
-
+            // transaction payload for DB
             $transactionData = [
-                'args' => $args,
-                // 'status_response' => $statusResponse,
-                'invoice_url' => "https://app.sandbox.midtrans.com/snap/v2/vtweb/" . $snapToken,
+                'args'        => $args,
+                'invoice_url' => $snapBaseURL . $snapToken,
             ];
 
             Transaction::createTransaction($transactionData, $transactions);
 
             $response = $transactionData;
         } catch (\Throwable $e) {
-            // dd([
-            //     "datas" => $args,
-            //     "e" => $e,
-            //     "transaction" => $transactions,
-            // ]);
-            
             $response['message'] = $e->getMessage();
         }
 

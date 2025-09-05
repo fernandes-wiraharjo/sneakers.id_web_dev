@@ -12,12 +12,13 @@ if (! function_exists('userHasOngoingPayment')) {
         ->where('transaction_destinations.user_id', auth()->id())
         ->join('transaction_histories', 'transaction_histories.transaction_id', '=', 'transaction_destinations.transaction_id')
         ->join('transactions', 'transactions.id', '=', 'transaction_destinations.transaction_id')
-        ->where('transaction_histories.response_status', 'CREATED') // or CREATED if that's the ongoing state
+        ->where('transactions.status', 'CREATED') // or CREATED if that's the ongoing state
         ->select(
             'transaction_destinations.*',
             'transaction_histories.response_status',
             'transactions.invoice_url',
-            'transactions.grand_total'
+            'transactions.grand_total',
+            'transactions.token'
         )
         ->latest('transaction_destinations.created_at')
         ->first();

@@ -9,6 +9,7 @@ use App\Facades\CheckoutMidtrans;
 use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
 use App\Services\MidtransService;
+use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
 
 class CheckoutProcess extends Component
@@ -168,6 +169,18 @@ class CheckoutProcess extends Component
                 'url' => $item['url']
             ];
 
+            // add shipping as an item
+            if ($this->shippingCost > 0) {
+                $items[] = [
+                    'id'       => 'SHIPPING',
+                    'name'     => 'Shipping Fee',
+                    'quantity' => 1,
+                    'price'    => intval($this->shippingCost),
+                    'category' => 'shipping',
+                    'url'      => null
+                ];
+            }
+
             $totalQuantity += $item['quantity'];
         }
         /**
@@ -220,6 +233,7 @@ class CheckoutProcess extends Component
             'callbacks' => [
                 'error'  => route('customer.payment.error'),
                 'finish' => route('customer.payment.success', $orderID),
+                'sucess' => route('customer.payment.success', $orderID),
             ],
             'custom_field1' => 'Gateway: Midtrans', // optional metadata
             'custom_field2' => Cart::getNotes() ?? '',

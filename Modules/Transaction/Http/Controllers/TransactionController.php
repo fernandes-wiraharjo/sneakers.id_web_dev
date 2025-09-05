@@ -10,6 +10,7 @@ use Modules\Transaction\Entities\TransactionShippings;
 use Alert;
 use App\Facades\CekOngkir;
 use App\Services\CekOngkirService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionDestination;
@@ -67,10 +68,6 @@ class TransactionController extends Controller
                     $update_transactions = $transaction->update(['status' => $status]);
                 }
 
-                dd([
-                    "resp" => $response
-                ]);
-
                 $history_created = TransactionHistories::create([
                     'transaction_id' => $shipping->transaction_id,
                     'response_raw' => json_encode($response),
@@ -109,13 +106,18 @@ class TransactionController extends Controller
 
     public function ajaxCheckResi(Request $request)
     {
-        $shipping = TransactionShippings::findOrFail($request->id);
-        $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)
+        $phoneNumber = TransactionDestination::where('transaction_id', $request->id)
         ->value('phone_number');
         $lastFiveDigitPhoneNumber = substr($phoneNumber, -5);
+
+    //     Log::info('ajaxCheckResi phoneNumber', [
+    //     'transaction_id' => $request->id,
+    //     'phone_number'   => $phoneNumber,
+    //     'last_five'   => $lastFiveDigitPhoneNumber,
+    // ]);
         $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt', $lastFiveDigitPhoneNumber);
 
-        return $response['data'];
+        return response()->json($response);
     }
 
     /**

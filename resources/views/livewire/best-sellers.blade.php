@@ -7,10 +7,11 @@
     <div class="ProductItem">
         <div class="ProductItem__Wrapper">
             {{-- Item detail route --}}
-            <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}" class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
+            <!-- <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}" class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage"> -->
+            <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}" class="ProductItem__ImageWrapper">
                 <div class="AspectRatio AspectRatio--withFallback" style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
 
-                    {{-- multi image --}}
+                    <!-- {{-- multi image --}}
                     @foreach ($item->images()->limit(2)->get() as $key => $image)
                         @if($item->image != $image->image_url)
                             <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
@@ -19,7 +20,7 @@
                                 data-widths="[1800]" data-sizes="auto"
                                 alt='{{$item->product_name}}' data-image-id="{{$image->id}}" />
                         @endif
-                    @endforeach
+                    @endforeach -->
 
                     <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                     {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}

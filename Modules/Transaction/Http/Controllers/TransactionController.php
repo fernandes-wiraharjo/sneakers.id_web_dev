@@ -67,10 +67,6 @@ class TransactionController extends Controller
                     $update_transactions = $transaction->update(['status' => $status]);
                 }
 
-                dd([
-                    "resp" => $response
-                ]);
-
                 $history_created = TransactionHistories::create([
                     'transaction_id' => $shipping->transaction_id,
                     'response_raw' => json_encode($response),

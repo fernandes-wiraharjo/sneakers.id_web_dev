@@ -6,7 +6,11 @@ use RajaOngkir;
 use Illuminate\Support\Facades\Http;
 
 class CekOngkirService {
-    public function CostCourier($destination, $destinationType = 'subdistrict', $weight = 1000, $courier = 'jne') {
+    public $destinationType = env('RAJAONGKIR_DESTINATION_TYPE');
+    public $weight = env('RAJAONGKIR_WEIGHT');
+    public $courier = env('RAJAONGKIR_COURIER');
+
+    public function CostCourier($destination, $destinationType, $weight, $courier) {
         $origin = 18080; //  fixed origin
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',

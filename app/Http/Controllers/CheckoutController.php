@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\MidtransService;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use Xendit\Xendit;
@@ -30,6 +31,7 @@ class CheckoutController extends BaseController {
         //check status transksi
 
         try {
+            DB::beginTransaction();
             $transaction = Transaction::where('token', $external_id)->first();
             $data['response'] = MidtransTransaction::status($external_id);
             $data['transaction'] = $transaction;
@@ -67,11 +69,18 @@ class CheckoutController extends BaseController {
                     'response_message' => 'Success Payment from redirect page.',
                 ]);
             }
+            DB::commit();
             CartService::clear();
 
             return view('display-store.customer.payment.success', $data);
         } catch (\Xendit\Exceptions\ApiException $e) {
-            $data['message'] =  $e->getMassage();
+            // TODO: might not needed since transition to midtrans, remove after testing
+            DB::rollBack();
+            $data['message'] =  $e->getMessage();
+            return view('display-store.customer.payment.error', $data);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $data['message'] =  $e->getMessage();
             return view('display-store.customer.payment.error', $data);
         }
 

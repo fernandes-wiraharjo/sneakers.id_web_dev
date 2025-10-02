@@ -46,6 +46,7 @@ class TransactionService {
                 'type' => 'PENDING',
                 'method' => 'PENDING',
                 'invoice_url' => $data['invoice_url'],
+                'snap_payment_url' => $data['snap_payment_url'] ?? null,
                 'total_quantity' => $transaction['transactions']['total_quantity'],
                 'total_weight' => $transaction['transactions']['total_weight'],
                 'sub_total' => $transaction['transactions']['sub_total'],
@@ -93,18 +94,16 @@ class TransactionService {
                 'response_message' => '',
             ]);
 
-
-
             $email = $data['args']['customer_details']['email'];
             $data = [
                 'invoice_url' => $data['invoice_url'],
                 'customer_name' => $data['args']['customer_details']['first_name']." ".$data['args']['customer_details']['last_name'],
                 'order_id' => $data['args']['transaction_details']['order_id']
             ];
-            //send email create invoices
+            // send email create invoices
             $sendMail = Mail::send('email.invoice', $data , function($message) use($email){
                 $message->to($email);
-                $message->subject('SNEAKERS.ID Invoice Payment.');
+                $message->subject('SNEAKERS.ID Invoice Payment');
             });
             DB::commit();
         } catch (\Exception $e) {

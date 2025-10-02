@@ -23,6 +23,7 @@ class Transaction extends Model
         'type',
         'method',
         'invoice_url',
+        'snap_payment_url',
         'total_quantity',
         'total_weight',
         'sub_total',

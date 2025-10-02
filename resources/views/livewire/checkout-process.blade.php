@@ -102,7 +102,8 @@
                             @include('display-store.cart._partials.payment')
 
                             {{-- Step 4 --}}
-                            @include('display-store.cart._partials.invoice')
+                            {{-- Not Applicable to Midtrans Snap, Iframe Blocked --}}
+                            {{-- @include('display-store.cart._partials.invoice') --}}
 
                             <footer role="contentinfo" class="QDqGb">
                                 <div class="HgABA">

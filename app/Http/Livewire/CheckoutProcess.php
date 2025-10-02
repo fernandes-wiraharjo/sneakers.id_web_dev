@@ -11,6 +11,7 @@ use App\Models\Region as ModelRegion;
 use App\Services\MidtransService;
 use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
+use Illuminate\Support\Str;
 
 class CheckoutProcess extends Component
 {
@@ -155,8 +156,8 @@ class CheckoutProcess extends Component
 
     public function paymentStepSubmit()
     {
-        $date = new \DateTime();
-        $orderID = 'sneakers-id-payments-' . $date->getTimestamp();
+        // updated orderID to prevent race condition on same seconds
+        $orderID = Str::upper('SNK-'.time().'-'.Str::random(4));
         $items = [];
         $totalQuantity = 0;
         foreach(Cart::content() as $item) {

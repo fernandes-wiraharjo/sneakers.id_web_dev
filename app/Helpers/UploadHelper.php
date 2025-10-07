@@ -196,6 +196,20 @@ if (!function_exists('getImage')) {
     }
 }
 
+// get aspect ratio for PHP 8.3+ (getimagesize() not reliable using URL, changed to image path)
+if (!function_exists('getImageAspectRatio')) {
+    function getImageAspectRatio($filename, $module = ''){
+        if ($filename && $module) {
+            $image_path = public_path('images/'.$module.'/'.$filename);
+        } else {
+            $image_path = public_path('demo1/media/blank/blank-image.png');
+        }
+        $image_size = getimagesize($image_path);
+        $ratio = $image_size[0] / $image_size[1];
+        return $ratio;
+    }
+}
+
 if (!function_exists('getImageGallery')) {
     function getImageGallery($filename, $module = ''){
         if ($filename && $module) {

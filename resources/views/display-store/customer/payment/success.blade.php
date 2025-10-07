@@ -364,7 +364,7 @@
                                                                                                             <div role="cell" class="w3cHO">
                                                                                                                 <h4>Payment Method</h4>
                                                                                                                 <div role="cell" class="nkp8r">
-                                                                                                                    <span>{{ str_replace('_', ' ', $response->payment_type) }} - {{ $response->bank }}</span>
+                                                                                                                    <span>{{ str_replace('_', ' ', $response->payment_type) }}</span>
                                                                                                                 </div>
                                                                                                                 <div role="cell" class="nkp8r">
                                                                                                                     <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem3 _1fragem38">

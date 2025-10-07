@@ -11,6 +11,7 @@ use App\Models\Region as ModelRegion;
 use App\Services\MidtransService;
 use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
+use Illuminate\Support\Str;
 
 class CheckoutProcess extends Component
 {
@@ -36,6 +37,7 @@ class CheckoutProcess extends Component
     public $shippingCost = 0;
     public $shippingCourier = [];
     public $shippingWeight;
+    public $originSubdistrict;
 
     public $userRegion;
     public $districtList = [];
@@ -56,6 +58,10 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
+        // init origin
+        $originRegionId = config('irfa.rajaongkir.origin_region_id');
+        $this->originSubdistrict = ModelRegion::where('region_id', $originRegionId)->first()->subdistrict_ro;
+
         $this->total = Cart::total();
         $this->content = Cart::content();
 
@@ -150,8 +156,8 @@ class CheckoutProcess extends Component
 
     public function paymentStepSubmit()
     {
-        $date = new \DateTime();
-        $orderID = 'sneakers-id-payments-' . $date->getTimestamp();
+        // updated orderID to prevent race condition on same seconds
+        $orderID = Str::upper('SNK-'.time().'-'.Str::random(4));
         $items = [];
         $totalQuantity = 0;
         foreach(Cart::content() as $item) {
@@ -269,16 +275,16 @@ class CheckoutProcess extends Component
                 'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
                 'shipping_cost'      => $this->selectedCourier['cost'],
                 'shipping_weight'    => $this->shippingWeight,
-                'origin_ro_id'       => 2088,
+                'origin_ro_id'       => $this->originSubdistrict,
                 'destination_ro_id'  => $this->selectedSubdistrict,
             ],
         ];
 
 
         $this->invoiceUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
-
         //send mail confimarion payment here
         $this->currentStep = 4;
+        
     }
 
     public function paymentSuccess(){

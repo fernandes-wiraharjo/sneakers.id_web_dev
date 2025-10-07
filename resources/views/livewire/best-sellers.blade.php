@@ -1,14 +1,13 @@
 @foreach ($products as $item)
-@php
-    $image_size = getimagesize(getImage($item->image, 'products/'.$item->product_code));
-    $ratio = $image_size[0] / $image_size[1];
-@endphp
 <div class="Carousel__Cell">
     <div class="ProductItem">
         <div class="ProductItem__Wrapper">
             {{-- Item detail route --}}
+            @php
+                $ratio = getImageAspectRatio($item->image, 'products/'.$item->product_code);
+            @endphp
             <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}" class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
-                <div class="AspectRatio AspectRatio--withFallback" style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
+                <div class="AspectRatio AspectRatio--withFallback" style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
 
                     {{-- multi image --}}
                     @foreach ($item->images()->limit(2)->get() as $key => $image)

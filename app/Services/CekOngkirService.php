@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Http;
 
 class CekOngkirService {
     public function CostCourier($destination, $destinationType = 'subdistrict', $weight = 1000, $courier = 'jne') {
-        $origin = 18080; //  fixed origin
+        $origin = config('irfa.rajaongkir.origin_region_id'); //  fixed origin
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'key' => env('RAJAONGKIR_API_KEY'),
+            'key' => config('irfa.rajaongkir.api_key'),
         ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [
             'origin' => $origin,
             // 'originType' => 'subdistrict',
@@ -46,7 +46,7 @@ class CekOngkirService {
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'key' => env('RAJAONGKIR_API_KEY'),
+            'key' => config('irfa.rajaongkir.api_key'),
         ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/track/waybill', [
             'awb' => $waybill,
             'courier' => $courier,

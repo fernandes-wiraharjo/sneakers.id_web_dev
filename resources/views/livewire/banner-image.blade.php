@@ -11,10 +11,6 @@
                             "pageDots": true
                           }'>
 @foreach ($banner as $key => $item)
-@php
-    $image_size = getimagesize(getImage($item->banner_image, 'banner'));
-    $ratio = $image_size[0] / $image_size[1];
-@endphp
 <div class="Slideshow__Slide Carousel__Cell {{ $key == 0 ? 'is-selected' : '' }}" style="{{ $key == 0 ? 'visibility: visible;' : '' }}" data-slide-index="{{$key}}">
     {{-- Banner Mobile 1x1 = 800x800 --}}
     <a href="{{ $item->banner_url }}">

@@ -5,6 +5,7 @@ namespace Modules\Transaction\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Transaction\Entities\TransactionDatatables;
 use Modules\Transaction\Entities\TransactionShippings;
 use Alert;
@@ -43,61 +44,84 @@ class TransactionController extends Controller
             $status_shipping = 'DIKIRIM';
         }
 
-        $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $status_shipping]);
-        if($updated) {
-            $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)->value('phone_number');
+        try {
+            // Mulai transaksi
+            DB::beginTransaction();
 
-            //create shipping history and get Raja Ongkir cek resi
-            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt',  substr($phoneNumber, -5));
-            if($response) {
-                if(intval($request->complete)){
-                    $status = 'COMPLETED';
-                    $transaction = Transaction::findOrFail($shipping->transaction_id);
-                    $email = $transaction->destination->email;
-                    $data = [
-                        'transaction_details' => route('customer.transaction.detail', $transaction->token),
-                        'customer_name' => $transaction->destination->first_name." ".$transaction->destination->last_name,
-                        'order_id' => $transaction->token
-                    ];
-                    //send email create invoices
-                    $sendMail = Mail::send('email.order-complete', $data , function($message) use($email){
-                        $message->to($email);
-                        $message->subject('SNEAKERS.ID Your Order is complete.');
-                    });
+            $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $status_shipping]);
 
-                    $update_transactions = $transaction->update(['status' => $status]);
-                }
+            if (!$updated) {
+                throw new \Exception('Failed to update shipping data.');
+            }
+          
+            $history_created = TransactionHistories::create([
+                'transaction_id' => $shipping->transaction_id,
+                'response_raw' => json_encode($response),
+                'response_status' => $response['data']['delivered'] ?? 'ERROR',
+                'response_code' =>  $response['meta']['code'] ?? '400',
+                'response_message' =>  $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Update Shipping status',
+                'created_by' =>  auth()->user()->id,
+            ]);
 
-                $history_created = TransactionHistories::create([
-                    'transaction_id' => $shipping->transaction_id,
-                    'response_raw' => json_encode($response),
-                    'response_status' => $response['data']['delivered'] ?? 'ERROR',
-                    'response_code' =>  $response['meta']['code'] ?? '400',
-                    'response_message' =>  $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Update Shipping status',
-                    'created_by' =>  auth()->user()->id,
-                ]);
-
-                if($history_created) {
-                    $shipping->update(['status' => $response['data']['delivered'] ?? 'RESI NOT VALID']);
-                }
-
-                //if status complete update quantity
-                if(intval($request->complete)) {
-                    $transaction = TransactionItems::where('transaction_id', $shipping->transaction_id)->get();
-
-                    foreach($transaction as $item) {
-                        $qty_sold = $item->quantity;
-                        $current_item = $item->detail;
-                        $current_item->update(['qty' => $current_item->qty - $qty_sold]);
-                    }
-                }
-
-                Alert::success('Success update resi & status');
-                return redirect()->back()->withSuccess('Success update resi & status');
+            if($history_created) {
+                $shipping->update(['status' => $response['data']['delivered'] ?? 'RESI NOT VALID']);
             }
 
-            Alert::error('Failed update resi, Resi is empty');
-            return redirect()->back()->withErrors('Failed update resi, Resi is empty');
+            $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)->value('phone_number');
+            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt', substr($phoneNumber, -5));
+
+            if (!$response) {
+                throw new \Exception('Failed to check waybill, empty response.');
+            }
+
+            if (intval($request->complete)) {
+                $status = 'COMPLETED';
+                $transaction = Transaction::findOrFail($shipping->transaction_id);
+                $transaction->update(['status' => $status]);
+
+                $email = $transaction->destination->email;
+                $data = [
+                    'transaction_details' => route('customer.transaction.detail', $transaction->token),
+                    'customer_name' => $transaction->destination->first_name . " " . $transaction->destination->last_name,
+                    'order_id' => $transaction->token
+                ];
+                Mail::send('email.order-complete', $data, function($message) use($email) {
+                    $message->to($email);
+                    $message->subject('SNEAKERS.ID Your Order is complete.');
+                });
+
+                // Stock Update
+                $transactionItems = TransactionItems::where('transaction_id', $shipping->transaction_id)->get();
+                foreach ($transactionItems as $item) {
+                    $current_item = $item->detail;
+                    $current_item->update(['qty' => $current_item->qty - $item->quantity]);
+                }
+            }
+
+            $history_created = TransactionHistories::create([
+                'transaction_id' => $shipping->transaction_id,
+                'response_raw' => json_encode($response),
+                'response_status' => $response['data']['delivered'] ?? 'ERROR',
+                'response_code' => $response['meta']['code'] ?? '400',
+                'response_message' => $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Unknown',
+                'created_by' => auth()->user()->id,
+            ]);
+
+            if (!$history_created) {
+                throw new \Exception('Failed to create transaction history.');
+            }
+
+            $shipping->update(['status' => $response['data']['delivered'] ?? 'RESI NOT VALID']);
+
+            DB::commit();
+
+            Alert::success('Success update resi & status');
+            return redirect()->back()->withSuccess('Success update resi & status');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Alert::error('Failed update resi', $e->getMessage());
+            return redirect()->back()->withErrors('Failed update resi');
         }
 
         Alert::error('Failed update resi & status');

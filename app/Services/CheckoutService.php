@@ -8,6 +8,7 @@ use App\Facades\Transaction;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Modules\Transaction\Entities\Transaction as EntitiesTransaction;
+use Illuminate\Support\Str;
 
 class CheckoutService {
 
@@ -15,13 +16,12 @@ class CheckoutService {
         // Xendit::setApiKey(env('API_KEY'));
         Config::$serverKey    = config('services.midtrans.serverKey');
         Config::$clientKey    = config('services.midtrans.clientKey');
-        Config::$isProduction = ! in_array(config('app.env'), ['local', 'uat']);
+        Config::$isProduction = ! in_array(Str::lower(config('app.env')), ['local', 'uat']);
         Config::$isSanitized  = true;
         Config::$is3ds        = true;
     }
 
     public function createInvoiceMidtrans($args, $transactions){
-        $snapBaseURL = config('services.midtrans.snapURL');
         $response = [];
 
         try {
@@ -34,17 +34,22 @@ class CheckoutService {
             }
 
             // get snap token
-            $snapToken = Snap::getSnapToken($args);
+            // $snapToken = Snap::getSnapToken($args);
+
+            // use snap redirect
+            $paymentUrl = Snap::createTransaction($args)->redirect_url;
 
             // transaction payload for DB
             $transactionData = [
-                'args'        => $args,
-                'invoice_url' => $snapBaseURL . $snapToken,
+                'args'              => $args,
+                'snap_payment_url'  => $paymentUrl,
+                'invoice_url'       => url('invoice/' . $args['transaction_details']['order_id']),
             ];
 
             Transaction::createTransaction($transactionData, $transactions);
-
-            $response = $transactionData;
+            header('Location: ' . $paymentUrl);
+            exit;
+            // $response = $transactionData;
         } catch (\Throwable $e) {
             $response['message'] = $e->getMessage();
         }

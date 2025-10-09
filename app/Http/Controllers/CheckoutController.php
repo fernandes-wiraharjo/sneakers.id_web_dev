@@ -152,32 +152,40 @@ class CheckoutController extends BaseController {
 
     public function cancelTransaction($orderId)
     {
-        $transaction = Transaction::where('token', $orderId)->first();
+        try {
+            DB::beginTransaction();
+            $transaction = Transaction::where('token', $orderId)->first();
 
-        if (!$transaction) {
+            if (!$transaction) {
+                return redirect()->route('customer.cart')
+                    ->with('error', 'Transaction not found.');
+            }
+
+            if (in_array($transaction->status, ['CANCELLED', 'SUCCESS'])) {
+                return redirect()->route('customer.cart')
+                    ->with('error', 'Transaction cannot be cancelled.');
+            }
+
+            // Only local cancel (not yet recorded in Midtrans)
+            $transaction->update([
+                'status' => 'CANCELLED',
+                'updated_at' => now(),
+            ]);
+
+            TransactionHistories::where('transaction_id', $transaction->id)->update([
+                'response_status' => 'CANCELLED',
+                'updated_at' => now(),
+            ]);
+
+            Cart::clearOrderId();
+            DB::commit();
+            return redirect()->route('store')
+                ->with('success', 'Transaction successfully cancelled.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Order ID: ' . $orderId . ' Failed to cancel transaction: ' . $e->getMessage());
             return redirect()->route('customer.cart')
-                ->with('error', 'Transaction not found.');
+                ->with('error', 'Failed to cancel transaction.');
         }
-
-        if (in_array($transaction->status, ['CANCELLED', 'SUCCESS'])) {
-            return redirect()->route('customer.cart')
-                ->with('error', 'Transaction cannot be cancelled.');
-        }
-
-        // Only local cancel (not yet recorded in Midtrans)
-        $transaction->update([
-            'status' => 'CANCELLED',
-            'updated_at' => now(),
-        ]);
-
-        TransactionHistories::where('transaction_id', $transaction->id)->update([
-            'response_status' => 'CANCELLED',
-            'updated_at' => now(),
-        ]);
-
-        Cart::clearOrderId();
-
-        return redirect()->route('store')
-            ->with('success', 'Transaction successfully cancelled.');
     }
 }

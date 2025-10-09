@@ -238,12 +238,7 @@
         window.onclick = function(event) {
             if (event.target == modalPayment) {
                 modalPayment.style.display = "none";
-            }
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modalShipping) {
+            } else if (event.target == modalShipping) {
                 modalShipping.style.display = "none";
             }
         }

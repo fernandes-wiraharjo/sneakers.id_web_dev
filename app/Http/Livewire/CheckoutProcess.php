@@ -264,7 +264,7 @@ class CheckoutProcess extends Component
                 'address'      => $this->shippingAddress,
                 'phone_number' => $this->shippingPhoneNumber,
                 'is_user'      => auth()->check() ? 1 : 0,
-                'user_id'      => auth()->user()->id ?? 0,
+                'user_id'      => auth()->user()->id ?? null,
             ],
 
             'transaction_items' => [

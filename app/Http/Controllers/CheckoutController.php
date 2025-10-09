@@ -102,7 +102,7 @@ class CheckoutController extends BaseController {
         return view('display-store.customer.payment.error');
     }
 
-     public function handle(Request $request)
+     public function handleWebhook(Request $request)
     {
         $payload = $request->all();
         Log::info('Midtrans Webhook:', $payload);

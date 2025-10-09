@@ -40,7 +40,7 @@ Route::get('/faq', [StoreController::class, 'faq'])->name('faq');
 
 Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
 Route::get('/email', [StoreController::class, 'email'])->name('email');
-Route::post('/midtrans/webhook', [CheckoutController::class, 'handle']);
+Route::post('/midtrans/webhook', [CheckoutController::class, 'handleWebhook']);
 
 
 Ladmin::route(function() {

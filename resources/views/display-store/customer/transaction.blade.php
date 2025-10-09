@@ -35,9 +35,9 @@
             <div class="chip paid">
                 <div class="chip-content">PAID</div>
             </div>
-            @elseif($transaction->status == 'EXPIRED')
+            @elseif($transaction->status == 'EXPIRED' || $transaction->status == 'CANCELLED')
             <div class="chip expired">
-                <div class="chip-content">EXPIRED / CANCELED</div>
+                <div class="chip-content">{{ $transaction->status }}</div>
             </div>
             @elseif($transaction->status == 'COMPLETED')
             <div class="chip completed">

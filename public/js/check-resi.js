@@ -80,6 +80,7 @@ function checkResi(transaction_id) {
         },
         error: function (xhr, status, error) {
             $('.loading-spinner-' + transaction_id).hide();
+            alert(xhr.responseText);
             console.error("AJAX Error:", error);
             console.error("Response Text:", xhr.responseText);
         }

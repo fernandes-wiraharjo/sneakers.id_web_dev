@@ -9,6 +9,7 @@ use App\Facades\CheckoutMidtrans;
 use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
 use App\Services\MidtransService;
+use App\Models\ShippingCourier;
 use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
 use Illuminate\Support\Str;
@@ -94,9 +95,9 @@ class CheckoutProcess extends Component
             $this->shippingWeight = Cart::totalWeight();
 
         }
-        //courier list 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
+        // Get enabled couriers from database
         if($this->selectedSubdistrict) {
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), 'jnt');
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), ShippingCourier::enabledCouriers());
             $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
         }
     }
@@ -360,9 +361,12 @@ class CheckoutProcess extends Component
             // V2 uses region_id
             $this->selectedSubdistrict = $getDistrict->region_id;
 
-            //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
+            // Get enabled couriers from database
             if($this->selectedSubdistrict) {
-                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), 'jnt');
+                $enabledCouriers = ShippingCourier::where('is_active', true)
+                    ->pluck('code')
+                    ->implode(':');
+                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
                 $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
             }
         } else {

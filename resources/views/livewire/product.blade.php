@@ -45,8 +45,7 @@
                        }' wire:ignore>
                         @php
                         $index = 1;
-                        $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
-                        $ratio_main_image = $image_size[0] / $image_size[1];
+                        $ratio_main_image = getImageAspectRatio($product->image, 'products/' . $product->product_code);
                         @endphp
                         <div id="image-{{ $product->product_code }}-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
                             data-image-position-ignoring-video="0" data-image-position="0" data-image-id="image-{{ $product->product_code }}-0">
@@ -73,8 +72,7 @@
                             data-image-position-ignoring-video="{{ $index }}" data-image-position="{{ $index }}"
                             data-image-id="image-{{ $product->product_code }}-{{ $index }}">
                             @php
-                            $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                            $ratio = $image_size[0] / $image_size[1];
+                            $ratio = getImageAspectRatio($item->image_url, 'products/' . $product->product_code);
                             @endphp
                             <div class="AspectRatio AspectRatio--withFallback"
                                 style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
@@ -112,8 +110,7 @@
                             @foreach ($product->images as $key => $item)
                             @if ($product->image != $item->image_url)
                             @php
-                            $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                            $ratio_image = $image_size[0] / $image_size[1];
+                            $ratio_image = getImageAspectRatio($item->image_url, 'products/' . $product->product_code);
                             @endphp
                             <span data-index="{{ $index }}" data-image-id="image-{{ $product->product_code }}-{{ $index }}"
                                 class="Product__SlideshowNavImage AspectRatio"

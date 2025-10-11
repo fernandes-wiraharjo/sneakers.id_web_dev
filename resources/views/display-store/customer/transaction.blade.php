@@ -1,24 +1,24 @@
 <x-customer-auth-layout>
 
     @push('styles')
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/size-chart.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/transactions.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/size-chart.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pages/transactions.css') }}" />
     @endpush
 
     @if ($message = Session::get('success'))
-        <div class="Form__Alert Alert Alert--success">
-            <ul class="Alert__ErrorList">
-                <li class="Alert__ErrorItem">{{ $message }}</li>
-            </ul>
-        </div>
+    <div class="Form__Alert Alert Alert--success">
+        <ul class="Alert__ErrorList">
+            <li class="Alert__ErrorItem">{{ $message }}</li>
+        </ul>
+    </div>
     @endif
 
     @if ($message = Session::get('error'))
-        <div class="Form__Alert Alert Alert--error">
-            <ul class="Alert__ErrorList">
-                <li class="Alert__ErrorItem">{{ $message }}</li>
-            </ul>
-        </div>
+    <div class="Form__Alert Alert Alert--error">
+        <ul class="Alert__ErrorList">
+            <li class="Alert__ErrorItem">{{ $message }}</li>
+        </ul>
+    </div>
     @endif
 
     <div>
@@ -28,21 +28,21 @@
         <div>
             <span>Order <strong>#{{ strtoupper($transaction->token) }}</strong></span>
             @if ($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
-                <div class="chip pending">
-                    <div class="chip-content">Waiting for Payment</div>
-                </div>
+            <div class="chip pending">
+                <div class="chip-content">Waiting for Payment</div>
+            </div>
             @elseif($transaction->status == 'SETTLED' || $transaction->status == 'PAID')
-                <div class="chip paid">
-                    <div class="chip-content">PAID</div>
-                </div>
-            @elseif($transaction->status == 'EXPIRED')
-                <div class="chip expired">
-                    <div class="chip-content">EXPIRED / CANCELED</div>
-                </div>
+            <div class="chip paid">
+                <div class="chip-content">PAID</div>
+            </div>
+            @elseif($transaction->status == 'EXPIRED' || $transaction->status == 'CANCELLED')
+            <div class="chip expired">
+                <div class="chip-content">{{ $transaction->status }}</div>
+            </div>
             @elseif($transaction->status == 'COMPLETED')
-                <div class="chip completed">
-                    <div class="chip-content">COMPLETED</div>
-                </div>
+            <div class="chip completed">
+                <div class="chip-content">COMPLETED</div>
+            </div>
             @endif
             <br>
             <span>
@@ -51,11 +51,11 @@
         </div>
         <div>
             <a href="#" id="btn-continue-payment" class="Form__Submit Button Button--primary"
-            style="width: 250px; {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? 'display: block;' : 'display: none;'}}" {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? '' : 'disabled'}}>Continue Payment</a>
+                style="width: 250px; {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? 'display: block;' : 'display: none;'}}" {{ $transaction->status == 'PENDING' || $transaction->status == 'CREATED' ? '' : 'disabled'}}>Continue Payment</a>
 
             {{-- @if ($shipping_waybill) --}}
             <a href="#" id="{{ $shipping_waybill ? 'btn-check-shipping' : ''}}" class="Form__Submit Button {{ $shipping_waybill ? 'Button--primary' : 'Button--secondary'}} "
-            style="width: 150px; {{ $transaction->status == 'SETTLED' || $transaction->status == 'PAID' ? 'display: block;' : 'display: none;' }}" {{ $transaction->status == 'SETTLED' || $transaction->status == 'PAID' ? ($shipping_waybill ? '' : 'disabled') : 'disabled'}}>CEK RESI</a>
+                style="width: 150px; {{ $transaction->status == 'settlement' || $transaction->status == 'PAID' ? 'display: block;' : 'display: none;' }}" {{ $transaction->status == 'settlement' || $transaction->status == 'PAID' ? ($shipping_waybill ? '' : 'disabled') : 'disabled'}}>CEK RESI</a>
             {{-- @else
 
             @endif --}}
@@ -68,7 +68,7 @@
             <div id="Order" class="tabcontent" style="display: block">
                 <div class="table-header">
                     <div class="header__item"><a id="us" class="filter__link filter__link--number" href="#">PRODUCT</a></div>
-                    <div class="header__item" style="max-width: 100px;"><a id="uk" class="filter__link filter__link--number"href="#">QUANTITY</a></div>
+                    <div class="header__item" style="max-width: 100px;"><a id="uk" class="filter__link filter__link--number" href="#">QUANTITY</a></div>
                     <div class="header__item" style="max-width: 150px;"><a id="cm" class="filter__link filter__link--number" href="#">TOTAL</a> </div>
                 </div>
                 <div class="table-content">
@@ -140,7 +140,7 @@
             </p>
         </div>
     </div>
-{{--
+    {{--
     @php
 
         dump($transaction);
@@ -175,78 +175,73 @@
                 </div>
                 @if ($shipping_waybill)
                 @php
-                    // dd($shipping_waybill['rajaongkir']['result']['delivery_status']);
+                // dd($shipping_waybill['rajaongkir']['result']['delivery_status']);
                 @endphp
-                    @if($shipping_waybill['rajaongkir']['status']['code'] == 200)
-                        STATUS : {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['status'] }} <br>
-                        PENERIMA : {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['pod_receiver'] }} <br>
-                        WAKTU DITERIMA : {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['pod_date'] }} {{ $shipping_waybill['rajaongkir']['result']['delivery_status']['pod_time'] }} <br>
-                        <hr>
-                        @foreach ($shipping_waybill['rajaongkir']['result']['manifest'] as $item)
-                            {{ $item['manifest_description']}} : {{  $item['city_name'] }} <br>
-                            TANGGAL : {{ $item['manifest_date']}} {{ $item['manifest_time']}} <br>
-                            <hr>
-                        @endforeach
-                    @else
-                        {{ $shipping_waybill['rajaongkir']['status']['description'] }}
-                    @endif
+                @if($shipping_waybill['meta']['code'] == 200)
+                STATUS : {{ $shipping_waybill['data']['delivery_status']['status'] }} <br>
+                PENERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_receiver'] }} <br>
+                WAKTU DITERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_date'] }} {{ $shipping_waybill['data']['delivery_status']['pod_time'] }} <br>
+                <hr>
+                @foreach ($shipping_waybill['data']['manifest'] as $item)
+                {{ $item['manifest_description']}} : {{ $item['city_name'] }} <br>
+                TANGGAL : {{ $item['manifest_date']}} {{ $item['manifest_time']}} <br>
+                <hr>
+                @endforeach
+                @else
+                {{ $shipping_waybill['meta']['message'] }}
+                @endif
                 @endif
             </div>
         </div>
     </div>
 
     @push('scripts')
-        <script src="{{ asset('js/pages/size-chart.js') }}" defer></script>
-        <script>
-            function closePayment() {
-                var modalPayment = document.getElementById("modal-continue-payment");
-                // When the user clicks on <span> (x), close the modal
-                modalPayment.style.display = "none";
-            }
-            // Get the modal
+    <script src="{{ asset('js/pages/size-chart.js') }}" defer></script>
+    <script>
+        function closePayment() {
             var modalPayment = document.getElementById("modal-continue-payment");
-            var modalShipping = document.getElementById("modal-check-shipping");
-
-            // Get the button that opens the modal
-            var btnPayment = document.getElementById("btn-continue-payment");
-
-            var btnShipping = document.getElementById("btn-check-shipping");
-
-            // Get the <span> element that closes the modal
-            var spanPayment = document.getElementsByClassName("closePayment");
-            var spanShipping = document.getElementsByClassName("closeShipping")[0];
-
-            // When the user clicks on the button, open the modal
-            btnPayment.onclick = function() {
-                modalPayment.style.display = "block";
-            }
-            btnShipping.onclick = function() {
-                modalShipping.style.display = "block";
-            }
-
             // When the user clicks on <span> (x), close the modal
-            spanPayment.onclick = function() {
-                modalPayment.style.display = "none";
-                console.log('closed');
-            }
+            modalPayment.style.display = "none";
+        }
+        // Get the modal
+        var modalPayment = document.getElementById("modal-continue-payment");
+        var modalShipping = document.getElementById("modal-check-shipping");
 
-            spanShipping.onclick = function() {
+        // Get the button that opens the modal
+        var btnPayment = document.getElementById("btn-continue-payment");
+
+        var btnShipping = document.getElementById("btn-check-shipping");
+
+        // Get the <span> element that closes the modal
+        var spanPayment = document.getElementsByClassName("closePayment");
+        var spanShipping = document.getElementsByClassName("closeShipping")[0];
+
+        // When the user clicks on the button, open the modal
+        btnPayment.onclick = function() {
+            modalPayment.style.display = "block";
+        }
+        btnShipping.onclick = function() {
+            modalShipping.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        spanPayment.onclick = function() {
+            modalPayment.style.display = "none";
+            console.log('closed');
+        }
+
+        spanShipping.onclick = function() {
+            modalShipping.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modalPayment) {
+                modalPayment.style.display = "none";
+            } else if (event.target == modalShipping) {
                 modalShipping.style.display = "none";
             }
-
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modalPayment) {
-                    modalPayment.style.display = "none";
-                }
-            }
-
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function(event) {
-                if (event.target == modalShipping) {
-                    modalShipping.style.display = "none";
-                }
-            }
-        </script>
+        }
+    </script>
     @endpush
 </x-customer-auth-layout>

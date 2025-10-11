@@ -296,10 +296,10 @@
                                                                                     @endphp
                                                                                     <h4>Order id
                                                                                         <span>
-                                                                                            <h3>#{{ strtoupper($response['external_id']) }}</h3>
+                                                                                            <h3>#{{ strtoupper($response->order_id) }}</h3>
                                                                                         </span>
                                                                                     </h4>
-                                                                                    <h3>Thankyou {{ $response['customer']['given_names'] }} {{ $response['customer']['surname'] }}</h3>
+                                                                                    <h3>Thankyou {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h3>
 
                                                                                     <section aria-label="Review" class="_1fragem15 _1fragemaf">
                                                                                         <div role="table" aria-label="Review your information" class="Z8Nx4 lT5DX">
@@ -364,14 +364,14 @@
                                                                                                             <div role="cell" class="w3cHO">
                                                                                                                 <h4>Payment Method</h4>
                                                                                                                 <div role="cell" class="nkp8r">
-                                                                                                                    <span>{{ str_replace('_', ' ', $response['payment_method']) }} - {{ $response['payment_channel'] }}</span>
+                                                                                                                    <span>{{ str_replace('_', ' ', $response->payment_type) }}</span>
                                                                                                                 </div>
                                                                                                                 <div role="cell" class="nkp8r">
                                                                                                                     <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem3 _1fragem38">
                                                                                                                         <abbr translate="yes"
                                                                                                                             class="_19gi7yt0 _19gi7ytc _1fragem1i _19gi7yt7 notranslate _19gi7ytq _1fragemal">IDR</abbr><strong
                                                                                                                             translate="yes"
-                                                                                                                            class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format(intval($response['paid_amount'])) }}</strong>
+                                                                                                                            class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format(intval($response->gross_amount)) }}</strong>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>

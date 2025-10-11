@@ -151,8 +151,7 @@
                             data-desktop-count="{{ $desktop_count }}" style="{{ $style }}">
                             @foreach ($products as $product)
                             @php
-                                $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                                $ratio = $image_size[0] / $image_size[1];
+                                $ratio = getImageAspectRatio($product->image, 'products/'.$product->product_code);
                             @endphp
                                 <div class="Grid__Cell {{ $class }}">
                                     <div class="ProductItem" style="visibility: visible;">

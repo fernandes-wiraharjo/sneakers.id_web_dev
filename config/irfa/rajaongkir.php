@@ -50,4 +50,5 @@ return [
 
     'cache_type' => env('RAJAONGKIR_CACHE', 'database'),
 
+    'origin_region_id' => env('RAJAONGKIR_ORIGIN_REGION_ID', '18080'),
 ];

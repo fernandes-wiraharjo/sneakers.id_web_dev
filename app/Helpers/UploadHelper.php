@@ -183,18 +183,19 @@ if(!function_exists('imageUploadProduct')) {
 
 if (!function_exists('getImage')) {
     function getImage($filename, $module = ''){
-    if ($filename && $module) {
-        // Encode filename
-        $safeFilename = str_replace(' ', '%20', $filename);
+        if ($filename && $module) {
+            // Encode filename
+            $safeFilename = str_replace(' ', '%20', $filename);
 
-        $image_path = public_path('images/'.$module.'/'.$filename);
-        if(File::exists($image_path)) {
-            return asset('images/'.$module.'/'.$safeFilename);
+            $image_path = public_path('images/'.$module.'/'.$filename);
+            if(File::exists($image_path)) {
+                return asset('images/'.$module.'/'.$safeFilename);
+            } else {
+                return asset('demo1/media/blank/blank-image.png');
+            }
         } else {
             return asset('demo1/media/blank/blank-image.png');
         }
-    } else {
-        return asset('demo1/media/blank/blank-image.png');
     }
 }
 

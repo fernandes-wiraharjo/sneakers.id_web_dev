@@ -190,6 +190,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
 
         Irfa\RajaOngkir\RajaOngkirServiceProvider::class,
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
     ],
 
     /*

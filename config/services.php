@@ -33,5 +33,7 @@ return [
     'midtrans' => [
         'serverKey' => env('MIDTRANS_SERVER_KEY'),
         'clientKey' => env('MIDTRANS_CLIENT_KEY'),
+        'snapURL' => env('MIDTRANS_SNAP_URL'),
+        'environment' => env('APP_ENV'),
     ],
 ];

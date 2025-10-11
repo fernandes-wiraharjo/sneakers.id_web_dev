@@ -242,4 +242,19 @@ class CartService {
             'options' => $options,
         ]);
     }
+
+    public function setOrderId($orderId)
+    {
+        $this->session->put('cart_order_id', $orderId);
+    }
+
+    public function getOrderId()
+    {
+        return $this->session->get('cart_order_id');
+    }
+
+    public function clearOrderId()
+    {
+        $this->session->forget('cart_order_id');
+    }
 }

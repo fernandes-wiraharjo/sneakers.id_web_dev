@@ -122,6 +122,10 @@
             <p class="meta">Checkout at: {{ $ongoing->created_at->format('d M Y, H:i') }}</p>
             <p class="amount">Amount: <strong>Rp {{ number_format($ongoing->grand_total, 0, ',', '.') }}</strong></p>
             <a href="{{ $ongoing->invoice_url }}" class="continue-btn">Continue Payment</a>
+                        <form action="{{ route('customer.transaction.cancel', $ongoing->token) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="cancel-btn">Cancel Payment</button>
+                </form>
         </div>
         @endif
     </section>

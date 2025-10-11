@@ -26,6 +26,7 @@ class DashboardController extends Controller
         $totalLastMonthBefore = $trx->where('modified_date', date('m')-2)->sum('grand_total');
         $totalLastMonth = $trx->where('modified_date', date('m')-1)->sum('grand_total');
         $totalThisMonth = $trx->where('modified_date', date('m'))->sum('grand_total');
+        $totalAllTime = $trx->sum('grand_total');
 
 
         $diffTotalGrandBefore = ($totalLastMonthBefore - $totalLastMonth);
@@ -121,7 +122,7 @@ class DashboardController extends Controller
 
         $data['panel_1'] = [
             'class' => 'card-xxl-stretch',
-            'xendit_balance' => XenditServices::getBalance(),
+            'balance' => $totalAllTime,
             'listRows' => $listRows
         ];
 

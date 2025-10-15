@@ -395,7 +395,10 @@ class CheckoutProcess extends Component
                     if (!$courier) {
                         return null;
                     }
-                    
+
+                    // normalize "day / days" from response
+                    $courierData['etd'] = trim(preg_replace('/\s*days?/i', '', $courierData['etd']));
+
                     // Get active service codes for this courier
                     $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
 

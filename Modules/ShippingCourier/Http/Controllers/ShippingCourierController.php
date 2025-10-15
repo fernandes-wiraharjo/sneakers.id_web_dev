@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\ShippingCourier;
-use Modules\ShippingCourier\Entities\ShippingCourierService;
+use App\Models\ShippingCourierService;
 use Modules\ShippingCourier\Entities\ShippingCourierDatatables;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Alert;

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\ShippingCourier\Entities\ShippingCourierService;
+use App\Models\ShippingCourierService;
 
 class ShippingCourier extends Model
 {

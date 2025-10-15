@@ -2,7 +2,7 @@
 
 namespace Modules\ShippingCourier\Entities;
 
-use Modules\ShippingCourier\Entities\ShippingCourier;
+use App\Models\ShippingCourier;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -22,9 +22,20 @@ class ShippingCourierDatatables extends DataTable {
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'status'])
+            ->rawColumns(['action', 'status', 'services'])
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
+            })
+            ->addColumn('services', function ($item) {
+                $services = $item->services;
+                if ($services->isEmpty()) {
+                    return '<span class="text-muted fst-italic">No service added</span>';
+                }
+                
+                return $services->map(function($service) {
+                    $statusClass = $service->is_active ? 'badge-success' : 'badge-light-dark';
+                    return "<span class='badge {$statusClass} me-2 mb-2'>{$service->code}</span>";
+                })->implode('');
             })
             ->addColumn('action', function ($item) {
                 return view('back-office.components.action-burger', [
@@ -54,6 +65,10 @@ class ShippingCourierDatatables extends DataTable {
                 ->sortable(false),
             Column::make('code')->title('Code'),
             Column::make('name')->title('Name'),
+            Column::make('services')->title('Services')
+                ->searchable(false)
+                ->sortable(false)
+                ->addClass('min-w-200px'),
             Column::make('status')
                 ->width(10)
                 ->sortable(false)
@@ -75,7 +90,7 @@ class ShippingCourierDatatables extends DataTable {
      */
     public function query(ShippingCourier $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('services');
     }
 
     /**

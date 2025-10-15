@@ -388,34 +388,32 @@ class CheckoutProcess extends Component
                     ->implode(':');
                 $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
                 $courierResponse = CekOngkir::CostRangeCourier($courier);
-                
+
                 // Filter services based on what's configured for each courier
                 $this->shippingCourier = $courierResponse->map(function($courierData) {
-                    $courier = ShippingCourier::where('code', strtolower($courierData['courier']))->first();
+                    $courier = ShippingCourier::where('code', strtolower($courierData['code']))->first();
                     if (!$courier) {
                         return null;
                     }
                     
                     // Get active service codes for this courier
-                    $activeServiceCodes = $courier->activeServices()->pluck('code')->map(function($code) {
-                        return strtoupper($code);
-                    })->toArray();
-                    
-                    // Filter services that are configured and active
-                    $courierData['services'] = collect($courierData['services'])->filter(function($service) use ($activeServiceCodes) {
-                        return in_array($service['service'], $activeServiceCodes);
-                    })->values()->all();
-                    
-                    return $courierData['services'] ? $courierData : null;
-                })->filter()->values();
-        } else {
-            $this->selectedSubdistrict = 0;
-        }
+                    $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
 
-        $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
-        $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
-        $this->selectedArea = 0;
-        $this->shippingZipCode = '';
+                    // Filter services that are configured and active
+                    if (in_array($courierData['service'], $activeServiceCodes)) {
+                        return $courierData;
+                    }
+                    return null;
+                })->filter()->values();
+            } else {
+                $this->selectedSubdistrict = 0;
+            }
+
+            $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
+            $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
+            $this->selectedArea = 0;
+            $this->shippingZipCode = '';
+        }
     }
 
     public function areaUpdate($value) {

@@ -6,9 +6,11 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\ShippingCourier;
+use Modules\ShippingCourier\Entities\ShippingCourierService;
 use Modules\ShippingCourier\Entities\ShippingCourierDatatables;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Alert;
+use DB;
 
 class ShippingCourierController extends Controller
 {
@@ -44,20 +46,48 @@ class ShippingCourierController extends Controller
             $validator = $request->validate([
                 'code' => 'required|string|unique:shipping_couriers,code',
                 'name' => 'required|string',
-                'is_active' => 'boolean'
+                'is_active' => 'boolean',
+                'services' => 'array',
+                'services.*.code' => 'required|string',
+                'services.*.name' => 'required|string',
+                'services.*.is_active' => 'boolean'
             ]);
 
             if ($validator) {
-                ShippingCourier::create($request->all());
-                Alert::success('Shipping Courier Created Successfully!');
-                return redirect(route('administrator.master-data.shipping-courier.index'))
-                    ->with('success', 'Shipping Courier Created Successfully!');
+                DB::beginTransaction();
+                try {
+                    // Create courier
+                    $courier = ShippingCourier::create($request->all());
+
+                    // Create services
+                    foreach ($request->input('services', []) as $serviceData) {
+                        $serviceData['is_active'] = isset($serviceData['is_active']);
+                        $courier->services()->create([
+                            'code' => $serviceData['code'],
+                            'name' => $serviceData['name'],
+                            'is_active' => $serviceData['is_active']
+                        ]);
+                    }
+
+                    DB::commit();
+                    Alert::success('Shipping Courier Created Successfully!');
+                    return redirect(route('administrator.master-data.shipping-courier.index'))
+                        ->with('success', 'Shipping Courier Created Successfully!');
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    throw $e;
+                }
             } else {
                 Alert::error('Failed to create shipping courier, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
             Alert::error($e->getMessage());
+            return redirect()->back()->withErrors([
+                $e->getMessage()
+            ]);
+        } catch (\Exception $e) {
+            Alert::error('An error occurred while creating the shipping courier.');
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);
@@ -106,29 +136,79 @@ class ShippingCourierController extends Controller
                 $validation = [
                     'code' => 'required|exists:shipping_couriers,code',
                     'name' => 'required|string',
-                    'is_active' => 'boolean'
+                    'is_active' => 'boolean',
+                    'services' => 'array',
+                    'services.*.code' => 'required|string',
+                    'services.*.name' => 'required|string',
+                    'services.*.is_active' => 'boolean'
                 ];
             } else {
                 $validation = [
                     'code' => 'required|string|unique:shipping_couriers,code',
                     'name' => 'required|string',
-                    'is_active' => 'boolean'
+                    'is_active' => 'boolean',
+                    'services' => 'array',
+                    'services.*.code' => 'required|string',
+                    'services.*.name' => 'required|string',
+                    'services.*.is_active' => 'boolean'
                 ];
             }
 
             $validator = $request->validate($validation);
 
             if ($validator) {
-                $courier->update($data);
-                Alert::success('Shipping Courier Updated Successfully!');
-                return redirect(route('administrator.master-data.shipping-courier.index'))
-                    ->with('success', 'Shipping Courier Updated Successfully!');
+                DB::beginTransaction();
+                try {
+                    // Update courier
+                    $courier->update($data);
+
+                    // Update services
+                    $existingServices = collect($request->input('services', []));
+                    $existingServiceIds = $existingServices->pluck('id')->filter()->all();
+
+                    // Delete services that are not in the request
+                    $courier->services()->whereNotIn('id', $existingServiceIds)->delete();
+
+                    // Update or create services
+                    foreach ($existingServices as $serviceData) {
+                        $serviceData['is_active'] = isset($serviceData['is_active']);
+                        
+                        if (isset($serviceData['id'])) {
+                            // Update existing service
+                            $courier->services()->where('id', $serviceData['id'])->update([
+                                'code' => $serviceData['code'],
+                                'name' => $serviceData['name'],
+                                'is_active' => $serviceData['is_active']
+                            ]);
+                        } else {
+                            // Create new service
+                            $courier->services()->create([
+                                'code' => $serviceData['code'],
+                                'name' => $serviceData['name'],
+                                'is_active' => $serviceData['is_active']
+                            ]);
+                        }
+                    }
+
+                    DB::commit();
+                    Alert::success('Shipping Courier Updated Successfully!');
+                    return redirect(route('administrator.master-data.shipping-courier.index'))
+                        ->with('success', 'Shipping Courier Updated Successfully!');
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    throw $e;
+                }
             } else {
                 Alert::error('Failed to update shipping courier, check your info!');
                 return redirect()->back();
             }
         } catch (LadminException $e) {
             Alert::error($e->getMessage());
+            return redirect()->back()->withErrors([
+                $e->getMessage()
+            ]);
+        } catch (\Exception $e) {
+            Alert::error('An error occurred while updating the shipping courier.');
             return redirect()->back()->withErrors([
                 $e->getMessage()
             ]);

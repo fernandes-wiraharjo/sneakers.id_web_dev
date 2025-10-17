@@ -43,7 +43,7 @@ class CheckoutService {
             $transactionData = [
                 'args'              => $args,
                 'snap_payment_url'  => $paymentUrl,
-                'invoice_url'       => url('invoice/' . $args['transaction_details']['order_id']),
+                'invoice_url'       => route('customer.transaction.detail', $args['transaction_details']['order_id']),
             ];
 
             Transaction::createTransaction($transactionData, $transactions);

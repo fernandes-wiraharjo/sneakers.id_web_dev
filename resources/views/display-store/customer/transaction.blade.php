@@ -99,6 +99,12 @@
                 <span>{{ $region->province ?? '-' }}</span> <br>
                 <span>{{ $region->post_code ?? '-' }}</span> <br>
             </p>
+            <p>
+                <span>Phone Number: {{ $destination->phone_number ?? '-' }}</span>
+            </p>
+            <p>
+                <span>Email: {{ $destination->email ?? '-' }}</span>
+            </p>
         </div>
     </div>
 

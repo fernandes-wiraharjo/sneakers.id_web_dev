@@ -364,6 +364,8 @@ class CheckoutProcess extends Component
 
     public function updateZipCode($value) {
         $this->shippingZipCode = $value;
+        $regionData = ModelRegion::where('post_code', $value)->first();
+        $this->selectedArea = $regionData->region_id;
     }
 
     public function updateArea($value) {
@@ -421,8 +423,10 @@ class CheckoutProcess extends Component
     }
 
     public function areaUpdate($value) {
+        $regionData = ModelRegion::where('region_id', $value)->first();
         $this->selectedArea = $value;
-        $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
+        $this->shippingZipCode = $regionData->post_code;
+        $this->shippingArea = $regionData->area;
     }
 
     public function render()

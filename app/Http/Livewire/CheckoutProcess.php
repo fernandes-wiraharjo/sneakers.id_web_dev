@@ -293,10 +293,11 @@ class CheckoutProcess extends Component
             ],
 
             'transaction_shippings' => [
+                'courier_code'       => Str::lower($this->selectedCourier['courier']),
                 'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
                 'shipping_cost'      => $this->selectedCourier['cost'],
                 'shipping_weight'    => $this->shippingWeight,
-                'origin_ro_id'       => $this->originSubdistrict,
+                'origin_ro_id'       => config('irfa.rajaongkir.origin_region_id'),
                 'destination_ro_id'  => $this->selectedSubdistrict,
             ],
         ];

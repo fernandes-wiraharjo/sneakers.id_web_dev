@@ -130,16 +130,11 @@ class TransactionController extends Controller
 
     public function ajaxCheckResi(Request $request)
     {
-        $phoneNumber = TransactionDestination::where('transaction_id', $request->id)
-        ->value('phone_number');
-        $lastFiveDigitPhoneNumber = substr($phoneNumber, -5);
-
-    //     Log::info('ajaxCheckResi phoneNumber', [
-    //     'transaction_id' => $request->id,
-    //     'phone_number'   => $phoneNumber,
-    //     'last_five'   => $lastFiveDigitPhoneNumber,
-    // ]);
-        $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt', $lastFiveDigitPhoneNumber);
+        $transactionDestination = TransactionDestination::where('transaction_id', $request->id)->first();
+        $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $transactionDestination->phone_number), -5);
+        $transactionShipping = TransactionShippings::where('transaction_id', $request->id)->first();
+        
+        $response = CekOngkir::CheckWaybill($request->shipping_waybill, $transactionShipping->courier_code, $lastFiveDigitPhoneNumber);
 
         return response()->json($response);
     }

@@ -116,15 +116,16 @@ class TransactionService {
     public function insertHistories($data){
         $transaction_before = TransactionHistories::where('transaction_id', $data['transaction_id'])->orderBy('created_at', 'desc')->first();
 
-        TransactionHistories::create([
+        $history = TransactionHistories::create([
             'transaction_id' => $data['transaction_id'],
             'transaction_history_id' => $transaction_before ? $transaction_before->id : NULL,
             'response_raw' => json_encode($data['response_raw']),
             'response_status' => $data['response_status'],
             'response_code' => $data['response_code'],
             'response_message' => $data['response_message'],
-            'created_by' => auth()->user()->id,
-            'updated_by' => auth()->user()->id,
+            'created_by' => auth()->user()->id ?? 'SYSTEM',
+            'updated_by' => auth()->user()->id ?? 'SYSTEM',
         ]);
+        return $history;
     }
 }

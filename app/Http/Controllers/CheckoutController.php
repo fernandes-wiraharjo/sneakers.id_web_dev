@@ -19,6 +19,7 @@ use Midtrans\Config;
 use Midtrans\Transaction as MidtransTransaction;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionHistories;
+use Modules\Transaction\Entities\TransactionDestination;
 
 use function App\Services\cancelMidtransTransaction;
 
@@ -32,65 +33,15 @@ class CheckoutController extends BaseController {
         if(!auth()->check()) {
             return redirect()->route('customer.login')->with('error', 'Session has been expired, please re-login.');
         }
-        //clear cart
-        //after few second redirect to dashboard
-        //check status transksi
 
-        try {
-            DB::beginTransaction();
-            $transaction = Transaction::where('token', $external_id)->first();
-            $data['response'] = MidtransTransaction::status($external_id);
-            $data['transaction'] = $transaction;
-            $data['items'] = $transaction->items()->with('detail', 'detail.product')->get();
-            $data['shipping'] = $transaction->shipping()->first();
-            $data['destination'] = $transaction->destination()->with('region')->first();
-            //check status transaction dgn respose jika status != respose status maka update method, type, status
-
-            if($transaction->status != data_get($data, 'response.transaction_status')){
-                $user = $transaction->user;
-                 $data_email = [
-                    'order_url' => '',
-                    'customer_name' => $user->first_name . " " . $user->last_name,
-                    'order_id' => data_get($data, 'response.order_id'),
-                ];
-
-                Mail::send('email.success-email', $data_email, function ($message) use ($user) {
-                    $message->to($user->email);
-                    $message->subject('SNEAKERS.ID Order Confirmed.');
-                });
-
-
-                $updateTransaction = Transaction::where('id', $transaction->id)->first();
-                $updateTransaction->update([
-                    'type'   => strtoupper(data_get($data, 'response.payment_type')),
-                    'method' => strtoupper(data_get($data, 'response.bank')),
-                    'status' => strtoupper(data_get($data, 'response.transaction_status')),
-                ]);
-
-                TransactionService::insertHistories([
-                    'transaction_id' => $transaction->id,
-                    'response_raw' => $data['response'],
-                    'response_status' => data_get($data, 'response.transaction_status'),
-                    'response_code' => 200,
-                    'response_message' => 'Success Payment from redirect page.',
-                ]);
-            }
-            DB::commit();
-            CartService::clear();
-            // CartService::clearOrderId();
-
-            return view('display-store.customer.payment.success', $data);
-        } catch (\Xendit\Exceptions\ApiException $e) {
-            // TODO: might not needed since transition to midtrans, remove after testing
-            DB::rollBack();
-            $data['message'] =  $e->getMessage();
-            return view('display-store.customer.payment.error', $data);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $data['message'] =  $e->getMessage();
-            return view('display-store.customer.payment.error', $data);
-        }
-
+        // update 2025-10-17: callback handled by webhook, this function is purely for view purpose
+        $transaction = Transaction::where('token', $external_id)->first();
+        $data['transaction'] = $transaction;
+        $data['items'] = $transaction->items()->with('detail', 'detail.product')->get();
+        $data['shipping'] = $transaction->shipping()->first();
+        $data['destination'] = $transaction->destination()->with('region')->first();
+        $data['response'] = MidtransTransaction::status($external_id);
+        return view('display-store.customer.payment.success', $data);
     }
 
     public function errorPayments()
@@ -102,51 +53,91 @@ class CheckoutController extends BaseController {
         return view('display-store.customer.payment.error');
     }
 
-     public function handleWebhook(Request $request)
+    public function handleWebhook(Request $request)
     {
-        $payload = $request->all();
-        Log::info('Midtrans Webhook:', $payload);
+        try {
+            DB::beginTransaction();
+            $payload = $request->all();
 
-        $transactionId = $payload['transaction_id'] ?? null;
-        $orderId = $payload['order_id'] ?? null;
-        $status = $payload['transaction_status'] ?? null;
-        $fraudStatus = $payload['fraud_status'] ?? null;
+            $midtransTransactionId = $payload['transaction_id'] ?? null;
+            $orderId = $payload['order_id'] ?? null;
+            $status = $payload['transaction_status'] ?? null;
 
-        if (!$transactionId) {
-            return response()->json(['message' => 'Invalid webhook'], 400);
+            $transaction = Transaction::where('token', $orderId)->first();
+            if (!$transaction) {
+                return response()->json(['message' => 'Transaction not found'], 404);
+            }
+            if ($transaction->status == 'SUCCESS') {
+                return response()->json(['message' => 'Transaction already processed'], 200);
+            }
+
+            $transactionDestination = TransactionDestination::where('transaction_id', $transaction->id)->first();
+            if (!$transactionDestination) {
+                return response()->json(['message' => 'Transaction destination not found'], 404);
+            }
+            
+            $history = TransactionService::insertHistories([
+                'transaction_id' => $transaction->id,
+                'response_raw' => $payload,
+                'response_status' => $status,
+                'response_code' => $payload['status_code'],
+                'response_message' => $payload['status_message'],
+            ]);
+
+
+            switch ($status) {
+                case 'settlement':
+                    $transaction->update([
+                        'type'   => strtoupper($payload['payment_type']),
+                        'method' => strtoupper($payload['bank'] ?? ''),
+                        'status' => 'SUCCESS',
+                        'paid_at' => $payload['settlement_time']
+                    ]);
+                    
+                    Mail::send('email.success-email', [
+                        'order_url' => $transaction->invoice_url,
+                        'customer_name' => $transactionDestination->first_name . " " . $transactionDestination->last_name,
+                        'order_id' => $transaction->token
+                    ], function ($message) use ($transactionDestination) {
+                        $message->to($transactionDestination->email);
+                        $message->subject('SNEAKERS.ID Order Confirmed.');
+                    });
+
+                    CartService::clear();
+                    break;
+
+                case 'expire':
+                    $transaction->update([
+                        'status' => 'EXPIRED'
+                    ]);
+                    break;
+
+                case 'cancel':
+                    $transaction->update([
+                        'status' => 'CANCELLED'
+                    ]);
+                    break;
+
+                case 'deny':
+                    $transaction->update([
+                        'status' => 'DENIED'
+                    ]);
+                    break;
+
+                default:
+                    $transaction->update([
+                        'status' => strtoupper($status)
+                    ]);
+                    break;
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Webhook handled'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Order ID: ' . $orderId . ' Failed to handle webhook: ' . $e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-
-        $transaction = Transaction::where('token', $orderId)->first();
-        if (!$transaction) {
-            return response()->json(['message' => 'Transaction not found'], 404);
-        }
-
-        switch ($status) {
-            case 'settlement':
-                $transaction->status = 'SUCCESS';
-                $transaction->paid_at = now();
-                break;
-
-            case 'expire':
-                $transaction->status = 'EXPIRED';
-                break;
-
-            case 'cancel':
-                $transaction->status = 'CANCELLED';
-                break;
-
-            case 'deny':
-                $transaction->status = 'DENIED';
-                break;
-
-            default:
-                $transaction->status = strtoupper($status);
-                break;
-        }
-
-        $transaction->save();
-
-        return response()->json(['message' => 'Webhook handled'], 200);
     }
 
 

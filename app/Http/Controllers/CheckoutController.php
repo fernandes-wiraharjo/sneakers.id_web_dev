@@ -20,6 +20,8 @@ use Midtrans\Transaction as MidtransTransaction;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionDestination;
+use Modules\Transaction\Entities\TransactionItems;
+use Modules\Product\Entities\ProductDetail;
 
 use function App\Services\cancelMidtransTransaction;
 
@@ -103,6 +105,14 @@ class CheckoutController extends BaseController {
                         $message->subject('SNEAKERS.ID Order Confirmed.');
                     });
                     CartService::clearByUserId($transactionDestination->user_id);
+
+                    
+                    // Stock Update
+                    $transactionItems = TransactionItems::where('transaction_id', $transaction->id)->get();
+                    foreach ($transactionItems as $item) {
+                        $productDetail = ProductDetail::where('id', $item->product_detail_id)->first();
+                        $productDetail->update(['qty' => $productDetail->qty - $item->quantity]);
+                    }
                     break;
 
                 case 'expire':

@@ -390,6 +390,62 @@
                         </table>
                     </div>
                 </div>
+
+                {{-- Refund Information Section --}}
+                @if($transaction->status == 'REFUNDED' && $transaction->refund)
+                <div class="mb-10">
+                    <div class="alert alert-warning">
+                        <strong><i class="fas fa-exclamation-triangle"></i> This transaction has been refunded</strong>
+                    </div>
+                    
+                    <h5>Refund Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Bank Name</td>
+                                    <td>{{ $transaction->refund->bank_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Account Number</td>
+                                    <td>{{ $transaction->refund->account_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Account Holder</td>
+                                    <td>{{ $transaction->refund->account_holder_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Refund Amount</td>
+                                    <td><strong class="text-danger">Rp {{ number_format($transaction->refund->amount, 0, ',', '.') }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Reason</td>
+                                    <td>{{ $transaction->refund->reason ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Processed By</td>
+                                    <td>{{ $transaction->refund->processedBy->name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Processed At</td>
+                                    <td>{{ $transaction->refund->processed_at ? $transaction->refund->processed_at->format('d-m-Y H:i') : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Refund Created At</td>
+                                    <td>{{ $transaction->refund->created_at->format('d-m-Y H:i') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if($transaction->refund->proof_image)
+                    <h5 class="mt-5">Transfer Proof</h5>
+                    <div class="text-center">
+                        <img src="{{ Storage::url('refunds/' . $transaction->refund->proof_image) }}" alt="Transfer Proof" style="max-width: 100%; max-height: 400px;" class="img-thumbnail">
+                    </div>
+                    @endif
+                </div>
+                @endif
             </div>
 
             <div class="modal-footer border-0">

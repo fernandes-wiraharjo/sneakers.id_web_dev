@@ -29,7 +29,12 @@ class Transaction extends Model
         'sub_total',
         'grand_total',
         'description',
-        'status'
+        'status',
+        'paid_at'
+    ];
+
+    protected $casts = [
+        'paid_at' => 'datetime'
     ];
 
     protected static function newFactory()

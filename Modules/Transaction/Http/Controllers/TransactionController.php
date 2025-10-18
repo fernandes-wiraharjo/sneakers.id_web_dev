@@ -48,12 +48,15 @@ class TransactionController extends Controller
             // Mulai transaksi
             DB::beginTransaction();
 
-            $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $status_shipping]);
+            $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)->value('phone_number');
+            $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $phoneNumber), -5);
+            $courierCode = $shipping->courier_code;
+            $response = CekOngkir::CheckWaybill($request->shipping_waybill, $courierCode, $lastFiveDigitPhoneNumber);
 
-            if (!$updated) {
-                throw new \Exception('Failed to update shipping data.');
+            if (!$response) {
+                throw new \Exception('Failed to check waybill, empty response.');
             }
-          
+
             $history_created = TransactionHistories::create([
                 'transaction_id' => $shipping->transaction_id,
                 'response_raw' => json_encode($response),
@@ -62,17 +65,6 @@ class TransactionController extends Controller
                 'response_message' =>  $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Update Shipping status',
                 'created_by' =>  auth()->user()->id,
             ]);
-
-            if($history_created) {
-                $shipping->update(['status' => $response['data']['delivered'] ?? 'RESI NOT VALID']);
-            }
-
-            $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)->value('phone_number');
-            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt', substr($phoneNumber, -5));
-
-            if (!$response) {
-                throw new \Exception('Failed to check waybill, empty response.');
-            }
 
             if (intval($request->complete)) {
                 $status = 'COMPLETED';
@@ -111,7 +103,10 @@ class TransactionController extends Controller
                 throw new \Exception('Failed to create transaction history.');
             }
 
-            $shipping->update(['status' => $response['data']['delivered'] ?? 'RESI NOT VALID']);
+            $shipping->update([
+                'shipping_waybill' => $request->shipping_waybill, 
+                'status' => $response['data']['summary']['status'] ?? 'RESI NOT VALID'
+            ]);
 
             DB::commit();
 
@@ -130,16 +125,11 @@ class TransactionController extends Controller
 
     public function ajaxCheckResi(Request $request)
     {
-        $phoneNumber = TransactionDestination::where('transaction_id', $request->id)
-        ->value('phone_number');
-        $lastFiveDigitPhoneNumber = substr($phoneNumber, -5);
-
-    //     Log::info('ajaxCheckResi phoneNumber', [
-    //     'transaction_id' => $request->id,
-    //     'phone_number'   => $phoneNumber,
-    //     'last_five'   => $lastFiveDigitPhoneNumber,
-    // ]);
-        $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt', $lastFiveDigitPhoneNumber);
+        $transactionDestination = TransactionDestination::where('transaction_id', $request->id)->first();
+        $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $transactionDestination->phone_number), -5);
+        $transactionShipping = TransactionShippings::where('transaction_id', $request->id)->first();
+        
+        $response = CekOngkir::CheckWaybill($request->shipping_waybill, $transactionShipping->courier_code, $lastFiveDigitPhoneNumber);
 
         return response()->json($response);
     }

@@ -293,10 +293,11 @@ class CheckoutProcess extends Component
             ],
 
             'transaction_shippings' => [
+                'courier_code'       => Str::lower($this->selectedCourier['courier']),
                 'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
                 'shipping_cost'      => $this->selectedCourier['cost'],
                 'shipping_weight'    => $this->shippingWeight,
-                'origin_ro_id'       => $this->originSubdistrict,
+                'origin_ro_id'       => config('irfa.rajaongkir.origin_region_id'),
                 'destination_ro_id'  => $this->selectedSubdistrict,
             ],
         ];
@@ -363,6 +364,8 @@ class CheckoutProcess extends Component
 
     public function updateZipCode($value) {
         $this->shippingZipCode = $value;
+        $regionData = ModelRegion::where('post_code', $value)->first();
+        $this->selectedArea = $regionData->region_id;
     }
 
     public function updateArea($value) {
@@ -420,8 +423,10 @@ class CheckoutProcess extends Component
     }
 
     public function areaUpdate($value) {
+        $regionData = ModelRegion::where('region_id', $value)->first();
         $this->selectedArea = $value;
-        $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
+        $this->shippingZipCode = $regionData->post_code;
+        $this->shippingArea = $regionData->area;
     }
 
     public function render()

@@ -12,6 +12,12 @@
     data-bs-toggle="modal" data-bs-target="#action-history-{{ $transaction->id }}">
     <i class="fa fa-reply"></i> History
 </a>
+@if (in_array($transaction->status, ['SUCCESS', 'COMPLETED']))
+<a href="#" class="btn btn-primary btn-active-light-primary btn-sm m-1"
+    data-bs-toggle="modal" data-bs-target="#action-refund-{{ $transaction->id }}">
+    <i class="fas fa-undo"></i> Refund
+</a>
+@endif
 
 <div class="modal fade" tabindex="-1" id="action-shipping-{{ $transaction->id }}" aria-labelledby="action-Label-shipping-{{ $transaction->id }}">
     <div class="modal-dialog modal-lg">
@@ -389,6 +395,183 @@
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- Refund Modal --}}
+<div class="modal fade" tabindex="-1" id="action-refund-{{ $transaction->id }}" aria-labelledby="action-Label-refund-{{ $transaction->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @if(!$transaction->refund)
+            <form action="{{ route('administrator.transaction.refund.store') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="action-refund-label">Process Refund - {{ $transaction->token ?? '-'}}</h5>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="transaction_id" value="{{ $transaction->id }}">
+                    
+                    <div class="mb-10">
+                        <h5>Transaction Information</h5>
+                        <div class="table-responsive" style="text-align: left;">
+                            <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 200px;">Order ID</td>
+                                        <td>{{ $transaction->token ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Grand Total</td>
+                                        <td>Rp {{ rupiah_format($transaction->grand_total ?? 0) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td>{{ $transaction->status ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Customer</td>
+                                        <td>{{ $destination->first_name ?? '' }} {{ $destination->last_name ?? '' }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <label for="bank_name" class="form-label required">Bank Name</label>
+                        <input type="text" name="bank_name" id="bank_name" class="form-control form-control-solid" placeholder="Enter bank name" required value="{{ old('bank_name') }}">
+                    </div>
+
+                    <div class="mb-10">
+                        <label for="account_number" class="form-label required">Account Number</label>
+                        <input type="text" name="account_number" id="account_number" class="form-control form-control-solid" placeholder="Enter account number" required value="{{ old('account_number') }}">
+                    </div>
+
+                    <div class="mb-10">
+                        <label for="account_holder_name" class="form-label required">Account Holder Name</label>
+                        <input type="text" name="account_holder_name" id="account_holder_name" class="form-control form-control-solid" placeholder="Enter account holder name" required value="{{ old('account_holder_name') }}">
+                    </div>
+
+                    <div class="mb-10">
+                        <label for="amount" class="form-label required">Refund Amount (Rp)</label>
+                        <input type="number" name="amount" id="amount" class="form-control form-control-solid" placeholder="Enter refund amount" required step="0.01" min="0" max="{{ $transaction->grand_total }}" value="{{ old('amount', $transaction->grand_total) }}">
+                        <div class="form-text">Maximum: Rp {{ rupiah_format($transaction->grand_total ?? 0) }}</div>
+                    </div>
+
+                    <div class="mb-10">
+                        <label for="proof_image" class="form-label">Transfer Proof Image</label>
+                        <input type="file" name="proof_image" id="proof_image" class="form-control form-control-solid" accept="image/*">
+                        <div class="form-text">Upload proof of transfer (JPEG, PNG, JPG, GIF - Max 2MB) - Will be converted to WebP</div>
+                    </div>
+
+                    <div class="mb-10">
+                        <label for="reason" class="form-label">Refund Reason</label>
+                        <textarea name="reason" id="reason" class="form-control form-control-solid" rows="3" placeholder="Enter refund reason">{{ old('reason') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Refund</button>
+                </div>
+            </form>
+            @else
+            {{-- Display existing refund information --}}
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="action-refund-label">Refund Details - {{ $transaction->token ?? '-'}}</h5>
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-times"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-10">
+                    <h5>Transaction Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Order ID</td>
+                                    <td>{{ $transaction->token ?? '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Grand Total</td>
+                                    <td>Rp {{ rupiah_format($transaction->grand_total ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>{{ $transaction->status ?? '-'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong><i class="fas fa-check-circle"></i> Refund Processed</strong>
+                </div>
+
+                <div class="mb-10">
+                    <h5>Refund Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Bank Name</td>
+                                    <td>{{ $transaction->refund->bank_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Account Number</td>
+                                    <td>{{ $transaction->refund->account_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Account Holder</td>
+                                    <td>{{ $transaction->refund->account_holder_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Refund Amount</td>
+                                    <td><strong>Rp {{ number_format($transaction->refund->amount, 0, ',', '.') }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Reason</td>
+                                    <td>{{ $transaction->refund->reason ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Processed By</td>
+                                    <td>{{ $transaction->refund->processedBy->name ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Processed At</td>
+                                    <td>{{ $transaction->refund->processed_at ? $transaction->refund->processed_at->format('d-M-Y H:i') : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Created At</td>
+                                    <td>{{ $transaction->refund->created_at->format('d-M-Y H:i') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                @if($transaction->refund->proof_image)
+                <div class="mb-10">
+                    <h5>Transfer Proof</h5>
+                    <div class="text-center">
+                        <img src="{{ Storage::url('refunds/' . $transaction->refund->proof_image) }}" alt="Transfer Proof" style="max-width: 100%; max-height: 500px;" class="img-thumbnail">
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            </div>
+            @endif
         </div>
     </div>
 </div>

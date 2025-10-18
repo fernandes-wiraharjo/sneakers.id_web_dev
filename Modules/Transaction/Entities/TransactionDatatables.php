@@ -82,7 +82,7 @@ class TransactionDatatables extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->with('destination', 'destination.user')
+        return $model->with('destination', 'destination.user', 'refund')
             ->select('transactions.*', 
                 'transaction_destinations.email', 
                 'transaction_destinations.transaction_id',

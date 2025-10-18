@@ -10,5 +10,6 @@
     "FooterSetting": true,
     "LookBook": true,
     "Transaction": true,
-    "Dashboard": true
+    "Dashboard": true,
+    "ShippingCourier": true
 }

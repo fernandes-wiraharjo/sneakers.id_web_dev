@@ -200,50 +200,6 @@
                                                                                     @error('selectedProvince') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="vTXBW _10vrn9p1 _10vrn9p0 _10vrn9p6">
-                                                                                <div>
-                                                                                    <div class="j2JE7">
-                                                                                        <label for="Select5" class="QOQ2V NKh24">
-                                                                                            <span class="KBYKh">
-                                                                                                <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kode Pos</span>
-                                                                                            </span>
-                                                                                        </label>
-                                                                                        <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd"  wire:change="updateZipCode($event.target.value)"wire:target="updateArea" wire:loading.attr="disabled">
-                                                                                            @if ($shippingZipCode == '')
-                                                                                                <option value="" {{ $shippingZipCode != '' ? '' : 'selected'}}>Pilih Kodepos</option>
-                                                                                            @endif
-                                                                                            {{-- @if($postalCode == [])
-                                                                                                <option value="{{ $userRegion->post_code }}">{{ $userRegion->post_code }}</option>
-                                                                                            @endif --}}
-
-                                                                                            @foreach ($postalCode as $item)
-                                                                                                <option value="{{$item}}" {{ $item == $shippingZipCode ? 'selected' : ''}}>{{$item}}</option>
-                                                                                            @endforeach
-                                                                                        </select>
-                                                                                        <div wire:loading wire:target="updateArea" class="TUEJq">
-                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum">
-                                                                                                <div class="loading-spinner"></div>
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div class="TUEJq"  wire:loading.remove wire:target="updateArea">
-                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
-                                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                                    viewBox="0 0 14 14"
-                                                                                                    focusable="false"
-                                                                                                    aria-hidden="true"
-                                                                                                    class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
-                                                                                                    <path
-                                                                                                        stroke-linecap="round"
-                                                                                                        stroke-linejoin="round"
-                                                                                                        d="m11.9 5.6-4.653 4.653a.35.35 0 0 1-.495 0L2.1 5.6">
-                                                                                                    </path>
-                                                                                                </svg>
-                                                                                            </span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @error('shippingZipCode') <span style="color: red;">{{ $message }}</span> @enderror
-                                                                                </div>
-                                                                            </div>
                                                                         </div>
                                                                         <div class="_1fragemaf _1fragem1b _1mrl40q3 _1fragem1o _1fragem25 _16s97g73 _16s97g75 _16s97g7b _16s97g7d" style="--_16s97g72: minmax(0, 1fr); --_16s97g74: minmax(0, 1fr); --_16s97g7a: minmax(0, 1fr); --_16s97g7c: minmax(0, 1fr);">
                                                                             <div class="vTXBW _10vrn9p1 _10vrn9p0 _10vrn9p6">
@@ -365,7 +321,7 @@
                                                                                             id="Select4"
                                                                                             required=""
                                                                                             autocomplete="shipping country"
-                                                                                            class="_b6uH RR8sg vYo81 RGaKd" wire:change="areaUpdate($event.target.value)" wire:target="updateArea" wire:loading.attr="disabled">
+                                                                                            class="_b6uH RR8sg vYo81 RGaKd" wire:change="areaUpdate($event.target.value)" wire:target="areaUpdate" wire:loading.attr="disabled">
                                                                                             @if (!$selectedArea)
                                                                                                 <option value="" {{$selectedArea ? '' : 'selected'}}>Pilih Kelurahan</option>
                                                                                             @endif
@@ -399,6 +355,51 @@
                                                                                     </div>
                                                                                     @error('selectedArea') <span style="color: red;">{{ $message }}</span> @enderror
 
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                            <div class="vTXBW _10vrn9p1 _10vrn9p0 _10vrn9p6">
+                                                                                <div>
+                                                                                    <div class="j2JE7">
+                                                                                        <label for="Select5" class="QOQ2V NKh24">
+                                                                                            <span class="KBYKh">
+                                                                                                <span class="rermvf1 _1fragem7q _1fragem7s _1fragem15">Kode Pos</span>
+                                                                                            </span>
+                                                                                        </label>
+                                                                                        <select name="post_code" id="Select5" required="" autocomplete="shipping address-level1" class="_b6uH RR8sg vYo81 RGaKd"  wire:change="updateZipCode($event.target.value)"wire:target="updateArea" wire:loading.attr="disabled">
+                                                                                            @if ($shippingZipCode == '')
+                                                                                                <option value="" {{ $shippingZipCode != '' ? '' : 'selected'}}>Pilih Kodepos</option>
+                                                                                            @endif
+                                                                                            {{-- @if($postalCode == [])
+                                                                                                <option value="{{ $userRegion->post_code }}">{{ $userRegion->post_code }}</option>
+                                                                                            @endif --}}
+
+                                                                                            @foreach ($postalCode as $item)
+                                                                                                <option value="{{$item}}" {{ $item == $shippingZipCode ? 'selected' : ''}}>{{$item}}</option>
+                                                                                            @endforeach
+                                                                                        </select>
+                                                                                        <div wire:loading wire:target="updateArea" class="TUEJq">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum">
+                                                                                                <div class="loading-spinner"></div>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class="TUEJq"  wire:loading.remove wire:target="updateArea">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
+                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                    viewBox="0 0 14 14"
+                                                                                                    focusable="false"
+                                                                                                    aria-hidden="true"
+                                                                                                    class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
+                                                                                                    <path
+                                                                                                        stroke-linecap="round"
+                                                                                                        stroke-linejoin="round"
+                                                                                                        d="m11.9 5.6-4.653 4.653a.35.35 0 0 1-.495 0L2.1 5.6">
+                                                                                                    </path>
+                                                                                                </svg>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    @error('shippingZipCode') <span style="color: red;">{{ $message }}</span> @enderror
                                                                                 </div>
                                                                             </div>
                                                                         </div>

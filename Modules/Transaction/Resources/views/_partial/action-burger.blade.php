@@ -2,12 +2,12 @@
     data-bs-toggle="modal" data-bs-target="#action-detail-{{ $transaction->id }}">
     <i class="fas fa-eye"></i> Detail
 </a>
-
+@if ($transaction->status == 'SUCCESS')
 <a href="#" class="btn btn-warning btn-active-light-primary btn-sm m-1"
     data-bs-toggle="modal" data-bs-target="#action-shipping-{{ $transaction->id }}" onclick="openModal({{ $transaction->id }})">
     <i class="fas fa-truck"></i> Shipping
 </a>
-
+@endif
 <a href="#" class="btn btn-danger btn-active-light-primary btn-sm m-1"
     data-bs-toggle="modal" data-bs-target="#action-history-{{ $transaction->id }}">
     <i class="fa fa-reply"></i> History

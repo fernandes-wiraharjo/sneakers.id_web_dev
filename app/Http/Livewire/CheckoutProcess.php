@@ -9,6 +9,7 @@ use App\Facades\CheckoutMidtrans;
 use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
 use App\Services\MidtransService;
+use App\Models\ShippingCourier;
 use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
 use Illuminate\Support\Str;
@@ -94,10 +95,30 @@ class CheckoutProcess extends Component
             $this->shippingWeight = Cart::totalWeight();
 
         }
-        //courier list 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
+        // Get enabled couriers and their services from database
         if($this->selectedSubdistrict) {
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), 'jnt');
-            $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), ShippingCourier::enabledCouriers());
+            $courierResponse = CekOngkir::CostRangeCourier($courier);
+            
+            // Filter services based on what's configured for each courier
+            $this->shippingCourier = $courierResponse->map(function($courierData) {
+                $courier = ShippingCourier::where('code', strtolower($courierData['courier']))->first();
+                if (!$courier) {
+                    return null;
+                }
+                
+                // Get active service codes for this courier
+                $activeServiceCodes = $courier->activeServices()->pluck('code')->map(function($code) {
+                    return strtoupper($code);
+                })->toArray();
+                
+                // Filter services that are configured and active
+                $courierData['services'] = collect($courierData['services'])->filter(function($service) use ($activeServiceCodes) {
+                    return in_array($service['service'], $activeServiceCodes);
+                })->values()->all();
+                
+                return $courierData['services'] ? $courierData : null;
+            })->filter()->values();
         }
     }
 
@@ -272,10 +293,11 @@ class CheckoutProcess extends Component
             ],
 
             'transaction_shippings' => [
+                'courier_code'       => Str::lower($this->selectedCourier['courier']),
                 'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
                 'shipping_cost'      => $this->selectedCourier['cost'],
                 'shipping_weight'    => $this->shippingWeight,
-                'origin_ro_id'       => $this->originSubdistrict,
+                'origin_ro_id'       => config('irfa.rajaongkir.origin_region_id'),
                 'destination_ro_id'  => $this->selectedSubdistrict,
             ],
         ];
@@ -342,6 +364,8 @@ class CheckoutProcess extends Component
 
     public function updateZipCode($value) {
         $this->shippingZipCode = $value;
+        $regionData = ModelRegion::where('post_code', $value)->first();
+        $this->selectedArea = $regionData->region_id;
     }
 
     public function updateArea($value) {
@@ -360,24 +384,49 @@ class CheckoutProcess extends Component
             // V2 uses region_id
             $this->selectedSubdistrict = $getDistrict->region_id;
 
-            //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
+            // Get enabled couriers and their services from database
             if($this->selectedSubdistrict) {
-                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), 'jnt');
-                $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
-            }
-        } else {
-            $this->selectedSubdistrict = 0;
-        }
+                $enabledCouriers = ShippingCourier::where('is_active', true)
+                    ->pluck('code')
+                    ->implode(':');
+                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
+                $courierResponse = CekOngkir::CostRangeCourier($courier);
 
-        $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
-        $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
-        $this->selectedArea = 0;
-        $this->shippingZipCode = '';
+                // Filter services based on what's configured for each courier
+                $this->shippingCourier = $courierResponse->map(function($courierData) {
+                    $courier = ShippingCourier::where('code', strtolower($courierData['code']))->first();
+                    if (!$courier) {
+                        return null;
+                    }
+
+                    // normalize "day / days" from response
+                    $courierData['etd'] = trim(preg_replace('/\s*days?/i', '', $courierData['etd']));
+
+                    // Get active service codes for this courier
+                    $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
+
+                    // Filter services that are configured and active
+                    if (in_array($courierData['service'], $activeServiceCodes)) {
+                        return $courierData;
+                    }
+                    return null;
+                })->filter()->values();
+            } else {
+                $this->selectedSubdistrict = 0;
+            }
+
+            $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
+            $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
+            $this->selectedArea = 0;
+            $this->shippingZipCode = '';
+        }
     }
 
     public function areaUpdate($value) {
+        $regionData = ModelRegion::where('region_id', $value)->first();
         $this->selectedArea = $value;
-        $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
+        $this->shippingZipCode = $regionData->post_code;
+        $this->shippingArea = $regionData->area;
     }
 
     public function render()

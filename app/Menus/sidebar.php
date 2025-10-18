@@ -239,6 +239,31 @@ return [
                     ]
                 ],
             ],
+            [
+                'gate' => 'administrator.master-data.shipping-courier.index',
+                'name' => 'Shipping Couriers',
+                'route' => ['administrator.master-data.shipping-courier.index', []],
+                'isActive' => 'master-data/shipping-courier*',
+                'icon' => 'truck',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.create',
+                        'title' => 'Create Shipping Courier',
+                        'description' => 'User can create new shipping courier'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.update',
+                        'title' => 'Update Shipping Courier',
+                        'description' => 'User can update shipping courier'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.destroy',
+                        'title' => 'Delete Shipping Courier',
+                        'description' => 'User can delete shipping courier'
+                    ]
+                ],
+            ],
         ]
     ],
     [

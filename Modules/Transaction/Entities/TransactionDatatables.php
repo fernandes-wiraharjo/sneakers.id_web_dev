@@ -25,24 +25,40 @@ class TransactionDatatables extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'customer_info'])
             ->editColumn('shipping_status', function ($item) {
                 return $item->shipping->status ?? '-' ;
             })
             ->editColumn('method',  function ($item) {
-                return $item->type.'-'.$item->method;
+                if ($item->type == 'PENDING') {
+                    return 'PENDING';
+                } else {
+                    return $item->type.'-'.$item->method;
+                }
             })
-            ->editColumn('customer_email',  function ($item) {
-                return $item->email ?? '-';
+            ->editColumn('customer_info',  function ($item) {
+                $email = $item->email ?? '-';
+                $phone = $item->destination->phone_number ?? '-';
+                
+                $emailLink = $email !== '-' ? '<a href="mailto:' . $email . '">' . $email . '</a>' : '-';
+                $phoneLink = $phone !== '-' ? '<a href="tel:' . $phone . '">' . $phone . '</a>' : '-';
+                
+                return '<div class="d-flex flex-column">
+                    <span>' . $emailLink . '</span>
+                    <span>' . $phoneLink . '</span>
+                </div>';
             })
             ->editColumn('total_weight',  function ($item) {
-                return $item->total_weight / 1000 . ' Kg';
+                return number_format($item->total_weight / 1000, 2) . ' Kg';
             })
             ->editColumn('grand_total',  function ($item) {
                 return 'Rp '.rupiah_format(intval($item->grand_total));
             })
             ->editColumn('created_at', function ($item) {
-                return $item->created_at->format('d-m-Y H:i');
+                return $item->created_at->format('d-M-Y H:i');
+            })
+            ->editColumn('paid_at', function ($item) {
+                return $item->paid_at ? $item->paid_at->format('d-M-Y H:i') : '-';
             })
             ->addColumn('action', function ($item) {
                 // dd($item);
@@ -67,7 +83,10 @@ class TransactionDatatables extends DataTable
     public function query(Transaction $model)
     {
         return $model->with('destination', 'destination.user')
-            ->select('transactions.*', 'transaction_destinations.email', 'transaction_destinations.transaction_id')
+            ->select('transactions.*', 
+                'transaction_destinations.email', 
+                'transaction_destinations.transaction_id',
+                'transaction_destinations.phone_number')
             ->leftJoin('transaction_destinations','transactions.id','=', 'transaction_destinations.transaction_id')
             ->newQuery();
     }
@@ -109,12 +128,19 @@ class TransactionDatatables extends DataTable
                 ->searchable(false)
                 ->width(300)
                 ->addClass('text-center'),
-            Column::make('date')
-                ->title(__('Payment date')),
-            Column::make('customer_email')
-                ->name('destination.user.email')
-                ->title('Customer Email')
+            Column::make('created_at')
                 ->width(150)
+                ->searchable(false)
+                ->sortable(true),
+            Column::make('paid_at')
+                ->title(__('Payment date'))
+                ->width(150)
+                ->searchable(false)
+                ->sortable(true),
+            Column::make('customer_info')
+                ->name('destination.user.email')
+                ->title('Customer Info')
+                ->width(200)
                 ->sortable(true)
                 ->orderable(true) // Allow sorting on this column
                 ->orderColumn('destination.user.email $1'),
@@ -133,10 +159,6 @@ class TransactionDatatables extends DataTable
                 ->searchable(false)
                 ->sortable(false),
             Column::make('shipping_status')
-                ->width(150)
-                ->searchable(false)
-                ->sortable(false),
-            Column::make('created_at')
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),

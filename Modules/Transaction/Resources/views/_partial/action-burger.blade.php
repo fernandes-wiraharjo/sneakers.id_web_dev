@@ -306,7 +306,22 @@
                                         </tr>
                                         <tr>
                                             <td style="width: 200px;">Order Status</td>
-                                            <td>{{ $transaction->status?? '-'}}</td>
+                                            <td>
+                                                @php
+                                                    $status = $transaction->status ?? '-';
+                                                    $badgeClass = match($status) {
+                                                        'PENDING' => 'badge-warning',
+                                                        'SUCCESS' => 'badge-success',
+                                                        'COMPLETED' => 'badge-primary',
+                                                        'REFUNDED' => 'badge-danger',
+                                                        'CANCELLED' => 'badge-dark',
+                                                        'FAILED' => 'badge-danger',
+                                                        'EXPIRED' => 'badge-secondary',
+                                                        default => 'badge-light',
+                                                    };
+                                                @endphp
+                                                <span class="badge {{ $badgeClass }} fs-7">{{ $status }}</span>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td >Order Created At</td>
@@ -544,7 +559,22 @@
                                     </tr>
                                     <tr>
                                         <td>Status</td>
-                                        <td>{{ $transaction->status ?? '-'}}</td>
+                                        <td>
+                                            @php
+                                                $txStatus = $transaction->status ?? '-';
+                                                $txBadgeClass = match($txStatus) {
+                                                    'PENDING' => 'badge-warning',
+                                                    'SUCCESS' => 'badge-success',
+                                                    'COMPLETED' => 'badge-primary',
+                                                    'REFUNDED' => 'badge-danger',
+                                                    'CANCELLED' => 'badge-dark',
+                                                    'FAILED' => 'badge-danger',
+                                                    'EXPIRED' => 'badge-secondary',
+                                                    default => 'badge-light',
+                                                };
+                                            @endphp
+                                            <span class="badge {{ $txBadgeClass }} fs-7">{{ $txStatus }}</span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Customer</td>
@@ -618,7 +648,22 @@
                                 </tr>
                                 <tr>
                                     <td>Status</td>
-                                    <td>{{ $transaction->status ?? '-'}}</td>
+                                    <td>
+                                        @php
+                                            $refundTxStatus = $transaction->status ?? '-';
+                                            $refundTxBadgeClass = match($refundTxStatus) {
+                                                'PENDING' => 'badge-warning',
+                                                'SUCCESS' => 'badge-success',
+                                                'COMPLETED' => 'badge-primary',
+                                                'REFUNDED' => 'badge-danger',
+                                                'CANCELLED' => 'badge-dark',
+                                                'FAILED' => 'badge-danger',
+                                                'EXPIRED' => 'badge-secondary',
+                                                default => 'badge-light',
+                                            };
+                                        @endphp
+                                        <span class="badge {{ $refundTxBadgeClass }} fs-7">{{ $refundTxStatus }}</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

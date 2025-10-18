@@ -25,9 +25,32 @@ class TransactionDatatables extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->rawColumns(['action', 'customer_info'])
+            ->rawColumns(['action', 'customer_info', 'status', 'shipping_status'])
+            ->editColumn('status', function ($item) {
+                $status = $item->status ?? '-';
+                $badgeClass = match($status) {
+                    'PENDING' => 'badge-warning',
+                    'SUCCESS' => 'badge-success',
+                    'COMPLETED' => 'badge-primary',
+                    'REFUNDED' => 'badge-danger',
+                    'CANCELLED' => 'badge-dark',
+                    'FAILED' => 'badge-danger',
+                    'EXPIRED' => 'badge-secondary',
+                    default => 'badge-light',
+                };
+                return '<span class="badge ' . $badgeClass . ' fs-7">' . $status . '</span>';
+            })
             ->editColumn('shipping_status', function ($item) {
-                return $item->shipping->status ?? '-' ;
+                $shippingStatus = $item->shipping->status ?? '-';
+                $badgeClass = match($shippingStatus) {
+                    'DIKEMAS' => 'badge-warning',
+                    'DIKIRIM' => 'badge-info',
+                    'SEDANG DIKIRIM' => 'badge-primary',
+                    'DELIVERED' => 'badge-success',
+                    'COMPLETE' => 'badge-success',
+                    default => 'badge-light',
+                };
+                return '<span class="badge ' . $badgeClass . ' fs-7">' . $shippingStatus . '</span>';
             })
             ->editColumn('method',  function ($item) {
                 if ($item->type == 'PENDING') {

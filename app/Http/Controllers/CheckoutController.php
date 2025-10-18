@@ -102,8 +102,7 @@ class CheckoutController extends BaseController {
                         $message->to($transactionDestination->email);
                         $message->subject('SNEAKERS.ID Order Confirmed.');
                     });
-                    // TODO: verify cart is cleared after updating cart to use redis / DB instead of session
-                    CartService::clear();
+                    CartService::clearByUserId($transactionDestination->user_id);
                     break;
 
                 case 'expire':

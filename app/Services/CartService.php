@@ -4,22 +4,23 @@ namespace App\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Facades\Cache;
 
 class CartService {
     const MINIMUM_QUANTITY = 1;
     const DEFAULT_INSTANCE = 'shopping-cart';
+    const CART_TTL = 3600; // 1 hour in seconds
 
-    protected $session;
     protected $instance;
+    protected $cartId;
 
-    /**
-     * Constructs a new cart object.
-     *
-     * @param Illuminate\Session\SessionManager $session
-     */
-    public function __construct(SessionManager $session)
+    public function __construct($userId = null)
     {
-        $this->session = $session;
+        if (!$userId && auth()->user()) {
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':' . auth()->user()->id);
+        } else {
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':' . $userId);
+        }
     }
 
     public function add($id, $size_id, $code ,$name, $retail_price, $discount_price, $size = 'All size', $quantity, $weight, $image, $url,$options = []): void
@@ -34,7 +35,7 @@ class CartService {
 
         $content->put($size_id, $cartItem);
 
-        $this->session->put(self::DEFAULT_INSTANCE, $content);
+        Cache::put($this->cartId, $content, self::CART_TTL);
     }
 
     public function update(string $size_id, string $action): void
@@ -61,7 +62,7 @@ class CartService {
 
             $content->put($size_id, $cartItem);
 
-            $this->session->put(self::DEFAULT_INSTANCE, $content);
+            Cache::put($this->cartId, $content, self::CART_TTL);
         }
     }
 
@@ -75,7 +76,7 @@ class CartService {
         });
         // // Add notes to existing content or create new array with only note text as value for key "
         // // $content->put('note', $text);
-        $this->session->put(self::DEFAULT_INSTANCE, $content);
+        Cache::put($this->cartId, $content, self::CART_TTL);
     }
 
     public function getNotes()
@@ -101,7 +102,7 @@ class CartService {
         $content = $this->getContent();
 
         if ($content->has($size_id)) {
-            $this->session->put(self::DEFAULT_INSTANCE, $content->except($size_id));
+            Cache::put($this->cartId, $content->except($size_id), self::CART_TTL);
         }
     }
 
@@ -112,7 +113,12 @@ class CartService {
      */
     public function clear(): void
     {
-        $this->session->forget(self::DEFAULT_INSTANCE);
+        Cache::forget($this->cartId);
+    }
+
+    public static function clearByUserId(int $userId): void
+    {
+        Cache::forget(md5(self::DEFAULT_INSTANCE . ':' . $userId));
     }
 
     /**
@@ -122,7 +128,7 @@ class CartService {
      */
     public function hashID(): string
     {
-        return $this->session->getId();
+        return $this->cartId;
     }
 
     /**
@@ -132,7 +138,7 @@ class CartService {
      */
     public function content(): Collection
     {
-        return is_null($this->session->get(self::DEFAULT_INSTANCE)) ? collect([]) : $this->session->get(self::DEFAULT_INSTANCE);
+        return Cache::get($this->cartId, collect([]));
     }
 
      /**
@@ -204,7 +210,7 @@ class CartService {
      */
     protected function getContent(): Collection
     {
-        return $this->session->has(self::DEFAULT_INSTANCE) ? $this->session->get(self::DEFAULT_INSTANCE) : collect([]);
+        return Cache::get($this->cartId, collect([]));
     }
 
     /**

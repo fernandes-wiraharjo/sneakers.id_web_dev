@@ -446,6 +446,63 @@
                     @endif
                 </div>
                 @endif
+
+                {{-- Shipping Information Section for Shipped Orders --}}
+                @if($shipping && $shipping->shipping_waybill)
+                <div class="mb-10">
+                    <div class="alert alert-info">
+                        <strong><i class="fas fa-shipping-fast"></i> This order has been shipped</strong>
+                    </div>
+                    
+                    <h5>Shipping Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Shipping Status</td>
+                                    <td><strong>{{ $shipping->status ?? '-' }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Courier</td>
+                                    <td>{{ $shipping->shipping_method ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Courier Code</td>
+                                    <td>{{ strtoupper($shipping->courier_code ?? '-') }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tracking Number (Resi)</td>
+                                    <td><strong class="text-primary">{{ $shipping->shipping_waybill }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Cost</td>
+                                    <td>Rp {{ rupiah_format($shipping->shipping_cost ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Address</td>
+                                    <td>
+                                        {{ $destination->address ?? '-' }}<br>
+                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
+                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
+                                        {{ $destination->region->post_code ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Recipient</td>
+                                    <td>
+                                        {{ $destination->first_name ?? '' }} {{ $destination->last_name ?? '' }}<br>
+                                        {{ $destination->phone_number ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Updated At</td>
+                                    <td>{{ $shipping->updated_at ? $shipping->updated_at->format('d-M-Y H:i') : '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <div class="modal-footer border-0">

@@ -182,7 +182,7 @@
                                 <p id="id_work_days">
                                     @foreach ($sizeList as $index => $item)
                                     @if($item->size != null || $item->size != '')
-                                    <label class="sizes-option"><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty == 0 ? 'disabled' : ''}}
+                                    <label class="sizes-option"><input type="radio" name="work_days" value="{{$item->id}}" data-size-id="{{ $item->id }}" wire:change="updatePrice($event.target.value)" {{ $item->qty <= 0 ? 'disabled' : ''}}
                                             {{-- {{ $index == 0 ? 'checked' : ''}} --}}><span>{{$item->size ?? 'All Size'}}</span></label>
                                     @endif
                                     @endforeach
@@ -216,7 +216,7 @@
 
                                 {{-- @if($product->details()->count() > 1)
                             @foreach ($product->details()->get() as $item)
-                                <a href="javascript:void(0)" onclick="changePrice(this)" data-id="{{$item->id}}"" data-price="{{$item->retail_price}}"
+                                <a href="javascript:void(0)" onclick="changePrice(this)" data-id="{{$item->id}}" data-price="{{$item->retail_price}}"
                                 data-discount-price="{{$item->after_discount_price}}" data-discount="{{$item->discount_percentage}}"
                                 data-qty="{{$item->qty}}"
                                 class="Button Button--primary size" style="font-size: 12px; padding: 5px 15px;" id="size-{{$item->id}}">

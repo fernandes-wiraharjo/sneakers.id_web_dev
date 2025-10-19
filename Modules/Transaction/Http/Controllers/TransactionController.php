@@ -13,10 +13,13 @@ use App\Facades\CekOngkir;
 use App\Services\CekOngkirService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Modules\Transaction\Entities\Transaction;
 use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionItems;
+use Modules\Transaction\Entities\Refund;
+use Intervention\Image\Facades\Image;
 
 class TransactionController extends Controller
 {
@@ -193,4 +196,80 @@ class TransactionController extends Controller
     {
         //
     }
+
+    /**
+     * Store refund
+     * @param Request $request
+     * @return Renderable
+     */
+    public function storeRefund(Request $request)
+    {
+        ladmin()->allow('administrator.transaction.index');
+
+        $request->validate([
+            'transaction_id' => 'required|exists:transactions,id',
+            'bank_name' => 'required|string|max:255',
+            'account_number' => 'required|string|max:255',
+            'account_holder_name' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0',
+            'proof_image' => 'nullable|image',
+            'reason' => 'nullable|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $refundData = [
+                'transaction_id' => $request->transaction_id,
+                'bank_name' => $request->bank_name,
+                'account_number' => $request->account_number,
+                'account_holder_name' => $request->account_holder_name,
+                'amount' => $request->amount,
+                'reason' => $request->reason,
+                'processed_by' => auth()->user()->id,
+                'processed_at' => now(),
+            ];
+
+            // Handle image upload with Intervention Image
+            if ($request->hasFile('proof_image')) {
+                $image = $request->file('proof_image');
+                $imageName = 'refund_' . time() . '_' . uniqid() . '.webp';
+                
+                // Process image with Intervention Image
+                $img = Image::make($image);
+                
+                // Resize if needed (maintain aspect ratio, max width 1200px)
+                if ($img->width() > 1200) {
+                    $img->resize(1200, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                }
+                
+                // Convert to WebP and save using Storage
+                $encodedImage = $img->encode('webp', 85);
+                Storage::disk('public')->put('refunds/' . $imageName, $encodedImage);
+                
+                $refundData['proof_image'] = $imageName;
+            }
+
+            $refund = Refund::create($refundData);
+
+            // Update transaction status to REFUNDED
+            $transaction = Transaction::findOrFail($request->transaction_id);
+            $transaction->update(['status' => 'REFUNDED']);
+
+            DB::commit();
+
+            Alert::success('Success', 'Refund processed successfully');
+            return redirect()->route('administrator.transaction.index');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Refund creation failed: ' . $e->getMessage());
+            Alert::error('Failed', 'Failed to create refund request: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
 }

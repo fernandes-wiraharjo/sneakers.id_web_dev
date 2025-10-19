@@ -88,4 +88,9 @@ class Transaction extends Model
             'user_id'         // Local key on TransactionDestination
         );
     }
+
+    public function refund()
+    {
+        return $this->hasOne(Refund::class, 'transaction_id', 'id');
+    }
 }

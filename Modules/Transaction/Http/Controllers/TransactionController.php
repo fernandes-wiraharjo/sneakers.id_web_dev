@@ -85,12 +85,6 @@ class TransactionController extends Controller
                     $message->subject('SNEAKERS.ID Your Order is complete.');
                 });
 
-                // Stock Update
-                $transactionItems = TransactionItems::where('transaction_id', $shipping->transaction_id)->get();
-                foreach ($transactionItems as $item) {
-                    $current_item = $item->detail;
-                    $current_item->update(['qty' => $current_item->qty - $item->quantity]);
-                }
             }
 
             $history_created = TransactionHistories::create([

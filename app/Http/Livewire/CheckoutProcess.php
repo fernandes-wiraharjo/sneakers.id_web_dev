@@ -5,8 +5,14 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Facades\Cart;
 use App\Facades\CekOngkir;
+use App\Facades\CheckoutMidtrans;
 use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
+use App\Services\MidtransService;
+use App\Models\ShippingCourier;
+use Ramsey\Uuid\Uuid;
+use Xendit\Transaction;
+use Illuminate\Support\Str;
 
 class CheckoutProcess extends Component
 {
@@ -32,6 +38,7 @@ class CheckoutProcess extends Component
     public $shippingCost = 0;
     public $shippingCourier = [];
     public $shippingWeight;
+    public $originSubdistrict;
 
     public $userRegion;
     public $districtList = [];
@@ -52,6 +59,10 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
+        // init origin
+        $originRegionId = config('irfa.rajaongkir.origin_region_id');
+        $this->originSubdistrict = ModelRegion::where('region_id', $originRegionId)->first()->subdistrict_ro;
+
         $this->total = Cart::total();
         $this->content = Cart::content();
 
@@ -84,10 +95,30 @@ class CheckoutProcess extends Component
             $this->shippingWeight = Cart::totalWeight();
 
         }
-        //courier list 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
+        // Get enabled couriers and their services from database
         if($this->selectedSubdistrict) {
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, 'subdistrict',Cart::totalWeight(), 'jnt');
-            $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), ShippingCourier::enabledCouriers());
+            $courierResponse = CekOngkir::CostRangeCourier($courier);
+            
+            // Filter services based on what's configured for each courier
+            $this->shippingCourier = $courierResponse->map(function($courierData) {
+                $courier = ShippingCourier::where('code', strtolower($courierData['courier']))->first();
+                if (!$courier) {
+                    return null;
+                }
+                
+                // Get active service codes for this courier
+                $activeServiceCodes = $courier->activeServices()->pluck('code')->map(function($code) {
+                    return strtoupper($code);
+                })->toArray();
+                
+                // Filter services that are configured and active
+                $courierData['services'] = collect($courierData['services'])->filter(function($service) use ($activeServiceCodes) {
+                    return in_array($service['service'], $activeServiceCodes);
+                })->values()->all();
+                
+                return $courierData['services'] ? $courierData : null;
+            })->filter()->values();
         }
     }
 
@@ -146,6 +177,8 @@ class CheckoutProcess extends Component
 
     public function paymentStepSubmit()
     {
+        // updated orderID to prevent race condition on same seconds
+        $orderID = Str::upper('SNK-'.time().'-'.Str::random(4));
         $items = [];
         $totalQuantity = 0;
         foreach(Cart::content() as $item) {
@@ -155,12 +188,25 @@ class CheckoutProcess extends Component
             }
 
             $items[] = [
+                'id' => $item['id'],
                 'name' => $item['name'],
                 'quantity' => $item['quantity'],
                 'price' => $price,
                 'category' => 'shoes',
                 'url' => $item['url']
             ];
+
+            // add shipping as an item
+            if ($this->shippingCost > 0) {
+                $items[] = [
+                    'id'       => 'SHIPPING',
+                    'name'     => 'Shipping Fee',
+                    'quantity' => 1,
+                    'price'    => intval($this->shippingCost),
+                    'category' => 'shipping',
+                    'url'      => null
+                ];
+            }
 
             $totalQuantity += $item['quantity'];
         }
@@ -180,69 +226,87 @@ class CheckoutProcess extends Component
         //shippingcost
         //subtotal
         //grandtotal
-        $this->invoiceUrl = CheckoutXendit::createInvoice([
-            'currency' => 'IDR',
-            'amount'    => intval($this->grandTotal),
-            'error_redirect_url' => route('customer.payment.error'),
-            //make new pages for thankyou after success -> to recheck transaction id and update current status and give invoice response,
-            'customer' => [
-                'given_names' => $this->shippingFirstName,
-                'surname' => $this->shippingLastName,
-                'email' => $this->shippingEmail,
-                'mobile_number' => $this->shippingPhoneNumber,
-                'addresses' => [
-                    [
-                        'city' => $this->shippingDistrict,
-                        'country' => 'indonesia',
-                        'postal_code' => $this->shippingZipCode,
-                        'state' => $this->shippingProvince,
-                        'street_line1' => $this->shippingAddress,
-                        'street_line2' => $this->shippingSubDistrict.', '.$this->shippingArea
-                    ]
-                ]
-            ],
-            'items' => $items,
-            'fees' => [
-                [
-                    'type' => 'Shipping',
-                    'value' => $this->shippingCost
-                ]
-            ]
-        ], [
-            'transactions' => [
-                'date' => date('Y-m-d'),
-                'gateway' => 'Xendit',
-                'total_quantity' =>  $totalQuantity,
-                'total_weight' =>  Cart::totalWeight(),
-                'sub_total' => Cart::total(),
-                'description' => Cart::getNotes(),
-                'grand_total' => $this->grandTotal
-            ],
-            'transaction_destinations' => [
-                'region_id' => $this->selectedArea,
-                'email' => $this->shippingEmail,
-                'first_name' => $this->shippingFirstName,
-                'last_name' => $this->shippingLastName,
-                'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingPhoneNumber,
-                'is_user' => auth()->check() ? 1 : 0,
-                'user_id' => auth()->user()->id ?? 0,
 
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderID,
+                'gross_amount'  => intval($this->grandTotal),
             ],
+            'customer_details' => [
+                'first_name'    => $this->shippingFirstName,
+                'last_name'     => $this->shippingLastName,
+                'email'         => $this->shippingEmail,
+                'phone'         => $this->shippingPhoneNumber,
+                'billing_address' => [
+                    'first_name'   => $this->shippingFirstName,
+                    'last_name'    => $this->shippingLastName,
+                    'address'      => $this->shippingAddress,
+                    'city'         => $this->shippingDistrict,
+                    'postal_code'  => $this->shippingZipCode,
+                    'phone'        => $this->shippingPhoneNumber,
+                    'country_code' => 'IDN',
+                ],
+                'shipping_address' => [
+                    'first_name'   => $this->shippingFirstName,
+                    'last_name'    => $this->shippingLastName,
+                    'address'      => $this->shippingAddress,
+                    'city'         => $this->shippingDistrict,
+                    'postal_code'  => $this->shippingZipCode,
+                    'phone'        => $this->shippingPhoneNumber,
+                    'country_code' => 'IDN',
+                ]
+            ],
+            'item_details' => $items,
+            'callbacks' => [
+                'error'  => route('customer.payment.error'),
+                'finish' => route('customer.payment.success', $orderID),
+                'sucess' => route('customer.payment.success', $orderID),
+            ],
+            'custom_field1' => 'Gateway: Midtrans', // optional metadata
+            'custom_field2' => Cart::getNotes() ?? '',
+        ];
+
+        $transactions = [
+            'transactions' => [
+                'date'            => date('Y-m-d'),
+                'gateway'         => 'Midtrans',
+                'total_quantity'  => $totalQuantity,
+                'total_weight'    => Cart::totalWeight(),
+                'sub_total'       => Cart::total(),
+                'description'     => Cart::getNotes(),
+                'grand_total'     => $this->grandTotal,
+            ],
+
+            'transaction_destinations' => [
+                'region_id'    => $this->selectedArea,
+                'email'        => $this->shippingEmail,
+                'first_name'   => $this->shippingFirstName,
+                'last_name'    => $this->shippingLastName,
+                'address'      => $this->shippingAddress,
+                'phone_number' => $this->shippingPhoneNumber,
+                'is_user'      => auth()->check() ? 1 : 0,
+                'user_id'      => auth()->user()->id ?? null,
+            ],
+
             'transaction_items' => [
                 'items' => Cart::content(),
             ],
-            'transaction_shippings' => [
-                 'shipping_method' => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
-                 'shipping_cost' => $this->selectedCourier['cost'],
-                 'shipping_weight' => $this->shippingWeight,
-                 'origin_ro_id' => 2088,
-                 'destination_ro_id' => $this->selectedSubdistrict,
-            ],
-        ]);
 
+            'transaction_shippings' => [
+                'courier_code'       => Str::lower($this->selectedCourier['courier']),
+                'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
+                'shipping_cost'      => $this->selectedCourier['cost'],
+                'shipping_weight'    => $this->shippingWeight,
+                'origin_ro_id'       => config('irfa.rajaongkir.origin_region_id'),
+                'destination_ro_id'  => $this->selectedSubdistrict,
+            ],
+        ];
+
+
+        $this->invoiceUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
         //send mail confimarion payment here
         $this->currentStep = 4;
+        
     }
 
     public function paymentSuccess(){
@@ -300,37 +364,69 @@ class CheckoutProcess extends Component
 
     public function updateZipCode($value) {
         $this->shippingZipCode = $value;
+        $regionData = ModelRegion::where('post_code', $value)->first();
+        $this->selectedArea = $regionData->region_id;
     }
 
     public function updateArea($value) {
         $this->shippingSubDistrict = $value;
         $getDistrict = ModelRegion::where(['district' => $this->selectedDistrict, 'subdistrict' => $value])->first();
         if($getDistrict) {
-            if($getDistrict->subdistrict_ro){
-                $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
-                $destinationType = 'subdistrict';
-            } else {
-                $this->selectedSubdistrict = $getDistrict->city_ro;
-                $destinationType = 'city';
-            }
-            //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
-            if($this->selectedSubdistrict) {
-                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, $destinationType, Cart::totalWeight(), 'jnt');
-                $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
-            }
-        } else {
-            $this->selectedSubdistrict = 0;
-        }
+            // V1 uses subdistrict / city RO
+            // if($getDistrict->subdistrict_ro){
+            //     $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
+            //     $destinationType = 'subdistrict';
+            // } else {
+            //     $this->selectedSubdistrict = $getDistrict->city_ro;
+            //     $destinationType = 'city';
+            // }
 
-        $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
-        $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
-        $this->selectedArea = 0;
-        $this->shippingZipCode = '';
+            // V2 uses region_id
+            $this->selectedSubdistrict = $getDistrict->region_id;
+
+            // Get enabled couriers and their services from database
+            if($this->selectedSubdistrict) {
+                $enabledCouriers = ShippingCourier::where('is_active', true)
+                    ->pluck('code')
+                    ->implode(':');
+                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
+                $courierResponse = CekOngkir::CostRangeCourier($courier);
+
+                // Filter services based on what's configured for each courier
+                $this->shippingCourier = $courierResponse->map(function($courierData) {
+                    $courier = ShippingCourier::where('code', strtolower($courierData['code']))->first();
+                    if (!$courier) {
+                        return null;
+                    }
+
+                    // normalize "day / days" from response
+                    $courierData['etd'] = trim(preg_replace('/\s*days?/i', '', $courierData['etd']));
+
+                    // Get active service codes for this courier
+                    $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
+
+                    // Filter services that are configured and active
+                    if (in_array($courierData['service'], $activeServiceCodes)) {
+                        return $courierData;
+                    }
+                    return null;
+                })->filter()->values();
+            } else {
+                $this->selectedSubdistrict = 0;
+            }
+
+            $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
+            $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
+            $this->selectedArea = 0;
+            $this->shippingZipCode = '';
+        }
     }
 
     public function areaUpdate($value) {
+        $regionData = ModelRegion::where('region_id', $value)->first();
         $this->selectedArea = $value;
-        $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
+        $this->shippingZipCode = $regionData->post_code;
+        $this->shippingArea = $regionData->area;
     }
 
     public function render()

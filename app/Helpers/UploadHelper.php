@@ -183,21 +183,34 @@ if(!function_exists('imageUploadProduct')) {
 
 if (!function_exists('getImage')) {
     function getImage($filename, $module = ''){
-    if ($filename && $module) {
-        // Encode filename
-        $safeFilename = str_replace(' ', '%20', $filename);
+        if ($filename && $module) {
+            // Encode filename
+            $safeFilename = str_replace(' ', '%20', $filename);
 
-        $image_path = public_path('images/'.$module.'/'.$filename);
-        if(File::exists($image_path)) {
-            return asset('images/'.$module.'/'.$safeFilename);
+            $image_path = public_path('images/'.$module.'/'.$filename);
+            if(File::exists($image_path)) {
+                return asset('images/'.$module.'/'.$safeFilename);
+            } else {
+                return asset('demo1/media/blank/blank-image.png');
+            }
         } else {
             return asset('demo1/media/blank/blank-image.png');
         }
-    } else {
-        return asset('demo1/media/blank/blank-image.png');
     }
 }
 
+// get aspect ratio for PHP 8.3+ (getimagesize() not reliable using URL, changed to image path)
+if (!function_exists('getImageAspectRatio')) {
+    function getImageAspectRatio($filename, $module = ''){
+        if ($filename && $module) {
+            $image_path = public_path('images/'.$module.'/'.$filename);
+        } else {
+            $image_path = public_path('demo1/media/blank/blank-image.png');
+        }
+        $image_size = getimagesize($image_path);
+        $ratio = $image_size[0] / $image_size[1];
+        return $ratio;
+    }
 }
 
 if (!function_exists('getImageGallery')) {

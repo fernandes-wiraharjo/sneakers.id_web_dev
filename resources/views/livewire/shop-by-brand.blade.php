@@ -1,8 +1,4 @@
 @foreach ($brand as $item)
-@php
-    $image_size = getimagesize(getImage($item->image, 'brand/'));
-    // $ratio = $image_size[0] / $image_size[1];
-@endphp
 <div class="Carousel__Cell">
     <div class="ProductItem">
         <div class="ProductItem__Wrapper">

@@ -6,16 +6,16 @@ use RajaOngkir;
 use Illuminate\Support\Facades\Http;
 
 class CekOngkirService {
-    public function CostCourier($destination = 2, $destinationType = 'subdistrict', $weight = 1000,  $courier = 'jne') {
-        $origin = 2088; //  fixed origin
+    public function CostCourier($destination, $destinationType = 'subdistrict', $weight = 1000, $courier = 'jne') {
+        $origin = config('irfa.rajaongkir.origin_region_id'); //  fixed origin
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'Key' => env('RAJAONGKIR_API_KEY'),
-        ])->asForm()->post('https://pro.rajaongkir.com/api/cost', [
+            'key' => config('irfa.rajaongkir.api_key'),
+        ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [
             'origin' => $origin,
-            'originType' => 'subdistrict',
+            // 'originType' => 'subdistrict',
             'destination' => $destination,
-            'destinationType' => $destinationType,
+            // 'destinationType' => $destinationType,
             'weight' => $weight,
             'courier' => $courier,
         ]);
@@ -24,30 +24,33 @@ class CekOngkirService {
     }
 
     public function CostRangeCourier($response = []) {
-        if($response['rajaongkir']['status']['code'] == 400){
+        if($response['meta']['code'] != 200){
             return collect();
         }
+
         if (!is_null($response)){
-            if(is_null($response['rajaongkir']['results'])){
+            if(is_null($response['data'])){
                 return collect();
             }
-            return collect($response['rajaongkir']['results']) ?? collect();
+
+            return collect($response['data']) ?? collect();
         }
 
         return collect();
     }
 
-    public function CheckWaybill($waybill = null, $courier = 'jne') {
+    public function CheckWaybill($waybill = null, $courier = 'jne', $lastFiveDigitPhoneNumber) {
         if (!$waybill) {
             return null;
         }
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'Key' => env('RAJAONGKIR_API_KEY'),
-        ])->asForm()->post('https://pro.rajaongkir.com/api/waybill', [
-            'waybill' => $waybill,
+            'key' => config('irfa.rajaongkir.api_key'),
+        ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/track/waybill', [
+            'awb' => $waybill,
             'courier' => $courier,
+            'last_phone_number' => $lastFiveDigitPhoneNumber,
         ]);
 
         return $response->json();

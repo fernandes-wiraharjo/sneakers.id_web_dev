@@ -75,6 +75,7 @@ class CartCheckout extends Component
     public function clearCart(): void
     {
         Cart::clear();
+        // Cart::clearOrderId();
         $this->updateCart();
         $this->emit('cartCounter');
     }

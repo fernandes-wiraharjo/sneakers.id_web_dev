@@ -5,15 +5,21 @@ namespace Modules\Transaction\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Transaction\Entities\TransactionDatatables;
 use Modules\Transaction\Entities\TransactionShippings;
 use Alert;
 use App\Facades\CekOngkir;
 use App\Services\CekOngkirService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Modules\Transaction\Entities\Transaction;
+use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionItems;
+use Modules\Transaction\Entities\Refund;
+use Intervention\Image\Facades\Image;
 
 class TransactionController extends Controller
 {
@@ -41,60 +47,73 @@ class TransactionController extends Controller
             $status_shipping = 'DIKIRIM';
         }
 
-        $updated = $shipping->update(['shipping_waybill' => $request->shipping_waybill, 'status' => $status_shipping]);
-        if($updated) {
-            //create shipping history and get Raja Ongkir cek resi
-            $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
+        try {
+            // Mulai transaksi
+            DB::beginTransaction();
 
-            if($response) {
-                if(intval($request->complete)){
-                    $status = 'COMPLETED';
-                    $transaction = Transaction::findOrFail($shipping->transaction_id);
-                    $email = $transaction->destination->email;
-                    $data = [
-                        'transaction_details' => route('customer.transaction.detail', $transaction->token),
-                        'customer_name' => $transaction->destination->first_name." ".$transaction->destination->last_name,
-                        'order_id' => $transaction->token
-                    ];
-                    //send email create invoices
-                    $sendMail = Mail::send('email.order-complete', $data , function($message) use($email){
-                        $message->to($email);
-                        $message->subject('SNEAKERS.ID Your Order is complete.');
-                    });
+            $phoneNumber = TransactionDestination::where('transaction_id', $shipping->transaction_id)->value('phone_number');
+            $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $phoneNumber), -5);
+            $courierCode = $shipping->courier_code;
+            $response = CekOngkir::CheckWaybill($request->shipping_waybill, $courierCode, $lastFiveDigitPhoneNumber);
 
-                    $update_transactions = $transaction->update(['status' => $status]);
-                }
-
-                $history_created = TransactionHistories::create([
-                    'transaction_id' => $shipping->transaction_id,
-                    'response_raw' => json_encode($response),
-                    'response_status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'ERROR',
-                    'response_code' =>  $response['rajaongkir']['status']['code'] ?? '400',
-                    'response_message' =>  $response['rajaongkir']['status']['description'] != 'OK' ? $response['rajaongkir']['status']['description'] : 'Update Shipping status',
-                    'created_by' =>  auth()->user()->id,
-                ]);
-
-                if($history_created) {
-                    $shipping->update(['status' => $response['rajaongkir']['result']['delivery_status']['status'] ?? 'RESI NOT VALID']);
-                }
-
-                //if status complete update quantity
-                if(intval($request->complete)) {
-                    $transaction = TransactionItems::where('transaction_id', $shipping->transaction_id)->get();
-
-                    foreach($transaction as $item) {
-                        $qty_sold = $item->quantity;
-                        $current_item = $item->detail;
-                        $current_item->update(['qty' => $current_item->qty - $qty_sold]);
-                    }
-                }
-
-                Alert::success('Success update resi & status');
-                return redirect()->back()->withSuccess('Success update resi & status');
+            if (!$response) {
+                throw new \Exception('Failed to check waybill, empty response.');
             }
 
-            Alert::error('Failed update resi, Resi is empty');
-            return redirect()->back()->withErrors('Failed update resi, Resi is empty');
+            $history_created = TransactionHistories::create([
+                'transaction_id' => $shipping->transaction_id,
+                'response_raw' => json_encode($response),
+                'response_status' => $response['data']['delivered'] ?? 'ERROR',
+                'response_code' =>  $response['meta']['code'] ?? '400',
+                'response_message' =>  $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Update Shipping status',
+                'created_by' =>  auth()->user()->id,
+            ]);
+
+            if (intval($request->complete)) {
+                $status = 'COMPLETED';
+                $transaction = Transaction::findOrFail($shipping->transaction_id);
+                $transaction->update(['status' => $status]);
+
+                $email = $transaction->destination->email;
+                $data = [
+                    'transaction_details' => route('customer.transaction.detail', $transaction->token),
+                    'customer_name' => $transaction->destination->first_name . " " . $transaction->destination->last_name,
+                    'order_id' => $transaction->token
+                ];
+                Mail::send('email.order-complete', $data, function($message) use($email) {
+                    $message->to($email);
+                    $message->subject('SNEAKERS.ID Your Order is complete.');
+                });
+
+            }
+
+            $history_created = TransactionHistories::create([
+                'transaction_id' => $shipping->transaction_id,
+                'response_raw' => json_encode($response),
+                'response_status' => $response['data']['delivered'] ?? 'ERROR',
+                'response_code' => $response['meta']['code'] ?? '400',
+                'response_message' => $response['meta']['status'] != 'OK' ? $response['meta']['status'] : 'Unknown',
+                'created_by' => auth()->user()->id,
+            ]);
+
+            if (!$history_created) {
+                throw new \Exception('Failed to create transaction history.');
+            }
+
+            $shipping->update([
+                'shipping_waybill' => $request->shipping_waybill, 
+                'status' => $response['data']['summary']['status'] ?? 'RESI NOT VALID'
+            ]);
+
+            DB::commit();
+
+            Alert::success('Success update resi & status');
+            return redirect()->back()->withSuccess('Success update resi & status');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Alert::error('Failed update resi', $e->getMessage());
+            return redirect()->back()->withErrors('Failed update resi');
         }
 
         Alert::error('Failed update resi & status');
@@ -103,9 +122,13 @@ class TransactionController extends Controller
 
     public function ajaxCheckResi(Request $request)
     {
-        $response = CekOngkir::CheckWaybill($request->shipping_waybill, 'jnt');
+        $transactionDestination = TransactionDestination::where('transaction_id', $request->id)->first();
+        $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $transactionDestination->phone_number), -5);
+        $transactionShipping = TransactionShippings::where('transaction_id', $request->id)->first();
+        
+        $response = CekOngkir::CheckWaybill($request->shipping_waybill, $transactionShipping->courier_code, $lastFiveDigitPhoneNumber);
 
-        return $response['rajaongkir'];
+        return response()->json($response);
     }
 
     /**
@@ -167,4 +190,80 @@ class TransactionController extends Controller
     {
         //
     }
+
+    /**
+     * Store refund
+     * @param Request $request
+     * @return Renderable
+     */
+    public function storeRefund(Request $request)
+    {
+        ladmin()->allow('administrator.transaction.index');
+
+        $request->validate([
+            'transaction_id' => 'required|exists:transactions,id',
+            'bank_name' => 'required|string|max:255',
+            'account_number' => 'required|string|max:255',
+            'account_holder_name' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0',
+            'proof_image' => 'nullable|image',
+            'reason' => 'nullable|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $refundData = [
+                'transaction_id' => $request->transaction_id,
+                'bank_name' => $request->bank_name,
+                'account_number' => $request->account_number,
+                'account_holder_name' => $request->account_holder_name,
+                'amount' => $request->amount,
+                'reason' => $request->reason,
+                'processed_by' => auth()->user()->id,
+                'processed_at' => now(),
+            ];
+
+            // Handle image upload with Intervention Image
+            if ($request->hasFile('proof_image')) {
+                $image = $request->file('proof_image');
+                $imageName = 'refund_' . time() . '_' . uniqid() . '.webp';
+                
+                // Process image with Intervention Image
+                $img = Image::make($image);
+                
+                // Resize if needed (maintain aspect ratio, max width 1200px)
+                if ($img->width() > 1200) {
+                    $img->resize(1200, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                }
+                
+                // Convert to WebP and save using Storage
+                $encodedImage = $img->encode('webp', 85);
+                Storage::disk('public')->put('refunds/' . $imageName, $encodedImage);
+                
+                $refundData['proof_image'] = $imageName;
+            }
+
+            $refund = Refund::create($refundData);
+
+            // Update transaction status to REFUNDED
+            $transaction = Transaction::findOrFail($request->transaction_id);
+            $transaction->update(['status' => 'REFUNDED']);
+
+            DB::commit();
+
+            Alert::success('Success', 'Refund processed successfully');
+            return redirect()->route('administrator.transaction.index');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Refund creation failed: ' . $e->getMessage());
+            Alert::error('Failed', 'Failed to create refund request: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
 }

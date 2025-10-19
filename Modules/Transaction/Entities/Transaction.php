@@ -23,12 +23,18 @@ class Transaction extends Model
         'type',
         'method',
         'invoice_url',
+        'snap_payment_url',
         'total_quantity',
         'total_weight',
         'sub_total',
         'grand_total',
         'description',
-        'status'
+        'status',
+        'paid_at'
+    ];
+
+    protected $casts = [
+        'paid_at' => 'datetime'
     ];
 
     protected static function newFactory()
@@ -69,5 +75,22 @@ class Transaction extends Model
         }
 
         return $this->destination();
+    }
+
+    public function user()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            TransactionDestination::class,
+            'transaction_id', // Foreign key on TransactionDestination
+            'id',             // Foreign key on User
+            'id',             // Local key on Transaction
+            'user_id'         // Local key on TransactionDestination
+        );
+    }
+
+    public function refund()
+    {
+        return $this->hasOne(Refund::class, 'transaction_id', 'id');
     }
 }

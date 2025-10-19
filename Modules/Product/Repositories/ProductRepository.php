@@ -136,7 +136,8 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function getProductDetailByIdAndSize($id, $size){
         return $this->productDetail
-            ->where(['product_id' => $id, 'size' => $size]);
+            ->where(['product_id' => $id, 'size' => $size])
+            ->first();
     }
 
     public function getProductOneFeaturedAirJordan(){

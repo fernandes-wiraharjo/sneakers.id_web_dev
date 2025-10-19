@@ -26,8 +26,8 @@
 
             <!--begin::Balance-->
             <div class="d-flex text-center flex-column text-white pt-8">
-                <span class="fw-bold fs-7">Xendit Balance</span>
-                <span class="fw-bolder fs-2x pt-1">Rp {{ rupiah_format($xendit_balance) }}</span>
+                <span class="fw-bold fs-7">Total Balance</span>
+                <span class="fw-bolder fs-2x pt-1">Rp {{ rupiah_format($balance) }}</span>
             </div>
             <!--end::Balance-->
         </div>

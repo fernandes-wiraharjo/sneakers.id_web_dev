@@ -15,4 +15,7 @@ Route::group(['prefix' => 'administrator/transaction', 'middleware' => 'auth'], 
     Route::get('/', 'TransactionController@index')->name('administrator.transaction.index');
     Route::post('/update/resi-status', 'TransactionController@updateResi')->name('administrator.transaction.resi');
     Route::post('/check-resi', 'TransactionController@ajaxCheckResi')->name('administrator.transaction.cek-resi');
+    
+    // Refund route
+    Route::post('/refund/store', 'TransactionController@storeRefund')->name('administrator.transaction.refund.store');
 });

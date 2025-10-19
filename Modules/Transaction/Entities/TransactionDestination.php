@@ -46,4 +46,12 @@ class TransactionDestination extends Model
     {
         return $this->belongsTo(User::class, 'email', 'email');
     }
+
+    function userHasOngoingPayment()
+    {
+        return Transaction::where('user_id', auth()->id())
+            ->where('status', 'CREATED')
+            ->latest()
+            ->first();
+    }
 }

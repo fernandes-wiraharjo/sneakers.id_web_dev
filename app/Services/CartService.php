@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Cache;
 class CartService {
     const MINIMUM_QUANTITY = 1;
     const DEFAULT_INSTANCE = 'shopping-cart';
-    const CART_TTL = 3600; // 1 hour in seconds
 
     protected $instance;
     protected $cartId;
+    protected $cartTTL;
 
     public function __construct($userId = null)
     {
@@ -21,6 +21,7 @@ class CartService {
         } else {
             $this->cartId = md5(self::DEFAULT_INSTANCE . ':' . $userId);
         }
+        $this->cartTTL = config('cache.cart_ttl');
     }
 
     public function add($id, $size_id, $code ,$name, $retail_price, $discount_price, $size = 'All size', $quantity, $weight, $image, $url,$options = []): void
@@ -35,7 +36,7 @@ class CartService {
 
         $content->put($size_id, $cartItem);
 
-        Cache::put($this->cartId, $content, self::CART_TTL);
+        Cache::put($this->cartId, $content, $this->cartTTL);
     }
 
     public function update(string $size_id, string $action): void
@@ -62,7 +63,7 @@ class CartService {
 
             $content->put($size_id, $cartItem);
 
-            Cache::put($this->cartId, $content, self::CART_TTL);
+            Cache::put($this->cartId, $content, $this->cartTTL);
         }
     }
 
@@ -76,7 +77,7 @@ class CartService {
         });
         // // Add notes to existing content or create new array with only note text as value for key "
         // // $content->put('note', $text);
-        Cache::put($this->cartId, $content, self::CART_TTL);
+        Cache::put($this->cartId, $content, $this->cartTTL);
     }
 
     public function getNotes()
@@ -102,7 +103,7 @@ class CartService {
         $content = $this->getContent();
 
         if ($content->has($size_id)) {
-            Cache::put($this->cartId, $content->except($size_id), self::CART_TTL);
+            Cache::put($this->cartId, $content->except($size_id), $this->cartTTL);
         }
     }
 

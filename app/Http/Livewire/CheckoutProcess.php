@@ -93,33 +93,9 @@ class CheckoutProcess extends Component
                 $this->shippingZipCode = $this->userRegion->post_code;
             }
             $this->shippingWeight = Cart::totalWeight();
-
         }
-        // Get enabled couriers and their services from database
-        if($this->selectedSubdistrict) {
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '',Cart::totalWeight(), ShippingCourier::enabledCouriers());
-            $courierResponse = CekOngkir::CostRangeCourier($courier);
-            
-            // Filter services based on what's configured for each courier
-            $this->shippingCourier = $courierResponse->map(function($courierData) {
-                $courier = ShippingCourier::where('code', strtolower($courierData['courier']))->first();
-                if (!$courier) {
-                    return null;
-                }
-                
-                // Get active service codes for this courier
-                $activeServiceCodes = $courier->activeServices()->pluck('code')->map(function($code) {
-                    return strtoupper($code);
-                })->toArray();
-                
-                // Filter services that are configured and active
-                $courierData['services'] = collect($courierData['services'])->filter(function($service) use ($activeServiceCodes) {
-                    return in_array($service['service'], $activeServiceCodes);
-                })->values()->all();
-                
-                return $courierData['services'] ? $courierData : null;
-            })->filter()->values();
-        }
+        
+        $this->filterCourierService();
     }
 
     protected function rules()
@@ -381,37 +357,7 @@ class CheckoutProcess extends Component
 
             // V2 uses region_id
             $this->selectedSubdistrict = $getDistrict->region_id;
-
-            // Get enabled couriers and their services from database
-            if($this->selectedSubdistrict) {
-                $enabledCouriers = ShippingCourier::where('is_active', true)
-                    ->pluck('code')
-                    ->implode(':');
-                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
-                $courierResponse = CekOngkir::CostRangeCourier($courier);
-
-                // Filter services based on what's configured for each courier
-                $this->shippingCourier = $courierResponse->map(function($courierData) {
-                    $courier = ShippingCourier::where('code', strtolower($courierData['code']))->first();
-                    if (!$courier) {
-                        return null;
-                    }
-
-                    // normalize "day / days" from response
-                    $courierData['etd'] = trim(preg_replace('/\s*days?/i', '', $courierData['etd']));
-
-                    // Get active service codes for this courier
-                    $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
-
-                    // Filter services that are configured and active
-                    if (in_array($courierData['service'], $activeServiceCodes)) {
-                        return $courierData;
-                    }
-                    return null;
-                })->filter()->values();
-            } else {
-                $this->selectedSubdistrict = 0;
-            }
+            $this->filterCourierService();
 
             $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
             $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
@@ -425,6 +371,40 @@ class CheckoutProcess extends Component
         $this->selectedArea = $value;
         $this->shippingZipCode = $regionData->post_code;
         $this->shippingArea = $regionData->area;
+    }
+
+    public function filterCourierService()
+    {
+        // Get enabled couriers and their services from database
+        if($this->selectedSubdistrict) {
+            $enabledCouriers = ShippingCourier::where('is_active', true)
+                ->pluck('code')
+                ->implode(':');
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
+            $courierResponse = CekOngkir::CostRangeCourier($courier);
+
+            // Filter services based on what's configured for each courier
+            $this->shippingCourier = $courierResponse->map(function($courierData) {
+                $courier = ShippingCourier::where('code', strtolower($courierData['code']))->first();
+                if (!$courier) {
+                    return null;
+                }
+
+                // normalize "day / days" from response
+                $courierData['etd'] = trim(preg_replace('/\s*days?/i', '', $courierData['etd']));
+
+                // Get active service codes for this courier
+                $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
+
+                // Filter services that are configured and active
+                if (in_array($courierData['service'], $activeServiceCodes)) {
+                    return $courierData;
+                }
+                return null;
+            })->filter()->values();
+        } else {
+            $this->selectedSubdistrict = 0;
+        }
     }
 
     public function render()

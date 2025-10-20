@@ -52,6 +52,11 @@
                 animation-name: animatetop;
                 animation-duration: 0.4s
             }
+            @media (max-width: 768px) {
+                .modal-body {
+                    width: 90%;
+                }
+            }
 
             /* Add Animation */
             @-webkit-keyframes animatetop {

@@ -303,10 +303,8 @@ class CheckoutProcess extends Component
         ];
 
 
-        $this->invoiceUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
-        //send mail confimarion payment here
-        $this->currentStep = 4;
-        
+        $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
+        return redirect()->away($paymentUrl);
     }
 
     public function paymentSuccess(){

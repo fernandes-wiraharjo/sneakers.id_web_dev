@@ -47,15 +47,12 @@ class CheckoutService {
             ];
 
             Transaction::createTransaction($transactionData, $transactions);
-            header('Location: ' . $paymentUrl);
-            exit;
-            // $response = $transactionData;
+            return $paymentUrl;
         } catch (\Throwable $e) {
             $response['message'] = $e->getMessage();
+            \Log::error('Error creating invoice midtrans: ' . $e->getMessage());
+            logger($response);
         }
-
-        logger($response);
-        return $response;
     }
 
 

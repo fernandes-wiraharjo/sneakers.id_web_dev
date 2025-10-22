@@ -17,6 +17,12 @@
             console.log('removing popover overlay');
         });
 
+        $('.Check__Box__Container').click(function(){
+            $('html').removeClass('no-scroll');
+            $('.PageOverlay').trigger("click");
+            console.log('filter checkbox triggered');
+        });
+
         var product_variants_removed = [];
 
         $("#total_result").click(function() {

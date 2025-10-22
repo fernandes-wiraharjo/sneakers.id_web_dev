@@ -113,7 +113,7 @@
                                                                 <label for="basic-Payments via Midtrans" class="yL8c2 D1RJr">
                                                                     <div class="hEGyz">
                                                                         <div class="_1fragemaf">
-                                                                            <input type="radio" id="basic-Payments via Midtrans" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
+                                                                            <input type="radio" id="basic-Payments via Midtrans" wire:click="setSelectedPaymentGateway('midtrans')" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
                                                                         </div>
                                                                         <div class="f5aCe">
                                                                             <div>
@@ -235,9 +235,15 @@
                                         </div>
                                         <div class="oQEAZ WD4IV">
                                             <div>
+                                                @if($selectedPaymentGateway)
                                                 <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy"  wire:click="paymentStepSubmit">
                                                     <span class="AjwsM">Pay now</span>
                                                 </a>
+                                                @else
+                                                <div class="alert alert-warning text-center py-4">
+                                                    <span>Select payment method</span>
+                                                </div>
+                                                @endif
                                             </div>
                                             <div>
                                                 <a href="#" class="QT4by eVFmT j6D1f janiy adBMs" wire:click="back(2)">

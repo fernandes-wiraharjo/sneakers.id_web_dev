@@ -23,6 +23,7 @@ class CheckoutProcess extends Component
     public $selectedDistrict = '';
     public $selectedProvince = '';
     public $selectedArea = 0;
+    public $selectedPaymentGateway = null;
 
     public $shippingEmail = '';
     public $shippingFirstName = '';
@@ -149,6 +150,11 @@ class CheckoutProcess extends Component
     {
         $this->currentStep = 3;
         //submit shipping information into session TransactionSession
+    }
+
+    public function setSelectedPaymentGateway($value)
+    {
+        $this->selectedPaymentGateway = $value;
     }
 
     public function paymentStepSubmit()

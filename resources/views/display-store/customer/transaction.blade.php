@@ -37,7 +37,7 @@
         </div>
         <div>
             @if($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
-            <a href="#" id="btn-continue-payment" class="Form__Submit Button Button--primary" style="width: 250px; display: block;">Continue Payment</a>
+            <a href="{{ $transaction->snap_payment_url }}" id="btn-continue-payment" class="Form__Submit Button Button--primary" style="width: 250px; display: block;">Continue Payment</a>
             @endif
 
             @if($shipping_waybill && $transaction->status == 'SUCCESS')
@@ -110,22 +110,6 @@
 
     <div>
         <!-- The Modal -->
-        <div id="modal-continue-payment" class="modal">
-            <div class="modal-body modalContinuePayment">
-                <span class="close closePayment" onclick="closePayment()">&times;</span>
-                <div style="text-align-last: center;">
-                    <h1>Continue Payment</h1>
-                </div>
-                @if ($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
-                <iframe id="iframe-invoice" class="iframe-invoice" title="Invoice" src="{{ $transaction->invoice_url }}">
-                </iframe>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <!-- The Modal -->
         <div id="modal-check-shipping" class="modal">
             <div class="modal-body">
                 <span class="close closeShipping">&times;</span>
@@ -166,27 +150,14 @@
         var modalPayment = document.getElementById("modal-continue-payment");
         var modalShipping = document.getElementById("modal-check-shipping");
 
-        // Get the button that opens the modal
-        var btnPayment = document.getElementById("btn-continue-payment");
-
         var btnShipping = document.getElementById("btn-check-shipping");
 
         // Get the <span> element that closes the modal
-        var spanPayment = document.getElementsByClassName("closePayment");
         var spanShipping = document.getElementsByClassName("closeShipping")[0];
 
         // When the user clicks on the button, open the modal
-        btnPayment.onclick = function() {
-            modalPayment.style.display = "block";
-        }
         btnShipping.onclick = function() {
             modalShipping.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        spanPayment.onclick = function() {
-            modalPayment.style.display = "none";
-            console.log('closed');
         }
 
         spanShipping.onclick = function() {
@@ -195,9 +166,7 @@
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
-            if (event.target == modalPayment) {
-                modalPayment.style.display = "none";
-            } else if (event.target == modalShipping) {
+            if (event.target == modalShipping) {
                 modalShipping.style.display = "none";
             }
         }

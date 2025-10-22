@@ -164,9 +164,6 @@
     MY ACCOUNT
     <br>
     Welcome back, {{ auth()->user()->name ?? '-' }}
-    @php
-        // dd($transaction);
-    @endphp
     <br>
     <br>
     <div id="Order" class="tabcontent" style="display: block">
@@ -182,6 +179,9 @@
             <div class="header__item"><a id="eu" class="filter__link filter__link--number"
                     href="#">TOTAL</a>
             </div>
+            <div class="header__item"><a id="ru" class="filter__link filter__link--number"
+                    href="#">ACTION</a>
+            </div>
         </div>
         <div class="table-content"  style="height: 300px; overflow: auto;">
         @if ($transaction)
@@ -191,6 +191,11 @@
                 <div class="table-data">{{ date('d F Y', strtotime($item->transaction->date)) }}</div>
                 <div class="table-data">{{ $item->transaction->status }}</div>
                 <div class="table-data">RP {{ rupiah_format(intval($item->transaction->grand_total)) }}</div>
+                <div class="table-data">
+                    @if ($item->transaction->status == 'PENDING' || $item->transaction->status == 'CREATED')    
+                        <a href="{{ $item->transaction->snap_payment_url }}" class="Button Button--primary" style="width: 100px;">PAY</a>
+                    @endif
+                </div>
             </div>
             @endforeach
         @endif

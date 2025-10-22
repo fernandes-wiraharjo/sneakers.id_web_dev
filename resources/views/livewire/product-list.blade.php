@@ -139,11 +139,11 @@
                                     $class = '1/2--phone 1/3--tablet-and-up 1/4--desk';
                                 } elseif ($count == 3) {
                                     $class = '1/4--desk';
-                                    $style = 'width: 85vw;';
+                                    $style = 'width: 67vw;';
                                     $desktop_count = 4;
                                 } else {
                                     $class = '1/4--desk';
-                                    $style = 'width: 85vw;';
+                                    $style = 'width: 67vw;';
                                     $desktop_count = 4;
                                 }
                             @endphp

@@ -13,6 +13,8 @@
 
         $('.Popover__Value').click(function(){
             $('html').removeClass('no-scroll');
+            $('.PageOverlay').trigger("click");
+            console.log('removing popover overlay');
         });
 
         var product_variants_removed = [];

@@ -92,10 +92,10 @@
 
     window.onload = function(){
         $('.Search__Close ').on("click", function() {
-            $('.bc-sf-search-suggestion-popover').hide();
-            $('.bc-sf-search-suggestion-wrapper ').hide();
-            $('#ui-id-1').hide();
-
+            // $('.bc-sf-search-suggestion-popover').hide();
+            // $('.bc-sf-search-suggestion-wrapper ').hide();
+            // $('#ui-id-1').hide();
+            $('#global_search').val('');
         });
 
 

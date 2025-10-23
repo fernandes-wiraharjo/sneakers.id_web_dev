@@ -148,9 +148,15 @@
                                         </div>
                                         <div class="oQEAZ WD4IV">
                                             <div>
-                                                <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy" wire:click="shippingStepSubmit">
-                                                    <span class="AjwsM">Continue to payment</span>
-                                                </a>
+                                                @if ($selectedCourier)
+                                                    <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy" wire:click="shippingStepSubmit">
+                                                        <span class="AjwsM">Continue to payment</span>
+                                                    </a>
+                                                @else
+                                                    <div class="alert alert-warning text-center py-4">
+                                                        <span>Select shipping method</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                             <div>
                                                 <a href="#" class="QT4by eVFmT j6D1f janiy adBMs" wire:click="back(1)">

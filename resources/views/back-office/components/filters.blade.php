@@ -1,5 +1,5 @@
 <div class="CollectionFilters">
-    <div id="bc-sf-filter-tree-mobile"><button id="bc-sf-filter-tree-mobile-button" type="button">FILTER</button></div>
+    <!-- <div id="bc-sf-filter-tree-mobile"><button id="bc-sf-filter-tree-mobile-button" type="button">FILTER</button></div> -->
     <div>
         <div id="bc-sf-filter-options-wrapper">
             <div class="bc-sf-filter-option-block bc-sf-filter-option-block-list bc-sf-filter-option-block-category">

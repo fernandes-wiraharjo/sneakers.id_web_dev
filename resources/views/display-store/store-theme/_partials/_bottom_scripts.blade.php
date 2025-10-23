@@ -13,6 +13,14 @@
 
         $('.Popover__Value').click(function(){
             $('html').removeClass('no-scroll');
+            $('.PageOverlay').trigger("click");
+            console.log('removing popover overlay');
+        });
+
+        $('.Check__Box__Container').click(function(){
+            $('html').removeClass('no-scroll');
+            $('.PageOverlay').trigger("click");
+            console.log('filter checkbox triggered');
         });
 
         var product_variants_removed = [];
@@ -84,10 +92,10 @@
 
     window.onload = function(){
         $('.Search__Close ').on("click", function() {
-            $('.bc-sf-search-suggestion-popover').hide();
-            $('.bc-sf-search-suggestion-wrapper ').hide();
-            $('#ui-id-1').hide();
-
+            // $('.bc-sf-search-suggestion-popover').hide();
+            // $('.bc-sf-search-suggestion-wrapper ').hide();
+            // $('#ui-id-1').hide();
+            $('#global_search').val('');
         });
 
 

@@ -65,11 +65,13 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
                     Select min(retail_price)
                     from product_details
                     where product_id = products.id
+                    and qty > 0
                 )'))
                 ->where('pd.after_discount_price', '=', DB::raw('(
                     Select min(after_discount_price)
                     from product_details
                     where product_id = products.id
+                    and qty > 0
                 )'));
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')

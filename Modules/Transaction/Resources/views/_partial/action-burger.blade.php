@@ -252,14 +252,26 @@
                                     <td style="width: 150px;">Order Status</td>
                                     <td>Response Code</td>
                                     <td>Response Message</td>
+                                    <td style="width: 100px;">Action</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($histories as $item)
+                                @foreach ($histories as $historyIndex => $item)
                                 <tr>
                                     <td>{{ $item->response_status == 'DELIVERED' ? 'COMPLETED' : $item->response_status}}</td>
                                     <td>{{ $item->response_code ?? '-'}}</td>
                                     <td>{{ $item->response_message ?? '-'}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary toggle-raw-btn" 
+                                                onclick="$(this).closest('tr').next('.raw-data-row').toggle(); $(this).find('.toggle-text').text($(this).find('.toggle-text').text() === 'Show' ? 'Hide' : 'Show');">
+                                            <i class="fas fa-code"></i> <span class="toggle-text">Show</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="raw-data-row" style="display: none;">
+                                    <td colspan="4" class="bg-dark text-light p-3">
+                                        <pre class="mb-0 text-danger" style="max-height: 400px; overflow-y: auto; font-size: 11px; white-space: pre-wrap; word-wrap: break-word;">{{ $item->response_raw ? json_encode(json_decode($item->response_raw), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : 'No raw data available' }}</pre>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

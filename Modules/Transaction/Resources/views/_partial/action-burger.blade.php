@@ -1,18 +1,18 @@
-<a href="#" class="btn btn-info btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-info btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-detail-{{ $transaction->id }}">
     <i class="fas fa-eye"></i> Detail
 </a>
 @if ($transaction->status == 'SUCCESS')
-<a href="#" class="btn btn-warning btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-warning btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-shipping-{{ $transaction->id }}" onclick="openModal({{ $transaction->id }})">
     <i class="fas fa-truck"></i> Shipping
 </a>
-<a href="#" class="btn btn-primary btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-danger btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-refund-{{ $transaction->id }}">
     <i class="fas fa-undo"></i> Refund
 </a>
 @endif
-<a href="#" class="btn btn-danger btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-primary btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-history-{{ $transaction->id }}">
     <i class="fa fa-reply"></i> History
 </a>

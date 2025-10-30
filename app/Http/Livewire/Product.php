@@ -17,7 +17,6 @@ class Product extends Component
     public $showSelectedSize;
     public $showWeight = 0;
     public $inCartPrice;
-    public $productAddedToCart = false;
 
     /**
      * Mounts the component on the template.
@@ -59,26 +58,24 @@ class Product extends Component
     public function addToCart(): void
     {
         if (is_null($this->size)) {
-            $this->emit('modal', ['message' => 'Please select a size']);
+            $this->emit('showToast', ['type' => 'error', 'message' => 'Please select a size']);
         } else {
             $item = Cart::item(intval($this->size));
             $current_item = ProductDetail::find($this->size);
 
             if($item->isNotEmpty()) {
                 if($item['quantity'] + $this->quantity >= $current_item->qty) {
-                    $this->emit('modal', ['message' => 'product stock has reach the limit']);
+                    $this->emit('showToast', ['type' => 'error', 'message' => 'Product stock has reach the limit']);
                 } else {
                     $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
                     Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
-                    $this->productAddedToCart = true;
-                    $this->emit('productAddedToCart');
+                    $this->emit('showToast', ['type' => 'success', 'message' => 'Product added to cart successfully']);
                     $this->emit('cartCounter');
                 }
             } else {
                 $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
                 Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->showWeight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
-                $this->productAddedToCart = true;
-                $this->emit('productAddedToCart');
+                $this->emit('showToast', ['type' => 'success', 'message' => 'Product added to cart successfully']);
                 $this->emit('cartCounter');
             }
 

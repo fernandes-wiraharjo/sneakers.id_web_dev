@@ -172,5 +172,8 @@
         @stack('scripts')
 
         @livewireScripts
+        
+        <!-- Toast Notification Component -->
+        @livewire('toast-notification')
     </body>
 </html>

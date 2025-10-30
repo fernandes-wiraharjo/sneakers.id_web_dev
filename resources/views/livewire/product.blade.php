@@ -195,12 +195,7 @@
                                 @endforeach
                                 </select> --}}
                             </div>
-                            
-                            @if ($productAddedToCart)
-                            <div class="alert alert-success" id="product-added-message" style="margin-top: 10px; padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px;">
-                                ✓ Product added to cart successfully!
-                            </div>
-                            @endif
+
                             <div style="margin: 5px 0">
                                 <div style="width: 100%;">
                                     @php
@@ -360,13 +355,4 @@
             </div>
         </div>
     </div>
-
-    @if ($productAddedToCart)
-    <script>
-        // Auto-hide the success message after 3 seconds
-        setTimeout(function() {
-            @this.set('productAddedToCart', false);
-        }, 3000);
-    </script>
-    @endif
 </div>

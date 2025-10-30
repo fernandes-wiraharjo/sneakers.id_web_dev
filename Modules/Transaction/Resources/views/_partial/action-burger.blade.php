@@ -456,7 +456,7 @@
                     @if($transaction->refund->proof_image)
                     <h5 class="mt-5">Transfer Proof</h5>
                     <div class="text-center">
-                        <img src="{{ Storage::url('refunds/' . $transaction->refund->proof_image) }}" alt="Transfer Proof" style="max-width: 100%; max-height: 400px;" class="img-thumbnail">
+                        <img src="{{ url('refunds/' . $transaction->refund->proof_image) }}" alt="Transfer Proof" style="max-width: 100%; max-height: 400px;" class="img-thumbnail">
                     </div>
                     @endif
                 </div>

@@ -67,6 +67,31 @@ class CartService {
         }
     }
 
+    /**
+     * Sets the quantity of a cart item directly.
+     *
+     * @param string $size_id
+     * @param int $quantity
+     * @return void
+     */
+    public function setQuantity(string $size_id, int $quantity): void
+    {
+        $content = $this->getContent();
+
+        if ($content->has($size_id)) {
+            $cartItem = $content->get($size_id);
+
+            if ($quantity < self::MINIMUM_QUANTITY) {
+                $quantity = self::MINIMUM_QUANTITY;
+            }
+
+            $cartItem->put('quantity', $quantity);
+            $content->put($size_id, $cartItem);
+
+            Cache::put($this->cartId, $content, $this->cartTTL);
+        }
+    }
+
     public function addNotes($text): void
     {
         // dd($text);

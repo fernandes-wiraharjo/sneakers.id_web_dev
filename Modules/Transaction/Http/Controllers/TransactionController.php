@@ -242,7 +242,7 @@ class TransactionController extends Controller
                 
                 // Convert to WebP and save using Storage
                 $encodedImage = $img->encode('webp', 85);
-                Storage::disk('public')->put('refunds/' . $imageName, $encodedImage);
+                Storage::disk('public_directory')->put('refunds/' . $imageName, $encodedImage);
                 
                 $refundData['proof_image'] = $imageName;
             }

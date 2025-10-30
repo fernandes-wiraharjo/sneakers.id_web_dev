@@ -1,23 +1,21 @@
-<a href="#" class="btn btn-info btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-info btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-detail-{{ $transaction->id }}">
     <i class="fas fa-eye"></i> Detail
 </a>
 @if ($transaction->status == 'SUCCESS')
-<a href="#" class="btn btn-warning btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-warning btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-shipping-{{ $transaction->id }}" onclick="openModal({{ $transaction->id }})">
     <i class="fas fa-truck"></i> Shipping
 </a>
-@endif
-<a href="#" class="btn btn-danger btn-active-light-primary btn-sm m-1"
-    data-bs-toggle="modal" data-bs-target="#action-history-{{ $transaction->id }}">
-    <i class="fa fa-reply"></i> History
-</a>
-@if (in_array($transaction->status, ['SUCCESS', 'COMPLETED']))
-<a href="#" class="btn btn-primary btn-active-light-primary btn-sm m-1"
+<a href="#" class="btn btn-danger btn-sm m-1 w-100 px-2 text-nowrap"
     data-bs-toggle="modal" data-bs-target="#action-refund-{{ $transaction->id }}">
     <i class="fas fa-undo"></i> Refund
 </a>
 @endif
+<a href="#" class="btn btn-primary btn-sm m-1 w-100 px-2 text-nowrap"
+    data-bs-toggle="modal" data-bs-target="#action-history-{{ $transaction->id }}">
+    <i class="fa fa-reply"></i> History
+</a>
 
 <div class="modal fade" tabindex="-1" id="action-shipping-{{ $transaction->id }}" aria-labelledby="action-Label-shipping-{{ $transaction->id }}">
     <div class="modal-dialog modal-lg">
@@ -232,7 +230,7 @@
 </div>
 
 <div class="modal fade" tabindex="-1" id="action-history-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-history-{{ $transaction->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title" id="action-1Label">Transaction History Information</h5>
@@ -252,14 +250,26 @@
                                     <td style="width: 150px;">Order Status</td>
                                     <td>Response Code</td>
                                     <td>Response Message</td>
+                                    <td style="width: 100px;">Action</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($histories as $item)
+                                @foreach ($histories as $historyIndex => $item)
                                 <tr>
                                     <td>{{ $item->response_status == 'DELIVERED' ? 'COMPLETED' : $item->response_status}}</td>
                                     <td>{{ $item->response_code ?? '-'}}</td>
                                     <td>{{ $item->response_message ?? '-'}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary toggle-raw-btn" 
+                                                onclick="$(this).closest('tr').next('.raw-data-row').toggle(); $(this).find('.toggle-text').text($(this).find('.toggle-text').text() === 'Show' ? 'Hide' : 'Show');">
+                                            <i class="fas fa-code"></i> <span class="toggle-text">Show</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="raw-data-row" style="display: none;">
+                                    <td colspan="4" class="bg-dark text-light p-3">
+                                        <pre class="mb-0 text-danger" style="max-height: 400px; overflow-y: auto; font-size: 11px; white-space: pre-wrap; word-wrap: break-word;">{{ $item->response_raw ? json_encode(json_decode($item->response_raw), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : 'No raw data available' }}</pre>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -456,7 +466,7 @@
                     @if($transaction->refund->proof_image)
                     <h5 class="mt-5">Transfer Proof</h5>
                     <div class="text-center">
-                        <img src="{{ Storage::url('refunds/' . $transaction->refund->proof_image) }}" alt="Transfer Proof" style="max-width: 100%; max-height: 400px;" class="img-thumbnail">
+                        <img src="{{ url('refunds/' . $transaction->refund->proof_image) }}" alt="Transfer Proof" style="max-width: 100%; max-height: 400px;" class="img-thumbnail">
                     </div>
                     @endif
                 </div>

@@ -195,6 +195,7 @@
                                 @endforeach
                                 </select> --}}
                             </div>
+
                             <div style="margin: 5px 0">
                                 <div style="width: 100%;">
                                     @php
@@ -209,6 +210,7 @@
                                             <span>ADD TO CART</span>
                                         </button>
                                 </div>
+
 
                                 <div style="height: 10px;">
                                     <span class="h-2"></span>

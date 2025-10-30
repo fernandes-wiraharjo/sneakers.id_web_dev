@@ -56,7 +56,13 @@
                                                 </svg>
                                             </a>
 
-                                            <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
+                                            <input type="text" 
+                                                   name="updates[]"
+                                                   class="QuantitySelector__CurrentQuantity" 
+                                                   value="{{ $item->get('quantity') }}"
+                                                   min="1"
+                                                   data-size-id="{{ $id }}"
+                                                   wire:change="updateCartItem({{ $id }}, 'change', $event.target.value)">
                                             @isset($disabledPlus)
                                                 @isset($disabledPlus[$id])
                                                     <a href="javascript:void(0)"
@@ -82,7 +88,6 @@
                             </div>
                         </div>
                         @endforeach
-                        @livewire('product-quantity-modal', key('modal-component-1'))
                     </div>
                 </div>
             </div>
@@ -139,6 +144,18 @@
                 }
                 // Optionally, you can add further logic or validation here.
             };
+
+            // Listen for quantity correction events
+            window.addEventListener('quantity-corrected', event => {
+                const sizeId = event.detail.size_id;
+                const correctedQty = event.detail.quantity;
+                
+                // Find and update the input field for this size_id
+                const input = document.querySelector(`input[data-size-id="${sizeId}"]`);
+                if (input) {
+                    input.value = correctedQty;
+                }
+            });
         </script>
 </div>
 

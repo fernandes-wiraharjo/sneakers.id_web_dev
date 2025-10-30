@@ -232,7 +232,7 @@
 </div>
 
 <div class="modal fade" tabindex="-1" id="action-history-{{ $transaction->id }}" tabindex="-1" role="dialog" aria-labelledby="action-Label-history-{{ $transaction->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header border-0">
                 <h5 class="modal-title" id="action-1Label">Transaction History Information</h5>

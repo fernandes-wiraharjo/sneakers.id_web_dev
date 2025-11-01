@@ -70,12 +70,14 @@ class Product extends Component
                     $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
                     Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
                     $this->emit('showToast', ['type' => 'success', 'message' => 'Product added to cart successfully']);
+                    $this->emit('productAddedToCart');
                     $this->emit('cartCounter');
                 }
             } else {
                 $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
                 Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->showWeight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
                 $this->emit('showToast', ['type' => 'success', 'message' => 'Product added to cart successfully']);
+                $this->emit('productAddedToCart');
                 $this->emit('cartCounter');
             }
 

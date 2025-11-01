@@ -62,7 +62,7 @@
                                                    value="{{ $item->get('quantity') }}"
                                                    min="1"
                                                    data-size-id="{{ $id }}"
-                                                   wire:change="updateCartItem({{ $id }}, 'change', $event.target.value)">
+                                                   wire:input.debounce.300ms="updateCartItem({{ $id }}, 'change', $event.target.value)">
                                             @isset($disabledPlus)
                                                 @isset($disabledPlus[$id])
                                                     <a href="javascript:void(0)"
@@ -150,11 +150,11 @@
                 const sizeId = event.detail.size_id;
                 const correctedQty = event.detail.quantity;
                 
-                // Find and update the input field for this size_id
-                const input = document.querySelector(`input[data-size-id="${sizeId}"]`);
-                if (input) {
+                // Find and update ALL input fields for this size_id
+                const inputs = document.querySelectorAll(`input[data-size-id="${sizeId}"]`);
+                inputs.forEach(input => {
                     input.value = correctedQty;
-                }
+                });
             });
         </script>
 </div>

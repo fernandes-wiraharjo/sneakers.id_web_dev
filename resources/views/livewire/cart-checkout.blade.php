@@ -69,7 +69,13 @@
                                                 </svg>
                                             </a>
 
-                                            <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
+                                            <input type="text" 
+                                                   name="updates[]"
+                                                   class="QuantitySelector__CurrentQuantity" 
+                                                   value="{{ $item->get('quantity') }}"
+                                                   min="1"
+                                                   data-size-id="{{ $id }}"
+                                                   wire:input.debounce.300ms="updateCartItem({{ $id }}, 'change', $event.target.value)">
 
                                             @isset($disabledPlus)
                                                 @isset($disabledPlus[$id])
@@ -77,8 +83,7 @@
                                                         class="QuantitySelector__Button Link Link--primary"
                                                         wire:disabled="{{ $disabledPlus[$id] ? 'true' : 'false'}}" style="{{ $disabledPlus[$id] ? 'cursor: not-allowed;' : ''}}"
                                                         title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
-                                                        >
+                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
                                                             <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
                                                                 <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
                                                                     <path d="M8,1 L8,15"></path>
@@ -103,7 +108,13 @@
                                                 <path d="M1,1 L15,1" stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square"></path>
                                             </svg>
                                         </a>
-                                        <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
+                                        <input type="text" 
+                                               name="updates[]"
+                                               class="QuantitySelector__CurrentQuantity" 
+                                               value="{{ $item->get('quantity') }}"
+                                               min="1"
+                                               data-size-id="{{ $id }}"
+                                               wire:input.debounce.300ms="updateCartItem({{ $id }}, 'change', $event.target.value)">
 
                                         @isset($disabledPlus)
                                             @isset($disabledPlus[$id])
@@ -179,6 +190,18 @@
             Livewire.on('updateNote', () => {
                 const textarea = document.getElementById('cart-note');
                 Livewire.emit('updateNote', textarea.value); // Emit the updated note value to the Livewire component
+            });
+        });
+
+        // Listen for quantity correction events
+        window.addEventListener('quantity-corrected', event => {
+            const sizeId = event.detail.size_id;
+            const correctedQty = event.detail.quantity;
+            
+            // Find and update ALL input fields for this size_id (there are multiple for mobile/desktop views)
+            const inputs = document.querySelectorAll(`input[data-size-id="${sizeId}"]`);
+            inputs.forEach(input => {
+                input.value = correctedQty;
             });
         });
     </script>

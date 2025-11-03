@@ -61,8 +61,7 @@
                                                    class="QuantitySelector__CurrentQuantity" 
                                                    value="{{ $item->get('quantity') }}"
                                                    min="1"
-                                                   data-size-id="{{ $id }}"
-                                                   wire:input.debounce.300ms="updateCartItem({{ $id }}, 'change', $event.target.value)">
+                                                   readonly>
                                             @isset($disabledPlus)
                                                 @isset($disabledPlus[$id])
                                                     <a href="javascript:void(0)"

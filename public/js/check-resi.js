@@ -28,6 +28,7 @@ function checkResi(transaction_id) {
 
     // Clear existing HTML content
     $('.description-check-resi-' + transaction_id).hide().empty();
+    $('.timeline--' + transaction_id).empty();
 
     $.ajax({
         url: "transaction/check-resi",

@@ -175,5 +175,26 @@
         
         <!-- Toast Notification Component -->
         @livewire('toast-notification')
+        @auth
+        <script>
+            $(document).ready(function() {
+                setInterval(function() {
+                    $.ajax({
+                        url: '{{ route('check-activity') }}',
+                        data: {
+                            'userId': '{{ Auth::user()->id }}',
+                        },
+                        type: 'GET',
+                        success: function(response) {
+                            if (!response.is_active) {
+                                alert('Logged out due to inactivity. Please login again to continue.');
+                                window.location.href = '{{ route('customer.logout') }}';
+                            }
+                        }
+                    });
+                }, 30000);
+            });
+        </script>
+        @endauth
     </body>
 </html>

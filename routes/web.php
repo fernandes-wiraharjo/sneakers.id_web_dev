@@ -66,7 +66,8 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/verify/{token}', [LoginController::class, 'sendVerificationEmail'])->name('verify-email');
     Route::get('/verify-email/{token}', [LoginController::class, 'verifyAccount'])->name('user.verify');
     Route::get('/cart', [CartController::class, 'cartCheckout'])->name('cart');
-
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+    
     Route::group( ['middleware' => 'auth' ], function()
     {
         Route::post('/checkout/c/{hashID}/order', [CartController::class, 'createOrder'])->name('checkout.order');

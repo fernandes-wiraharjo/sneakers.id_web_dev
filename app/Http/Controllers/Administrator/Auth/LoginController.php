@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
@@ -277,4 +278,12 @@ class LoginController extends Controller
         return Auth::guard(config('ladmin.auth.guard', 'web'));
     }
 
+    public function checkActivity(Request $request)
+    {
+        if (Cache::has('user_last_activity:'.$request->userId)) {
+            return response()->json(['is_active' => true]);
+        } else {
+            return response()->json(['is_active' => false]);
+        }
+    }
 }

@@ -126,11 +126,7 @@ License: {{ theme()->getOption('product', 'license') }}
                 },
                 type: 'GET',
                 success: function(response) {
-                    console.log(response);
-                    if (response.is_active) {
-                        console.log('User is active');
-                    } else {
-                        console.log('User is inactive');
+                    if (!response.is_active) {
                         alert('Logged out due to inactivity. Please login again to continue.');
                         window.location.href = '{{ route('customer.logout') }}';
                     }

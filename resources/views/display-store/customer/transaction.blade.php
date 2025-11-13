@@ -43,6 +43,12 @@
             @if($shipping_waybill && $transaction->status == 'SUCCESS')
             <a href="#" id="btn-check-shipping" class="Form__Submit Button Button--primary" style="width: 150px;">CEK RESI</a>
             @endif
+
+            @if ($shipping_waybill && $transaction->status == 'COMPLETED')
+            <div class="chip completed">
+                <div class="chip-content">DELIVERED</div>
+            </div>
+            @endif
         </div>
     </div>
     <br>
@@ -116,23 +122,18 @@
                 <div style="text-align-last: center;">
                     <h1>Check shipping</h1>
                 </div>
-                @if ($shipping_waybill)
-                @php
-                // dd($shipping_waybill['rajaongkir']['result']['delivery_status']);
-                @endphp
-                @if($shipping_waybill['meta']['code'] == 200)
-                STATUS : {{ $shipping_waybill['data']['delivery_status']['status'] }} <br>
-                PENERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_receiver'] }} <br>
-                WAKTU DITERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_date'] }} {{ $shipping_waybill['data']['delivery_status']['pod_time'] }} <br>
-                <hr>
-                @foreach ($shipping_waybill['data']['manifest'] as $item)
-                {{ $item['manifest_description']}} : {{ $item['city_name'] }} <br>
-                TANGGAL : {{ $item['manifest_date']}} {{ $item['manifest_time']}} <br>
-                <hr>
-                @endforeach
+                @if ($shipping_waybill && $shipping_waybill['meta']['code'] == 200)
+                    STATUS : {{ $shipping_waybill['data']['delivery_status']['status'] }} <br>
+                    PENERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_receiver'] }} <br>
+                    WAKTU DITERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_date'] }} {{ $shipping_waybill['data']['delivery_status']['pod_time'] }} <br>
+                    <hr>
+                    @foreach ($shipping_waybill['data']['manifest'] as $item)
+                        {{ $item['manifest_description']}} : {{ $item['city_name'] }} <br>
+                        TANGGAL : {{ $item['manifest_date']}} {{ $item['manifest_time']}} <br>
+                        <hr>
+                    @endforeach
                 @else
-                {{ $shipping_waybill['meta']['message'] }}
-                @endif
+                    {{ $shipping_waybill['meta']['message'] }}
                 @endif
             </div>
         </div>

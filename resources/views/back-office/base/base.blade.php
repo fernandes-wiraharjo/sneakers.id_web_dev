@@ -114,6 +114,32 @@ License: {{ theme()->getOption('product', 'license') }}
 @stack('scripts')
 @stack('after-scripts')
 @include('sweetalert::alert')
+
+@auth
+<script>
+    $(document).ready(function() {
+        setInterval(function() {
+            $.ajax({
+                url: '{{ route('check-activity') }}',
+                data: {
+                    'userId': '{{ Auth::user()->id }}',
+                },
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    if (response.is_active) {
+                        console.log('User is active');
+                    } else {
+                        console.log('User is inactive');
+                        alert('Logged out due to inactivity. Please login again to continue.');
+                        window.location.href = '{{ route('customer.logout') }}';
+                    }
+                }
+            });
+        }, 30000);
+    });
+</script>
+@endauth
 </body>
 {{-- end::Body --}}
 </html>

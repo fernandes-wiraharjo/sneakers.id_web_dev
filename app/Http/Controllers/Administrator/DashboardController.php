@@ -91,7 +91,7 @@ class DashboardController extends Controller {
             'region' => $transactionDestination->region()->first(),
             'items' => $transaction->items()->with('detail.product')->get(),
             'shipping' => $transaction->shipping()->first(),
-            'shipping_waybill' => CekOngkir::CheckWaybill($transaction->shipping()->first()->shipping_waybill, $transaction->shipping()->first()->courier, $lastFiveDigitPhoneNumber) ?? null,
+            'shipping_waybill' => CekOngkir::CheckWaybill($transaction->shipping()->first()->shipping_waybill, $transaction->shipping()->first()->courier_code, $lastFiveDigitPhoneNumber) ?? null,
         ];
         return view('display-store.customer.transaction', $data);
     }

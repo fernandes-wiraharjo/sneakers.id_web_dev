@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -48,7 +49,8 @@ class Kernel extends ConsoleKernel
         \Nwidart\Modules\Commands\UpdateCommand::class,
         \Nwidart\Modules\Commands\UseCommand::class,
     
-        //
+        // Custom commands
+        \App\Console\Commands\CheckShippingStatus::class,
     ];
 
     /**
@@ -59,7 +61,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Check shipping status every hour and auto-complete delivered orders
+        $schedule->command('shipping:check-status')
+                 ->hourly()
+                 ->withoutOverlapping()
+                 ->runInBackground()
+                 ->onSuccess(function () {
+                     Log::info('Shipping status check completed successfully');
+                 })
+                 ->onFailure(function () {
+                     Log::error('Shipping status check failed');
+                 });
     }
 
     /**

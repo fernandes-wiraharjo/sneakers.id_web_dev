@@ -52,6 +52,10 @@ class CheckoutProcess extends Component
     protected $note;
     protected $total;
     protected $content;
+    
+    // Voucher properties
+    public $voucherData = null;
+    public $voucherDiscount = 0;
 
     /**
      * Mounts the component on the template.
@@ -66,6 +70,10 @@ class CheckoutProcess extends Component
 
         $this->total = Cart::total();
         $this->content = Cart::content();
+        
+        // Load voucher from cart
+        $this->voucherData = Cart::getVoucher();
+        $this->voucherDiscount = $this->calculateVoucherDiscount();
 
         $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->where('subdistrict_ro', '<>', 'NULL')->first();
         $this->updateCart();
@@ -178,19 +186,31 @@ class CheckoutProcess extends Component
                 'url' => $item['url']
             ];
 
-            // add shipping as an item
-            if ($this->shippingCost > 0) {
-                $items[] = [
-                    'id'       => 'SHIPPING',
-                    'name'     => 'Shipping Fee',
-                    'quantity' => 1,
-                    'price'    => intval($this->shippingCost),
-                    'category' => 'shipping',
-                    'url'      => null
-                ];
-            }
-
             $totalQuantity += $item['quantity'];
+        }
+        
+        // Add voucher discount as a line item (if applied)
+        if ($this->voucherDiscount > 0) {
+            $items[] = [
+                'id'       => 'VOUCHER_DISCOUNT',
+                'name'     => 'Voucher Discount (' . ($this->voucherData['code'] ?? '') . ')',
+                'quantity' => 1,
+                'price'    => -intval($this->voucherDiscount), // Negative amount for discount
+                'category' => 'discount',
+                'url'      => null
+            ];
+        }
+        
+        // Add shipping as an item (moved outside loop - was a bug)
+        if ($this->shippingCost > 0) {
+            $items[] = [
+                'id'       => 'SHIPPING',
+                'name'     => 'Shipping Fee',
+                'quantity' => 1,
+                'price'    => intval($this->shippingCost),
+                'category' => 'shipping',
+                'url'      => null
+            ];
         }
         /**
          * if not logged in
@@ -317,7 +337,10 @@ class CheckoutProcess extends Component
 
     public function updateShippingCost($value, $courier, $service, $etd, $cartTotal)
     {
-        $this->grandTotal = intval($cartTotal) + intval($value);
+        // Calculate grand total: cart total - voucher discount + shipping
+        $subtotal = intval($cartTotal);
+        $this->grandTotal = $subtotal - $this->voucherDiscount + intval($value);
+        
         $this->shippingCost = $value;
         $this->selectedCourier = [
             'courier'   => $courier,
@@ -420,21 +443,32 @@ class CheckoutProcess extends Component
     }
 
     /**
-     * Calculate voucher discount
+     * Calculate voucher discount amount
+     * 
+     * @param array|null $voucherData Voucher data (uses $this->voucherData if null)
+     * @param int|null $subtotal Subtotal amount (uses $this->total if null)
+     * @return int The discount amount
      */
-    protected function calculateVoucherDiscount($voucherData, $subtotal)
+    protected function calculateVoucherDiscount($voucherData = null, $subtotal = null)
     {
-        if ($voucherData['discount_type'] === 'percent') {
-            $discount = ($subtotal * $voucherData['discount_rate']) / 100;
+        $voucher = $voucherData ?? $this->voucherData;
+        $amount = $subtotal ?? $this->total;
+        
+        if (!$voucher) {
+            return 0;
+        }
+        
+        if ($voucher['discount_type'] === 'percent') {
+            $discount = ($amount * $voucher['discount_rate']) / 100;
             
             // Apply max discount cap if set
-            if (isset($voucherData['discount_amount']) && $voucherData['discount_amount'] > 0 && $discount > $voucherData['discount_amount']) {
-                $discount = $voucherData['discount_amount'];
+            if (isset($voucher['discount_amount']) && $voucher['discount_amount'] > 0 && $discount > $voucher['discount_amount']) {
+                $discount = $voucher['discount_amount'];
             }
             
             return $discount;
         } else {
-            return $voucherData['discount_amount'];
+            return $voucher['discount_amount'];
         }
     }
 

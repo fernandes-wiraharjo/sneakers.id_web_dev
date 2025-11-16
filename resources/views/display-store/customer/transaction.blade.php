@@ -84,8 +84,22 @@
                     @endforeach
                     <div class="table-row">
                         <div class="table-data"></div>
-                        <div class="table-data" style="max-width: 100px;text-align-last: end;">Subtotal <br> Shipping <br> Total</div>
-                        <div class="table-data" style="max-width: 150px;text-align-last: end;">Rp {{ rupiah_format($transaction->sub_total) }} <br> Rp {{ rupiah_format($shipping->shipping_cost) }} <br> Rp {{ rupiah_format($transaction->grand_total) }}</div>
+                        <div class="table-data" style="max-width: 100px;text-align-last: end;">
+                            Subtotal <br> 
+                            @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
+                            <span style="color: #c83532;">Discount ({{ $transaction->voucher_code }})</span> <br>
+                            @endif
+                            Shipping <br> 
+                            Total
+                        </div>
+                        <div class="table-data" style="max-width: 150px;text-align-last: end;">
+                            Rp {{ rupiah_format($transaction->sub_total) }} <br> 
+                            @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
+                            <span style="color: #c83532; font-weight: 600;">- Rp {{ rupiah_format($transaction->voucher_discount) }}</span> <br>
+                            @endif
+                            Rp {{ rupiah_format($shipping->shipping_cost) }} <br> 
+                            Rp {{ rupiah_format($transaction->grand_total) }}
+                        </div>
                     </div>
                 </div>
             </div>

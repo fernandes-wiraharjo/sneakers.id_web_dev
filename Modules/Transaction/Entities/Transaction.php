@@ -28,6 +28,9 @@ class Transaction extends Model
         'total_weight',
         'sub_total',
         'grand_total',
+        'discount_voucher_id',
+        'voucher_code',
+        'voucher_discount',
         'description',
         'status',
         'paid_at'
@@ -92,5 +95,10 @@ class Transaction extends Model
     public function refund()
     {
         return $this->hasOne(Refund::class, 'transaction_id', 'id');
+    }
+
+    public function discountVoucher()
+    {
+        return $this->belongsTo(\Modules\DiscountVoucher\Entities\DiscountVoucher::class, 'discount_voucher_id');
     }
 }

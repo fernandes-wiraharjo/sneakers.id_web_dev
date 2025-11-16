@@ -51,6 +51,9 @@ class TransactionService {
                 'total_weight' => $transaction['transactions']['total_weight'],
                 'sub_total' => $transaction['transactions']['sub_total'],
                 'grand_total' => $transaction['transactions']['grand_total'],
+                'discount_voucher_id' => $transaction['transactions']['discount_voucher_id'] ?? null,
+                'voucher_code' => $transaction['transactions']['voucher_code'] ?? null,
+                'voucher_discount' => $transaction['transactions']['voucher_discount'] ?? null,
                 'description' => $transaction['transactions']['description'],
                 'status' => 'CREATED'
             ]);
@@ -75,6 +78,19 @@ class TransactionService {
             TransactionItems::insert($transactionItems);
 
             TransactionShippings::create($transaction['transaction_shippings']);
+
+            // Record voucher usage if voucher was used
+            if (isset($transaction['transactions']['discount_voucher_id']) && $transaction['transactions']['discount_voucher_id']) {
+                $userId = $transaction['transaction_destinations']['user_id'] ?? null;
+                if ($userId) {
+                    $voucherRepo = app(\Modules\DiscountVoucher\Repositories\DiscountVoucherRepository::class);
+                    $voucherRepo->recordUsage(
+                        $transaction['transactions']['discount_voucher_id'], 
+                        $userId, 
+                        $creteTransaction->id
+                    );
+                }
+            }
 
             //insert histories
             $this->insertHistories([

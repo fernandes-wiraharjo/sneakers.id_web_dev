@@ -93,7 +93,14 @@ class DiscountVoucher extends Model
         }
 
         if ($this->discount_type === 'percent') {
-            return ($subtotal * $this->discount_rate) / 100;
+            $discount = ($subtotal * $this->discount_rate) / 100;
+            
+            // Apply max discount cap if set
+            if ($this->discount_amount && $this->discount_amount > 0 && $discount > $this->discount_amount) {
+                $discount = $this->discount_amount;
+            }
+            
+            return $discount;
         }
 
         return $this->discount_amount;

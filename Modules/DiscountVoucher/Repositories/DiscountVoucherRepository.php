@@ -123,7 +123,7 @@ class DiscountVoucherRepository
         }
 
         if (!$voucher->isValid()) {
-            return ['valid' => false, 'message' => 'Voucher is not valid or has expired.'];
+            return ['valid' => false, 'message' => 'Voucher is not valid.'];
         }
 
         if ($subtotal < $voucher->min_purchase) {

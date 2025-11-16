@@ -248,6 +248,9 @@ class CheckoutProcess extends Component
             'custom_field2' => Cart::getNotes() ?? '',
         ];
 
+        // Get voucher data from cart
+        $voucherData = Cart::getVoucher();
+        
         $transactions = [
             'transactions' => [
                 'date'            => date('Y-m-d'),
@@ -257,6 +260,9 @@ class CheckoutProcess extends Component
                 'sub_total'       => Cart::total(),
                 'description'     => Cart::getNotes(),
                 'grand_total'     => $this->grandTotal,
+                'discount_voucher_id' => $voucherData['id'] ?? null,
+                'voucher_code'    => $voucherData['code'] ?? null,
+                'voucher_discount' => $voucherData ? $this->calculateVoucherDiscount($voucherData, Cart::total()) : null,
             ],
 
             'transaction_destinations' => [
@@ -410,6 +416,25 @@ class CheckoutProcess extends Component
             })->filter()->values();
         } else {
             $this->selectedSubdistrict = 0;
+        }
+    }
+
+    /**
+     * Calculate voucher discount
+     */
+    protected function calculateVoucherDiscount($voucherData, $subtotal)
+    {
+        if ($voucherData['discount_type'] === 'percent') {
+            $discount = ($subtotal * $voucherData['discount_rate']) / 100;
+            
+            // Apply max discount cap if set
+            if (isset($voucherData['discount_amount']) && $voucherData['discount_amount'] > 0 && $discount > $voucherData['discount_amount']) {
+                $discount = $voucherData['discount_amount'];
+            }
+            
+            return $discount;
+        } else {
+            return $voucherData['discount_amount'];
         }
     }
 

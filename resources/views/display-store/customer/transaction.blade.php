@@ -40,6 +40,12 @@
             <a href="{{ $transaction->snap_payment_url }}" id="btn-continue-payment" class="Form__Submit Button Button--primary" style="width: 250px; display: block;">Continue Payment</a>
             @endif
 
+            @if(!$shipping_waybill && $transaction->status == 'SUCCESS')
+            <div class="chip pending">
+                <div class="chip-content">AWAITING SHIPMENT</div>
+            </div>
+            @endif
+
             @if($shipping_waybill && $transaction->status == 'SUCCESS')
             <a href="#" id="btn-check-shipping" class="Form__Submit Button Button--primary" style="width: 150px;">CEK RESI</a>
             @endif
@@ -122,7 +128,11 @@
                 <div style="text-align-last: center;">
                     <h1>Check shipping</h1>
                 </div>
-                @if ($shipping_waybill && $shipping_waybill['meta']['code'] == 200)
+                @if (!$shipping_waybill)
+                    <div class="chip pending">
+                        <div class="chip-content">AWAITING SHIPMENT</div>
+                    </div>
+                @elseif ($shipping_waybill && $shipping_waybill['meta']['code'] == 200)
                     STATUS : {{ $shipping_waybill['data']['delivery_status']['status'] }} <br>
                     PENERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_receiver'] }} <br>
                     WAKTU DITERIMA : {{ $shipping_waybill['data']['delivery_status']['pod_date'] }} {{ $shipping_waybill['data']['delivery_status']['pod_time'] }} <br>

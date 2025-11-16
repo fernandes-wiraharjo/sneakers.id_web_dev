@@ -401,6 +401,13 @@
                                     <td>Subtotal</td>
                                     <td>Rp {{ rupiah_format($transaction->sub_total ?? 0) }}</td>
                                 </tr>
+                                @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
+                                <tr>
+                                    <td colspan="4"></td>
+                                    <td><span style="color: #c83532;">Discount ({{ $transaction->voucher_code }})</span></td>
+                                    <td><span style="color: #c83532; font-weight: 600;">- Rp {{ rupiah_format($transaction->voucher_discount ?? 0) }}</span></td>
+                                </tr>
+                                @endif
                                 <tr>
                                     <td colspan="4"></td>
                                     <td>Shipping Cost {{ $shipping->shipping_method ?? '-' }}</td>
@@ -472,8 +479,50 @@
                 </div>
                 @endif
 
-                {{-- Shipping Information Section for Shipped Orders --}}
-                @if($shipping && $shipping->shipping_waybill)
+                {{-- Shipping Status Section --}}
+                @if($transaction->status == 'CREATED')
+                <div class="mb-10">
+                    <div class="alert alert-warning">
+                        <strong><i class="fas fa-clock"></i> Waiting Payment</strong>
+                    </div>
+                    
+                    <h5>Shipping Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Shipping Status</td>
+                                    <td><span class="badge badge-warning">Waiting Payment</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Courier</td>
+                                    <td>{{ $shipping->shipping_method ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Cost</td>
+                                    <td>Rp {{ rupiah_format($shipping->shipping_cost ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Address</td>
+                                    <td>
+                                        {{ $destination->address ?? '-' }}<br>
+                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
+                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
+                                        {{ $destination->region->post_code ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Recipient</td>
+                                    <td>
+                                        {{ $destination->first_name ?? '' }} {{ $destination->last_name ?? '' }}<br>
+                                        {{ $destination->phone_number ?? '-' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @elseif($shipping && $shipping->shipping_waybill)
                 <div class="mb-10">
                     <div class="alert alert-info">
                         <strong><i class="fas fa-shipping-fast"></i> This order has been shipped</strong>
@@ -522,6 +571,49 @@
                                 <tr>
                                     <td>Updated At</td>
                                     <td>{{ $shipping->updated_at ? $shipping->updated_at->format('d-M-Y H:i') : '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @else
+                {{-- Payment received but not shipped yet --}}
+                <div class="mb-10">
+                    <div class="alert alert-success">
+                        <strong><i class="fas fa-check-circle"></i> Payment Received - Ready to Ship</strong>
+                    </div>
+                    
+                    <h5>Shipping Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Shipping Status</td>
+                                    <td><span class="badge badge-success">Ready to Ship</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Courier</td>
+                                    <td>{{ $shipping->shipping_method ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Cost</td>
+                                    <td>Rp {{ rupiah_format($shipping->shipping_cost ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Address</td>
+                                    <td>
+                                        {{ $destination->address ?? '-' }}<br>
+                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
+                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
+                                        {{ $destination->region->post_code ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Recipient</td>
+                                    <td>
+                                        {{ $destination->first_name ?? '' }} {{ $destination->last_name ?? '' }}<br>
+                                        {{ $destination->phone_number ?? '-' }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

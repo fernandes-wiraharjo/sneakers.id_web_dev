@@ -56,6 +56,31 @@ return [
         ],
     ],
     [
+        'gate' => 'administrator.discount-voucher.index',
+        'name' => 'Discount Voucher',
+        'route' => ['administrator.discount-voucher.index', []],
+        'isActive' => 'discount-voucher*',
+        'icon' => 'ticket-alt',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.discount-voucher.create',
+                'title' => 'Create Discount Voucher',
+                'description' => 'User can create new discount voucher'
+            ],
+            [
+                'gate' => 'administrator.discount-voucher.update',
+                'title' => 'Update Discount Voucher',
+                'description' => 'User can update discount voucher'
+            ],
+            [
+                'gate' => 'administrator.discount-voucher.destroy',
+                'title' => 'Delete Discount Voucher',
+                'description' => 'User can delete discount voucher'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.master-data',
         'name' => 'Master Data',
         'route' => null,

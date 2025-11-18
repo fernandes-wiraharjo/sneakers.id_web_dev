@@ -441,12 +441,14 @@
                                                                     </div> --}}
                                                                 </div>
                                                             </div>
-                                                            {{-- <div>
+                                                            @if(auth()->check())
+                                                            <div>
                                                                 <div class="_1fragemaf _1fragem17">
                                                                     <div class="_1mmswk95 _1fragemaf">
                                                                         <input type="checkbox"
                                                                             id="save_shipping_information"
                                                                             name="save_shipping_information"
+                                                                            wire:model="saveAddress"
                                                                             class="_1mmswk97 _1fragem40 _1fragem3w _1fragem44 _1fragem3s _1fragem4w _1fragem4t _1fragem4z _1fragem4q _1fragem5b _1fragem56 _1fragem5g _1fragem51 _1fragem13 _1fragem15 _1fragem34 _1fragem10 _1fragemat _1fragemao _1fragemaz _1mmswk9a _1mmswk9c">
                                                                         <div class="_1mmswk9o _1fragemac _1fragem9v _1fragemad _1fragemao _1fragemb2 _1fragemat">
                                                                             <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wug a8x1wum"><svg
@@ -464,11 +466,12 @@
                                                                             </span>
                                                                         </div>
                                                                     </div>
-                                                                    <label for="save_shipping_information"class="_1mmswk9k _1fragem15 _1fragem9q _1fragem13 _1fragem9e">
-                                                                        Save
+                                                                    <label for="save_shipping_information" class="_1mmswk9k _1fragem15 _1fragem9q _1fragem13 _1fragem9e">
+                                                                        Save this address for future orders
                                                                     </label>
                                                                 </div>
-                                                            </div> --}}
+                                                            </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </section>

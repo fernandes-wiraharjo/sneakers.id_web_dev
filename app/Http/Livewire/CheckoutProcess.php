@@ -10,6 +10,7 @@ use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
 use App\Services\MidtransService;
 use App\Models\ShippingCourier;
+use App\Models\UserAddress;
 use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
 use Illuminate\Support\Str;
@@ -49,6 +50,7 @@ class CheckoutProcess extends Component
     public $invoiceUrl;
     public $grandTotal = 0;
     public $currentUrl = '';
+    public $saveAddress = false;
     protected $note;
     protected $total;
     protected $content;
@@ -139,6 +141,27 @@ class CheckoutProcess extends Component
     public function informationStepSubmit()
     {
         $this->validate();
+        
+        // Save or update user address if checkbox is checked and user is logged in
+        if ($this->saveAddress && auth()->check()) {
+            $existingAddress = UserAddress::where('user_id', auth()->user()->id)->first();
+            
+            $addressData = [
+                'user_id' => auth()->user()->id,
+                'region_id' => $this->selectedArea,
+                'address' => $this->shippingAddress,
+                'phone_number' => $this->shippingPhoneNumber,
+            ];
+            
+            if ($existingAddress) {
+                // Update existing address
+                $existingAddress->update($addressData);
+            } else {
+                // Create new address
+                UserAddress::create($addressData);
+            }
+        }
+        
         $this->currentStep = 2;
         if($this->shippingCourier->count() == 0){
             $this->back(1);

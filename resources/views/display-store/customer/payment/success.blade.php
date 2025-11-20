@@ -580,6 +580,21 @@
                                                                 class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">Rp {{ rupiah_format(intval($transaction->sub_total)) }}</span>
                                                         </div>
                                                     </div>
+                                                    @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
+                                                    <div role="row" class="_1qy6ue61 _1fragem1b _1qy6ue68">
+                                                        <div role="cell" class="_1qy6ue69">
+                                                            <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                <div
+                                                                    class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1r _1fragem28 _1fragem0 _1fragem4 _1fragem38">
+                                                                    <span class="_19gi7yt0 _19gi7yte _1fragem1j" style="color: #c83532;">Discount ({{ $transaction->voucher_code }})</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div role="cell" class="_1qy6ue6a"><span translate="yes"
+                                                                class="_19gi7yt0 _19gi7yte _1fragem1j notranslate" style="color: #c83532; font-weight: 600;">- Rp {{ rupiah_format(intval($transaction->voucher_discount)) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    @endif
                                                     <div role="row" class="_1qy6ue61 _1fragem1b _1qy6ue68">
                                                         <div role="cell" class="_1qy6ue69">
                                                             <div class="_1fragem17 _1fragemaf _1fragem38">

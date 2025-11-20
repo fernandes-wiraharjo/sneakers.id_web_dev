@@ -118,6 +118,40 @@ class CartService {
     }
 
     /**
+     * Add voucher to cart
+     *
+     * @param array $voucher
+     * @return void
+     */
+    public function addVoucher(array $voucher): void
+    {
+        $voucherKey = $this->cartId . ':voucher';
+        Cache::put($voucherKey, $voucher, $this->cartTTL);
+    }
+
+    /**
+     * Get voucher from cart
+     *
+     * @return array|null
+     */
+    public function getVoucher()
+    {
+        $voucherKey = $this->cartId . ':voucher';
+        return Cache::get($voucherKey);
+    }
+
+    /**
+     * Remove voucher from cart
+     *
+     * @return void
+     */
+    public function removeVoucher(): void
+    {
+        $voucherKey = $this->cartId . ':voucher';
+        Cache::forget($voucherKey);
+    }
+
+    /**
      * Removes an item from the cart.
      *
      * @param string $id
@@ -140,11 +174,15 @@ class CartService {
     public function clear(): void
     {
         Cache::forget($this->cartId);
+        $this->removeVoucher();
     }
 
     public static function clearByUserId(int $userId): void
     {
-        Cache::forget(md5(self::DEFAULT_INSTANCE . ':' . $userId));
+        $cartId = md5(self::DEFAULT_INSTANCE . ':' . $userId);
+        Cache::forget($cartId);
+        // Also clear voucher
+        Cache::forget($cartId . ':voucher');
     }
 
     /**

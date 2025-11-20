@@ -14,6 +14,15 @@ class CartCheckout extends Component
     public $note;
     public $disabledPlus = [];
     public $interval = 5; // Interval in seconds (adjust as needed)
+    
+    // Voucher properties
+    public $voucherCode = '';
+    public $voucherApplied = false;
+    public $voucherMessage = '';
+    public $discountAmount = 0;
+    public $finalTotal = 0;
+    public $appliedVoucher = null;
+    
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
         'noteUpdated' => 'updateNote',
@@ -29,6 +38,16 @@ class CartCheckout extends Component
     {
         $this->note = Cart::getNotes();
         $this->updateCart();
+        
+        // Load voucher from cart if exists
+        $voucherData = Cart::getVoucher();
+        if ($voucherData) {
+            $this->voucherCode = $voucherData['code'];
+            $this->voucherApplied = true;
+            $this->appliedVoucher = $voucherData;
+            $this->voucherMessage = $voucherData['message'] ?? 'Voucher applied successfully!';
+            $this->calculateDiscount();
+        }
 
 
         // foreach(Cart::content() as $item) {
@@ -48,6 +67,8 @@ class CartCheckout extends Component
     public function render(): View
     {
         $this->updateCart();
+        $this->calculateDiscount();
+        
         return view('livewire.cart-checkout', [
             'session_id' => Cart::hashID(),
             'total' => intval($this->total),
@@ -172,5 +193,100 @@ class CartCheckout extends Component
     public function fetchLatestNote()
     {
         $this->note = Cart::getNotes(); // Fetch the latest note from the backend (assuming 'Cart::getNotes()' fetches the current note)
+    }
+    
+    /**
+     * Apply voucher code
+     */
+    public function applyVoucher()
+    {
+        if (empty($this->voucherCode)) {
+            $this->voucherMessage = 'Please enter a voucher code.';
+            return;
+        }
+        
+        // Get voucher repository
+        $voucherRepo = app(\Modules\DiscountVoucher\Repositories\DiscountVoucherRepository::class);
+        
+        // Get current cart total
+        $currentTotal = Cart::total();
+        
+        // Validate voucher
+        $validation = $voucherRepo->validateVoucherForUser(
+            $this->voucherCode,
+            auth()->check() ? auth()->id() : null,
+            $currentTotal
+        );
+        
+        if ($validation['valid']) {
+            $this->voucherApplied = true;
+            $this->appliedVoucher = [
+                'id' => $validation['voucher']->id,
+                'code' => $validation['voucher']->voucher_code,
+                'discount_type' => $validation['voucher']->discount_type,
+                'discount_rate' => $validation['voucher']->discount_rate,
+                'discount_amount' => $validation['voucher']->discount_amount,
+                'message' => $validation['message']
+            ];
+            $this->voucherMessage = $validation['message'];
+            
+            // Store voucher in cart
+            Cart::addVoucher($this->appliedVoucher);
+            
+            $this->calculateDiscount();
+        } else {
+            $this->voucherMessage = $validation['message'];
+            $this->voucherApplied = false;
+        }
+    }
+    
+    /**
+     * Remove applied voucher
+     */
+    public function removeVoucher()
+    {
+        $this->voucherCode = '';
+        $this->voucherApplied = false;
+        $this->voucherMessage = '';
+        $this->discountAmount = 0;
+        $this->appliedVoucher = null;
+        $this->finalTotal = $this->total;
+        
+        // Remove voucher from cart
+        Cart::removeVoucher();
+    }
+    
+    /**
+     * Calculate discount amount
+     */
+    protected function calculateDiscount()
+    {
+        if (!$this->voucherApplied || !$this->appliedVoucher) {
+            $this->discountAmount = 0;
+            $this->finalTotal = $this->total;
+            return;
+        }
+        
+        $voucher = $this->appliedVoucher;
+        
+        if ($voucher['discount_type'] === 'percent') {
+            $discount = ($this->total * $voucher['discount_rate']) / 100;
+            
+            // Apply max discount cap if set
+            if (isset($voucher['discount_amount']) && $voucher['discount_amount'] > 0 && $discount > $voucher['discount_amount']) {
+                $discount = $voucher['discount_amount'];
+            }
+            
+            $this->discountAmount = $discount;
+        } else {
+            $this->discountAmount = $voucher['discount_amount'];
+        }
+        
+        $this->finalTotal = $this->total - $this->discountAmount;
+        
+        // Ensure final total is not negative
+        if ($this->finalTotal < 0) {
+            $this->finalTotal = 0;
+        }
     }
 }

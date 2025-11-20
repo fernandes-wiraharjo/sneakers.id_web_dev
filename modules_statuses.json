@@ -11,5 +11,6 @@
     "LookBook": true,
     "Transaction": true,
     "Dashboard": true,
-    "ShippingCourier": true
+    "ShippingCourier": true,
+    "DiscountVoucher": true
 }

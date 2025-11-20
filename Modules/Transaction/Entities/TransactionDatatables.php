@@ -41,7 +41,13 @@ class TransactionDatatables extends DataTable
                 return '<span class="badge ' . $badgeClass . ' fs-7">' . $status . '</span>';
             })
             ->editColumn('shipping_status', function ($item) {
-                $shippingStatus = $item->shipping->status ?? '-';
+                // Only show WAITING PAYMENT for CREATED status
+                if ($item->status == 'CREATED') {
+                    return '<span class="badge badge-warning fs-7">WAITING PAYMENT</span>';
+                }
+                
+                // For all other statuses (SUCCESS, COMPLETED, REFUNDED, PENDING, EXPIRED, etc.), show actual shipping status
+                $shippingStatus = $item->shipping->status ?? 'DIKEMAS';
                 $badgeClass = match($shippingStatus) {
                     'DIKEMAS' => 'badge-warning',
                     'DIKIRIM' => 'badge-info',
@@ -105,7 +111,7 @@ class TransactionDatatables extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->with('destination', 'destination.user', 'refund')
+        return $model->with('destination', 'destination.user', 'refund', 'shipping')
             ->select('transactions.*', 
                 'transaction_destinations.email', 
                 'transaction_destinations.transaction_id',

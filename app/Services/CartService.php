@@ -16,10 +16,20 @@ class CartService {
 
     public function __construct($userId = null)
     {
-        if (!$userId && auth()->user()) {
-            $this->cartId = md5(self::DEFAULT_INSTANCE . ':' . auth()->user()->id);
+        if (!$userId && auth()->check()) {
+            // Authenticated user - use user ID
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':user:' . auth()->user()->id);
+        } elseif ($userId) {
+            // Specific user ID provided
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':user:' . $userId);
         } else {
-            $this->cartId = md5(self::DEFAULT_INSTANCE . ':' . $userId);
+            // Guest user - use session ID
+            $sessionId = session()->getId();
+            if (!$sessionId) {
+                session()->start();
+                $sessionId = session()->getId();
+            }
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':guest:' . $sessionId);
         }
         $this->cartTTL = config('cache.cart_ttl');
     }
@@ -179,10 +189,50 @@ class CartService {
 
     public static function clearByUserId(int $userId): void
     {
-        $cartId = md5(self::DEFAULT_INSTANCE . ':' . $userId);
+        $cartId = md5(self::DEFAULT_INSTANCE . ':user:' . $userId);
         Cache::forget($cartId);
         // Also clear voucher
         Cache::forget($cartId . ':voucher');
+    }
+
+    /**
+     * Merge guest cart with user cart after login
+     *
+     * @param string $guestSessionId
+     * @param int $userId
+     * @return void
+     */
+    public static function mergeGuestCart(string $guestSessionId, int $userId): void
+    {
+        $guestCartId = md5(self::DEFAULT_INSTANCE . ':guest:' . $guestSessionId);
+        $userCartId = md5(self::DEFAULT_INSTANCE . ':user:' . $userId);
+        
+        $guestCart = Cache::get($guestCartId, collect([]));
+        $userCart = Cache::get($userCartId, collect([]));
+        
+        if ($guestCart->isNotEmpty()) {
+            // Merge guest cart items into user cart
+            foreach ($guestCart as $sizeId => $item) {
+                if ($userCart->has($sizeId)) {
+                    // If item exists, add quantities
+                    $existingQty = $userCart->get($sizeId)->get('quantity');
+                    $item->put('quantity', $existingQty + $item->get('quantity'));
+                }
+                $userCart->put($sizeId, $item);
+            }
+            
+            // Save merged cart and clear guest cart
+            $cartTTL = config('cache.cart_ttl');
+            Cache::put($userCartId, $userCart, $cartTTL);
+            Cache::forget($guestCartId);
+            
+            // Also merge vouchers if guest has one
+            $guestVoucher = Cache::get($guestCartId . ':voucher');
+            if ($guestVoucher && !Cache::has($userCartId . ':voucher')) {
+                Cache::put($userCartId . ':voucher', $guestVoucher, $cartTTL);
+            }
+            Cache::forget($guestCartId . ':voucher');
+        }
     }
 
     /**

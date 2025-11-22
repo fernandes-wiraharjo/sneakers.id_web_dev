@@ -68,17 +68,16 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/cart', [CartController::class, 'cartCheckout'])->name('cart');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     
+    // Guest checkout routes - no auth required
+    Route::post('/checkout/c/{hashID}/order', [CartController::class, 'createOrder'])->name('checkout.order');
+    Route::get('/success-payment/{external_id}', [CheckoutController::class, 'successPayments'])->name('payment.success');
+    Route::get('/error-payment', [CheckoutController::class, 'errorPayments'])->name('payment.error');
+    Route::get('/transaction/c/{external_id}', [DashboardController::class, 'detail'])->name('transaction.detail');
+    
+    // Auth required routes
     Route::group( ['middleware' => 'auth' ], function()
     {
-        Route::post('/checkout/c/{hashID}/order', [CartController::class, 'createOrder'])->name('checkout.order');
         Route::post('/address/save', [DashboardController::class, 'saveAccount'])->name('address.save');
-        Route::get('/success-payment/{external_id}', [CheckoutController::class, 'successPayments'])->name('payment.success');
-        Route::get('/error-payment', [CheckoutController::class, 'errorPayments'])->name('payment.error');
-        Route::get('/transaction/c/{external_id}', [DashboardController::class, 'detail'])->name('transaction.detail');
         Route::post('/transaction/cancel/{orderId}', [CheckoutController::class, 'cancelTransaction'])->name('transaction.cancel');
-
     });
-
-
-
 });

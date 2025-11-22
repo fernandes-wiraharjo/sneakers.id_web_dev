@@ -77,7 +77,14 @@ class CheckoutProcess extends Component
         $this->voucherData = Cart::getVoucher();
         $this->voucherDiscount = $this->calculateVoucherDiscount();
 
-        $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->where('subdistrict_ro', '<>', 'NULL')->first();
+        // Initialize region only if user is authenticated and has an address
+        if (auth()->check() && auth()->user()->user_address) {
+            $regionId = auth()->user()->user_address->region_id;
+            $this->userRegion = ModelRegion::where('region_id', $regionId)->where('subdistrict_ro', '<>', 'NULL')->first();
+        } else {
+            // For guests or users without address, no default region - they must select
+            $this->userRegion = null;
+        }
         $this->updateCart();
         $this->districtList = [];
         $this->subdistrictList = [];
@@ -86,12 +93,13 @@ class CheckoutProcess extends Component
         $this->currentUrl = url()->current();
         $this->note = Cart::getNotes();
 
+        // Populate user data if authenticated
         if(auth()->check()){
             $user = auth()->user();
             $this->shippingEmail = $user->email;
             $this->shippingFirstName = $user->first_name;
             $this->shippingLastName = $user->last_name;
-            if($user->user_address) {
+            if($user->user_address && $this->userRegion) {
                 $this->selectedProvince = $this->userRegion->province;
                 $this->selectedDistrict = $this->userRegion->district;
                 $this->selectedSubdistrict = $this->userRegion->subdistrict_ro; //unused but safety for not updating data
@@ -103,8 +111,10 @@ class CheckoutProcess extends Component
                 $this->selectedArea = $this->userRegion->region_id;
                 $this->shippingZipCode = $this->userRegion->post_code;
             }
-            $this->shippingWeight = Cart::totalWeight();
         }
+        
+        // Set shipping weight for both guest and authenticated users
+        $this->shippingWeight = Cart::totalWeight();
         
         $this->filterCourierService();
     }
@@ -335,6 +345,10 @@ class CheckoutProcess extends Component
 
 
         $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
+        
+        // Clear cart after order is created (for both guests and registered users)
+        Cart::clear();
+        
         return redirect()->away($paymentUrl);
     }
 

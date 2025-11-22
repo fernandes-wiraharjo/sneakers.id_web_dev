@@ -181,36 +181,41 @@
                                 </tbody>
                             </table>
                         </div>
-                        <h5>User Information</h5>
+                        <h5>User Account Information</h5>
                         <div class="table-responsive" style="text-align: left;">
                             <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
                                 <tbody>
+                                    @if($user_info)
                                     <tr>
-                                        <td>Email</td>
+                                        <td>Account Email</td>
                                         <td>{{ $user_info->email ?? "-" }}</td>
                                     </tr>
                                     <tr>
-                                        <td>User Name</td>
+                                        <td>Account Name</td>
                                         <td>{{ $user_info->first_name ?? "" }} {{ $user_info->last_name ?? "" }}</td>
                                     </tr>
                                     @if($user_address != null)
                                     <tr>
-                                        <td>User Address</td>
-                                        <td>{{ $user_address->address ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>User Region</td>
+                                        <td>Saved Address (Profile)</td>
                                         <td>
-                                            <span>{{ $region->area ?? '-' }}</span> <br>
-                                            <span>{{ $region->subdistrict ?? '-' }}</span> <br>
-                                            <span>{{ $region->district ?? '-' }}</span> <br>
-                                            <span>{{ $region->province ?? '-' }}</span> <br>
-                                            <span>{{ $region->post_code ?? '-' }}</span> <br>
+                                            {{ $user_address->address ?? '-' }}<br>
+                                            <small class="text-muted">Note: This is the user's saved address, not necessarily the shipping destination.</small>
                                         </td>
                                     </tr>
                                     @else
                                     <tr>
-                                        Address not set.
+                                        <td colspan="2">
+                                            <small class="text-muted">User has no saved address in their profile.</small>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @else
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="alert alert-info mb-0">
+                                                <i class="fas fa-info-circle"></i> <strong>Guest Order</strong> - This order was placed without a registered account.
+                                            </div>
+                                        </td>
                                     </tr>
                                     @endif
                                 </tbody>
@@ -353,6 +358,7 @@
                                             <td>Customer Note</td>
                                             <td>{{ $transaction->description ?? "-" }}</td>
                                         </tr>
+                                        @if($user_info)
                                         <tr>
                                             <td>Customer Email</td>
                                             <td>{{ $user_info->email ?? "-" }}</td>
@@ -361,6 +367,12 @@
                                             <td>Customer Name</td>
                                             <td>{{ $user_info->first_name ?? "" }} {{ $user_info->last_name ?? "" }}</td>
                                         </tr>
+                                        @else
+                                        <tr>
+                                            <td>Order Type</td>
+                                            <td><span class="badge badge-info">Guest Order</span></td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <td>Recipient Email</td>
                                             <td>{{ $destination->email ?? "-" }}</td>

@@ -96,9 +96,15 @@ class TransactionDatatables extends DataTable
                 $data['histories'] = $item->histories;
                 $data['transaction'] = $item;
                 $data['items'] = $item->items;
-                $data['user_info'] = $item->getUserData;
-                $data['user_address'] = $item->getUserData->user_address()->first();
-                $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
+                
+                // Handle both guest and registered user orders
+                $userData = $item->getUserData;
+                $data['user_info'] = $userData;
+                $data['user_address'] = $userData ? $userData->user_address()->first() : null;
+                
+                // Always use destination region for shipping info (user might ship to different address than their saved one)
+                $data['region'] = $item->destination->region;
+                
                 return view('transaction::_partial.action-burger', $data);
             });
     }

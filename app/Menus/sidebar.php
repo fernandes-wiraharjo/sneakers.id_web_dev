@@ -140,6 +140,31 @@ return [
                 ],
             ],
             [
+                'gate' => 'administrator.master-data.size-filter.index',
+                'name' => 'Size Filter',
+                'route' => ['administrator.master-data.size-filter.index', []],
+                'isActive' => 'master-data/size-filter*',
+                'icon' => 'filter',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.size-filter.create',
+                        'title' => 'Create Size Filter',
+                        'description' => 'User can create new size filter'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.size-filter.update',
+                        'title' => 'Update Size Filter',
+                        'description' => 'User can update size filter'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.size-filter.destroy',
+                        'title' => 'Delete Size Filter',
+                        'description' => 'User can delete size filter'
+                    ]
+                ],
+            ],
+            [
                 'gate' => 'administrator.master-data.brand.index',
                 'name' => 'Brand',
                 'route' => ['administrator.master-data.brand.index', []],

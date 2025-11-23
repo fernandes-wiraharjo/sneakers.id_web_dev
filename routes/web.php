@@ -21,6 +21,9 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/v2/test', function() {
+    return view('bootstrap.homepage');
+})->name('test');
 
 Route::get('/', [StoreController::class, 'index'])->name('store');
 

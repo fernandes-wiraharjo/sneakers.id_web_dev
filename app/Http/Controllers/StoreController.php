@@ -46,7 +46,8 @@ class StoreController extends Controller
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone Accessing my website');
-        return view('display-store.landing', $data);
+        // return view('display-store.landing', $data);
+        return view('bootstrap.homepage', $data);
     }
 
     public function productDetail($id){

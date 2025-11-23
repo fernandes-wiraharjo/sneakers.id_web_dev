@@ -107,14 +107,16 @@
         </div>
 
         <!-- Right Side Icons -->
-        <ul class="navbar-nav ms-lg-auto fs-3 d-flex flex-row gap-1 order-1 order-lg-2">
+        <ul class="navbar-nav ms-lg-auto fs-3 d-flex flex-row gap-1 align-items-center order-1 order-lg-2">
             <!-- User Account -->
             @if(auth()->check())
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarAccount" 
+                    <a class="nav-link dropdown-toggle fs-6" href="#" id="navbarAccount" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="iconify" data-icon="majesticons:user-line"></span>
-                        {{ auth()->user()->name }}
+                        <span class="iconify fs-3" data-icon="majesticons:user-line"></span>
+                        <span class="fs-6">
+                            {{ auth()->user()->name }}
+                        </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarAccount">
                         <li><a class="dropdown-item" href="{{ route('customer.dashboard') }}">MY ACCOUNT</a></li>

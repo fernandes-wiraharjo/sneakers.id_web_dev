@@ -1,6 +1,8 @@
 @extends('bootstrap.layout')
 
 @section('content')
+    @livewire('banner-image')
+    
     <div class="container">
         <div class="row">
             <div class="col-12">

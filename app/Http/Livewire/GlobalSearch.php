@@ -13,6 +13,7 @@ use Modules\Size\Repositories\SizeRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Modules\SizeFilter\Entities\SizeFilter;
 
 class GlobalSearch extends Component
 {
@@ -241,6 +242,14 @@ class GlobalSearch extends Component
             'category' => $categoryRepository->getAllCategoriesExceptGender(),
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
+        
+        // Add size filters if using database mode
+        if (config('app.size_filter_mode') === 'database') {
+            $data['sizeFilters'] = SizeFilter::with('sizes')
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->get();
+        }
         $where_column = ['product_code', 'product_name', 'description'];
         $keyword_array = [];
         $sale_keyword = '';

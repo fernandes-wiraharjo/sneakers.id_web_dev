@@ -14,6 +14,7 @@ use Modules\Size\Repositories\SizeRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Modules\SizeFilter\Entities\SizeFilter;
 
 class ProductList extends Component
 {
@@ -262,6 +263,16 @@ class ProductList extends Component
                 'signature_player' => $signaturePlayerRepository->getAllSignatures(),
             ];
         });
+        
+        // Add size filters if using database mode
+        if (config('app.size_filter_mode') === 'database') {
+            $data['sizeFilters'] = Cache::remember('size_filters', 3600, function () {
+                return SizeFilter::with('sizes')
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->get();
+            });
+        }
         $keyword_array = [];
         $sale_keyword = '';
         $all_signature = false;

@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Size Filter Mode
+    |--------------------------------------------------------------------------
+    |
+    | This value determines whether the size filter uses hardcoded values
+    | or database-driven values from the size_filters table.
+    | Options: 'hardcoded', 'database'
+    |
+    */
+
+    'size_filter_mode' => env('SIZE_FILTER_MODE', 'hardcoded'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

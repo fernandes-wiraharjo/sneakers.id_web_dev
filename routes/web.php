@@ -26,6 +26,8 @@ Route::get('/v2/test', function() {
 })->name('test');
 
 Route::get('/', [StoreController::class, 'index'])->name('store');
+Route::get('/instagram-feed', [App\Http\Controllers\InstagramFeedController::class, 'show'])->name('instagram.feed');
+Route::get('/instagram-feed/refresh', [App\Http\Controllers\InstagramFeedController::class, 'refresh'])->name('instagram.refresh')->middleware('auth');
 
 Route::get('/product-detail/{id}/{product_name}', [StoreController::class, 'productDetail'])->name('product-detail');
 

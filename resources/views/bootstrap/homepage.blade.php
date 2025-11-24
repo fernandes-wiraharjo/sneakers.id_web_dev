@@ -87,9 +87,20 @@
     <div class="container py-5">
         <div class="row">
             <div class="col-12 text-center">
-                <h1 class="display-2">
-                    TODO: IG Embed
-                </h1>
+                <!-- Cached Instagram Feed (24h cache) -->
+                <div class="ratio ratio-16x9" style="min-height: 500px;">
+                    <iframe 
+                        src="{{ route('instagram.feed') }}" 
+                        frameborder="0" 
+                        scrolling="no"
+                        loading="lazy"
+                        title="Instagram Feed"
+                        class="w-100 h-100">
+                    </iframe>
+                </div>
+                <div class="text-end mt-2">
+                    <small class="text-muted">Feed updates every 24 hours</small>
+                </div>
             </div>
         </div>
     </div>

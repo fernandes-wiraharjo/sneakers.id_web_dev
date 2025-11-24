@@ -38,6 +38,18 @@
             align-items: center;
             justify-content: center;
         }
+        #footer {
+            background: linear-gradient(150deg, #000000 0%, #000000 70%, #01132a 100%);
+        }
+        .footer-brand {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 50%;
+        }
     </style>
     @stack('styles')
     @livewireStyles
@@ -49,5 +61,7 @@
 
     @stack('scripts')
     @livewireScripts
+
+    @include('bootstrap.parts.footer')
 </body>
 </html>

@@ -2,7 +2,7 @@
     <div class="container">
         <!-- Brand/Logo -->
         <a class="navbar-brand order-0 me-auto" href="{{ route('store') }}">
-            <img src="{{ asset('stores-info/logos-black.png') }}" alt="SNEAKERS.ID" height="50">
+            <img src="{{ asset('stores-info/logo-black-new.png') }}" alt="SNEAKERS.ID">
         </a>
 
         <!-- Mobile Toggle Button -->

@@ -13,6 +13,6 @@ class SignaturePlayer extends Component
     public function render(SignaturePlayerRepository $signature)
     {
         $signature = $signature->getSignatureTag()->toJson();
-        return view('livewire.signature-player', compact('signature'));
+        return view('bootstrap.livewire.signature-player', compact('signature'));
     }
 }

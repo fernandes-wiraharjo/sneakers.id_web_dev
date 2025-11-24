@@ -47,6 +47,7 @@ class StoreController extends Controller
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        $data['faq'] = $this->faqRepository->getFaq(5);
         activity()->log('Someone Accessing my website');
         // return view('display-store.landing', $data);
         return view('bootstrap.homepage', $data);

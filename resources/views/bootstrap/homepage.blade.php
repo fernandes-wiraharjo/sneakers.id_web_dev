@@ -62,6 +62,51 @@
             </div>
         </div>
     </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-2">
+                    TODO: Signature Player
+                </h1>
+            </div>
+        </div>
+    </div>
+    @livewire('signature-player')
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-2">
+                    TODO: Customer Review
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="display-2">
+                    TODO: IG Embed
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <img src="{{ asset('stores-info/qna-top.png') }}" alt="FAQ Image" class="img-fluid">
+                <p class="mt-5 mb-2">FAQ</p>
+                <h2 class="text-black fw-bold">APA PERTANYAAN POPULER TENTANG SNEAKERS.ID?</h2>
+                <p class="fs-5 text-secondary">Berikut beberapa pertanyaan umum tentang SNEAKERS</p>
+            </div>
+            <div class="col-12 col-md-6">
+                @include('bootstrap.parts.faq-content', ['faq' => $faq])
+            </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
     <script>

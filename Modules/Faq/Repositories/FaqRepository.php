@@ -46,4 +46,8 @@ class FaqRepository extends Repository implements MasterRepositoryInterface {
   public function deleteFaq($id){
       return $this->getFaqById($id)->delete();
   }
+
+  public function getFaq($limit = 10){
+    return $this->model->limit($limit)->get();
+  }
 }

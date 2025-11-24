@@ -1,6 +1,6 @@
-<div class="container-fluid">
+<div class="container-fluid pt-3 pb-5">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 px-0">
             <div class="slick-banner">
                 @foreach ($banner as $item)
                 <div class="ratio ratio-21x9">
@@ -21,8 +21,7 @@
             centerPadding: '10%',
             autoplay: true,
             autoplaySpeed: 3000,
-            arrow: false,
-            dots: false,
+            arrows: false,
         });
     });
 </script>

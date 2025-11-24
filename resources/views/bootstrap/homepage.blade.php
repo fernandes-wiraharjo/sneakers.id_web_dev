@@ -48,6 +48,20 @@
             </div>
         </div>
     </div>
+
+    <div class="container-fluid py-5">
+        <div class="row">
+            <div class="col-12 slick-brand">
+                @foreach ($brand as $item)
+                <div class="px-2">
+                    <a href="{{ route('collections', 'all.' . $item->brand_code) }}">
+                        <img style="max-height: 150px" src="{{ getImage($item->brand_image, 'brand') }}" alt="{{ $item->brand_title }}" class="img-fluid">
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
     <script>
@@ -82,6 +96,40 @@
                             slidesToScroll: 1,
                             arrows: false,
                             dots: true
+                        }
+                    }
+                ]
+            });
+            $('.slick-brand').slick({
+                slidesToShow: 7,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 1000,
+                infinite: true,
+                arrows: false,
+                responsive: [
+                    {
+                        breakpoint: 1400,
+                        settings: {
+                            slidesToShow: 6,
+                        }
+                    },
+                    {
+                        breakpoint: 992,
+                        settings: {
+                            slidesToShow: 4,
+                        }
+                    },
+                    {
+                        breakpoint: 576,
+                        settings: {
+                            slidesToShow: 3,
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2,
                         }
                     }
                 ]

@@ -4,7 +4,7 @@
             <div class="slick-banner">
                 @foreach ($banner as $item)
                 <div class="ratio ratio-21x9">
-                    <img class="px-3 img-fluid rounded-5 object-fit-cover" src="{{ getImage($item->banner_image, 'banner') }}" alt="{{ $item->banner_description }}">
+                    <img class="px-1 px-md-3 img-fluid rounded-5 rounded-sm-3 object-fit-cover" src="{{ getImage($item->banner_image, 'banner') }}" alt="{{ $item->banner_description }}">
                 </div>
                 @endforeach
             </div>
@@ -12,6 +12,17 @@
     </div>
 </div>
 
+@push('styles')
+    <style>
+        @media screen and (max-width: 768px) {
+            .slick-banner .rounded-sm-3 {
+                border-radius: 0.775rem !important;
+            }
+        }
+    </style>
+@endpush
+
+@push('scripts')
 <script>
     $(document).ready(function() {
         $('.slick-banner').slick({
@@ -22,6 +33,15 @@
             autoplay: true,
             autoplaySpeed: 3000,
             arrows: false,
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        centerPadding: '4%',
+                    }
+                }
+            ]
         });
     });
 </script>
+@endpush

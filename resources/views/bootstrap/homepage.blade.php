@@ -8,7 +8,7 @@
             <div class="col-12 col-md-4 p-0">
                 <img src="{{ asset('stores-info/homepage-featured.webp') }}" alt="Featured Product" class="img-fluid">
             </div>
-            <div class="col-12 col-md-8 p-5">
+            <div class="col-12 col-md-8 py-5 px-md-5">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2>New Release</h2>
                     <a href="{{ route('collections', 'new-release') }}">
@@ -140,7 +140,9 @@
                             slidesToShow: 1,
                             slidesToScroll: 1,
                             arrows: false,
-                            dots: true
+                            dots: true,
+                            centerMode: true,
+                            centerPadding: '6%',
                         }
                     }
                 ]

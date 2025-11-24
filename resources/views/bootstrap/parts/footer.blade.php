@@ -29,7 +29,7 @@
                     <p>Aldy Satria Gumilar</p>
                 </div>
                 
-                <div class="d-flex gap-4 flex-wrap">
+                <div class="d-flex gap-4 flex-wrap mt-5">
                     @foreach ($brand as $item)
                     <a class="footer-brand" href="{{ route('collections', 'all.' . $item->brand_code) }}">
                         <img src="{{ getImage($item->brand_image, 'brand') }}" alt="{{ $item->brand_title }}" class="img-fluid rounded-circle">

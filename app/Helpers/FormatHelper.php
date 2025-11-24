@@ -3,7 +3,10 @@
 use Illuminate\Validation\Rules\Exists;
 
 if (!function_exists('rupiah_format')) {
-    function rupiah_format($nominal){
+    function rupiah_format($nominal, $rp_prefix = true){
+        if($rp_prefix) {
+            return 'RP ' . number_format($nominal, 0, ",", ".");
+        }
         return number_format($nominal, 0, ",", ".");
     }
 }

@@ -39,6 +39,8 @@ class StoreController extends Controller
 
     public function index() {
         // SlackAlert::message("test");
+        $data['new_release'] = $this->productRepository->getProductNewRelease(10);
+        $data['best_seller'] = $this->productRepository->getProductBestSeller(10);
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['brand'] = $this->brandRepository->getAllBrand();

@@ -32,12 +32,14 @@ class CheckoutController extends BaseController {
 
     public function successPayments($external_id)
     {
-        if(!auth()->check()) {
-            return redirect()->route('customer.login')->with('error', 'Session has been expired, please re-login.');
-        }
-
+        // Allow both authenticated and guest users to view payment success
         // update 2025-10-17: callback handled by webhook, this function is purely for view purpose
         $transaction = Transaction::where('token', $external_id)->first();
+        
+        if (!$transaction) {
+            return redirect()->route('store')->with('error', 'Transaction not found.');
+        }
+        
         $data['transaction'] = $transaction;
         $data['items'] = $transaction->items()->with('detail', 'detail.product')->get();
         $data['shipping'] = $transaction->shipping()->first();
@@ -48,9 +50,7 @@ class CheckoutController extends BaseController {
 
     public function errorPayments()
     {
-        if(!auth()->check()) {
-            return redirect()->route('customer.login')->with('error', 'Session has been expired, please re-login.');
-        }
+        // Allow both authenticated and guest users to view payment error
         //after few second redirect to cart
         return view('display-store.customer.payment.error');
     }
@@ -104,7 +104,9 @@ class CheckoutController extends BaseController {
                         $message->to($transactionDestination->email);
                         $message->subject('SNEAKERS.ID Order Confirmed.');
                     });
-                    CartService::clearByUserId($transactionDestination->user_id);
+                    
+                    // Note: Cart is already cleared when order was created in CheckoutProcess
+                    // This webhook just confirms payment status
 
                     
                     // Stock Update

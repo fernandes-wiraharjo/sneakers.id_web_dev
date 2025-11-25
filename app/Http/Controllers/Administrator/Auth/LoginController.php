@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Cache;
+use App\Services\CartService;
 
 class LoginController extends Controller
 {
@@ -251,6 +252,25 @@ class LoginController extends Controller
         }
 
         return redirect()->route('customer.login')->with(['message'=> $message]);
+    }
+
+    /**
+     * The user has been authenticated.
+     * Merge guest cart with user cart after login.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        // Get the session ID from before login
+        $sessionId = $request->session()->getId();
+        
+        // Merge guest cart with user cart
+        CartService::mergeGuestCart($sessionId, $user->id);
+        
+        return redirect()->intended($this->redirectPath());
     }
 
     /**

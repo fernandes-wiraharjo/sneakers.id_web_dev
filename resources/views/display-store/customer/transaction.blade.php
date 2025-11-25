@@ -6,7 +6,11 @@
     @endpush
 
     <div style="margin-bottom: 2rem;">
-        <a href="{{ route('customer.dashboard') }}" class="back-button Button Button--primary ">BACK</a>
+        @auth
+            <a href="{{ route('customer.dashboard') }}" class="back-button Button Button--primary ">BACK</a>
+        @else
+            <a href="{{ route('store') }}" class="back-button Button Button--primary ">BACK TO STORE</a>
+        @endauth
     </div>
     <div class="header">
         <div>

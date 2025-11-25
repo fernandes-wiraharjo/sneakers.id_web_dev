@@ -48,10 +48,7 @@ class CartController extends Controller
     }
 
     public function createOrder(Request $request) {
-        if(!auth()->check()){
-            return redirect()->route('customer.login');
-        }
-
+        // Guest checkout is now allowed - no authentication check needed
         $data['total'] = Cart::total();
         $data['items'] = Cart::content();
         $data['notes'] = $request->note;

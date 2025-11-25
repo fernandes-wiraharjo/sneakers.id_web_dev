@@ -64,28 +64,20 @@ class DashboardController extends Controller {
   }
 
     public function detail($external_id){
-        if(!auth()->check()) {
-            return redirect()->route('customer.login')->with('error', 'Session has been expired, please re-login.');
-        }
-
-        $user = auth()->user();
-        if(!$user){
-            return redirect()->route('customer.login')->with('error', 'You are not authorized to access this page.');
-        }
+        // Anyone with the order token (hashID) can access the transaction details
         $transaction = Transaction::where('token', $external_id)->first();
         if(!$transaction){
-            return redirect()->route('customer.login')->with('error', 'Transaction not found.');
+            return redirect()->route('store')->with('error', 'Transaction not found.');
         }
+        
         $transactionDestination = $transaction->destination()->first();
         if(!$transactionDestination){
-            return redirect()->route('customer.login')->with('error', 'Transaction destination not found.');
+            return redirect()->route('store')->with('error', 'Transaction destination not found.');
         }
-        if($transactionDestination->user_id != $user->id){
-            return redirect()->route('customer.login')->with('error', 'You are not authorized to access this page.');
-        }
+        
         $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $transactionDestination->phone_number), -5);
         $data = [
-            'user' => $user,
+            'user' => auth()->user() ?? null,
             'transaction' => $transaction,
             'destination' => $transactionDestination,
             'region' => $transactionDestination->region()->first(),

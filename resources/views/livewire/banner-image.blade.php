@@ -25,11 +25,7 @@
     </a>
     {{-- End Banner Mobile --}}
     {{-- Banner Web with data width --}}
-    <a href="{{ $item->banner_url }}">
-        <!-- <div class="Slideshow__Image Container Image--contrast AspectRatio AspectRatio--withFallback hidden-phone"
-                {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
-            style="padding-bottom: 66.66666666666667%; --aspect-ratio: {{round($ratio,2)}}; background-image: url({{ getImage($item->banner_image, 'banner') }}); background-repeat: no-repeat; background-size: cover;">
-        </div> -->
+    <a href="{{ $item->banner_url }}">\
         <div class="Slideshow__Image Container Image--contrast AspectRatio AspectRatio--withFallback hidden-phone"
             style="width: 100%;
                 height: auto;

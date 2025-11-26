@@ -439,14 +439,74 @@ class GlobalSearch extends Component
                     });
                 })
                 ->when($this->size_filter, function ($q, $sizes) {
-                            foreach($sizes as $index => $size){
-                                if($index == 0) {
-                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
-                                } else {
-                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                    if (config('app.size_filter_mode') === 'database') {
+                        // Database mode: Get all EU size values from SizeFilter records
+                        $allEuSizes = [];
+                        
+                        foreach ($sizes as $euSize) {
+                            // Find SizeFilter records that have sizes matching this EU value
+                            $filters = SizeFilter::whereHas('sizes', function ($query) use ($euSize) {
+                                $query->where(function ($q) use ($euSize) {
+                                    $q->whereHas('charts', function ($subQ) use ($euSize) {
+                                        $subQ->where('size_name', 'EU')
+                                             ->where('size_value', $euSize);
+                                    })->orWhereHas('mens', function ($subQ) use ($euSize) {
+                                        $subQ->where('EU', $euSize);
+                                    })->orWhereHas('womens', function ($subQ) use ($euSize) {
+                                        $subQ->where('EU', $euSize);
+                                    })->orWhereHas('kids', function ($subQ) use ($euSize) {
+                                        $subQ->where('EU', $euSize);
+                                    });
+                                });
+                            })->with(['sizes.charts', 'sizes.mens', 'sizes.womens', 'sizes.kids'])->get();
+                            
+                            // Collect all EU size values from mapped sizes in these filters
+                            foreach ($filters as $filter) {
+                                foreach ($filter->sizes as $size) {
+                                    // Get EU from size_charts
+                                    $euChart = $size->charts->where('size_name', 'EU')->first();
+                                    if ($euChart && $euChart->size_value) {
+                                        $allEuSizes[] = $euChart->size_value;
+                                    }
+                                    
+                                    // Get EU from men_sizes, women_sizes, or kid_sizes
+                                    if ($size->mens && $size->mens->EU) {
+                                        $allEuSizes[] = $size->mens->EU;
+                                    }
+                                    if ($size->womens && $size->womens->EU) {
+                                        $allEuSizes[] = $size->womens->EU;
+                                    }
+                                    if ($size->kids && $size->kids->EU) {
+                                        $allEuSizes[] = $size->kids->EU;
+                                    }
                                 }
                             }
-                            return $q->where('pd.qty', '>', 0);
+                        }
+                        
+                        // Remove duplicates and filter products
+                        $allEuSizes = array_unique($allEuSizes);
+                        
+                        if (!empty($allEuSizes)) {
+                            foreach ($allEuSizes as $index => $euSize) {
+                                if ($index == 0) {
+                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$euSize.'%"'));
+                                } else {
+                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$euSize.'%"'));
+                                }
+                            }
+                        }
+                    } else {
+                        // Hardcoded mode: Use sizes directly as before
+                        foreach ($sizes as $index => $size) {
+                            if ($index == 0) {
+                                $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                            } else {
+                                $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                            }
+                        }
+                    }
+                    
+                    return $q->where('pd.qty', '>', 0);
                 })
                 ->when(count($keyword_array) >= 2, function($query) {
                     return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');

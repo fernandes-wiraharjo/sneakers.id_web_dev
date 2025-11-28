@@ -1,0 +1,13 @@
+{
+    "name": "SizeFilter",
+    "alias": "sizefilter",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SizeFilter\\Providers\\SizeFilterServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

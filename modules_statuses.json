@@ -12,5 +12,6 @@
     "Transaction": true,
     "Dashboard": true,
     "ShippingCourier": true,
-    "DiscountVoucher": true
+    "DiscountVoucher": true,
+    "SizeFilter": true
 }

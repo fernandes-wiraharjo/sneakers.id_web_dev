@@ -245,8 +245,7 @@ class GlobalSearch extends Component
         
         // Add size filters if using database mode
         if (config('app.size_filter_mode') === 'database') {
-            $data['sizeFilters'] = SizeFilter::with('sizes')
-                ->where('is_active', true)
+            $data['sizeFilters'] = SizeFilter::where('is_active', true)
                 ->orderBy('sort_order')
                 ->get();
         }
@@ -438,48 +437,19 @@ class GlobalSearch extends Component
                         $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                     });
                 })
-                ->when($this->size_filter, function ($q, $sizes) {
+                ->when($this->size_filter, function ($q, $filterLabels) {
                     if (config('app.size_filter_mode') === 'database') {
                         // Database mode: Get all EU size values from SizeFilter records
                         $allEuSizes = [];
                         
-                        foreach ($sizes as $euSize) {
-                            // Find SizeFilter records that have sizes matching this EU value
-                            $filters = SizeFilter::whereHas('sizes', function ($query) use ($euSize) {
-                                $query->where(function ($q) use ($euSize) {
-                                    $q->whereHas('charts', function ($subQ) use ($euSize) {
-                                        $subQ->where('size_name', 'EU')
-                                             ->where('size_value', $euSize);
-                                    })->orWhereHas('mens', function ($subQ) use ($euSize) {
-                                        $subQ->where('EU', $euSize);
-                                    })->orWhereHas('womens', function ($subQ) use ($euSize) {
-                                        $subQ->where('EU', $euSize);
-                                    })->orWhereHas('kids', function ($subQ) use ($euSize) {
-                                        $subQ->where('EU', $euSize);
-                                    });
-                                });
-                            })->with(['sizes.charts', 'sizes.mens', 'sizes.womens', 'sizes.kids'])->get();
+                        foreach ($filterLabels as $filterLabel) {
+                            // Find SizeFilter records by filter_label
+                            $filters = SizeFilter::where('filter_label', $filterLabel)->get();
                             
-                            // Collect all EU size values from mapped sizes in these filters
+                            // Collect all EU size values from JSON column
                             foreach ($filters as $filter) {
-                                foreach ($filter->sizes as $size) {
-                                    // Get EU from size_charts
-                                    $euChart = $size->charts->where('size_name', 'EU')->first();
-                                    if ($euChart && $euChart->size_value) {
-                                        $allEuSizes[] = $euChart->size_value;
-                                    }
-                                    
-                                    // Get EU from men_sizes, women_sizes, or kid_sizes
-                                    if ($size->mens && $size->mens->EU) {
-                                        $allEuSizes[] = $size->mens->EU;
-                                    }
-                                    if ($size->womens && $size->womens->EU) {
-                                        $allEuSizes[] = $size->womens->EU;
-                                    }
-                                    if ($size->kids && $size->kids->EU) {
-                                        $allEuSizes[] = $size->kids->EU;
-                                    }
-                                }
+                                $euSizes = $filter->eu_sizes ?? [];
+                                $allEuSizes = array_merge($allEuSizes, $euSizes);
                             }
                         }
                         
@@ -488,20 +458,21 @@ class GlobalSearch extends Component
                         
                         if (!empty($allEuSizes)) {
                             foreach ($allEuSizes as $index => $euSize) {
+                                // Use %size (ends with) instead of %size%
                                 if ($index == 0) {
-                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$euSize.'%"'));
+                                    $q->where('pd.size', 'LIKE', '%' . $euSize);
                                 } else {
-                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$euSize.'%"'));
+                                    $q->orWhere('pd.size', 'LIKE', '%' . $euSize);
                                 }
                             }
                         }
                     } else {
-                        // Hardcoded mode: Use sizes directly as before
-                        foreach ($sizes as $index => $size) {
+                        // Hardcoded mode: Use sizes directly as before (ends with)
+                        foreach ($filterLabels as $index => $size) {
                             if ($index == 0) {
-                                $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                $q->where('pd.size', 'LIKE', '%' . $size);
                             } else {
-                                $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                                $q->orWhere('pd.size', 'LIKE', '%' . $size);
                             }
                         }
                     }

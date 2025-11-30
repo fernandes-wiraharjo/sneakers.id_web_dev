@@ -15,73 +15,42 @@
 
         <!--begin::Input group-->
         <div class="fv-row mb-7">
-            <label class="required fs-6 fw-bold mb-2">Mapped Sizes</label>
+            <label class="required fs-6 fw-bold mb-2">Mapped EU Sizes</label>
             <div class="card">
-                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                <div class="card-body">
                     <div class="form-text mb-4">
-                        Select the actual sizes that should be included when this filter is selected. You can select multiple sizes.
+                        Enter the EU sizes that should be included when this filter is selected. You can add multiple EU sizes manually (e.g., "42 1/3", "42.5", "42") or enter comma-separated values in a single field (e.g., "49, 49.5, 49 1/3").
                     </div>
-                    <div class="row">
+                    <div id="eu-sizes-container">
                         @php
-                            // Sort sizes by EUR size (low to high)
-                            $sortedSizes = $sizes->sort(function($a, $b) {
-                                $euA = null;
-                                if ($a->mens && $a->mens->EU) {
-                                    $euA = $a->mens->EU;
-                                } elseif ($a->womens && $a->womens->EU) {
-                                    $euA = $a->womens->EU;
-                                } elseif ($a->kids && $a->kids->EU) {
-                                    $euA = $a->kids->EU;
-                                }
-                                
-                                $euB = null;
-                                if ($b->mens && $b->mens->EU) {
-                                    $euB = $b->mens->EU;
-                                } elseif ($b->womens && $b->womens->EU) {
-                                    $euB = $b->womens->EU;
-                                } elseif ($b->kids && $b->kids->EU) {
-                                    $euB = $b->kids->EU;
-                                }
-                                
-                                // Handle null values - put them at the end
-                                if ($euA === null && $euB === null) return 0;
-                                if ($euA === null) return 1;
-                                if ($euB === null) return -1;
-                                
-                                // Compare as floats for proper numeric sorting
-                                return floatval($euA) <=> floatval($euB);
-                            });
+                            $oldEuSizes = old('eu_sizes', $euSizes ?? []);
+                            if (empty($oldEuSizes)) {
+                                $oldEuSizes = [''];
+                            }
                         @endphp
-                        @foreach($sortedSizes as $size)
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input @error('sizes') is-invalid @enderror" 
-                                    type="checkbox" 
-                                    name="sizes[]" 
-                                    value="{{ $size->id }}" 
-                                    id="size_{{ $size->id }}"
-                                    {{ in_array($size->id, old('sizes', $selectedSizes ?? [])) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="size_{{ $size->id }}">
-                                    {{ $size->size_title }}
-                                    @php
-                                        $eu = null;
-                                        if ($size->mens && $size->mens->EU) {
-                                            $eu = $size->mens->EU;
-                                        } elseif ($size->womens && $size->womens->EU) {
-                                            $eu = $size->womens->EU;
-                                        } elseif ($size->kids && $size->kids->EU) {
-                                            $eu = $size->kids->EU;
-                                        }
-                                    @endphp
-                                    @if($eu)
-                                    <small class="text-muted">(EUR: {{ $eu }})</small>
-                                    @endif
-                                </label>
-                            </div>
+                        @foreach($oldEuSizes as $index => $euSize)
+                        <div class="input-group mb-3 eu-size-input-group">
+                            <input type="text" 
+                                class="form-control form-control-solid @error('eu_sizes.' . $index) is-invalid @enderror" 
+                                name="eu_sizes[]" 
+                                value="{{ $euSize }}" 
+                                placeholder="e.g., 42 1/3, 42.5, 42 (or single value)"
+                                maxlength="200">
+                            @if($index > 0 || count($oldEuSizes) > 1)
+                            <button type="button" class="btn btn-sm btn-light-danger remove-eu-size" type="button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            @endif
+                            @error('eu_sizes.' . $index)
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
                         @endforeach
                     </div>
-                    @error('sizes')
+                    <button type="button" class="btn btn-sm btn-light-primary" id="add-eu-size">
+                        <i class="fas fa-plus"></i> Add EU Size
+                    </button>
+                    @error('eu_sizes')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
                 </div>
@@ -127,13 +96,13 @@
                     <strong>Filter Label:</strong> This is what customers will see in the filter (e.g., "42").
                 </p>
                 <p class="card-text">
-                    <strong>Mapped Sizes:</strong> Select all size variations that should be included when this filter is applied.
+                    <strong>Mapped EU Sizes:</strong> Enter all EU size variations manually that should be included when this filter is applied.
                 </p>
                 <p class="card-text text-muted small">
                     <strong>Example:</strong><br>
-                    Filter Label: "42"<br>
-                    Mapped Sizes: 42, 42 1/3, 42.5<br><br>
-                    When a customer selects "42" in the filter, products with any of these sizes will be shown.
+                    Filter Label: "42.5"<br>
+                    Mapped EU Sizes: 42 1/3, 42.5<br><br>
+                    When a customer selects "42.5" in the filter, products with sizes ending in any of these EU sizes will be shown (e.g., "US / EU (11 / 42.5)").
                 </p>
             </div>
         </div>
@@ -150,6 +119,35 @@
     form.addEventListener('submit', function() {
         submitButton.setAttribute('data-kt-indicator', 'on');
         submitButton.disabled = true;
+    });
+
+    // Add EU size input
+    document.getElementById('add-eu-size').addEventListener('click', function() {
+        const container = document.getElementById('eu-sizes-container');
+        const newInput = document.createElement('div');
+        newInput.className = 'input-group mb-3 eu-size-input-group';
+        newInput.innerHTML = `
+            <input type="text" 
+                class="form-control form-control-solid" 
+                name="eu_sizes[]" 
+                value="" 
+                placeholder="e.g., 42 1/3, 42.5, 42 (or single value)"
+                maxlength="200">
+            <button type="button" class="btn btn-sm btn-light-danger remove-eu-size" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        container.appendChild(newInput);
+    });
+
+    // Remove EU size input
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-eu-size')) {
+            const inputGroup = e.target.closest('.eu-size-input-group');
+            if (inputGroup) {
+                inputGroup.remove();
+            }
+        }
     });
 </script>
 @endpush

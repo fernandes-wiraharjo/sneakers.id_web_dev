@@ -22,17 +22,18 @@ class SizeFilterDatatables extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'status', 'sizes'])
-            ->editColumn('sizes', function ($item) {
-                $sizes = $item->sizes->pluck('size_title')->take(5)->toArray();
-                $sizeCount = $item->sizes->count();
-                $sizeList = implode(', ', $sizes);
+            ->rawColumns(['action', 'status', 'eu_sizes'])
+            ->editColumn('eu_sizes', function ($item) {
+                $euSizes = $item->eu_sizes ?? [];
+                $euSizeCount = count($euSizes);
+                $displaySizes = array_slice($euSizes, 0, 5);
+                $euSizeList = implode(', ', $displaySizes);
                 
-                if ($sizeCount > 5) {
-                    $sizeList .= ' <span class="badge badge-light-primary">+' . ($sizeCount - 5) . ' more</span>';
+                if ($euSizeCount > 5) {
+                    $euSizeList .= ' <span class="badge badge-light-primary">+' . ($euSizeCount - 5) . ' more</span>';
                 }
                 
-                return $sizeList ?: '<span class="text-muted">No sizes</span>';
+                return $euSizeList ?: '<span class="text-muted">No EU sizes</span>';
             })
             ->addColumn('status', function ($item) {
                 return $item->is_active 
@@ -69,8 +70,8 @@ class SizeFilterDatatables extends DataTable
             Column::make('filter_label')
                 ->title('Filter Label')
                 ->width(150),
-            Column::make('sizes')
-                ->title('Mapped Sizes')
+            Column::make('eu_sizes')
+                ->title('Mapped EU Sizes')
                 ->sortable(false)
                 ->searchable(false),
             Column::make('sort_order')
@@ -98,7 +99,7 @@ class SizeFilterDatatables extends DataTable
      */
     public function query(SizeFilter $model)
     {
-        return $model->with('sizes')->newQuery();
+        return $model->newQuery();
     }
 
     /**

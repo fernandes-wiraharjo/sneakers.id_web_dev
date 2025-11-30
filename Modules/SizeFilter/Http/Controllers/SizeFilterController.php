@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\SizeFilter\Entities\SizeFilter;
 use Modules\SizeFilter\Entities\SizeFilterDatatables;
-use Modules\Size\Entities\Size;
 use Alert;
 
 class SizeFilterController extends Controller
@@ -32,9 +31,6 @@ class SizeFilterController extends Controller
         ladmin()->allow('administrator.master-data.size-filter.create');
         
         $data['sizeFilter'] = new SizeFilter();
-        $data['sizes'] = Size::with(['mens', 'womens', 'kids'])
-            ->orderBy('id')
-            ->get();
 
         return view('sizefilter::create', $data);
     }
@@ -52,19 +48,33 @@ class SizeFilterController extends Controller
             'filter_label' => 'required|string|max:255|unique:size_filters,filter_label',
             'sort_order' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
-            'sizes' => 'required|array|min:1',
-            'sizes.*' => 'exists:sizes,id',
+            'eu_sizes' => 'required|array|min:1',
+            'eu_sizes.*' => 'required|string|max:50',
         ]);
 
         try {
+            // Process EU sizes: split comma-separated values, filter out empty values and trim
+            $euSizes = [];
+            foreach ($request->eu_sizes as $euSize) {
+                // Split by comma if present
+                $values = explode(',', $euSize);
+                foreach ($values as $value) {
+                    $trimmed = trim($value);
+                    if (!empty($trimmed)) {
+                        $euSizes[] = $trimmed;
+                    }
+                }
+            }
+            
+            // Remove duplicates and re-index
+            $euSizes = array_values(array_unique($euSizes));
+
             $sizeFilter = SizeFilter::create([
                 'filter_label' => $request->filter_label,
+                'eu_sizes' => $euSizes,
                 'sort_order' => $request->sort_order,
                 'is_active' => $request->is_active,
             ]);
-
-            // Attach selected sizes
-            $sizeFilter->sizes()->attach($request->sizes);
 
             Alert::success('Size Filter Created Successfully!');
             return redirect()->route('administrator.master-data.size-filter.index')
@@ -84,11 +94,8 @@ class SizeFilterController extends Controller
     {
         ladmin()->allow('administrator.master-data.size-filter.update');
 
-        $data['sizeFilter'] = SizeFilter::with('sizes')->findOrFail($id);
-        $data['sizes'] = Size::with(['mens', 'womens', 'kids'])
-            ->orderBy('id')
-            ->get();
-        $data['selectedSizes'] = $data['sizeFilter']->sizes->pluck('id')->toArray();
+        $data['sizeFilter'] = SizeFilter::findOrFail($id);
+        $data['euSizes'] = $data['sizeFilter']->eu_sizes ?? [];
 
         return view('sizefilter::edit', $data);
     }
@@ -107,21 +114,35 @@ class SizeFilterController extends Controller
             'filter_label' => 'required|string|max:255|unique:size_filters,filter_label,' . $id,
             'sort_order' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
-            'sizes' => 'required|array|min:1',
-            'sizes.*' => 'exists:sizes,id',
+            'eu_sizes' => 'required|array|min:1',
+            'eu_sizes.*' => 'required|string|max:50',
         ]);
 
         try {
             $sizeFilter = SizeFilter::findOrFail($id);
             
+            // Process EU sizes: split comma-separated values, filter out empty values and trim
+            $euSizes = [];
+            foreach ($request->eu_sizes as $euSize) {
+                // Split by comma if present
+                $values = explode(',', $euSize);
+                foreach ($values as $value) {
+                    $trimmed = trim($value);
+                    if (!empty($trimmed)) {
+                        $euSizes[] = $trimmed;
+                    }
+                }
+            }
+            
+            // Remove duplicates and re-index
+            $euSizes = array_values(array_unique($euSizes));
+            
             $sizeFilter->update([
                 'filter_label' => $request->filter_label,
+                'eu_sizes' => $euSizes,
                 'sort_order' => $request->sort_order,
                 'is_active' => $request->is_active,
             ]);
-
-            // Sync selected sizes
-            $sizeFilter->sizes()->sync($request->sizes);
 
             Alert::success('Size Filter Updated Successfully!');
             return redirect()->route('administrator.master-data.size-filter.index')
@@ -143,7 +164,6 @@ class SizeFilterController extends Controller
 
         try {
             $sizeFilter = SizeFilter::findOrFail($id);
-            $sizeFilter->sizes()->detach(); // Remove relationships
             $sizeFilter->delete();
 
             Alert::success('Size Filter Deleted Successfully!');

@@ -267,8 +267,7 @@ class ProductList extends Component
         // Add size filters if using database mode
         if (config('app.size_filter_mode') === 'database') {
             $data['sizeFilters'] = Cache::remember('size_filters', 3600, function () {
-                return SizeFilter::with('sizes')
-                    ->where('is_active', true)
+                return SizeFilter::where('is_active', true)
                     ->orderBy('sort_order')
                     ->get();
             });
@@ -498,14 +497,46 @@ class ProductList extends Component
                         //         $q->where('qty', '>', 0);
                         //     });
                         // });
-                        ->when($this->size_filter, function ($q, $sizes) {
-                            foreach($sizes as $index => $size){
-                                if($index == 0) {
-                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
-                                } else {
-                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                        ->when($this->size_filter, function ($q, $filterLabels) {
+                            if (config('app.size_filter_mode') === 'database') {
+                                // Database mode: Get all EU size values from SizeFilter records
+                                $allEuSizes = [];
+                                
+                                foreach ($filterLabels as $filterLabel) {
+                                    // Find SizeFilter records by filter_label
+                                    $filters = SizeFilter::where('filter_label', $filterLabel)->get();
+                                    
+                                    // Collect all EU size values from JSON column
+                                    foreach ($filters as $filter) {
+                                        $euSizes = $filter->eu_sizes ?? [];
+                                        $allEuSizes = array_merge($allEuSizes, $euSizes);
+                                    }
+                                }
+                                
+                                // Remove duplicates and filter products
+                                $allEuSizes = array_unique($allEuSizes);
+                                
+                                if (!empty($allEuSizes)) {
+                                    foreach ($allEuSizes as $index => $euSize) {
+                                        // Use %size (ends with) instead of %size%
+                                        if ($index == 0) {
+                                            $q->where('pd.size', 'LIKE', '%' . $euSize);
+                                        } else {
+                                            $q->orWhere('pd.size', 'LIKE', '%' . $euSize);
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Hardcoded mode: Use sizes directly as before (ends with)
+                                foreach ($filterLabels as $index => $size) {
+                                    if ($index == 0) {
+                                        $q->where('pd.size', 'LIKE', '%' . $size);
+                                    } else {
+                                        $q->orWhere('pd.size', 'LIKE', '%' . $size);
+                                    }
                                 }
                             }
+                            
                             return $q->where('pd.qty', '>', 0);
                         });
 

@@ -270,6 +270,16 @@ if(!function_exists('moveImage')) {
     }
 }
 
+/**
+ * uploadAsWebp function
+ * @param \Illuminate\Http\UploadedFile $file
+ * @param string $path
+ * @param string $storage
+ * @param int $width
+ * @param int $height
+ * @param string $saveAsFilename
+ * @return string => URL of the uploaded image
+ */
 if (!function_exists('uploadAsWebp')) {
     function uploadAsWebp($file, $path, $storage = 'public', $width = 1200, $height = 1200, $saveAsFilename = null) {
         if ($saveAsFilename) {

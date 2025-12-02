@@ -19,6 +19,15 @@
     </div>
 </x-ladmin-form-group>
 
+<x-ladmin-form-group name="emblem" label="Emblem">
+	<input type="file" class="form-control" name="emblem" id="emblem" accept="image/*">
+    <div class="col-sm-12">
+        <span class="text-muted fw-bold fs-6">
+            use WHITE image with TRANSPARENT background. emblem will be cropped to 500x500 pixels. 
+        </span>
+    </div>
+</x-ladmin-form-group>
+
 <!--begin::Input group-->
 <div class="d-flex flex-stack w-lg-50 mb-5">
     <!--begin::Label-->

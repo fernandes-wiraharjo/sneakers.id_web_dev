@@ -54,8 +54,10 @@ class SignaturePlayerController extends Controller
             $validator = $request->validate([
                 'signature_code' => 'required|unique:signature_players|max:255',
                 'signature_image' => 'required|image|max:2000',
+                'emblem' => 'required|image|max:2000',
             ],  [
-                'signature_image.max' => 'Signature image must be less than 2MB!'
+                'signature_image.max' => 'Signature image must be less than 2MB!',
+                'emblem.max' => 'Emblem must be less than 2MB!'
             ]);
 
             if($validator) {
@@ -117,18 +119,21 @@ class SignaturePlayerController extends Controller
             if($old_data->signature_code == $data['signature_code']){
                 $validation = [
                     'signature_code' => 'required|exists:signature_players,signature_code|max:255',
-                    'signature_image' => 'image|max:2000',
+                    'signature_image' => 'nullable|image|max:2000',
+                    'emblem' => 'nullable|image|max:2000',
                 ];
             } else {
                 $validation = [
                     'signature_code' => 'required|unique:signature_players,signature_code|max:255',
-                    'signature_image' => 'image|max:2000',
+                    'signature_image' => 'nullable|image|max:2000',
+                    'emblem' => 'nullable|image|max:2000',
                 ];
             }
 
             $message = [
                 //'is_menu.brandmenu' => 'Brand menu cannot more than 3 actived!',
-                'signature_image.max' => 'Signature image must be less than 2MB!'
+                'signature_image.max' => 'Signature image must be less than 2MB!',
+                'emblem.max' => 'Emblem must be less than 2MB!'
             ];
 
             $validator = $request->validate($validation, $message);

@@ -4,6 +4,7 @@ use BaconQrCode\Renderer\Path\Path;
 use Illuminate\Validation\Rules\Exists;
 use Intervention\Image\Facades\Image;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('cleanDirectory')){
     function cleanDirectory($path){
@@ -266,6 +267,23 @@ if(!function_exists('moveImage')) {
         }
 
         return true;
+    }
+}
+
+if (!function_exists('uploadAsWebp')) {
+    function uploadAsWebp($file, $path, $storage = 'public', $width = 1200, $height = 1200, $saveAsFilename = null) {
+        if ($saveAsFilename) {
+            $imageName = $saveAsFilename . '.webp';
+        } else {
+            $imageName = time() . '.webp';
+        }
+        $img = Image::make($file);
+        $img->resize($width, $height, function ($constraint) {
+            $constraint->aspectRatio();
+        })->encode('webp', 80);
+        Storage::disk($storage)->put($path . '/' . $imageName, $img);
+        $uploadedUrl = Storage::disk($storage)->url($path . '/' . $imageName);
+        return $uploadedUrl;
     }
 }
 

@@ -19,6 +19,7 @@ class SignaturePlayer extends Model
         'signature_image',
         'signature_description',
         'emblem_url',
+        'is_home_display',
         'is_active'
     ];
 

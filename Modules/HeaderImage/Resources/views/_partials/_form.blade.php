@@ -18,7 +18,7 @@
         value="{{ $edit ? old('image', $header_image->image_url) : old('image') }}">
     <div class="col-sm-12">
         <span class="text-muted fw-bold fs-6">
-            recommended banner resolution is ###p or ####p and aspect ratio is #:#. make sure the image not below this resolution.
+            banner image will be cropped to 1280x500 pixels
         </span>
     </div>
 </x-ladmin-form-group>

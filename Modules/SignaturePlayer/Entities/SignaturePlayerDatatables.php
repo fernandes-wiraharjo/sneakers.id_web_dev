@@ -22,11 +22,18 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'status', 'home_display', 'signature_image'])
+            ->rawColumns(['action', 'status', 'home_display', 'signature_image', 'emblem_url'])
             ->editColumn('signature_image', function ($item) {
+              if($item->signature_image){
                 return '<div class="text-center px-4">
-                    <img class="mw-75 card-rounded" alt="" src="'.getImage($item->signature_image, 'signature/'.$item->signature_code) .'"/>
+                    <img class="mw-75 card-rounded" alt="" src="'.$item->signature_image.'"/>
                 </div>';
+              }
+            })
+            ->editColumn('emblem_url', function ($item) {
+              if($item->emblem_url){
+                return '<img class="bg-dark p-2 card-rounded" alt="Emblem" src="'.$item->emblem_url.'" style="width: 30px; height: 30px;">';
+              }
             })
             ->addColumn('status', function ($item) {
               return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
@@ -65,6 +72,11 @@ use Yajra\DataTables\Services\DataTable;
                 ->searchable(false)
                 ->sortable(false),
             Column::make('signature_image')
+                ->title('Signature Image')
+                ->sortable(false)
+                ->searchable(false),
+            Column::make('emblem_url')
+                ->title('Emblem')
                 ->sortable(false)
                 ->searchable(false),
             Column::make('signature_code'),

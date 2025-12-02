@@ -58,7 +58,7 @@ class HeaderImageController extends Controller
         $validator = $request->validate([
             'menu_parent_name' => 'required|string',
             'menu_name' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|max:2048',
         ]);
 
         $stored = $this->repository->createHeaderImage($request);
@@ -114,7 +114,7 @@ class HeaderImageController extends Controller
             $validation = [
                  'menu_parent_name' => 'required|string',
                  'menu_name' => 'required|string',
-                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                 'image' => 'required|image|max:2048',
             ];
 
             $validator = $request->validate($validation);

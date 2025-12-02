@@ -278,9 +278,7 @@ if (!function_exists('uploadAsWebp')) {
             $imageName = time() . '.webp';
         }
         $img = Image::make($file);
-        $img->resize($width, $height, function ($constraint) {
-            $constraint->aspectRatio();
-        })->encode('webp', 80);
+        $img->fit($width, $height)->encode('webp', 80);
         Storage::disk($storage)->put($path . '/' . $imageName, $img);
         $uploadedUrl = Storage::disk($storage)->url($path . '/' . $imageName);
         return $uploadedUrl;

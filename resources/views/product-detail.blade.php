@@ -372,13 +372,12 @@
                         }'>
                         @php
                             $index = 1;
-                            $image_size = getimagesize(getImage($product->image, 'products/' . $product->product_code));
-                            $ratio_main_image = $image_size[0] / $image_size[1];
+                            $ratio = getImageAspectRatio($product->image, 'products/' . $product->product_code);
                         @endphp
                         <div id="image-{{ $product->product_code }}-0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell"
                             data-image-position-ignoring-video="0" data-image-position="0" data-image-id="image-{{ $product->product_code }}-0">
                             <div class="AspectRatio AspectRatio--withFallback"
-                                style="padding-bottom: 100%; --aspect-ratio: {{ $ratio_main_image }};">
+                                style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
                                 <img class="Image--lazyLoad Image--fadeIn"
                                     data-src="{{ getImage($product->image, 'products/' . $product->product_code) }}"
                                     data-widths="[200,400,600,700,800,900,1000,1200,1400,1600]" data-sizes="auto"
@@ -396,8 +395,7 @@
                                     data-image-position-ignoring-video="{{ $index }}" data-image-position="{{ $index }}"
                                     data-image-id="image-{{ $product->product_code }}-{{ $index }}">
                                     @php
-                                        $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                                        $ratio = $image_size[0] / $image_size[1];
+                                        $ratio = getImageAspectRatio($item->image_url, 'products/' . $product->product_code);
                                     @endphp
                                     <div class="AspectRatio AspectRatio--withFallback"
                                         style="padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
@@ -425,18 +423,17 @@
                             @endphp
                             <span data-index="0" data-image-id="0"
                                 class="Product__SlideshowNavImage AspectRatio is-selected"
-                                style="--aspect-ratio: {{ $ratio_main_image }};">
+                                style="--aspect-ratio: {{ $ratio }};">
                                 <img src="{{ getImage($product->image, 'products/' . $product->product_code) }}" />
                             </span>
                             @foreach ($product->images as $key => $item)
                                 @if ($product->image != $item->image_url)
                                     @php
-                                        $image_size = getimagesize(getImage($item->image_url, 'products/' . $product->product_code));
-                                        $ratio_image = $image_size[0] / $image_size[1];
+                                        $ratio = getImageAspectRatio($item->image_url, 'products/' . $product->product_code);
                                     @endphp
                                     <span data-index="{{ $index }}" data-image-id="image-{{ $product->product_code }}-{{ $index }}"
                                         class="Product__SlideshowNavImage AspectRatio"
-                                        style="--aspect-ratio: {{ $ratio_image }};">
+                                        style="--aspect-ratio: {{ $ratio }};">
                                         <img
                                             src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" />
                                     </span>
@@ -501,6 +498,18 @@
                         </div>
                         <div style="margin: 5px 0">
                         </div>
+                        @if($product->shopee_link)
+                            <div style="width: 100%;">
+                                <a data-spiff-hide data-product-id="{{ $product->product_code }}"
+                                    href="{{ $product->shopee_link }}" target="_blank"
+                                    class="ProductForm__AddToCart Button Button--primary Button--full">
+                                    <span>ORDER VIA SHOPEE</span>
+                                </a>
+                            </div>
+                            <div style="height: 10px;">
+                                <span class="h-2"></span>
+                            </div>
+                        @endif
                         <div style="width: 100%;">
                             <a data-spiff-hide data-product-id="{{ $product->product_code }}"
                                 href="{{ $product->product_link }}" target="_blank"
@@ -508,15 +517,15 @@
                                 <span>ORDER VIA TOKOPEDIA</span>
                             </a>
                         </div>
-                        @if($product->shopee_link)
+                        @if($product->tiktok_link)
                             <div style="height: 10px;">
                                 <span class="h-2"></span>
                             </div>
                             <div style="width: 100%;">
                                 <a data-spiff-hide data-product-id="{{ $product->product_code }}"
-                                    href="{{ $product->shopee_link }}" target="_blank"
+                                    href="{{ $product->tiktok_link }}" target="_blank"
                                     class="ProductForm__AddToCart Button Button--primary Button--full">
-                                    <span>ORDER VIA SHOPEE</span>
+                                    <span>ORDER VIA TIKTOK</span>
                                 </a>
                             </div>
                         @endif
@@ -635,13 +644,13 @@
         //     'show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
         // });
 
-        // $(document).ready(function() {
-        //     $('.size-item').click(function() {
-        //         console.log($(this).find('#size:checked').attr('data-price'));
-        //         $('#retail').text($(this).find('#size:checked').attr('data-price'));
-        //         $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
-        //         $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
-        //     });
-        // });
+        $(document).ready(function() {
+            $('.size-item').click(function() {
+                // console.log($(this).find('#size:checked').attr('data-price'));
+                $('#retail').text($(this).find('#size:checked').attr('data-price'));
+                $('#discount').text($(this).find('#size:checked').attr('data-discount-price'));
+                $('#percentage').text($(this).find('#size:checked').attr('data-discount'));
+            });
+        });
     </script>
 @endpush

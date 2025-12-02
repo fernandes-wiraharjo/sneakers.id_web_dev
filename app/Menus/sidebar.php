@@ -56,6 +56,31 @@ return [
         ],
     ],
     [
+        'gate' => 'administrator.discount-voucher.index',
+        'name' => 'Discount Voucher',
+        'route' => ['administrator.discount-voucher.index', []],
+        'isActive' => 'discount-voucher*',
+        'icon' => 'ticket-alt',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.discount-voucher.create',
+                'title' => 'Create Discount Voucher',
+                'description' => 'User can create new discount voucher'
+            ],
+            [
+                'gate' => 'administrator.discount-voucher.update',
+                'title' => 'Update Discount Voucher',
+                'description' => 'User can update discount voucher'
+            ],
+            [
+                'gate' => 'administrator.discount-voucher.destroy',
+                'title' => 'Delete Discount Voucher',
+                'description' => 'User can delete discount voucher'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.master-data',
         'name' => 'Master Data',
         'route' => null,
@@ -111,6 +136,31 @@ return [
                         'gate' => 'administrator.master-data.size.destroy',
                         'title' => 'Delete Size',
                         'description' => 'User can delete size'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.master-data.size-filter.index',
+                'name' => 'Size Filter',
+                'route' => ['administrator.master-data.size-filter.index', []],
+                'isActive' => 'master-data/size-filter*',
+                'icon' => 'filter',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.size-filter.create',
+                        'title' => 'Create Size Filter',
+                        'description' => 'User can create new size filter'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.size-filter.update',
+                        'title' => 'Update Size Filter',
+                        'description' => 'User can update size filter'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.size-filter.destroy',
+                        'title' => 'Delete Size Filter',
+                        'description' => 'User can delete size filter'
                     ]
                 ],
             ],
@@ -236,6 +286,31 @@ return [
                         'gate' => 'administrator.master-data.faq.destroy',
                         'title' => 'Delete Faq',
                         'description' => 'User can delete faq'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.master-data.shipping-courier.index',
+                'name' => 'Shipping Couriers',
+                'route' => ['administrator.master-data.shipping-courier.index', []],
+                'isActive' => 'master-data/shipping-courier*',
+                'icon' => 'truck',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.create',
+                        'title' => 'Create Shipping Courier',
+                        'description' => 'User can create new shipping courier'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.update',
+                        'title' => 'Update Shipping Courier',
+                        'description' => 'User can update shipping courier'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.destroy',
+                        'title' => 'Delete Shipping Courier',
+                        'description' => 'User can delete shipping courier'
                     ]
                 ],
             ],

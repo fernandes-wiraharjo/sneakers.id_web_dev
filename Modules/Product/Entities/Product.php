@@ -18,6 +18,7 @@ class Product extends Model
         'product_link',
         'shopee_link',
         'blibli_link',
+        'tiktok_link',
         'description',
         'is_active'
     ];

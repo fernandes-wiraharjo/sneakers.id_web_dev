@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Cache;
+use App\Services\CartService;
 
 class LoginController extends Controller
 {
@@ -128,6 +130,8 @@ class LoginController extends Controller
             // }
 
             return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             // $mailPort = env('MAIL_PORT', 587);
             // Log::error("Regitration failed: (". $mailPort .") " . $e->getMessage());
@@ -251,6 +255,25 @@ class LoginController extends Controller
     }
 
     /**
+     * The user has been authenticated.
+     * Merge guest cart with user cart after login.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        // Get the session ID from before login
+        $sessionId = $request->session()->getId();
+        
+        // Merge guest cart with user cart
+        CartService::mergeGuestCart($sessionId, $user->id);
+        
+        return redirect()->intended($this->redirectPath());
+    }
+
+    /**
      * Log the user out of the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -275,4 +298,12 @@ class LoginController extends Controller
         return Auth::guard(config('ladmin.auth.guard', 'web'));
     }
 
+    public function checkActivity(Request $request)
+    {
+        if (Cache::has('user_last_activity:'.$request->userId)) {
+            return response()->json(['is_active' => true]);
+        } else {
+            return response()->json(['is_active' => false]);
+        }
+    }
 }

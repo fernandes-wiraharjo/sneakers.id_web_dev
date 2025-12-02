@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\View\View;
 use Livewire\WithPagination;
@@ -12,6 +13,7 @@ use Modules\Size\Repositories\SizeRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Modules\SizeFilter\Entities\SizeFilter;
 
 class GlobalSearch extends Component
 {
@@ -19,19 +21,36 @@ class GlobalSearch extends Component
 
     public $search;
     public $brand = [];
-    public $size = [];
+    public $brand_string = '';
+    public $size_filter = [];
+    public $size_filter_string = '';
     public $tag = [];
+    public $tag_string = '';
     public $category = [];
+    public $category_string = '';
     public $signature = [];
+    public $signature_string = '';
     public $keyword;
     public $sort_by = 'DESC';
     public $sort_column = 'products.created_at';
     public $sort_column_2 = 'pd.after_discount_price';
     public $gender = [];
+    public $gender_string = '';
     public $age_range = [];
+    public $age_range_string = '';
     public $total_product = 0;
 
-    protected $updatesQueryString = ['search'];
+    // protected $updatesQueryString = ['search'];
+    protected $queryString = [
+        'search'             => ['except' => ''],
+        'brand_string'       => ['as' => 'brand', 'except' => ''],
+        'gender_string'      => ['as' => 'gender', 'except' => ''],
+        'age_range_string'   => ['as' => 'age_range', 'except' => ''],
+        'category_string'    => ['as' => 'category', 'except' => ''],
+        'signature_string'   => ['as' => 'signature', 'except' => ''],
+        'size_filter_string' => ['as' => 'size_filter', 'except' => ''],
+        'tag_string'         => ['as' => 'tag', 'except' => ''],
+    ];
 
     public function updatingSearch()
     {
@@ -77,6 +96,14 @@ class GlobalSearch extends Component
     {
         $this->keyword = str_replace("+", " ", $this->keyword);
         $this->search = request()->query('search', $this->search) ?? $this->keyword;
+
+        $this->brand = $this->brand_string ? explode(',', $this->brand_string) : [];
+        $this->gender = $this->gender_string ? explode(',', $this->gender_string) : [];
+        $this->category = $this->category_string ? explode(',', $this->category_string) : [];
+        $this->tag = $this->tag_string ? explode(',', $this->tag_string) : [];
+        $this->age_range = $this->age_range_string ? explode(',', $this->age_range_string) : [];
+        $this->signature = $this->signature_string ? explode(',', $this->signature_string) : [];
+        $this->size_filter = $this->size_filter_string ? explode(',', $this->size_filter_string) : [];
     }
 
     public function updatedBrand()
@@ -87,6 +114,13 @@ class GlobalSearch extends Component
                 return $brand != false;
             }
         );
+
+        $this->brand_string = implode(',', $this->brand);
+    }
+
+    public function updatedBrandString()
+    {
+        $this->brand = array_filter(explode(',', $this->brand_string));
     }
 
     public function updatedCategory()
@@ -97,6 +131,13 @@ class GlobalSearch extends Component
                 return $category != false;
             }
         );
+        
+        $this->category_string = implode(',', $this->category);
+    }
+
+    public function updatedCategoryString()
+    {
+        $this->category = array_filter(explode(',', $this->category_string));
     }
 
     public function updatedTag()
@@ -107,6 +148,13 @@ class GlobalSearch extends Component
                 return $tag != false;
             }
         );
+
+        $this->tag_string = implode(',', $this->tag);
+    }
+
+    public function updatedTagString()
+    {
+        $this->tag = array_filter(explode(',', $this->tag_string));
     }
 
     public function updatedSignature()
@@ -117,6 +165,13 @@ class GlobalSearch extends Component
                 return $signature != false;
             }
         );
+
+        $this->signature_string = implode(',', $this->signature);
+    }
+
+    public function updatedSignatureString()
+    {
+        $this->signature = array_filter(explode(',', $this->signature_string));
     }
 
     public function updatedGender()
@@ -127,6 +182,13 @@ class GlobalSearch extends Component
                 return $gender != false;
             }
         );
+
+        $this->gender_string = implode(',', $this->gender);
+    }
+
+    public function updatedGenderString()
+    {
+        $this->gender = array_filter(explode(',', $this->gender_string));
     }
 
     public function updatedAgeRange()
@@ -137,6 +199,30 @@ class GlobalSearch extends Component
                 return $age_range != false;
             }
         );
+
+        $this->age_range_string = implode(',', $this->age_range);
+    }
+
+    public function updatedAgeRangeString()
+    {
+        $this->age_range = array_filter(explode(',', $this->age_range_string));
+    }
+
+    public function updatedSizeFilter()
+    {
+        if(!is_array($this->size_filter)) return;
+        $this->size_filter = array_filter($this->size_filter,
+            function ($size_filter) {
+                return $size_filter != false;
+            }
+        );
+
+        $this->size_filter_string = implode(',', $this->size_filter);
+    }
+
+    public function updatedSizeFilterString()
+    {
+        $this->size_filter = array_filter(explode(',', $this->size_filter_string));
     }
 
     public function render(
@@ -153,9 +239,16 @@ class GlobalSearch extends Component
             'brand' => $brandRepository->getAllBrand(),
             'size' => $sizeRepository->getAllSizes(),
             'tag' => $tagRepository->getAllTags(),
-            'category' => $categoryRepository->getAllCategories(),
+            'category' => $categoryRepository->getAllCategoriesExceptGender(),
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
+        
+        // Add size filters if using database mode
+        if (config('app.size_filter_mode') === 'database') {
+            $data['sizeFilters'] = SizeFilter::where('is_active', true)
+                ->orderBy('sort_order')
+                ->get();
+        }
         $where_column = ['product_code', 'product_name', 'description'];
         $keyword_array = [];
         $sale_keyword = '';
@@ -169,12 +262,12 @@ class GlobalSearch extends Component
             if(empty($this->brand)) $this->brand = [];
         }
 
-        if ($this->size) {
-            if (($key = array_search(false, $this->size)) !== false) {
-                unset($this->size[$key]);
+        if ($this->size_filter) {
+            if (($key = array_search(false, $this->size_filter)) !== false) {
+                unset($this->size_filter[$key]);
             }
 
-            if(empty($this->size)) $this->size = [];
+            if(empty($this->size_filter)) $this->size_filter = [];
         }
 
         if ($this->tag) {
@@ -343,6 +436,48 @@ class GlobalSearch extends Component
                         $q->where('tag_title', 'NEW RELEASE');
                         $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                     });
+                })
+                ->when($this->size_filter, function ($q, $filterLabels) {
+                    if (config('app.size_filter_mode') === 'database') {
+                        // Database mode: Get all EU size values from SizeFilter records
+                        $allEuSizes = [];
+                        
+                        foreach ($filterLabels as $filterLabel) {
+                            // Find SizeFilter records by filter_label
+                            $filters = SizeFilter::where('filter_label', $filterLabel)->get();
+                            
+                            // Collect all EU size values from JSON column
+                            foreach ($filters as $filter) {
+                                $euSizes = $filter->eu_sizes ?? [];
+                                $allEuSizes = array_merge($allEuSizes, $euSizes);
+                            }
+                        }
+                        
+                        // Remove duplicates and filter products
+                        $allEuSizes = array_unique($allEuSizes);
+                        
+                        if (!empty($allEuSizes)) {
+                            foreach ($allEuSizes as $index => $euSize) {
+                                // Use %size (ends with) instead of %size%
+                                if ($index == 0) {
+                                    $q->where('pd.size', 'LIKE', '%' . $euSize);
+                                } else {
+                                    $q->orWhere('pd.size', 'LIKE', '%' . $euSize);
+                                }
+                            }
+                        }
+                    } else {
+                        // Hardcoded mode: Use sizes directly as before (ends with)
+                        foreach ($filterLabels as $index => $size) {
+                            if ($index == 0) {
+                                $q->where('pd.size', 'LIKE', '%' . $size);
+                            } else {
+                                $q->orWhere('pd.size', 'LIKE', '%' . $size);
+                            }
+                        }
+                    }
+                    
+                    return $q->where('pd.qty', '>', 0);
                 })
                 ->when(count($keyword_array) >= 2, function($query) {
                     return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');

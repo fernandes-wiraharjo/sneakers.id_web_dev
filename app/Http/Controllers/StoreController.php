@@ -51,7 +51,13 @@ class StoreController extends Controller
 
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
-        $data['size'] = $data['product']->details()->get();
+      
+        // if product exists, get its details, otherwise return empty collection
+        $data['size'] = $data['product']
+            ? $data['product']->details()->get()
+            : collect();
+        // $data['size'] = $data['product']->details()->where('product_details.qty', '>' , 0)->get();
+
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;

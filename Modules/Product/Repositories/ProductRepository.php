@@ -69,20 +69,70 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
                     Select min(retail_price)
                     from product_details
                     where product_id = products.id
+                    and qty > 0
                 )'))
                 ->where('pd.after_discount_price', '=', DB::raw('(
                     Select min(after_discount_price)
                     from product_details
                     where product_id = products.id
+                    and qty > 0
                 )'));
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['products.is_active'=> 1])
         ->where('pd.qty', '<>', 0)
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
 
         return $q;
     }
+
+    // public function getProductWhere() {
+    //     $minPrices = DB::table('product_details')
+    //         ->select(
+    //             'product_id',
+    //             DB::raw('MIN(retail_price) as min_retail_price'),
+    //             DB::raw('MIN(after_discount_price) as min_after_discount_price')
+    //         )
+    //         ->groupBy('product_id');
+
+    //     $q = $this->model->query()
+    //         ->with(['images:id,product_id,image_url']) // only load what you need
+    //         ->joinSub($minPrices, 'pd', function($join) {
+    //             $join->on('pd.product_id', '=', 'products.id');
+    //         })
+    //         ->select(
+    //             'products.*',
+    //             'pd.min_retail_price as retail_price',
+    //             'pd.min_after_discount_price as after_discount_price',
+    //             DB::raw('IF(pd.min_after_discount_price = 0, pd.min_retail_price, pd.min_after_discount_price) as actual_product_prize')
+    //         )
+    //         ->where('products.is_active', 1)
+    //         ->whereExists(function($q) {
+    //             $q->select(DB::raw(1))
+    //             ->from('product_details')
+    //             ->whereColumn('product_details.product_id', 'products.id')
+    //             ->where('product_details.qty', '<>', 0);
+    //         })
+    //         ->groupBy(
+    //             'products.id',
+    //             'products.product_code',
+    //             'products.product_name',
+    //             'products.product_link',
+    //             'products.shopee_link',
+    //             'products.tiktok_link',
+    //             'products.blibli_link',
+    //             'products.description',
+    //             'products.image',
+    //             'products.product_visit',
+    //             'products.is_active',
+    //             'products.created_at',
+    //             'products.updated_at',
+    //             'pd.min_retail_price',
+    //             'pd.min_after_discount_price'
+    //         );
+
+    //     return $q;
+    // }
 
     public function getProductByCode($code){
         return $this->model->query()
@@ -92,7 +142,8 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
     public function getProductDetailByIdAndSize($id, $size){
         return $this->productDetail
-            ->where(['product_id' => $id, 'size' => $size]);
+            ->where(['product_id' => $id, 'size' => $size])
+            ->first();
     }
 
     public function getProductOneFeaturedAirJordan(){
@@ -162,7 +213,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
         ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)
@@ -192,7 +243,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
         ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)
@@ -277,15 +328,20 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
        return $this->productImage->where(['image_url' => $image_url, 'product_id' => $product_id])->delete();
     }
 
-    public function deleteProduct($id){
+    public function deleteProduct($id, $source){
         $product = $this->model->find($id);
         $path = 'images/products/'.$product->product_code;
 
-        foreach($product->images()->get() as $image){
-            removeImageFromStorage($path, $image->image_url);
+        if ($source == 'cms') {
+            foreach($product->images()->get() as $image){
+                removeImageFromStorage($path, $image->image_url);
+            }
+        } else { // from artisan command (run from repositories, not public_html on cpanel)
+            $actualPublicPath = base_path('../../public_html');
+            foreach($product->images()->get() as $image){
+                removeImageFromStorage($path, $image->image_url, $actualPublicPath);
+            }
         }
-
-
 
         $product->images()->delete();
         $product->detail()->delete();
@@ -296,7 +352,12 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
 
         if($product->images()->count() == 0) {
             //delete folder
-            removeFolderFromStorage($path);
+            if ($source == 'cms') {
+                removeFolderFromStorage($path);
+            } else { // from artisan command (run from repositories, not public_html on cpanel)
+                $actualPublicPath = base_path('../../public_html');
+                removeFolderFromStorage($path, $actualPublicPath);
+            }
         }
 
         return $product->delete();

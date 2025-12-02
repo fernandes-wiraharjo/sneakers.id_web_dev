@@ -184,15 +184,32 @@ if(!function_exists('imageUploadProduct')) {
 if (!function_exists('getImage')) {
     function getImage($filename, $module = ''){
         if ($filename && $module) {
+            // Encode filename
+            $safeFilename = str_replace(' ', '%20', $filename);
+
             $image_path = public_path('images/'.$module.'/'.$filename);
             if(File::exists($image_path)) {
-                return asset('images/'.$module.'/'.$filename);
+                return asset('images/'.$module.'/'.$safeFilename);
             } else {
-                return public_path('demo1/media/blank/blank-image.png');
+                return asset('demo1/media/blank/blank-image.png');
             }
         } else {
-            return public_path('demo1/media/blank/blank-image.png');
+            return asset('demo1/media/blank/blank-image.png');
         }
+    }
+}
+
+// get aspect ratio for PHP 8.3+ (getimagesize() not reliable using URL, changed to image path)
+if (!function_exists('getImageAspectRatio')) {
+    function getImageAspectRatio($filename, $module = ''){
+        if ($filename && $module) {
+            $image_path = public_path('images/'.$module.'/'.$filename);
+        } else {
+            $image_path = public_path('demo1/media/blank/blank-image.png');
+        }
+        $image_size = getimagesize($image_path);
+        $ratio = $image_size[0] / $image_size[1];
+        return $ratio;
     }
 }
 
@@ -208,10 +225,13 @@ if (!function_exists('getImageGallery')) {
 }
 
 if(!function_exists('removeImageFromStorage')) {
-    function removeImageFromStorage($path = '', $filename = ''){
-        $image_path = public_path($path."/".$filename);
-        if(File::exists($image_path)) {
-            File::delete($image_path);
+    function removeImageFromStorage($path = '', $filename = '', $customBasePath = null){
+        // $image_path = public_path($path."/".$filename);
+        $basePath = $customBasePath ?? public_path();
+        $imagePath = rtrim($basePath, '/') . '/' . trim($path, '/') . '/' . trim($filename, '/');
+
+        if(File::exists($imagePath)) {
+            File::delete($imagePath);
         }
 
         return true;
@@ -219,8 +239,11 @@ if(!function_exists('removeImageFromStorage')) {
 }
 
 if(!function_exists('removeFolderFromStorage')) {
-    function removeFolderFromStorage($path = ''){
-        $new_path = public_path($path);
+    function removeFolderFromStorage($path = '', $basePath = null){
+        // $new_path = public_path($path);
+        $base = $basePath ?? public_path();
+        $new_path = $base . '/' . $path;
+
         if(File::isDirectory($new_path)) {
             File::deleteDirectory($new_path);
         }
@@ -228,7 +251,6 @@ if(!function_exists('removeFolderFromStorage')) {
         return true;
     }
 }
-
 
 if(!function_exists('moveImage')) {
     function moveImage($beforePath = '', $afterPath = '', $filename = ''){
@@ -242,6 +264,40 @@ if(!function_exists('moveImage')) {
         if(File::exists($image_before_path)) {
             File::move($image_before_path, $image_after_path);
         }
+
+        return true;
+    }
+}
+
+if(!function_exists('convertToWebpAndDelete')) {
+    function convertToWebpAndDelete($sourcePath, $quality = 80) {
+        if (!file_exists($sourcePath)) {
+            return false;
+        }
+
+        $info = getimagesize($sourcePath);
+        $ext = strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION));
+        $webpPath = preg_replace('/\.[^.]+$/', '.webp', $sourcePath);
+
+        switch ($info['mime']) {
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($sourcePath);
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($sourcePath);
+                imagepalettetotruecolor($image);
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+                break;
+            default:
+                return false; // skip unsupported
+        }
+
+        imagewebp($image, $webpPath, $quality);
+        imagedestroy($image);
+
+        // Delete original after conversion
+        unlink($sourcePath);
 
         return true;
     }

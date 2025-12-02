@@ -17,6 +17,8 @@ use Modules\Transaction\Entities\Transaction;
 
 class DashboardController extends Controller {
 
+    public $lastFiveDigitPhoneNumber;
+
     public function __construct(BrandRepository $brandRepository) {
             $this->brandRepository = $brandRepository;
     }
@@ -62,18 +64,27 @@ class DashboardController extends Controller {
   }
 
     public function detail($external_id){
-        if(!auth()->check()) {
-            return redirect()->route('customer.login')->with('error', 'Session has been expired, please re-login.');
+        // Anyone with the order token (hashID) can access the transaction details
+        $transaction = Transaction::where('token', $external_id)->first();
+        if(!$transaction){
+            return redirect()->route('store')->with('error', 'Transaction not found.');
         }
-        $data['user_address'] = auth()->user()->user_address()->first();
-        $data['user_info'] = auth()->user();
-        $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
-        $data['province'] = Region::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
-        $data['transaction'] = Transaction::where('token', $external_id)->first();
-        $data['destination'] = $data['transaction']->destination()->select('transaction_destinations.*', 'regions.*')->joinRelationship('region')->first();
-        $data['items'] = $data['transaction']->items()->with('detail.product')->select('transaction_items.*', 'product_details.size', 'product_details.product_id')->joinRelationship('detail')->get();
-        $data['shipping'] = $data['transaction']->shipping()->first();
-        $data['shipping_waybill'] = CekOngkir::CheckWaybill($data['shipping']->shipping_waybill, 'jnt') ?? null;
+        
+        $transactionDestination = $transaction->destination()->first();
+        if(!$transactionDestination){
+            return redirect()->route('store')->with('error', 'Transaction destination not found.');
+        }
+        
+        $lastFiveDigitPhoneNumber = substr(preg_replace('/[^0-9]/', '', $transactionDestination->phone_number), -5);
+        $data = [
+            'user' => auth()->user() ?? null,
+            'transaction' => $transaction,
+            'destination' => $transactionDestination,
+            'region' => $transactionDestination->region()->first(),
+            'items' => $transaction->items()->with('detail.product')->get(),
+            'shipping' => $transaction->shipping()->first(),
+            'shipping_waybill' => CekOngkir::CheckWaybill($transaction->shipping()->first()->shipping_waybill, $transaction->shipping()->first()->courier_code, $lastFiveDigitPhoneNumber) ?? null,
+        ];
         return view('display-store.customer.transaction', $data);
     }
 

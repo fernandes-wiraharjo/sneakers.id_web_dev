@@ -4,22 +4,34 @@ namespace App\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Facades\Cache;
 
 class CartService {
     const MINIMUM_QUANTITY = 1;
     const DEFAULT_INSTANCE = 'shopping-cart';
 
-    protected $session;
     protected $instance;
+    protected $cartId;
+    protected $cartTTL;
 
-    /**
-     * Constructs a new cart object.
-     *
-     * @param Illuminate\Session\SessionManager $session
-     */
-    public function __construct(SessionManager $session)
+    public function __construct($userId = null)
     {
-        $this->session = $session;
+        if (!$userId && auth()->check()) {
+            // Authenticated user - use user ID
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':user:' . auth()->user()->id);
+        } elseif ($userId) {
+            // Specific user ID provided
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':user:' . $userId);
+        } else {
+            // Guest user - use session ID
+            $sessionId = session()->getId();
+            if (!$sessionId) {
+                session()->start();
+                $sessionId = session()->getId();
+            }
+            $this->cartId = md5(self::DEFAULT_INSTANCE . ':guest:' . $sessionId);
+        }
+        $this->cartTTL = config('cache.cart_ttl');
     }
 
     public function add($id, $size_id, $code ,$name, $retail_price, $discount_price, $size = 'All size', $quantity, $weight, $image, $url,$options = []): void
@@ -34,7 +46,7 @@ class CartService {
 
         $content->put($size_id, $cartItem);
 
-        $this->session->put(self::DEFAULT_INSTANCE, $content);
+        Cache::put($this->cartId, $content, $this->cartTTL);
     }
 
     public function update(string $size_id, string $action): void
@@ -61,7 +73,32 @@ class CartService {
 
             $content->put($size_id, $cartItem);
 
-            $this->session->put(self::DEFAULT_INSTANCE, $content);
+            Cache::put($this->cartId, $content, $this->cartTTL);
+        }
+    }
+
+    /**
+     * Sets the quantity of a cart item directly.
+     *
+     * @param string $size_id
+     * @param int $quantity
+     * @return void
+     */
+    public function setQuantity(string $size_id, int $quantity): void
+    {
+        $content = $this->getContent();
+
+        if ($content->has($size_id)) {
+            $cartItem = $content->get($size_id);
+
+            if ($quantity < self::MINIMUM_QUANTITY) {
+                $quantity = self::MINIMUM_QUANTITY;
+            }
+
+            $cartItem->put('quantity', $quantity);
+            $content->put($size_id, $cartItem);
+
+            Cache::put($this->cartId, $content, $this->cartTTL);
         }
     }
 
@@ -75,7 +112,7 @@ class CartService {
         });
         // // Add notes to existing content or create new array with only note text as value for key "
         // // $content->put('note', $text);
-        $this->session->put(self::DEFAULT_INSTANCE, $content);
+        Cache::put($this->cartId, $content, $this->cartTTL);
     }
 
     public function getNotes()
@@ -91,6 +128,40 @@ class CartService {
     }
 
     /**
+     * Add voucher to cart
+     *
+     * @param array $voucher
+     * @return void
+     */
+    public function addVoucher(array $voucher): void
+    {
+        $voucherKey = $this->cartId . ':voucher';
+        Cache::put($voucherKey, $voucher, $this->cartTTL);
+    }
+
+    /**
+     * Get voucher from cart
+     *
+     * @return array|null
+     */
+    public function getVoucher()
+    {
+        $voucherKey = $this->cartId . ':voucher';
+        return Cache::get($voucherKey);
+    }
+
+    /**
+     * Remove voucher from cart
+     *
+     * @return void
+     */
+    public function removeVoucher(): void
+    {
+        $voucherKey = $this->cartId . ':voucher';
+        Cache::forget($voucherKey);
+    }
+
+    /**
      * Removes an item from the cart.
      *
      * @param string $id
@@ -101,7 +172,7 @@ class CartService {
         $content = $this->getContent();
 
         if ($content->has($size_id)) {
-            $this->session->put(self::DEFAULT_INSTANCE, $content->except($size_id));
+            Cache::put($this->cartId, $content->except($size_id), $this->cartTTL);
         }
     }
 
@@ -112,7 +183,56 @@ class CartService {
      */
     public function clear(): void
     {
-        $this->session->forget(self::DEFAULT_INSTANCE);
+        Cache::forget($this->cartId);
+        $this->removeVoucher();
+    }
+
+    public static function clearByUserId(int $userId): void
+    {
+        $cartId = md5(self::DEFAULT_INSTANCE . ':user:' . $userId);
+        Cache::forget($cartId);
+        // Also clear voucher
+        Cache::forget($cartId . ':voucher');
+    }
+
+    /**
+     * Merge guest cart with user cart after login
+     *
+     * @param string $guestSessionId
+     * @param int $userId
+     * @return void
+     */
+    public static function mergeGuestCart(string $guestSessionId, int $userId): void
+    {
+        $guestCartId = md5(self::DEFAULT_INSTANCE . ':guest:' . $guestSessionId);
+        $userCartId = md5(self::DEFAULT_INSTANCE . ':user:' . $userId);
+        
+        $guestCart = Cache::get($guestCartId, collect([]));
+        $userCart = Cache::get($userCartId, collect([]));
+        
+        if ($guestCart->isNotEmpty()) {
+            // Merge guest cart items into user cart
+            foreach ($guestCart as $sizeId => $item) {
+                if ($userCart->has($sizeId)) {
+                    // If item exists, add quantities
+                    $existingQty = $userCart->get($sizeId)->get('quantity');
+                    $item->put('quantity', $existingQty + $item->get('quantity'));
+                }
+                $userCart->put($sizeId, $item);
+            }
+            
+            // Save merged cart and clear guest cart
+            $cartTTL = config('cache.cart_ttl');
+            Cache::put($userCartId, $userCart, $cartTTL);
+            Cache::forget($guestCartId);
+            
+            // Also merge vouchers if guest has one
+            $guestVoucher = Cache::get($guestCartId . ':voucher');
+            if ($guestVoucher && !Cache::has($userCartId . ':voucher')) {
+                Cache::put($userCartId . ':voucher', $guestVoucher, $cartTTL);
+            }
+            Cache::forget($guestCartId . ':voucher');
+        }
     }
 
     /**
@@ -122,7 +242,7 @@ class CartService {
      */
     public function hashID(): string
     {
-        return $this->session->getId();
+        return $this->cartId;
     }
 
     /**
@@ -132,7 +252,7 @@ class CartService {
      */
     public function content(): Collection
     {
-        return is_null($this->session->get(self::DEFAULT_INSTANCE)) ? collect([]) : $this->session->get(self::DEFAULT_INSTANCE);
+        return Cache::get($this->cartId, collect([]));
     }
 
      /**
@@ -204,7 +324,7 @@ class CartService {
      */
     protected function getContent(): Collection
     {
-        return $this->session->has(self::DEFAULT_INSTANCE) ? $this->session->get(self::DEFAULT_INSTANCE) : collect([]);
+        return Cache::get($this->cartId, collect([]));
     }
 
     /**
@@ -241,5 +361,20 @@ class CartService {
             'url' => $url,
             'options' => $options,
         ]);
+    }
+
+    public function setOrderId($orderId)
+    {
+        $this->session->put('cart_order_id', $orderId);
+    }
+
+    public function getOrderId()
+    {
+        return $this->session->get('cart_order_id');
+    }
+
+    public function clearOrderId()
+    {
+        $this->session->forget('cart_order_id');
     }
 }

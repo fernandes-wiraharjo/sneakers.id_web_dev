@@ -295,6 +295,24 @@ if (!function_exists('uploadAsWebp')) {
     }
 }
 
+/**
+ * deletePublicFileByUrl function
+ * @param string $url
+ * @return bool
+ */
+if(!function_exists('deletePublicFileByUrl')) {
+    function deletePublicFileByUrl($url)
+    {
+        if (! $url) return false;
+
+        $relativePath = ltrim(parse_url($url, PHP_URL_PATH), '/');
+        $storagePath = str_replace('storage/', '', $relativePath);
+
+        return Storage::disk('public')->delete($storagePath);
+    }
+}
+
+
 if(!function_exists('convertToWebpAndDelete')) {
     function convertToWebpAndDelete($sourcePath, $quality = 80) {
         if (!file_exists($sourcePath)) {

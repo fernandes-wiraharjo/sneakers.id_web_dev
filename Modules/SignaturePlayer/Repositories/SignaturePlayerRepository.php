@@ -66,7 +66,15 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
     if($signature->products()->count() > 0){
         return false;
     } else {
+      try {
+        // delete image from storage
+        deletePublicFileByUrl($signature->signature_image);
+        deletePublicFileByUrl($signature->emblem_url);
+
         return $signature->delete();
+      } catch (\Throwable $th) {
+        return false;
+      }
     }
   }
 

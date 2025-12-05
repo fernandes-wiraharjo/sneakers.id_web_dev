@@ -110,6 +110,7 @@ class ProductController extends Controller
                 'size_price.*.retail_price' => 'required|gte:0',
                 'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price|gte:0',
                 'is_main' => 'required',
+                'products_size_chart_image' => 'nullable|image',
                 // 'base_price' => 'gte:0',
                 // 'retail_price' => 'gte:0',
                 // 'after_discount_price' => 'lte:retail_price|gte:0'
@@ -124,7 +125,8 @@ class ProductController extends Controller
                 'size_price.*.retail_price.required' => 'Retail price must be filled!',
                 'size_price.*.retail_price.gte' => 'Retail price must be not 0',
                 'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
-                'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.'
+                'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.',
+                'products_size_chart_image.image' => 'Size chart image must be an image!',
             ]);
 
             if($validator) {
@@ -200,6 +202,7 @@ class ProductController extends Controller
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
                     'size_price.*.after_discount_price' => 'required',
+                    'products_size_chart_image' => 'nullable|image',
                 ];
             } else {
                 $validation = [
@@ -210,6 +213,7 @@ class ProductController extends Controller
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
                     'size_price.*.after_discount_price' => 'required',
+                    'products_size_chart_image' => 'nullable|image',
                 ];
             }
 
@@ -226,7 +230,8 @@ class ProductController extends Controller
                 'size_price.*.retail_price.gte' => 'Retail price must be not 0',
                 'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
                 'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.',
-                'size_price.*.after_discount_price.gte' => 'Discount price must be not below 0.'
+                'size_price.*.after_discount_price.gte' => 'Discount price must be not below 0.',
+                'products_size_chart_image.image' => 'Size chart image must be an image!',
             ]);
 
             if($validator) {

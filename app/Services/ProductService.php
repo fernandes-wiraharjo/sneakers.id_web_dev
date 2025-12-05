@@ -93,20 +93,15 @@ class ProductService {
             }
 
             if(isset($request['products_size_chart_image'])){
-                $path = 'images/products/'.$request['product_code'].'/size-chart';
+                $path = 'images/products/'.$request['product_code'];
+                $saveAsFilename = 'size-chart';
+                $sizeChartImageURL = uploadAsWebp($request['products_size_chart_image'], $path, 'public', 1200, 1200, $saveAsFilename);
+                $productImage = [
+                    'product_id' => $idNewProduct,
+                    'size_chart_image_url' => $sizeChartImageURL
+                ];
 
-                $do_upload = imageUpload($request['products_size_chart_image'], $path, 'public');
-                if(!$do_upload){
-                    abort(500, 'Failed upload image');
-                } else {
-                    $imageURL = asset($path.'/'.$do_upload);
-                    $productImage = [
-                        'product_id' => $idNewProduct,
-                        'size_chart_image_url' => $imageURL
-                    ];
-
-                    $this->productRepository->insertProductSizeChart($productImage);
-                }
+                $this->productRepository->insertProductSizeChart($productImage);
             }
 
             if(isset($request['size_price'])) {
@@ -270,43 +265,22 @@ class ProductService {
         }
 
             if(isset($request['products_size_chart_image'])){
-               $path = 'images/products/'.$request['product_code'].'/size-chart';
+                $path = 'images/products/'.$request['product_code'];
+                $saveAsFilename = 'size-chart';
+                $sizeChartImageURL = uploadAsWebp($request['products_size_chart_image'], $path, 'public', 1200, 1200, $saveAsFilename);
 
-               //delete unused file
-               $imageFilename = $getProduct->sizeCharts()->pluck('size_chart_image_url')->first() ?? null;
+                $productImage = [
+                    'product_id' => $id,
+                    'size_chart_image_url' => $sizeChartImageURL
+                ];
 
-               if ($imageFilename) {
-                    $filename = basename($imageFilename);
-                    $filePath = public_path($path . '/' . $filename);
-
-                    if (File::exists($filePath)) {
-                        removeImageFromStorage($path, $filename);
-
-                        $getProduct->sizeCharts()->where('size_chart_image_url', $imageFilename)->first()?->delete();
-                    }
-
-                }
-
-                $do_upload = imageUpload($request['products_size_chart_image'], $path, 'public');
-
-                if(!$do_upload){
-                    abort(500, 'Failed upload image');
-                } else {
-                    $imageURL = asset($path.'/'.$do_upload);
-                    $productImage = [
-                        'product_id' => $id,
-                        'size_chart_image_url' => $imageURL
-                    ];
-
-                    $this->productRepository->insertProductSizeChart($productImage);
-                }
-
+                $this->productRepository->insertProductSizeChart($productImage);
             }
 
             if(isset($request['is_main'])){
                 $getProduct = $this->productRepository->getProductById($id);
 
-                if($getProduct) {
+                if(isset($afterPath) && $getProduct) {
                     $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
                     $webpPath = public_path($afterPath . '/' . $webpMain);
 

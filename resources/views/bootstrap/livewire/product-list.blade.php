@@ -26,7 +26,7 @@
 <div class="container-fluid">
 
     <div class="row">
-        <div class="col-12 d-flex align-items-center mb-4">
+        <div class="col-12 col-md-6 d-flex align-items-center mb-4">
             <a href="javascript:history.back()" class="border bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3 p-2">
                 <span class="iconify fs-3" data-icon="stash:arrow-left-duotone"></span>
             </a>
@@ -45,6 +45,21 @@
                     {{ $pageTitle }}
                 @endif
             </h1>
+        </div>
+        <div class="col-12 col-md-6 text-end d-flex align-items-center justify-content-end">
+            <span class="text-muted me-2">Sort by: </span>
+            <select name="sort_by" id="sort_by" class="form-select text-muted rounded-pill" style="width: auto;" wire:change="handleSortChange($event.target.value)">
+                @php
+                    $currentSort = $sort_column . ':' . $sort_by;
+                @endphp
+                <option value="products.created_at:DESC" {{ $currentSort == 'products.created_at:DESC' ? 'selected' : '' }}>Date, new to old</option>
+                <option value="pd.created_at:ASC" {{ $currentSort == 'pd.created_at:ASC' ? 'selected' : '' }}>Date, old to new</option>
+                <option value="product_name:ASC" {{ $currentSort == 'product_name:ASC' ? 'selected' : '' }}>Alphabetically, A-Z</option>
+                <option value="product_name:DESC" {{ $currentSort == 'product_name:DESC' ? 'selected' : '' }}>Alphabetically, Z-A</option>
+                <option value="actual_product_prize:ASC" {{ $currentSort == 'actual_product_prize:ASC' ? 'selected' : '' }}>Price, low to high</option>
+                <option value="actual_product_prize:DESC" {{ $currentSort == 'actual_product_prize:DESC' ? 'selected' : '' }}>Price, high to low</option>
+                <option value="products.updated_at:DESC" {{ $currentSort == 'products.updated_at:DESC' ? 'selected' : '' }}>Date, last updated</option>
+            </select>
         </div>
     </div>
 

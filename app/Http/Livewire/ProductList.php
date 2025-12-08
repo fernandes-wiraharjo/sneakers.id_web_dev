@@ -98,6 +98,14 @@ class ProductList extends Component
         $this->sort_column = $sort_column;
     }
 
+    public function handleSortChange($value)
+    {
+        if ($value) {
+            list($sort_column, $sort_by) = explode(':', $value);
+            $this->sort($sort_column, strtoupper($sort_by));
+        }
+    }
+
     public function mount(): void
     {
         $this->search = request()->query('search', $this->search);

@@ -19,14 +19,14 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarFeatured" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        FEATURED
+                        Featured
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarFeatured">
-                        <li><a class="dropdown-item" href="{{ route('collections', 'all') }}">ALL PRODUCTS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'featured') }}">FEATURED</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'new-release') }}">NEW RELEASES</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'best-seller') }}">BEST SELLERS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'sale') }}">SALE</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'featured') }}">Featured</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'new-release') }}">New releases</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'best-seller') }}">Best Sellers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale') }}">Sale</a></li>
                     </ul>
                 </li>
 
@@ -34,16 +34,16 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all.MENS') }}" id="navbarMens" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        MEN'S
+                        Men's
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarMens">
-                        <li><a class="dropdown-item" href="{{ route('collections', 'all.MENS') }}">ALL PRODUCTS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.MENS') }}">BASKETBALL SHOES</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.MENS') }}">CASUAL SNEAKERS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.MENS') }}">APPARELS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.MENS') }}">ACCESSORIES</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all.MENS') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.MENS') }}">Basketball Shoes</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.MENS') }}">Casual Sneakers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.MENS') }}">Apparels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.MENS') }}">Accesories</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.MENS') }}">SALE</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.MENS') }}">Sale</a></li>
                     </ul>
                 </li>
 
@@ -51,16 +51,16 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all.WOMENS') }}" id="navbarWomens" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        WOMEN'S
+                        Women's
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarWomens">
-                        <li><a class="dropdown-item" href="{{ route('collections', 'all.WOMENS') }}">ALL PRODUCTS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.WOMENS') }}">BASKETBALL SHOES</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.WOMENS') }}">CASUAL SNEAKERS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.WOMENS') }}">APPARELS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.WOMENS') }}">ACCESSORIES</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all.WOMENS') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.WOMENS') }}">Basketball Shoes</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.WOMENS') }}">Casual Sneakers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.WOMENS') }}">Apparels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.WOMENS') }}">Accesories</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.WOMENS') }}">SALE</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.WOMENS') }}">Sale</a></li>
                     </ul>
                 </li>
 
@@ -68,16 +68,29 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all.KIDS') }}" id="navbarKids" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        KIDS'
+                        Kids'
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarKids">
-                        <li><a class="dropdown-item" href="{{ route('collections', 'all.KIDS') }}">ALL PRODUCTS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.KIDS') }}">BASKETBALL SHOES</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.KIDS') }}">CASUAL SNEAKERS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.KIDS') }}">APPARELS</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.KIDS') }}">ACCESSORIES</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all.KIDS') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.KIDS') }}">Basketball Shoes</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.KIDS') }}">Casual Sneakers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.KIDS') }}">Apparels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.KIDS') }}">Accesories</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.KIDS') }}">SALE</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.KIDS') }}">Sale</a></li>
+                    </ul>
+                </li>
+
+                <!-- Signature Player -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarSignaturePlayer" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Signature Athlete
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarSignaturePlayer">
+                        @foreach ($signature as $item)
+                            <li><a class="dropdown-item" href="{{ route('collections', 'all.' . $item->signature_code) }}">{{ $item->signature_title }}</a></li>
+                        @endforeach
                     </ul>
                 </li>
 
@@ -85,7 +98,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarBrand" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        BRAND
+                        Brand
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarBrand">
                         @foreach ($brand_menu as $item)
@@ -96,13 +109,16 @@
 
                 <!-- PRE OWNED -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('collections', 'all.PREOWNED') }}">PRE OWNED</a>
+                    <a class="nav-link" href="{{ route('collections', 'all.PREOWNED') }}">Pre Owned</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('blog') }}">Blog</a>
                 </li>
 
                 <!-- SIZE CHART -->
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="{{ route('size-chart') }}">SIZE CHART</a>
-                </li>
+                </li> -->
             </ul>
         </div>
 

@@ -48,7 +48,7 @@
         </div>
         <div class="col-12 col-md-6 text-end d-flex align-items-center justify-content-end">
             <span class="text-muted me-2">Sort by: </span>
-            <select name="sort_by" id="sort_by" class="form-select text-muted rounded-pill" style="width: auto;" wire:change="handleSortChange($event.target.value)">
+            <select name="sort_by" id="sort_by" class="form-select text-muted rounded-pill" style="width: auto; padding: 11px 25px 11px 15px;" wire:change="handleSortChange($event.target.value)">
                 @php
                     $currentSort = $sort_column . ':' . $sort_by;
                 @endphp
@@ -60,7 +60,19 @@
                 <option value="actual_product_prize:DESC" {{ $currentSort == 'actual_product_prize:DESC' ? 'selected' : '' }}>Price, high to low</option>
                 <option value="products.updated_at:DESC" {{ $currentSort == 'products.updated_at:DESC' ? 'selected' : '' }}>Date, last updated</option>
             </select>
+            
+            <div class="input-group w-50 ms-4 rounded-pill border py-1 px-2">
+                <span class="input-group-text rounded-pill bg-white border-0 pe-0">
+                    <span class="iconify fs-4" data-icon="material-symbols:search-rounded"></span>
+                </span>
+                <input type="text" class="form-control border-0" wire:model.debounce.500ms="search" placeholder="Search keyword..." aria-label="Search">
+                <button type="button" class="btn btn-dark rounded-pill px-4 shadow" wire:click="$refresh">Search</button>
+            </div>
         </div>
+    </div>
+
+
+    <div class="row">
     </div>
 
     <div class="row">

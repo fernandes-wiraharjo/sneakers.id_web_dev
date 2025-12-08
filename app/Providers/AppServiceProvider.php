@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\Brand\Repositories\BrandRepository;
+use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(BrandRepository $brandRepository)
+    public function boot(BrandRepository $brandRepository, SignaturePlayerRepository $signaturePlayerRepository)
     {
 
         \Midtrans\Config::$serverKey    = config('services.midtrans.serverKey');
@@ -44,6 +45,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Share theme adapter class
         View::share('theme', $theme);
+
+        // Share common data across all views
+        View::share('brand', $brandRepository->getAllBrand());
+        View::share('brand_menu', $brandRepository->getActiveMenuBrand());
+        View::share('signature', $signaturePlayerRepository->getAllSignatures());
 
         // Set demo globally
         $theme->setDemo(request()->input('demo', 'demo1'));

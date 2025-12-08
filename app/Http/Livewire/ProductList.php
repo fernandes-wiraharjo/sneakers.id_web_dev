@@ -514,6 +514,6 @@ class ProductList extends Component
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         $this->total_product = $data['products']->total();
         // dd($products->toSql());
-        return view('livewire.product-list', $data);
+        return view('bootstrap.livewire.product-list', $data);
     }
 }

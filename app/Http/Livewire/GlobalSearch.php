@@ -446,6 +446,6 @@ class GlobalSearch extends Component
 
         $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
-        return view('livewire.global-search', $data);
+        return view('bootstrap.livewire.global-search', $data);
     }
 }

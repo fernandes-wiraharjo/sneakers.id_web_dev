@@ -219,10 +219,8 @@ class StoreController extends Controller
 
     public function collections($keyword){
         $data['keyword'] = $keyword;
-        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
-        $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.collections', $data);
+        return view('bootstrap.collections', $data);
     }
 
     public function lookbook($page){

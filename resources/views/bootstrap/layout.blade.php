@@ -52,6 +52,17 @@
             background-color: #fff;
             border-radius: 50%;
         }
+        .header-image-wrapper {
+            position: relative;
+            z-index: 1;
+            height: 400px;
+            display: flex;
+        }
+        .header-image-wrapper img {
+            object-fit: cover;
+            width: 100%;
+            object-position: bottom;
+        }
     </style>
     @stack('styles')
     @livewireStyles

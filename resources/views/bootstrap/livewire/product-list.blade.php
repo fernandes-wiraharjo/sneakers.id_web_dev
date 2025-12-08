@@ -23,31 +23,55 @@
     </style>
 @endpush
 
+<div class="container-fluid">
 
-
-<div class="row">
-    <!-- Sidebar Filters (Desktop) -->
-    <div class="col-md-2 filter-sidebar">
-        @include('bootstrap.parts.filters', $filters)
+    <div class="row">
+        <div class="col-12 d-flex align-items-center mb-4">
+            <a href="javascript:history.back()" class="border bg-white shadow-sm rounded-circle d-flex align-items-center justify-content-center me-3 p-2">
+                <span class="iconify fs-3" data-icon="stash:arrow-left-duotone"></span>
+            </a>
+            <h1 class="fw-bold mb-0 text-uppercase">
+                @php
+                    $lastSegment = last(request()->segments());
+                @endphp
+                @if ($lastSegment == 'all')
+                    ALL PRODUCT
+                @else
+                    @php
+                    $pageTitle = str_replace('all.', '', $lastSegment);
+                    $pageTitle = str_replace('-', ' ', $pageTitle);
+                    $pageTitle = str_replace('.', ' - ', $pageTitle);
+                    @endphp
+                    {{ $pageTitle }}
+                @endif
+            </h1>
+        </div>
     </div>
 
-    <!-- Products Grid -->
-    <div class="col-md-10">
-        <div wire:loading class="text-center py-5">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
+    <div class="row">
+        <!-- Sidebar Filters (Desktop) -->
+        <div class="col-md-2 filter-sidebar">
+            @include('bootstrap.parts.filters', $filters)
         </div>
-        <div wire:loading.remove>
-            <div class="product-grid">
-                @foreach ($products as $product)
-                    @include('bootstrap.parts.product-card', ['item' => $product])
-                @endforeach
+
+        <!-- Products Grid -->
+        <div class="col-md-10">
+            <div wire:loading class="text-center py-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
-            
-            <!-- Pagination -->
-            <div class="mt-4 d-flex justify-content-center">
-                {{ $products->onEachSide(1)->links('vendor.livewire.bootstrap') }}
+            <div wire:loading.remove>
+                <div class="product-grid">
+                    @foreach ($products as $product)
+                        @include('bootstrap.parts.product-card', ['item' => $product])
+                    @endforeach
+                </div>
+                
+                <!-- Pagination -->
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $products->onEachSide(1)->links('vendor.livewire.bootstrap') }}
+                </div>
             </div>
         </div>
     </div>

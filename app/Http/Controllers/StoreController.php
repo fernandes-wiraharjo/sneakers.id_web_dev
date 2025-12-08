@@ -218,6 +218,7 @@ class StoreController extends Controller
     }
 
     public function collections($keyword){
+        $data['headerImageURL'] = 'https://placehold.co/1280x400?text=Header+Image+Placeholder';
         $data['keyword'] = $keyword;
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('bootstrap.collections', $data);

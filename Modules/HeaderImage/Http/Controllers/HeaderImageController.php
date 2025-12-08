@@ -12,6 +12,7 @@ use Modules\HeaderImage\Entities\HeaderImage;
 use Alert;
 use Modules\Brand\Entities\Brand;
 use Modules\Category\Entities\Category;
+use Modules\SignaturePlayer\Entities\SignaturePlayer;
 
 class HeaderImageController extends Controller
 {
@@ -43,6 +44,7 @@ class HeaderImageController extends Controller
         $data['header_image'] = new HeaderImage();
         $data['brands'] = Brand::all();
         $data['categories'] = Category::all();
+        $data['signature_players'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
 
         return view('headerimage::create', $data);
     }
@@ -98,6 +100,7 @@ class HeaderImageController extends Controller
         $data['header_image'] = $this->repository->getHeaderImageById($id);
         $data['brands'] = Brand::all();
         $data['categories'] = Category::all();
+        $data['signature_players'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
         return view('headerimage::edit', $data);
     }
 

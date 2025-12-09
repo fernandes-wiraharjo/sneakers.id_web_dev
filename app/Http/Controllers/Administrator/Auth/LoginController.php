@@ -58,7 +58,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('back-office.auth.login');
+        return view('bootstrap.login');
     }
 
         /**
@@ -68,7 +68,7 @@ class LoginController extends Controller
      */
     public function showCustomerLoginForm()
     {
-        return view('display-store.auth.login');
+        return view('bootstrap.login');
     }
 
     /**

@@ -6,7 +6,7 @@
     $selling_price = $item->after_discount_price;
 @endphp
 <a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">
-    <div class="card rounded-5 h-100 position-relative">
+    <div class="card shadow rounded-5 h-100 position-relative">
         <span class="iconify fs-3 position-absolute text-secondary top-0 end-0 mt-3 me-3" data-icon="uil:cart"></span>
         <img src="{{ $image_url }}" class="card-img-top rounded-top-5" alt="...">
         <div class="card-body">

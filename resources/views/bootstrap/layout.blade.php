@@ -30,7 +30,12 @@
         .anton {
             font-family: 'Anton', sans-serif;
         }
-        
+        .btn-dark {
+            background-color: black;
+        }
+        .btn-outline-dark {
+            border-color: var(--bs-border-color);
+        }
         .cart-counter {
             font-size: 10px;
             font-weight: bold;
@@ -62,6 +67,34 @@
             object-fit: cover;
             width: 100%;
             object-position: bottom;
+        }
+        
+        /* Pagination Styles */
+        .pagination .page-item {
+            margin: 0 0.25rem;
+        }
+        .pagination .page-link {
+            border: 1px solid #dee2e6;
+            padding: 0.25rem 0.75rem;
+            color: #212529;
+            background-color: #fff;
+            border-radius: 0.25rem;
+        }
+        .pagination .page-link:hover {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+            color: #212529;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #000;
+            border-color: #000;
+            color: #fff;
+        }
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #fff;
+            border-color: #dee2e6;
         }
     </style>
     @stack('styles')

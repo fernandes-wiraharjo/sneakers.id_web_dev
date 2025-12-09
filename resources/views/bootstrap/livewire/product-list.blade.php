@@ -73,15 +73,15 @@
 
             <div class="d-flex d-md-none gap-2 mt-3 w-100">
                 <!-- Filter Button -->
-                <button class="btn btn-outline-dark rounded-pill flex-fill" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
-                    <span class="iconify me-2" data-icon="material-symbols:filter-list"></span>
+                <button class="btn btn-outline-dark rounded-pill flex-fill d-flex justify-content-center align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
                     Filter
+                    <span class="iconify ms-2" data-icon="fa6-solid:chevron-down"></span>
                 </button>
                 
                 <!-- Sort Button -->
-                <button class="btn btn-outline-dark rounded-pill flex-fill" type="button" data-bs-toggle="offcanvas" data-bs-target="#sortOffcanvas" aria-controls="sortOffcanvas">
-                    <span class="iconify me-2" data-icon="material-symbols:sort"></span>
+                <button class="btn btn-outline-dark rounded-pill flex-fill d-flex justify-content-center align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#sortOffcanvas" aria-controls="sortOffcanvas">
                     Sort
+                    <span class="iconify ms-2" data-icon="fa6-solid:chevron-down"></span>
                 </button>
 
                 <!-- Filter Offcanvas for Mobile -->
@@ -170,7 +170,7 @@
                 
                 <!-- Pagination -->
                 <div class="mt-4 d-flex justify-content-center">
-                    {{ $products->onEachSide(1)->links('vendor.livewire.bootstrap') }}
+                    {{ $products->onEachSide(3)->links('vendor.livewire.bootstrap') }}
                 </div>
             </div>
         </div>

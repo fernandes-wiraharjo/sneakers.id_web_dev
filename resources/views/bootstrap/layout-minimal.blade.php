@@ -29,7 +29,37 @@
     @stack('styles')
 </head>
 <body>
+    @livewire('toast-notification')
     @yield('content')
     @stack('scripts')
+    @livewireScripts
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('toast_error'))
+                Livewire.emit('showToast', {
+                    type: 'error',
+                    message: {!! json_encode(session('toast_error')) !!}
+                });
+            @endif
+            @if(session('toast_success'))
+                Livewire.emit('showToast', {
+                    type: 'success',
+                    message: {!! json_encode(session('toast_success')) !!}
+                });
+            @endif
+            @if(session('toast_warning'))
+                Livewire.emit('showToast', {
+                    type: 'warning',
+                    message: {!! json_encode(session('toast_warning')) !!}
+                });
+            @endif
+            @if(session('toast_info'))
+                Livewire.emit('showToast', {
+                    type: 'info',
+                    message: {!! json_encode(session('toast_info')) !!}
+                });
+            @endif
+        });
+    </script>
 </body>
 </html>

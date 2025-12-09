@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
@@ -80,7 +81,7 @@ class LoginController extends Controller
     {
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.register', $data);
+        return view('bootstrap.register', $data);
     }
 
     /**
@@ -95,13 +96,13 @@ class LoginController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|min:6',
+                'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()],
             ]);
 
             $token = Str::random(64);
             $request['role_id'] = 2;
             $request['remember_token'] = $token;
-            $request['name'] = $request['first_name'].' '.$request['last_name'];
+            $request['name'] = $request->first_name.' '.$request->last_name;
 
             $createUser = $this->repository->createUserCustomer($request);
 
@@ -130,7 +131,13 @@ class LoginController extends Controller
 
             return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
         } catch (ValidationException $e) {
-            throw $e;
+            $errorMessage = 'Failed to register. ' . $e->getMessage();
+            if ($e->errors()) {
+                $errorMessage = 'Failed to register. ' . implode(' ', array_map(function($errors) {
+                    return implode(' ', $errors);
+                }, $e->errors()));
+            }
+            return back()->with(['toast_error' => $errorMessage])->withInput();
         } catch (\Exception $e) {
             // $mailPort = env('MAIL_PORT', 587);
             // Log::error("Regitration failed: (". $mailPort .") " . $e->getMessage());

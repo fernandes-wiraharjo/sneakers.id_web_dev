@@ -7,9 +7,9 @@
         </div>
         <div class="col-12 col-md-6 p-4 p-md-5">
             <img src="{{ asset('stores-info/logo-black-new.png') }}" alt="">
-            <p class="mt-3 mt-md-4 fw-bold">Login Sneakers Account</p>
-            <h1 class="display-5 fw-bold">Welcome</h1>
-            <p class="text-muted mb-3 mb-md-4">Enter your Email and Password to login</p>
+            <p class="mt-3 mt-md-4 fw-bold">Create Sneakers Account</p>
+            <h1 class="display-5 fw-bold">Registration</h1>
+            <p class="text-muted mb-3 mb-md-4">Complete this form to create your account</p>
 
             <form action="{{ route('customer.submit.register') }}" method="POST" id="registerForm">
                 @csrf

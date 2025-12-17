@@ -12,6 +12,7 @@ use Modules\HeaderImage\Entities\HeaderImage;
 use Alert;
 use Modules\Brand\Entities\Brand;
 use Modules\Category\Entities\Category;
+use Modules\SignaturePlayer\Entities\SignaturePlayer;
 
 class HeaderImageController extends Controller
 {
@@ -43,6 +44,7 @@ class HeaderImageController extends Controller
         $data['header_image'] = new HeaderImage();
         $data['brands'] = Brand::all();
         $data['categories'] = Category::all();
+        $data['signature_players'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
 
         return view('headerimage::create', $data);
     }
@@ -58,7 +60,7 @@ class HeaderImageController extends Controller
         $validator = $request->validate([
             'menu_parent_name' => 'required|string',
             'menu_name' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|max:2048',
         ]);
 
         $stored = $this->repository->createHeaderImage($request);
@@ -98,6 +100,7 @@ class HeaderImageController extends Controller
         $data['header_image'] = $this->repository->getHeaderImageById($id);
         $data['brands'] = Brand::all();
         $data['categories'] = Category::all();
+        $data['signature_players'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
         return view('headerimage::edit', $data);
     }
 
@@ -114,7 +117,7 @@ class HeaderImageController extends Controller
             $validation = [
                  'menu_parent_name' => 'required|string',
                  'menu_name' => 'required|string',
-                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                 'image' => 'required|image|max:2048',
             ];
 
             $validator = $request->validate($validation);

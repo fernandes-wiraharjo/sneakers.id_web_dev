@@ -18,7 +18,27 @@ use Yajra\DataTables\Services\DataTable;
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'status'])
+            ->rawColumns(['action', 'status', 'image_url'])
+            ->editColumn('image_url', function ($item) {
+                $imageUrl = $item->image_url ?? '';
+                if (empty($imageUrl)) {
+                    return '<span class="text-muted">No image</span>';
+                }
+                
+                return '<div class="d-flex flex-column align-items-start gap-3">
+                    <img src="' . e($imageUrl) . '" 
+                         alt="Header Image" 
+                         class="rounded" 
+                         style="width: 160px; height: 60px; object-fit: cover; cursor: pointer;"
+                         onclick="window.open(\'' . e($imageUrl) . '\', \'_blank\')"
+                         onerror="this.src=\'/images/placeholder.png\'; this.onerror=null;">
+                    <div title="' . e($imageUrl) . '">
+                        <a href="' . e($imageUrl) . '" target="_blank" class="small">
+                            ' . e($imageUrl) . '
+                        </a>
+                    </div>
+                </div>';
+            })
             ->addColumn('status', function ($item) {
               return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
             })
@@ -49,7 +69,10 @@ use Yajra\DataTables\Services\DataTable;
             Column::make('DT_RowIndex')->title(__('No'))
                     ->sortable(false)
                     ->searchable(false),
-            Column::make('image_url'),
+            Column::make('image_url')
+                ->title('Image')
+                ->sortable(false)
+                ->searchable(true),
             Column::make('menu_name'),
             Column::make('menu_parent_name'),
             Column::make('status')

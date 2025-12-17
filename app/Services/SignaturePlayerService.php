@@ -2,21 +2,18 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SignaturePlayerService {
 	public function insertSignaturePlayer($request){
 		$data = $request->all();
 
-        $path = 'images/signature/'.$data['signature_code'];
-        $do_upload = imageUpload($data['image'], $path ,'public');
+        $path = 'images/signature';
+        $saveAsFilename = Str::slug($data['signature_code']);
+        $data['signature_image'] = uploadAsWebp($data['signature_image'], $path, 'public', 427, 856, $saveAsFilename);
 
-        if(!$do_upload){
-            abort(500, 'Failed upload image');
-        } else {
-            $data['signature_image'] = $do_upload;
-        }
-
-        unset($data['image']);
+        $emblemFilename = $saveAsFilename . '_emblem';
+        $data['emblem_url'] = uploadAsWebp($data['emblem'], $path, 'public', 500, 500, $emblemFilename);
 
         foreach ($data as $key => $value){ $signature[$key] = $value; }
         return $signature;
@@ -25,17 +22,16 @@ class SignaturePlayerService {
     public function updateSignaturePlayer($request){
         $data = $request->all();
 
-        if(isset($data['image'])) {
-            $path = 'images/signature/'.$data['signature_code'];
-            $do_upload = imageUpload($data['image'], $path ,'public');
+        $path = 'images/signature';
+        if(isset($data['signature_image'])) {
+            $saveAsFilename = Str::slug($data['signature_code']);
+            $data['signature_image'] = uploadAsWebp($data['signature_image'], $path, 'public', 427, 856, $saveAsFilename);
+        }
 
-            if(!$do_upload){
-                abort(500, 'Failed upload image');
-            } else {
-                $data['signature_image'] = $do_upload;
-            }
-
-            unset($data['image']);
+        if(isset($data['emblem'])) {
+            $saveAsFilename = Str::slug($data['signature_code']);
+            $emblemFilename = $saveAsFilename . '_emblem';
+            $data['emblem_url'] = uploadAsWebp($data['emblem'], $path, 'public', 500, 500, $emblemFilename);
         }
 
         foreach ($data as $key => $value) { $signature[$key] = $value; }

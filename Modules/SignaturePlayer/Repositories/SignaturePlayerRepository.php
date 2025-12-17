@@ -25,14 +25,7 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
    */
   public function updateSignaturePlayer(Request $request, $id) {
     $get_signaturePlayer = $this->model->findOrFail($id);
-    $existingPath = 'images/signature/'.$get_signaturePlayer->signature_code.'/'.$get_signaturePlayer->signature_image;
-
-    // Remove previous image if it exists
-    if ($get_signaturePlayer->signature_image && File::exists(public_path($existingPath)) && $request['image'] != null) {
-        File::delete(public_path($existingPath));
-    }
-
-    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request, $id);
+    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
 
     return $get_signaturePlayer->update($signaturePlayer);
   }
@@ -73,7 +66,15 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
     if($signature->products()->count() > 0){
         return false;
     } else {
+      try {
+        // delete image from storage
+        deletePublicFileByUrl($signature->signature_image);
+        deletePublicFileByUrl($signature->emblem_url);
+
         return $signature->delete();
+      } catch (\Throwable $th) {
+        return false;
+      }
     }
   }
 

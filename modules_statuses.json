@@ -11,7 +11,7 @@
     "LookBook": true,
     "Transaction": true,
     "Dashboard": true,
-    "HeaderImage": true
+    "HeaderImage": true,
     "ShippingCourier": true,
     "DiscountVoucher": true,
     "SizeFilter": true

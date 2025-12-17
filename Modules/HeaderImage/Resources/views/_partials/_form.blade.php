@@ -3,6 +3,7 @@
         <option value="" disabled {{ !$edit ? 'selected' : '' }}>-- Select Menu Parent --</option>
         <option value="brand" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'brand' ? 'selected' : '' }}>Brand</option>
         <option value="category" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'category' ? 'selected' : '' }}>Category</option>
+        <option value="signature_player" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'signature_player' ? 'selected' : '' }}>Signature Player</option>
     </select>
 </x-ladmin-form-group>
 
@@ -18,7 +19,7 @@
         value="{{ $edit ? old('image', $header_image->image_url) : old('image') }}">
     <div class="col-sm-12">
         <span class="text-muted fw-bold fs-6">
-            recommended banner resolution is ###p or ####p and aspect ratio is #:#. make sure the image not below this resolution.
+            banner image will be cropped to 1280x500 pixels
         </span>
     </div>
 </x-ladmin-form-group>
@@ -30,6 +31,7 @@
     const form = document.getElementById('form');
     const brands = @json($brands);
     const categories = @json($categories);
+    const signaturePlayers = @json($signature_players);
     const parentTypeSelect = document.getElementById('menu_parent_name');
     const menuNameSelect = document.getElementById('menu_name');
 
@@ -49,10 +51,12 @@
             data = brands;
         } else if (type === 'category') {
             data = categories;
+        } else if (type === 'signature_player') {
+            data = signaturePlayers;
         }
 
         data.forEach(item => {
-            let title = item.brand_title || item.category_title;
+            let title = item.brand_title || item.category_title || item.signature_title;
             let selected = (title === selectedMenu) ? 'selected' : '';
             options += `<option value="${title}" ${selected}>${title}</option>`;
         });

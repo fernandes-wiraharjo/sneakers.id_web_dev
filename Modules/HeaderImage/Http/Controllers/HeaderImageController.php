@@ -44,7 +44,7 @@ class HeaderImageController extends Controller
         $data['header_image'] = new HeaderImage();
         $data['brands'] = Brand::all();
         $data['categories'] = Category::all();
-        $data['signature_players'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
+        $data['signatures'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
 
         return view('headerimage::create', $data);
     }
@@ -100,7 +100,7 @@ class HeaderImageController extends Controller
         $data['header_image'] = $this->repository->getHeaderImageById($id);
         $data['brands'] = Brand::all();
         $data['categories'] = Category::all();
-        $data['signature_players'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
+        $data['signatures'] = SignaturePlayer::orderBy('signature_title', 'ASC')->get();
         return view('headerimage::edit', $data);
     }
 

@@ -3,7 +3,7 @@
         <option value="" disabled {{ !$edit ? 'selected' : '' }}>-- Select Menu Parent --</option>
         <option value="brand" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'brand' ? 'selected' : '' }}>Brand</option>
         <option value="category" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'category' ? 'selected' : '' }}>Category</option>
-        <option value="signature_player" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'signature_player' ? 'selected' : '' }}>Signature Player</option>
+        <option value="signatures" {{ $edit && old('menu_parent_name', $header_image->menu_parent_name ?? '') == 'signatures' ? 'selected' : '' }}>Signature Player</option>
     </select>
 </x-ladmin-form-group>
 
@@ -31,7 +31,7 @@
     const form = document.getElementById('form');
     const brands = @json($brands);
     const categories = @json($categories);
-    const signaturePlayers = @json($signature_players);
+    const signatures = @json($signatures);
     const parentTypeSelect = document.getElementById('menu_parent_name');
     const menuNameSelect = document.getElementById('menu_name');
 
@@ -51,14 +51,15 @@
             data = brands;
         } else if (type === 'category') {
             data = categories;
-        } else if (type === 'signature_player') {
-            data = signaturePlayers;
+        } else if (type === 'signatures') {
+            data = signatures;
         }
 
         data.forEach(item => {
-            let title = item.brand_title || item.category_title || item.signature_title;
-            let selected = (title === selectedMenu) ? 'selected' : '';
-            options += `<option value="${title}" ${selected}>${title}</option>`;
+            let value = item.brand_code || item.category_code || item.signature_code;
+            let label = item.brand_title || item.category_title || item.signature_title;
+            let selected = (value === selectedMenu) ? 'selected' : '';
+            options += `<option value="${value}" ${selected}>${label}</option>`;
         });
 
         menuNameSelect.innerHTML = options;

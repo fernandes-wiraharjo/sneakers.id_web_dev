@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Livewire\Category;
+use App\Models\HeaderImage;
 use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -218,7 +219,14 @@ class StoreController extends Controller
     }
 
     public function collections($keyword){
-        $data['headerImageURL'] = 'https://placehold.co/1280x400?text=Header+Image+Placeholder';
+        $keywordArray = explode('.', $keyword);
+        if ($keywordArray[0] == 'all') {
+            $menu_parent_name = 'category';
+        } else {
+            $menu_parent_name = $keywordArray[0];
+        }
+        $headerImageData = (new HeaderImage())->getHeaderImage($menu_parent_name, $keywordArray[1]);
+        $data['headerImageURL'] = $headerImageData;
         $data['keyword'] = $keyword;
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('bootstrap.collections', $data);

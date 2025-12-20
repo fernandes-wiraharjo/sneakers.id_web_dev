@@ -89,7 +89,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarSignaturePlayer">
                         @foreach ($signature as $item)
-                            <li><a class="dropdown-item" href="{{ route('collections', 'signatures.' . $item->id) }}">{{ $item->signature_title }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('collections', 'signatures.' . $item->signature_code) }}">{{ $item->signature_title }}</a></li>
                         @endforeach
                     </ul>
                 </li>
@@ -102,7 +102,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarBrand">
                         @foreach ($brand_menu as $item)
-                            <li><a class="dropdown-item" href="{{ route('collections', 'all.' . $item->brand_code) }}">{{ strtoupper($item->brand_title) }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('collections', 'brand.' . $item->brand_code) }}">{{ strtoupper($item->brand_title) }}</a></li>
                         @endforeach
                     </ul>
                 </li>

@@ -220,18 +220,18 @@ class StoreController extends Controller
 
     public function collections($keyword){
         $keywordArray = explode('.', $keyword);
-        if ($keywordArray[0] !== 'signatures' && $keywordArray[0] !== 'brands') {
+        if ($keywordArray[0] !== 'signatures' && $keywordArray[0] !== 'brand') {
             $menu_parent_name = 'category';
         } else {
             $menu_parent_name = $keywordArray[0];
         }
+        dd($menu_parent_name);
         if (!isset($keywordArray[1]) || $keywordArray[1] == '') {
             $menu_name = 'ALL';
         } else {
             $menu_name = $keywordArray[1];
         }
-        $headerImageData = (new HeaderImage())->getHeaderImage($menu_parent_name, $menu_name);
-        $data['headerImageURL'] = $headerImageData;
+        $data['headerImageURL'] = (new HeaderImage())->getHeaderImage($menu_parent_name, $menu_name);
         $data['keyword'] = $keyword;
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('bootstrap.collections', $data);

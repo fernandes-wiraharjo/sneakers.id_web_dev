@@ -7,7 +7,7 @@
         </div>
     </div>
 </div>
-<div class="container border-1 shadow rounded-4 py-4 px-3 bg-white position-relative z-1" style="margin-top: -3rem;">
+<div class="container border-1 shadow rounded-4 py-4 px-3 bg-white position-relative z-1 product-list-container">
     @livewire('product-list', ['keyword' => $keyword])
 </div>
 @endsection

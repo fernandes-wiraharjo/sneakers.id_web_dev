@@ -60,7 +60,7 @@
         .header-image-wrapper {
             position: relative;
             z-index: 1;
-            height: 400px;
+            aspect-ratio: 10 / 3;
             display: flex;
         }
         .header-image-wrapper img {
@@ -68,7 +68,9 @@
             width: 100%;
             object-position: bottom;
         }
-        
+        .product-list-container {
+            margin-top: -3rem;
+        }
         /* Pagination Styles */
         .pagination .page-item {
             margin: 0 0.25rem;
@@ -95,6 +97,17 @@
             pointer-events: none;
             background-color: #fff;
             border-color: #dee2e6;
+        }
+        @media (max-width: 768px) {
+            .header-image-wrapper {
+                aspect-ratio: 3 / 1;
+            }
+            .header-image-wrapper img {
+                object-position: bottom;
+            }
+            .product-list-container {
+                margin-top: -.75rem;
+            }
         }
     </style>
     @stack('styles')

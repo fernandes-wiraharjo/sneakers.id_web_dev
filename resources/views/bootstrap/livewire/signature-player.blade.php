@@ -1,12 +1,11 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 p-0">
             <!-- TODO: verify UI shows signature image after PR 300 merged -->
             <div class="slick-signature">
-                @php $signature = json_decode($signature, true); @endphp
-                @foreach ($signature as $item)
+                @foreach ($signature_carousel as $item)
                     @if (isset($item['signature_image']) && $item['signature_image'] != '')
-                        <img src="{{ getImage($item['signature_image'], 'signature') }}" alt="{{ $item['signature_title'] }}" class="img-fluid">
+                        <img src="{{ $item['signature_image'] }}" alt="{{ $item['signature_title'] }}" class="img-fluid">
                     @endif
                 @endforeach
             </div>

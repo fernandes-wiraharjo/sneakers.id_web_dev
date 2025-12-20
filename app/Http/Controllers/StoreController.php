@@ -44,11 +44,9 @@ class StoreController extends Controller
         $data['best_seller'] = $this->productRepository->getProductBestSeller(10);
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
-        $data['brand'] = $this->brandRepository->getAllBrand();
-        $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
-        $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         $data['faq'] = $this->faqRepository->getFaq(5);
+        $data['signature_carousel'] = $this->signaturePlayerRepository->getSignatureCarousel();
         activity()->log('Someone Accessing my website');
         // return view('display-store.landing', $data);
         return view('bootstrap.homepage', $data);

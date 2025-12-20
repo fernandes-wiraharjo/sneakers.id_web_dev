@@ -106,7 +106,7 @@
                 object-position: bottom;
             }
             .product-list-container {
-                margin-top: -.75rem;
+                margin-top: -7px;
             }
         }
     </style>

@@ -225,7 +225,6 @@ class StoreController extends Controller
         } else {
             $menu_parent_name = $keywordArray[0];
         }
-        dd($menu_parent_name);
         if (!isset($keywordArray[1]) || $keywordArray[1] == '') {
             $menu_name = 'ALL';
         } else {

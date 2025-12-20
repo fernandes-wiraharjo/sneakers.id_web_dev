@@ -40,6 +40,7 @@ class ProductList extends Component
     public $age_range_string = '';
     public $total_product = 0;
     public $gender_list = ['MENS', 'WOMENS', 'KIDS'];
+    public $page_title = '';
 
     // Use *_string to prevent escaped array in URL
     protected $queryString = [
@@ -117,6 +118,7 @@ class ProductList extends Component
         $this->age_range = $this->age_range_string ? explode(',', $this->age_range_string) : [];
         $this->signature = $this->signature_string ? explode(',', $this->signature_string) : [];
         $this->size_filter = $this->size_filter_string ? explode(',', $this->size_filter_string) : [];
+        $this->page_title = $this->keyword;
     }
 
     public function updatedBrand()
@@ -274,26 +276,35 @@ class ProductList extends Component
         $sale_keyword = '';
         $all_signature = false;
         $size = [];
-
+        $this->page_title = 'ALL PRODUCT';
         if($this->keyword != 'all') {
             $keyword = str_replace('-', ' ', $this->keyword);
             $keyword_array = explode('.', $keyword);
             if(count($keyword_array) >= 2){
                 $keyword_array[1] = str_replace('-', ' ', $keyword_array[1]);
-
+                $this->page_title = $keyword_array[1];
                 if($keyword_array[1] != 'all') {
+                    $signature = $signaturePlayerRepository->getSignaturePlayerByCode($keyword_array[1]);
                     $brand = $brandRepository->getBrandByName($keyword_array[1]);
                     $category = $categoryRepository->getCategoryByName($keyword_array[1]);
+
+                    $signature_id = $signature ? $signature->id : null;
+                    if($signature_id) {
+                        $this->signature[] = $signature_id;
+                        $this->page_title = $signature->signature_title;
+                    }
+
                     $brand_id = $brand ? $brand->id : null;
-                    $category_id = $category ? $category->id : null;
                     if($brand_id) {
                         $this->brand[] = $brand_id;
+                        $this->page_title = $brand->brand_title;
                     }
-
+                    
+                    $category_id = $category ? $category->id : null;
                     if($category_id) {
                         $this->category[] = intval($category_id);
+                        $this->page_title = $category->category_title;
                     }
-
                 }
 
                 if($keyword_array[0] != 'all'){
@@ -301,6 +312,7 @@ class ProductList extends Component
                     $category_id = $category ? $category->id : null;
                     if($category_id) {
                         $this->category[] = intval($category_id);
+                        $this->page_title = $category->category_title;
                     }
 
                     $tag = $tagRepository->getTagByName($keyword_array[0]);
@@ -334,6 +346,7 @@ class ProductList extends Component
                 }
             } else {
                 $category = $categoryRepository->getCategoryByName($keyword_array[0]);
+                $this->page_title = $category->category_title;
                 $category_id = $category ? $category->id : null;
                 if($category_id) {
                     $this->category[] = intval($category_id);

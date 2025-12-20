@@ -31,19 +31,7 @@
                 <span class="iconify fs-3" data-icon="stash:arrow-left-duotone"></span>
             </a>
             <h1 class="fw-bold mb-0 text-uppercase">
-                @php
-                    $lastSegment = last(request()->segments());
-                @endphp
-                @if ($lastSegment == 'all')
-                    ALL PRODUCT
-                @else
-                    @php
-                    $pageTitle = str_replace('all.', '', $lastSegment);
-                    $pageTitle = str_replace('-', ' ', $pageTitle);
-                    $pageTitle = str_replace('.', ' - ', $pageTitle);
-                    @endphp
-                    {{ $pageTitle }}
-                @endif
+                {{ $page_title }}
             </h1>
         </div>
         <div class="col-12 col-md-6 mb-3 d-flex align-items-center justify-content-end flex-column flex-md-row">

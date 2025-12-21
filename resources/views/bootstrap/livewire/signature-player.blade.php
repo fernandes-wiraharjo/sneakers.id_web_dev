@@ -1,17 +1,16 @@
+@if ($signature_carousel && count($signature_carousel) > 0)
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 p-0">
-            <!-- TODO: verify UI shows signature image after PR 300 merged -->
             <div class="slick-signature">
                 @foreach ($signature_carousel as $item)
-                    @if (isset($item['signature_image']) && $item['signature_image'] != '')
-                        <img src="{{ $item['signature_image'] }}" alt="{{ $item['signature_title'] }}" class="img-fluid">
-                    @endif
+                    <img src="{{ $item['signature_image'] }}" alt="{{ $item['signature_title'] }}" class="w-100">
                 @endforeach
             </div>
         </div>
     </div>
 </div>
+@endif
 
 @push('scripts')
 <script>
@@ -21,13 +20,17 @@
             slidesToScroll: 1,
             autoplay: true,
             autoplaySpeed: 1000,
+            infinite: true,
+            arrows: true,
+            prevArrow: '<button type="button" class="slick-prev rounded-circle bg-white shadow-sm"><span class="iconify fs-2 text-dark" data-icon="stash:arrow-left-duotone"></span></button>',
+            nextArrow: '<button type="button" class="slick-next rounded-circle bg-white shadow-sm"><span class="iconify fs-2 text-dark" data-icon="stash:arrow-right-duotone"></span></button>',
             responsive: [
                 {
                     breakpoint: 768,
                     settings: {
                         slidesToShow: 2,
                     }
-                }
+                },
                 {
                     breakpoint: 576,
                     settings: {
@@ -38,4 +41,15 @@
         });
     });
 </script>
+@endpush
+
+@push('styles')
+<style>
+    .slick-signature .slick-prev {
+        left: 1rem;
+    }
+    .slick-signature .slick-next {
+        right: 1rem;
+    }
+</style>
 @endpush

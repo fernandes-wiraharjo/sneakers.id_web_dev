@@ -22,6 +22,7 @@ class CartCheckout extends Component
     public $discountAmount = 0;
     public $finalTotal = 0;
     public $appliedVoucher = null;
+    public $guestEmail = ''; // Email for guest users
     
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
@@ -46,6 +47,10 @@ class CartCheckout extends Component
             $this->voucherApplied = true;
             $this->appliedVoucher = $voucherData;
             $this->voucherMessage = $voucherData['message'] ?? 'Voucher applied successfully!';
+            // Pre-fill guest email if voucher was applied by guest
+            if (!auth()->check() && isset($voucherData['email'])) {
+                $this->guestEmail = $voucherData['email'];
+            }
             $this->calculateDiscount();
         }
 
@@ -67,6 +72,20 @@ class CartCheckout extends Component
     public function render(): View
     {
         $this->updateCart();
+        
+        // Reload voucher data to ensure inputs are populated on refresh
+        $voucherData = Cart::getVoucher();
+        if ($voucherData) {
+            $this->voucherCode = $voucherData['code'];
+            $this->voucherApplied = true;
+            $this->appliedVoucher = $voucherData;
+            $this->voucherMessage = $voucherData['message'] ?? 'Voucher applied successfully!';
+            // Pre-fill guest email if voucher was applied by guest
+            if (!auth()->check() && isset($voucherData['email'])) {
+                $this->guestEmail = $voucherData['email'];
+            }
+        }
+        
         $this->calculateDiscount();
         
         return view('livewire.cart-checkout', [
@@ -205,17 +224,32 @@ class CartCheckout extends Component
             return;
         }
         
+        // For guests, email is required
+        if (!auth()->check() && empty($this->guestEmail)) {
+            $this->voucherMessage = 'Please enter your email address to apply voucher.';
+            return;
+        }
+        
+        // Validate email format for guests
+        if (!auth()->check() && !filter_var($this->guestEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->voucherMessage = 'Please enter a valid email address.';
+            return;
+        }
+        
         // Get voucher repository
         $voucherRepo = app(\Modules\DiscountVoucher\Repositories\DiscountVoucherRepository::class);
         
         // Get current cart total
         $currentTotal = Cart::total();
         
+        // Get email - use authenticated user's email or guest email
+        $email = auth()->check() ? auth()->user()->email : $this->guestEmail;
+        
         // Validate voucher
         $validation = $voucherRepo->validateVoucherForUser(
             $this->voucherCode,
-            auth()->check() ? auth()->id() : null,
-            $currentTotal
+            $currentTotal,
+            $email
         );
         
         if ($validation['valid']) {
@@ -226,7 +260,8 @@ class CartCheckout extends Component
                 'discount_type' => $validation['voucher']->discount_type,
                 'discount_rate' => $validation['voucher']->discount_rate,
                 'discount_amount' => $validation['voucher']->discount_amount,
-                'message' => $validation['message']
+                'message' => $validation['message'],
+                'email' => !auth()->check() ? $this->guestEmail : null
             ];
             $this->voucherMessage = $validation['message'];
             

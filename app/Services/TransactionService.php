@@ -81,12 +81,14 @@ class TransactionService {
 
             // Record voucher usage if voucher was used
             if (isset($transaction['transactions']['discount_voucher_id']) && $transaction['transactions']['discount_voucher_id']) {
-                $userId = $transaction['transaction_destinations']['user_id'] ?? null;
-                if ($userId) {
+                $email = $transaction['transaction_destinations']['email'] ?? null;
+                
+                // Record usage by email
+                if ($email) {
                     $voucherRepo = app(\Modules\DiscountVoucher\Repositories\DiscountVoucherRepository::class);
                     $voucherRepo->recordUsage(
                         $transaction['transactions']['discount_voucher_id'], 
-                        $userId, 
+                        $email,
                         $creteTransaction->id
                     );
                 }

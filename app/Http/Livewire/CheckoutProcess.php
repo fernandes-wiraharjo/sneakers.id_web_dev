@@ -111,6 +111,11 @@ class CheckoutProcess extends Component
                 $this->selectedArea = $this->userRegion->region_id;
                 $this->shippingZipCode = $this->userRegion->post_code;
             }
+        } else {
+            // For guests, populate email from voucher data if available
+            if ($this->voucherData && isset($this->voucherData['email'])) {
+                $this->shippingEmail = $this->voucherData['email'];
+            }
         }
         
         // Set shipping weight for both guest and authenticated users

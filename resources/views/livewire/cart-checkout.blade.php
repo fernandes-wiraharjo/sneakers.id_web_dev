@@ -23,7 +23,6 @@
                             <span class="Cart__HeadItem Heading Text--subdued u-h7" style="text-align: right">Total</span>
                         </div>
                         @foreach ($content as $id => $item)
-                        {{ $disabledPlus[$id] ? 'true' : 'false'}}
                         <div class="CartItem">
                             <input type="hidden" name="cart_item[{{ $id }}][id]" value="{{ $id }}">
                             <input type="hidden" name="cart_item[{{ $id }}][product_code]" value="{{ $item->get('product_code') }}">
@@ -154,9 +153,24 @@
                             {{-- Voucher Code Section --}}
                             <div class="Cart__VoucherContainer" style="margin-bottom: 20px;">
                                 <label for="voucher_code" style="display: block; margin-bottom: 8px; font-weight: 600;">Have a voucher code?</label>
+                                
+                                {{-- Email field for guests only (authenticated users use their account email) --}}
+                                @guest
+                                <div style="margin-bottom: 12px;">
+                                    <label for="guest_email" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px;">Email Address <span style="color: #c83532;">*</span></label>
+                                    <input type="email" 
+                                        wire:model="guestEmail" 
+                                        id="guest_email" 
+                                        class="Form__Input" 
+                                        placeholder="Enter your email address"
+                                        style="width: 100%;"
+                                        {{ $voucherApplied ? 'disabled' : '' }}>
+                                </div>
+                                @endguest
+                                
                                 <div style="display: flex; gap: 10px;">
                                     <input type="text" 
-                                        wire:model.defer="voucherCode" 
+                                        wire:model="voucherCode" 
                                         id="voucher_code" 
                                         class="Form__Input" 
                                         placeholder="Enter voucher code"

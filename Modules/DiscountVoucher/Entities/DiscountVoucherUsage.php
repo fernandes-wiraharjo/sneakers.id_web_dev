@@ -3,7 +3,6 @@
 namespace Modules\DiscountVoucher\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class DiscountVoucherUsage extends Model
 {
@@ -11,7 +10,7 @@ class DiscountVoucherUsage extends Model
 
     protected $fillable = [
         'discount_voucher_id',
-        'user_id',
+        'email',
         'transaction_id'
     ];
 
@@ -21,14 +20,6 @@ class DiscountVoucherUsage extends Model
     public function voucher()
     {
         return $this->belongsTo(DiscountVoucher::class, 'discount_voucher_id');
-    }
-
-    /**
-     * Get the user
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**

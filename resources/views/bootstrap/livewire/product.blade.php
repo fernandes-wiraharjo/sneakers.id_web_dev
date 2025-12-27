@@ -1,15 +1,23 @@
-<div class="container">
+<div class="container py-5">
     <div class="row">
         <div class="d-none d-md-flex col-md-2 flex-column gap-2">
             @foreach ($product->images as $item)
-            <div class="ratio ratio-1x1">
-                <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3">
+            <div class="ratio ratio-1x1 product-thumbnail-container" style="cursor: pointer;">
+                <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3 product-thumbnail" data-full-image="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
             </div>
             @endforeach
         </div>
         <div class="col-12 col-md-6">
             <div class="ratio ratio-1x1">
-                <img src="{{ getImage($product->images[0]->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-4">
+                <img id="main-product-image" src="{{ getImage($product->images[0]->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-4">
+            </div>
+            
+            <div class="my-3 d-flex flex-nowrap gap-3 d-md-none overflow-x-auto overflow-y-hidden" style="-webkit-overflow-scrolling: touch">
+                @foreach ($product->images as $item)
+                <div class="ratio ratio-1x1 flex-shrink-0 product-thumbnail-container" style="width: 100px; height: 100px; cursor: pointer;">
+                    <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3 product-thumbnail" data-full-image="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
+                </div>
+                @endforeach
             </div>
         </div>
         <div class="col-12 col-md-4">
@@ -90,3 +98,21 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // Handle thumbnail click for both mobile and desktop
+        $('.product-thumbnail').on('click', function() {
+            var fullImageUrl = $(this).data('full-image');
+            if (fullImageUrl) {
+                $('#main-product-image').attr('src', fullImageUrl);
+                
+                // Optional: Add active state to clicked thumbnail
+                $('.product-thumbnail-container').removeClass('border rounded-3 border-dark shadow');
+                $(this).closest('.product-thumbnail-container').addClass('border rounded-3 border-dark shadow');
+            }
+        });
+    });
+</script>
+@endpush

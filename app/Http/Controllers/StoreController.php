@@ -68,7 +68,8 @@ class StoreController extends Controller
             : [];
       
         activity()->log('Someone look into my product');
-        return view('display-store.product-detail', $data);
+        return view('bootstrap.product-detail', $data);
+        // return view('display-store.product-detail', $data);
     }
 
     public function search(Request $request){

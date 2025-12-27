@@ -1,5 +1,8 @@
 @extends('bootstrap.layout')
 
+@section('title', 'Home')
+@section('description', 'Homepage of SNEAKERS.ID')
+
 @section('content')
     @livewire('banner-image')
 

@@ -1,8 +1,11 @@
-<div class="container py-5">
+@php
+$selectedThumbStyle = 'border rounded-3 border-dark shadow'
+@endphp
+<div class="container pb-5 pt-md-5">
     <div class="row">
         <div class="d-none d-md-flex col-md-2 flex-column gap-2">
-            @foreach ($product->images as $item)
-            <div class="ratio ratio-1x1 product-thumbnail-container" style="cursor: pointer;">
+            @foreach ($product->images as $index => $item)
+            <div class="ratio ratio-1x1 product-thumbnail-container {{ $index == 0 ? $selectedThumbStyle : ''}}" style="cursor: pointer;">
                 <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3 product-thumbnail" data-full-image="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
             </div>
             @endforeach
@@ -14,7 +17,7 @@
             
             <div class="my-3 d-flex flex-nowrap gap-3 d-md-none overflow-x-auto overflow-y-hidden" style="-webkit-overflow-scrolling: touch">
                 @foreach ($product->images as $item)
-                <div class="ratio ratio-1x1 flex-shrink-0 product-thumbnail-container" style="width: 100px; height: 100px; cursor: pointer;">
+                <div class="ratio ratio-1x1 flex-shrink-0 product-thumbnail-container {{ $index == 0 ? $selectedThumbStyle : ''}}" style="width: 100px; height: 100px; cursor: pointer;">
                     <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3 product-thumbnail" data-full-image="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
                 </div>
                 @endforeach
@@ -109,8 +112,8 @@
                 $('#main-product-image').attr('src', fullImageUrl);
                 
                 // Optional: Add active state to clicked thumbnail
-                $('.product-thumbnail-container').removeClass('border rounded-3 border-dark shadow');
-                $(this).closest('.product-thumbnail-container').addClass('border rounded-3 border-dark shadow');
+                $('.product-thumbnail-container').removeClass('{{ $selectedThumbStyle }}');
+                $(this).closest('.product-thumbnail-container').addClass('{{ $selectedThumbStyle }}');
             }
         });
     });

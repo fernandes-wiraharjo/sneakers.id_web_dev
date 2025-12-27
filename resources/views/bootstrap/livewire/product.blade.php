@@ -3,20 +3,20 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
 @endphp
 <div class="container pb-5 pt-md-5">
     <div class="row">
-        <div class="d-none d-md-flex col-md-2 flex-column gap-2">
+        <div class="d-none d-md-flex col-md-2 flex-column gap-2" id="thumbnail-container" style="overflow-y: auto; overflow-x: hidden;">
             @foreach ($product->images as $index => $item)
-            <div class="ratio ratio-1x1 product-thumbnail-container {{ $index == 0 ? $selectedThumbStyle : ''}}" style="cursor: pointer;">
+            <div class="ratio ratio-1x1 product-thumbnail-container {{ $index == 0 ? $selectedThumbStyle : ''}}" style="cursor: pointer; flex-shrink: 0;">
                 <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3 product-thumbnail" data-full-image="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
             </div>
             @endforeach
         </div>
         <div class="col-12 col-md-6">
-            <div class="ratio ratio-1x1">
+            <div class="ratio ratio-1x1" id="main-image-container">
                 <img id="main-product-image" src="{{ getImage($product->images[0]->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-4">
             </div>
             
             <div class="my-3 d-flex flex-nowrap gap-3 d-md-none overflow-x-auto overflow-y-hidden" style="-webkit-overflow-scrolling: touch">
-                @foreach ($product->images as $item)
+                @foreach ($product->images as $index => $item)
                 <div class="ratio ratio-1x1 flex-shrink-0 product-thumbnail-container {{ $index == 0 ? $selectedThumbStyle : ''}}" style="width: 100px; height: 100px; cursor: pointer;">
                     <img src="{{ getImage($item->image_url, 'products/' . $product->product_code) }}" alt="{{ $product->product_name }}" class="img-fluid rounded-3 product-thumbnail" data-full-image="{{ getImage($item->image_url, 'products/' . $product->product_code) }}">
                 </div>
@@ -27,7 +27,12 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             <p class="text-muted mb-2">{{ $product->product_code }}</p>
             <h1 class="fw-bold">{{ $product->product_name }}</h1>
             <div>
-                {!! $product->description !!}
+                <div id="product-description" class="product-description-text" style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                    {!! $product->description !!}
+                </div>
+                <button id="read-more-btn" class="btn btn-link p-0 text-danger text-decoration-none mt-2" style="display: none; font-size: 0.875rem;">
+                    <span id="read-more-text">Read more</span>
+                </button>
             </div>
             <div class="d-flex justify-content-between">
                 <span class="fw-bold">SELECT SIZE</span>
@@ -105,6 +110,27 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
 @push('scripts')
 <script>
     $(document).ready(function() {
+        // Match thumbnail container height to main image height
+        function matchThumbnailHeight() {
+            var mainImageHeight = $('#main-image-container').outerHeight();
+            if (mainImageHeight > 0) {
+                $('#thumbnail-container').css('height', mainImageHeight + 'px');
+            }
+        }
+        
+        // Initial height match after images load
+        $(window).on('load', function() {
+            setTimeout(matchThumbnailHeight, 100);
+        });
+        
+        // Also try immediately in case images are already loaded
+        setTimeout(matchThumbnailHeight, 100);
+        
+        // Update on window resize
+        $(window).on('resize', function() {
+            matchThumbnailHeight();
+        });
+        
         // Handle thumbnail click for both mobile and desktop
         $('.product-thumbnail').on('click', function() {
             var fullImageUrl = $(this).data('full-image');
@@ -114,8 +140,56 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
                 // Optional: Add active state to clicked thumbnail
                 $('.product-thumbnail-container').removeClass('{{ $selectedThumbStyle }}');
                 $(this).closest('.product-thumbnail-container').addClass('{{ $selectedThumbStyle }}');
+                
+                // Recalculate height after image change
+                setTimeout(matchThumbnailHeight, 100);
             }
         });
+        
+        // Read more/read less functionality for product description
+        function initReadMore() {
+            var $description = $('#product-description');
+            var $btn = $('#read-more-btn');
+            var $btnText = $('#read-more-text');
+            var originalHeight = $description[0].scrollHeight;
+            var lineHeight = parseInt($description.css('line-height')) || 24;
+            var maxHeight = lineHeight * 3; // 3 lines
+            
+            // Check if content exceeds 3 lines
+            if (originalHeight > maxHeight) {
+                $btn.show();
+                $description.css({
+                    'max-height': maxHeight + 'px',
+                    'overflow': 'hidden'
+                });
+            }
+            
+            var isExpanded = false;
+            $btn.on('click', function() {
+                if (!isExpanded) {
+                    $description.css({
+                        'max-height': originalHeight + 'px',
+                        'display': 'block',
+                        '-webkit-line-clamp': 'unset',
+                        '-webkit-box-orient': 'unset'
+                    });
+                    $btnText.text('Read less');
+                    isExpanded = true;
+                } else {
+                    $description.css({
+                        'max-height': maxHeight + 'px',
+                        'display': '-webkit-box',
+                        '-webkit-line-clamp': '3',
+                        '-webkit-box-orient': 'vertical'
+                    });
+                    $btnText.text('Read more');
+                    isExpanded = false;
+                }
+            });
+        }
+        
+        // Initialize read more after content loads
+        setTimeout(initReadMore, 100);
     });
 </script>
 @endpush

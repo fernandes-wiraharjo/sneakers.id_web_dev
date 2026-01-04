@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class HeaderImageSeeder extends Seeder
 {
@@ -30,6 +31,7 @@ class HeaderImageSeeder extends Seeder
         
         $existingDatas = DB::table('header_images')->select('menu_name', 'menu_parent_name')->get();
         
+        $currentTimestamp = now();
         $insertData = [];
         foreach ($defaultCategories as $category) {
             if ($existingDatas->where('menu_name', $category)->where('menu_parent_name', 'category')->count() > 0) {
@@ -38,8 +40,10 @@ class HeaderImageSeeder extends Seeder
             $insertData[] = [
                 'menu_name' => $category,
                 'menu_parent_name' => 'category',
-                'image_url' => $baseUrl . '/images/header-image/' . Str::lower($category) . '.webp',
+                'image_url' => Storage::disk('public')->url('images/header-image/' . Str::lower($category) . '.webp'),
                 'is_active' => 1,
+                'created_at' => $currentTimestamp,
+                'updated_at' => $currentTimestamp
             ];
         }
         foreach ($defaultBrands as $brand) {
@@ -49,8 +53,10 @@ class HeaderImageSeeder extends Seeder
             $insertData[] = [
                 'menu_name' => $brand,
                 'menu_parent_name' => 'brand',
-                'image_url' => $baseUrl . '/images/header-image/' . Str::lower($brand) . '.webp',
-                'is_active' => 1
+                'image_url' => Storage::disk('public')->url('images/header-image/' . Str::lower($brand) . '.webp'),
+                'is_active' => 1,
+                'created_at' => $currentTimestamp,
+                'updated_at' => $currentTimestamp
             ];
         }
         foreach ($defaultSignaturePlayers as $player) {
@@ -60,8 +66,10 @@ class HeaderImageSeeder extends Seeder
             $insertData[] = [
                 'menu_name' => $player,
                 'menu_parent_name' => 'signatures',
-                'image_url' => $baseUrl . '/images/header-image/' . Str::lower($player) . '.webp',
-                'is_active' => 1
+                'image_url' => Storage::disk('public')->url('images/header-image/' . Str::lower($player) . '.webp'),
+                'is_active' => 1,
+                'created_at' => $currentTimestamp,
+                'updated_at' => $currentTimestamp
             ];
         }
 

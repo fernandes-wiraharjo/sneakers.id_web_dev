@@ -155,17 +155,17 @@
 
             <!-- Search -->
             <li class="nav-item">
-                <button class="nav-link border-0 bg-transparent p-0" type="button" id="toggleSearchBtn" aria-label="Toggle search">
+                <button class="d-flex align-items-center nav-link border-0 bg-transparent p-0" type="button" id="toggleSearchBtn" aria-label="Toggle search">
                     <span class="iconify" data-icon="material-symbols:search-rounded"></span>
                 </button>
             </li>
 
             <!-- Cart -->
             <li class="nav-item">
-                <a class="nav-link position-relative" href="javascript:void(0);">
+                <button class="d-flex align-items-center nav-link position-relative border-0 bg-transparent p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas">
                     <span class="iconify" data-icon="uil:cart"></span>
                     @livewire('cart-counter')
-                </a>
+                </button>
             </li>
         </ul>
     </div>
@@ -325,3 +325,17 @@
     });
 </script>
 @endpush
+
+<!-- Cart Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="width: 400px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel">Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0 d-flex flex-column" style="height: calc(100vh - 73px);">
+        <form action="{{ route('customer.cart') }}" method="POST" novalidate class="d-flex flex-column h-100">
+            @csrf
+            @livewire('cart-component')
+        </form>
+    </div>
+</div>

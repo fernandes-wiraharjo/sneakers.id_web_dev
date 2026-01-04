@@ -35,7 +35,7 @@ class CartComponent extends Component
     public function render(): View
     {
         $this->updateCart();
-        return view('livewire.cart-component', [
+        return view('bootstrap.livewire.cart-component', [
             'total' => intval($this->total),
             'content' => $this->content,
             'note' => Cart::getNotes(),

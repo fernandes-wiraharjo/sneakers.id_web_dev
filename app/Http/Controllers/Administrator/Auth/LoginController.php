@@ -155,7 +155,7 @@ class LoginController extends Controller
     {
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.forgot-password', $data);
+        return view('bootstrap.forgot-password', $data);
     }
 
     /**

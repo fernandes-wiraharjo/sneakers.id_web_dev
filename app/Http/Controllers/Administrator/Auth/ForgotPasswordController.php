@@ -55,9 +55,7 @@ class ForgotPasswordController extends Controller {
                 app('auth.password.broker')->createToken($admin)
             );
             
-            session()->flash('success', [
-                __('passwords.sent')
-            ]);
+            session()->flash('success', __('passwords.sent'));
             
             return redirect()->back();
             

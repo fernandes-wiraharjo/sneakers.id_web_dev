@@ -47,7 +47,7 @@ class LoginController extends Controller
     protected $repository;
 
     public function __construct(UserRepository $repository, BrandRepository $brandRepository) {
-        $this->middleware([LadminGuestMiddleware::class])->except('logout');
+        $this->middleware([LadminGuestMiddleware::class])->except(['logout', 'sendVerificationEmail', 'verifyAccount']);
         $this->repository = $repository;
         $this->brandRepository = $brandRepository;
     }
@@ -197,36 +197,29 @@ class LoginController extends Controller
     }
 
     public function sendVerificationEmail($token){
-        $verifyUser = UserVerify::where('token', $token)->first();
+        try {
+            $verifyUser = UserVerify::where('token', $token)->first();
+            if (!$verifyUser) {
+                throw new \Exception('Token not found');
+            }
 
-        $message = 'Sorry your email cannot be identified.';
+            if ($verifyUser->user->is_email_verified) {
+                return redirect()->back()->with('error', 'Your email is already verified.');
+            }
 
-        if(!is_null($verifyUser) ){
-            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
+            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($verifyUser){
                 $message->to($verifyUser->user->email);
                 $message->subject('Email Verification Mail');
             });
+            if (count(Mail::failures()) > 0) {
+                Log::error('Failed to send verification email: ' . json_encode(Mail::failures()));
+                throw new \Exception('Failed to send verification email');
+            }
+            return redirect()->back()->with('success', 'Resend email verification, please check your email to verify.');
 
-            return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
-
-            // $user = $verifyUser->user;
-
-            // if(!$user->is_email_verified) {
-            //     $verifyUser->user->is_email_verified = 1;
-            //     $verifyUser->user->save();
-            //     $message = "Your e-mail is verified. You can now login.";
-            // } else {
-            //     $message = "Your e-mail is already verified. You can now login.";
-            // }
-        } else {
-            return redirect()->back()->with(['error', $message]);
-
-            // $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
-            //     $message->to($verifyUser->user->email);
-            //     $message->subject('Email Verification Mail');
-            // });
-
-            // return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
+        } catch (\Exception $e) {
+            Log::error("Failed to send verification email: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to send verification email. Please try again later.');
         }
     }
 

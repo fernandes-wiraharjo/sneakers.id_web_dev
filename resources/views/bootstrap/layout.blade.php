@@ -119,6 +119,48 @@
                 margin-top: -7px;
             }
         }
+        /* Search Bar Styles */
+        #searchBar {
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+        }
+        
+        #searchBar input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+        
+        #searchResultsList li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        #searchResultsList li:last-child {
+            border-bottom: none;
+        }
+        
+        #searchResultsList a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        #searchResultsList a:hover {
+            color: #000;
+        }
+        
+        .search-result-image {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            margin-right: 12px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .search-result-info {
+            flex: 1;
+        }
     </style>
     @stack('styles')
     @livewireStyles

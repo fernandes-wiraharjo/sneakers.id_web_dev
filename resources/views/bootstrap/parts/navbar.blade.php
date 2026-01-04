@@ -155,9 +155,9 @@
 
             <!-- Search -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('search') }}">
+                <button class="nav-link border-0 bg-transparent p-0" type="button" id="toggleSearchBtn" aria-label="Toggle search">
                     <span class="iconify" data-icon="material-symbols:search-rounded"></span>
-                </a>
+                </button>
             </li>
 
             <!-- Cart -->
@@ -170,3 +170,158 @@
         </ul>
     </div>
 </nav>
+
+<!-- Search Bar (Hidden by default) -->
+<div class="container-fluid bg-light border-bottom" id="searchBar" style="display: none;">
+    <div class="container py-3">
+        <div class="d-flex align-items-center">
+            <!-- Search Icon -->
+            <div class="me-3" style="color: #939393;">
+                <span class="iconify" data-icon="material-symbols:search-rounded" style="font-size: 21px;"></span>
+            </div>
+            
+            <!-- Search Input -->
+            <input type="text" 
+                   class="form-control border-0 bg-transparent flex-grow-1" 
+                   id="global_search" 
+                   name="q" 
+                   placeholder="Search..." 
+                   autocomplete="off" 
+                   autocorrect="off" 
+                   autocapitalize="off"
+                   style="font-size: 15px; box-shadow: none;"
+                   aria-label="Search">
+            
+            <!-- Close Button -->
+            <button class="btn btn-link text-decoration-none p-0 ms-3" type="button" id="closeSearchBtn" aria-label="Close search" style="color: #939393;">
+                <span class="iconify" data-icon="mdi:close" style="font-size: 16px;"></span>
+            </button>
+        </div>
+        
+        <!-- Search Results Container -->
+        <div id="searchResults" class="mt-3" style="display: none;">
+            <div class="border-top pt-3">
+                <div class="fw-semibold text-uppercase small mb-2" style="color: #666;">Products</div>
+                <ul id="searchResultsList" class="list-unstyled mb-0"></ul>
+                <div class="mt-2">
+                    <a href="#" id="total_result" class="text-decoration-none fw-semibold small"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        const toggleSearchBtn = $('#toggleSearchBtn');
+        const searchBar = $('#searchBar');
+        const globalSearch = $('#global_search');
+        const closeSearchBtn = $('#closeSearchBtn');
+        const searchResults = $('#searchResults');
+        const searchResultsList = $('#searchResultsList');
+        const totalResult = $('#total_result');
+
+        // Toggle search bar visibility
+        function toggleSearch() {
+            if (searchBar.is(':visible')) {
+                searchBar.slideUp(300, function() {
+                    globalSearch.val('');
+                    searchResults.hide();
+                    searchResultsList.html('');
+                });
+            } else {
+                searchBar.slideDown(300, function() {
+                    globalSearch.focus();
+                });
+            }
+        }
+
+        // Open/close search
+        toggleSearchBtn.on('click', function(e) {
+            e.preventDefault();
+            toggleSearch();
+        });
+
+        // Close search
+        closeSearchBtn.on('click', function(e) {
+            e.preventDefault();
+            searchBar.slideUp(300, function() {
+                globalSearch.val('');
+                searchResults.hide();
+                searchResultsList.html('');
+            });
+        });
+
+        // Search input handler - AJAX search
+        globalSearch.on('input', function() {
+            const searchQuery = $(this).val().trim();
+            
+            if (searchQuery.length > 0) {
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route('search') }}',
+                    data: {'search': searchQuery},
+                    success: function(data) {
+                        const result = JSON.parse(data);
+                        const items = result.item;
+                        let searchResultHtml = '';
+
+                        if (items && items.length > 0) {
+                            for (let index = 0; index < items.length; index++) {
+                                const imageUrl = '{{ asset("images/") }}/products/' + items[index].product_code + '/' + items[index].image;
+                                const productUrl = '/product-detail/' + items[index].id + '/' + items[index].product_name.replace(/ /g, '_');
+                                
+                                searchResultHtml += 
+                                    '<li>' +
+                                        '<a href="' + productUrl + '">' +
+                                            '<img src="' + imageUrl + '" alt="' + items[index].product_name + '" class="search-result-image">' +
+                                            '<div class="search-result-info">' +
+                                                '<div class="fw-semibold">' + items[index].product_name + '</div>' +
+                                            '</div>' +
+                                        '</a>' +
+                                    '</li>';
+                            }
+                            searchResults.show();
+                            searchResultsList.html(searchResultHtml);
+                            totalResult.html('View All ' + result.total_result + ' Products').attr('href', '/search-result/' + encodeURIComponent(searchQuery));
+                        } else {
+                            searchResultHtml = '<li class="text-muted">Search not found!</li>';
+                            searchResults.show();
+                            searchResultsList.html(searchResultHtml);
+                            totalResult.html('').attr('href', '#');
+                        }
+                    },
+                    error: function() {
+                        searchResults.hide();
+                        searchResultsList.html('');
+                    }
+                });
+            } else {
+                searchResults.hide();
+                searchResultsList.html('');
+                totalResult.html('').attr('href', '#');
+            }
+        });
+
+        // Close search on Escape key
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && searchBar.is(':visible')) {
+                searchBar.slideUp(300, function() {
+                    globalSearch.val('');
+                    searchResults.hide();
+                    searchResultsList.html('');
+                });
+            }
+        });
+
+        // Close search results when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('#searchBar').length && searchBar.is(':visible')) {
+                searchResults.hide();
+            }
+        });
+    });
+</script>
+@endpush

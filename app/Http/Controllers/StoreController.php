@@ -206,6 +206,7 @@ class StoreController extends Controller
 
     public function searchResult($keyword){
         $data['keyword'] = $keyword;
+        $data['headerImageURL'] = (new HeaderImage())->getHeaderImage('common', 'Search Result');
         $data['sizes'] = $this->sizeRepository->getAllActiveSizes();
         $data['men_sizes'] = $this->sizeRepository->getAllMenSize();
         $data['women_sizes'] = $this->sizeRepository->getAllWomenSize();
@@ -214,7 +215,7 @@ class StoreController extends Controller
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone find a product');
-        return view('display-store.search-result', $data);
+        return view('bootstrap.search-result', $data);
     }
 
     public function collections($keyword){

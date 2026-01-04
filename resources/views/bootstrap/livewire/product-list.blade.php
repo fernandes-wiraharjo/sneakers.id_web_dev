@@ -150,17 +150,19 @@
                 </div>
             </div>
             <div wire:loading.remove>
-                @forelse ($products as $product)
+                @if (count($products) > 0)
                     <div class="product-grid">
-                        @include('bootstrap.parts.product-card', ['item' => $product])
+                        @foreach ($products as $product)
+                            @include('bootstrap.parts.product-card', ['item' => $product])
+                        @endforeach
                     </div>
-                @empty
+                @else
                     <div class="text-center py-5">
                         <img src="{{ asset('stores-info/product-not-found.webp') }}" alt="Not Found" class="img-fluid">
                         <h4 class="fw-bold">Oops, product not found</h4>
                         <p class="text-muted">Try another keyword</p>
                     </div>
-                @endforelse
+                @endif
                 
                 <!-- Pagination -->
                 <div class="mt-4 d-flex justify-content-center">

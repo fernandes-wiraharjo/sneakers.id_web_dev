@@ -1,0 +1,13 @@
+{
+    "name": "ShippingCourier",
+    "alias": "shippingcourier",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ShippingCourier\\Providers\\ShippingCourierServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -509,10 +509,9 @@
                                                 class="Link Link--secondary">MY TRANSACTION </a>
                                             </li> --}}
                                         <li class="Linklist__Item">
-                                            <a href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()" class="Link Link--secondary">
+                                            <a href="{{ route('customer.logout') }}" class="Link Link--secondary">
                                                 {{ __('SIGN OUT') }}
                                             </a>
-                                            <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post">@csrf</form>
                                         </li>
                                     </ul>
                                 </div>

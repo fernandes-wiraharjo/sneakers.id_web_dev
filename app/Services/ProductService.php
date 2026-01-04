@@ -6,6 +6,7 @@ use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\File;
+use Modules\Transaction\Entities\TransactionItems;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
@@ -29,6 +30,7 @@ class ProductService {
             'product_name' => $request['product_name'],
             'product_link' => $request['product_link'],
             'shopee_link' => $request['shopee_link'],
+            'tiktok_link' => $request['tiktok_link'],
             'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active']
@@ -48,15 +50,27 @@ class ProductService {
                     $checkFileExists = imageIsExist($beforePath, $image);
                     $checkFile1200isExists = imageIsExist($beforePath, str_replace("1800x1800", "1200x1200", $image));
                     if ($checkFileExists && $checkFile1200isExists) {
+
+                        if (!File::exists($afterPath)) {
+                            File::makeDirectory($afterPath, 0755, true);
+                        }
                         $do_move = moveImage($beforePath, $afterPath, $image);
                         $do_move = moveImage($beforePath, $afterPath, str_replace("1800x1800", "1200x1200", $image));
 
                         if(!$do_move){
                             abort(500, 'Failed upload image');
                         } else {
+                            // Convert both to WebP and delete original
+                            convertToWebpAndDelete(public_path($afterPath . '/' . $image));
+                            convertToWebpAndDelete(public_path($afterPath . '/' . str_replace("1800x1800", "1200x1200", $image)));
+
+                            // Save WebP name instead of original extension
+                            $webpName = pathinfo($image, PATHINFO_FILENAME) . '.webp';
+
                             $productImage = [
                                 'product_id' => $idNewProduct,
-                                'image_url' => $image
+                                // 'image_url' => $image
+                                'image_url' => $webpName
                             ];
 
                             $this->productRepository->insertProductImage($productImage);
@@ -65,7 +79,9 @@ class ProductService {
                                 $getProduct = $this->productRepository->getProductById($idNewProduct);
 
                                 if($getProduct) {
-                                    $getProduct->image = $request['is_main'];
+                                    $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
+                                    // $getProduct->image = $request['is_main'];
+                                    $getProduct->image = $webpMain;
                                     $getProduct->save();
                                 }
                             }
@@ -145,11 +161,13 @@ class ProductService {
 	}
 
     public function updateProduct($id, $request){
+        $message = '';
         $product = [
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
             'product_link' => $request['product_link'],
             'shopee_link' => $request['shopee_link'],
+            'tiktok_link' => $request['tiktok_link'],
             'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active'],
@@ -203,9 +221,16 @@ class ProductService {
                         if(!$do_move){
                             abort(500, 'Failed upload image');
                         } else {
+                            // Convert to WebP and delete original
+                            convertToWebpAndDelete(public_path($afterPath . '/' . $image));
+                            convertToWebpAndDelete(public_path($afterPath . '/' . str_replace("1800x1800", "1200x1200", $image)));
+
+                            $webpName = pathinfo($image, PATHINFO_FILENAME) . '.webp';
+
                             $productImage = [
                                 'product_id' => $id,
-                                'image_url' => $image
+                                'image_url' => $webpName
+                                // 'image_url' => $image
                             ];
 
                             $this->productRepository->insertProductImage($productImage);
@@ -219,7 +244,15 @@ class ProductService {
                 $getProduct = $this->productRepository->getProductById($id);
 
                 if($getProduct) {
-                    $getProduct->image = $request['is_main'];
+                    $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
+                    $webpPath = public_path($afterPath . '/' . $webpMain);
+
+                    if (File::exists($webpPath)) {
+                        $getProduct->image = $webpMain; // use converted webp
+                    } else {
+                        $getProduct->image = $request['is_main']; // fallback to original
+                    }
+
                     $getProduct->save();
                 }
 
@@ -238,10 +271,14 @@ class ProductService {
             }
 
             if($diff = array_diff($oldDetail, $detail_ids)){
-                foreach($diff as $itemDiff) {
-                    $this->productRepository->deleteProductDetail($itemDiff);
+              foreach($diff as $itemDiff) {
+                    $check_transactions = TransactionItems::where('product_detail_id', $itemDiff)->first();
+                    if(!$check_transactions) {
+                        $this->productRepository->deleteProductDetail($itemDiff);
+                    } else {
+                        $message = 'There are sizes that cannot be deleted because they already have transaction data';
+                    }
                 }
-
                 $updateTimestamps = $getProduct->update([
                     'updated_at' => Carbon::now()
                 ]);
@@ -365,7 +402,7 @@ class ProductService {
                 ]);
             }
         }
-        return true;
+        return ['status' => true, 'message' => $message];
     }
 
     public function generateProductCode()
@@ -396,7 +433,7 @@ class ProductService {
         //get data images
         $directory = 'images/products/'.$request['product_code'];
         $files_info = [];
-        $file_ext = array('png','jpg','jpeg','pdf');
+        $file_ext = array('png','jpg','jpeg','pdf','webp');
 
         // Read files
         foreach (File::allFiles(public_path($directory)) as $file) {

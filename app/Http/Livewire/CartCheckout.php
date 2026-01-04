@@ -14,6 +14,16 @@ class CartCheckout extends Component
     public $note;
     public $disabledPlus = [];
     public $interval = 5; // Interval in seconds (adjust as needed)
+    
+    // Voucher properties
+    public $voucherCode = '';
+    public $voucherApplied = false;
+    public $voucherMessage = '';
+    public $discountAmount = 0;
+    public $finalTotal = 0;
+    public $appliedVoucher = null;
+    public $guestEmail = ''; // Email for guest users
+    
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
         'noteUpdated' => 'updateNote',
@@ -29,6 +39,20 @@ class CartCheckout extends Component
     {
         $this->note = Cart::getNotes();
         $this->updateCart();
+        
+        // Load voucher from cart if exists
+        $voucherData = Cart::getVoucher();
+        if ($voucherData) {
+            $this->voucherCode = $voucherData['code'];
+            $this->voucherApplied = true;
+            $this->appliedVoucher = $voucherData;
+            $this->voucherMessage = $voucherData['message'] ?? 'Voucher applied successfully!';
+            // Pre-fill guest email if voucher was applied by guest
+            if (!auth()->check() && isset($voucherData['email'])) {
+                $this->guestEmail = $voucherData['email'];
+            }
+            $this->calculateDiscount();
+        }
 
 
         // foreach(Cart::content() as $item) {
@@ -48,6 +72,22 @@ class CartCheckout extends Component
     public function render(): View
     {
         $this->updateCart();
+        
+        // Reload voucher data to ensure inputs are populated on refresh
+        $voucherData = Cart::getVoucher();
+        if ($voucherData) {
+            $this->voucherCode = $voucherData['code'];
+            $this->voucherApplied = true;
+            $this->appliedVoucher = $voucherData;
+            $this->voucherMessage = $voucherData['message'] ?? 'Voucher applied successfully!';
+            // Pre-fill guest email if voucher was applied by guest
+            if (!auth()->check() && isset($voucherData['email'])) {
+                $this->guestEmail = $voucherData['email'];
+            }
+        }
+        
+        $this->calculateDiscount();
+        
         return view('livewire.cart-checkout', [
             'session_id' => Cart::hashID(),
             'total' => intval($this->total),
@@ -75,6 +115,7 @@ class CartCheckout extends Component
     public function clearCart(): void
     {
         Cart::clear();
+        // Cart::clearOrderId();
         $this->updateCart();
         $this->emit('cartCounter');
     }
@@ -95,8 +136,38 @@ class CartCheckout extends Component
                 Cart::update($size_id, $action);
             } else {
                 $this->disabledPlus[$size_id] = true;
-                $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
+                $this->emit('showToast', ['type' => 'error', 'message' => 'Product stock has reached the limit']);
                 // dd('qty Not valid');
+            }
+        } elseif($action == 'minus') {
+            $this->disabledPlus[$size_id] = false;
+            Cart::update($size_id, $action);
+        } elseif($action == 'change') {
+            // Handle direct input change
+            $newQty = intval($current_qty);
+            $originalQty = intval($current_qty);
+            
+            // Ensure minimum quantity is 1
+            if ($newQty < 1) {
+                $newQty = 1;
+            }
+            
+            // Check if new quantity exceeds available stock
+            if ($newQty > $qty) {
+                $newQty = $qty;
+                $this->disabledPlus[$size_id] = true;
+                $this->emit('showToast', ['type' => 'warning', 'message' => 'Product stock has reached the limit. Set to maximum: ' . $qty]);
+            }
+            
+            Cart::setQuantity($size_id, $newQty);
+            $this->disabledPlus[$size_id] = ($newQty >= $qty);
+            
+            // If quantity was corrected, dispatch event to update the input field
+            if ($originalQty != $newQty) {
+                $this->dispatchBrowserEvent('quantity-corrected', [
+                    'size_id' => $size_id,
+                    'quantity' => $newQty
+                ]);
             }
         } else {
             $this->disabledPlus[$size_id] = false;
@@ -104,10 +175,11 @@ class CartCheckout extends Component
         }
 
         if((intval($current_qty)+1 >= $qty) && ($action == 'plus')) {
-            $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
+            $this->emit('showToast', ['type' => 'error', 'message' => 'Product stock has reached the limit']);
         }
 
         $this->updateCart();
+        $this->emit('cartCounter');
     }
     /**
      * Rerenders the cart items and total price on the browser.
@@ -140,5 +212,116 @@ class CartCheckout extends Component
     public function fetchLatestNote()
     {
         $this->note = Cart::getNotes(); // Fetch the latest note from the backend (assuming 'Cart::getNotes()' fetches the current note)
+    }
+    
+    /**
+     * Apply voucher code
+     */
+    public function applyVoucher()
+    {
+        if (empty($this->voucherCode)) {
+            $this->voucherMessage = 'Please enter a voucher code.';
+            return;
+        }
+        
+        // For guests, email is required
+        if (!auth()->check() && empty($this->guestEmail)) {
+            $this->voucherMessage = 'Please enter your email address to apply voucher.';
+            return;
+        }
+        
+        // Validate email format for guests
+        if (!auth()->check() && !filter_var($this->guestEmail, FILTER_VALIDATE_EMAIL)) {
+            $this->voucherMessage = 'Please enter a valid email address.';
+            return;
+        }
+        
+        // Get voucher repository
+        $voucherRepo = app(\Modules\DiscountVoucher\Repositories\DiscountVoucherRepository::class);
+        
+        // Get current cart total
+        $currentTotal = Cart::total();
+        
+        // Get email - use authenticated user's email or guest email
+        $email = auth()->check() ? auth()->user()->email : $this->guestEmail;
+        
+        // Validate voucher
+        $validation = $voucherRepo->validateVoucherForUser(
+            $this->voucherCode,
+            $currentTotal,
+            $email
+        );
+        
+        if ($validation['valid']) {
+            $this->voucherApplied = true;
+            $this->appliedVoucher = [
+                'id' => $validation['voucher']->id,
+                'code' => $validation['voucher']->voucher_code,
+                'discount_type' => $validation['voucher']->discount_type,
+                'discount_rate' => $validation['voucher']->discount_rate,
+                'discount_amount' => $validation['voucher']->discount_amount,
+                'message' => $validation['message'],
+                'email' => !auth()->check() ? $this->guestEmail : null
+            ];
+            $this->voucherMessage = $validation['message'];
+            
+            // Store voucher in cart
+            Cart::addVoucher($this->appliedVoucher);
+            
+            $this->calculateDiscount();
+        } else {
+            $this->voucherMessage = $validation['message'];
+            $this->voucherApplied = false;
+        }
+    }
+    
+    /**
+     * Remove applied voucher
+     */
+    public function removeVoucher()
+    {
+        $this->voucherCode = '';
+        $this->voucherApplied = false;
+        $this->voucherMessage = '';
+        $this->discountAmount = 0;
+        $this->appliedVoucher = null;
+        $this->finalTotal = $this->total;
+        
+        // Remove voucher from cart
+        Cart::removeVoucher();
+    }
+    
+    /**
+     * Calculate discount amount
+     */
+    protected function calculateDiscount()
+    {
+        if (!$this->voucherApplied || !$this->appliedVoucher) {
+            $this->discountAmount = 0;
+            $this->finalTotal = $this->total;
+            return;
+        }
+        
+        $voucher = $this->appliedVoucher;
+        
+        if ($voucher['discount_type'] === 'percent') {
+            $discount = ($this->total * $voucher['discount_rate']) / 100;
+            
+            // Apply max discount cap if set
+            if (isset($voucher['discount_amount']) && $voucher['discount_amount'] > 0 && $discount > $voucher['discount_amount']) {
+                $discount = $voucher['discount_amount'];
+            }
+            
+            $this->discountAmount = $discount;
+        } else {
+            $this->discountAmount = $voucher['discount_amount'];
+        }
+        
+        $this->finalTotal = $this->total - $this->discountAmount;
+        
+        // Ensure final total is not negative
+        if ($this->finalTotal < 0) {
+            $this->finalTotal = 0;
+        }
     }
 }

@@ -294,12 +294,12 @@
                                                                                         // dump($items);
                                                                                         // dump($response);
                                                                                     @endphp
-                                                                                    <h4>Order id
-                                                                                        <span>
-                                                                                            <h3>#{{ strtoupper($response['external_id']) }}</h3>
-                                                                                        </span>
-                                                                                    </h4>
-                                                                                    <h3>Thankyou {{ $response['customer']['given_names'] }} {{ $response['customer']['surname'] }}</h3>
+                                                                    <h4>Order id
+                                                                        <span>
+                                                                            <h3>#{{ strtoupper($response->order_id) }}</h3>
+                                                                        </span>
+                                                                    </h4>
+                                                                    <h3>Thankyou {{ $destination->first_name }} {{ $destination->last_name }}</h3>
 
                                                                                     <section aria-label="Review" class="_1fragem15 _1fragemaf">
                                                                                         <div role="table" aria-label="Review your information" class="Z8Nx4 lT5DX">
@@ -364,14 +364,14 @@
                                                                                                             <div role="cell" class="w3cHO">
                                                                                                                 <h4>Payment Method</h4>
                                                                                                                 <div role="cell" class="nkp8r">
-                                                                                                                    <span>{{ str_replace('_', ' ', $response['payment_method']) }} - {{ $response['payment_channel'] }}</span>
+                                                                                                                    <span>{{ str_replace('_', ' ', $response->payment_type) }}</span>
                                                                                                                 </div>
                                                                                                                 <div role="cell" class="nkp8r">
                                                                                                                     <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem3 _1fragem38">
                                                                                                                         <abbr translate="yes"
                                                                                                                             class="_19gi7yt0 _19gi7ytc _1fragem1i _19gi7yt7 notranslate _19gi7ytq _1fragemal">IDR</abbr><strong
                                                                                                                             translate="yes"
-                                                                                                                            class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format(intval($response['paid_amount'])) }}</strong>
+                                                                                                                            class="_19gi7yt0 _19gi7yti _1fragem1l _19gi7yt1 notranslate">Rp {{ rupiah_format(intval($response->gross_amount)) }}</strong>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
@@ -396,30 +396,30 @@
                                                                                                 <span class="AjwsM">Continue shopping</span>
                                                                                             </a>
                                                                                         </div>
-                                                                                        <div>
-                                                                                            <a href="{{ route('customer.dashboard') }}" class="QT4by eVFmT j6D1f janiy adBMs">
-                                                                                                <span class="AjwsM">
-                                                                                                    <div class="_1fragem17 _1fragemaf _1fragem38">
-                                                                                                        <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
-                                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum"><svg
-                                                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                                                    viewBox="0 0 14 14"
-                                                                                                                    focusable="false"
-                                                                                                                    aria-hidden="true"
-                                                                                                                    class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
-                                                                                                                    <path
-                                                                                                                        stroke-linecap="round"
-                                                                                                                        stroke-linejoin="round"
-                                                                                                                        d="M8.4 11.9 3.748 7.248a.35.35 0 0 1 0-.495L8.4 2.1">
-                                                                                                                    </path>
-                                                                                                                </svg>
-                                                                                                            </span>
-                                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j">Go to Transaction Status</span>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </span>
-                                                                                            </a>
+                                                                        <div>
+                                                                            <a href="{{ route('customer.transaction.detail', $transaction->token) }}" class="QT4by eVFmT j6D1f janiy adBMs">
+                                                                                <span class="AjwsM">
+                                                                                    <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                                        <div class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1t _1fragem2a _1fragem0 _1fragem4 _1fragem38">
+                                                                                            <span class="_1fragem34 _1fragem10 _1fragem9q _1fragem9p _1fragem15 a8x1wuh a8x1wuf a8x1wum"><svg
+                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                                    viewBox="0 0 14 14"
+                                                                                                    focusable="false"
+                                                                                                    aria-hidden="true"
+                                                                                                    class="a8x1wuo _1fragem15 _1fragem34 _1fragem9q _1fragem9p">
+                                                                                                    <path
+                                                                                                        stroke-linecap="round"
+                                                                                                        stroke-linejoin="round"
+                                                                                                        d="M8.4 11.9 3.748 7.248a.35.35 0 0 1 0-.495L8.4 2.1">
+                                                                                                    </path>
+                                                                                                </svg>
+                                                                                            </span>
+                                                                                            <span class="_19gi7yt0 _19gi7yte _1fragem1j">Go to Transaction Status</span>
                                                                                         </div>
+                                                                                    </div>
+                                                                                </span>
+                                                                            </a>
+                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -580,6 +580,21 @@
                                                                 class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">Rp {{ rupiah_format(intval($transaction->sub_total)) }}</span>
                                                         </div>
                                                     </div>
+                                                    @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
+                                                    <div role="row" class="_1qy6ue61 _1fragem1b _1qy6ue68">
+                                                        <div role="cell" class="_1qy6ue69">
+                                                            <div class="_1fragem17 _1fragemaf _1fragem38">
+                                                                <div
+                                                                    class="_5uqybw2 _1fragem17 _1fragem9r _1fragem1r _1fragem28 _1fragem0 _1fragem4 _1fragem38">
+                                                                    <span class="_19gi7yt0 _19gi7yte _1fragem1j" style="color: #c83532;">Discount ({{ $transaction->voucher_code }})</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div role="cell" class="_1qy6ue6a"><span translate="yes"
+                                                                class="_19gi7yt0 _19gi7yte _1fragem1j notranslate" style="color: #c83532; font-weight: 600;">- Rp {{ rupiah_format(intval($transaction->voucher_discount)) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    @endif
                                                     <div role="row" class="_1qy6ue61 _1fragem1b _1qy6ue68">
                                                         <div role="cell" class="_1qy6ue69">
                                                             <div class="_1fragem17 _1fragemaf _1fragem38">

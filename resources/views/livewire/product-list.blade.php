@@ -139,11 +139,11 @@
                                     $class = '1/2--phone 1/3--tablet-and-up 1/4--desk';
                                 } elseif ($count == 3) {
                                     $class = '1/4--desk';
-                                    $style = 'width: 85vw;';
+                                    $style = 'width: 67vw;';
                                     $desktop_count = 4;
                                 } else {
                                     $class = '1/4--desk';
-                                    $style = 'width: 85vw;';
+                                    $style = 'width: 67vw;';
                                     $desktop_count = 4;
                                 }
                             @endphp
@@ -151,18 +151,19 @@
                             data-desktop-count="{{ $desktop_count }}" style="{{ $style }}">
                             @foreach ($products as $product)
                             @php
-                                $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                                $ratio = $image_size[0] / $image_size[1];
+                                $ratio = getImageAspectRatio($product->image, 'products/'.$product->product_code);
                             @endphp
                                 <div class="Grid__Cell {{ $class }}">
                                     <div class="ProductItem" style="visibility: visible;">
+                                        <!-- <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
+                                            class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">  -->
                                         <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
-                                            class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
+                                            class="ProductItem__ImageWrapper">
                                             <div class="AspectRatio AspectRatio--withFallback"
                                                 style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
 
-                                                {{-- multi image --}}
-                                                @foreach ($product->images()->limit(2)->get() as $key => $image)
+                                                <!-- {{-- multi image --}} -->
+                                                <!-- @foreach ($product->images()->limit(2)->get() as $key => $image)
                                                     @if($product->image != $image->image_url)
                                                         <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
                                                         {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}
@@ -170,7 +171,7 @@
                                                             data-widths="[1200]" data-sizes="auto"
                                                             alt='{{$product->product_name}}' data-image-id="{{$image->id}}" />
                                                     @endif
-                                                @endforeach
+                                                @endforeach -->
 
                                                 <img class="ProductItem__Image Image--lazyLoad Image--fadeIn"
                                                 {{-- BOX-A2_{width}x.jpg?v=1644800500 --}}

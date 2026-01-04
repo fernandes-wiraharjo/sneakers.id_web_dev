@@ -11,5 +11,8 @@
     "LookBook": true,
     "Transaction": true,
     "Dashboard": true,
-    "GlobalSetting": true
+    "GlobalSetting": true,
+    "ShippingCourier": true,
+    "DiscountVoucher": true,
+    "SizeFilter": true
 }

@@ -33,50 +33,88 @@ class ProductDatatables extends DataTable
             ->addColumn('status', function ($item) {
                 return $item->is_active ? "<span class='badge badge-primary'>Active</span>" : "<span class='badge badge-light-dark'>Not Active</span>";
               })
+            // ->addColumn('tag', function ($item) {
+            //     if ($item->tags()->count() > 0) {
+            //         $result = "";
+            //         foreach($item->tags()->get() as $tag) {
+            //             $result .= view('components.chips', [
+            //                 'a' => $tag->tag_title,
+            //                 'b' => ''
+            //             ]);
+            //         }
+            //         return $result;
+            //     } else {
+            //         return '-';
+            //     }
+
+            // })
             ->addColumn('tag', function ($item) {
-                if ($item->tags()->count() > 0) {
+                if ($item->tags->count() > 0) {   // use eager loaded relation
                     $result = "";
-                    foreach($item->tags()->get() as $tag) {
+                    foreach($item->tags as $tag) {
                         $result .= view('back-office.components.chips', [
                             'a' => $tag->tag_title,
                             'b' => ''
                         ]);
                     }
                     return $result;
-                } else {
-                    return '-';
                 }
-
+                return '-';
             })
+            // ->addColumn('category', function ($item) {
+            //     if ($item->categories()->count() > 0) {
+            //         $result = "";
+            //         foreach($item->categories()->get() as $category) {
+            //             $result .= view('components.chips', [
+            //                 'a' => $category->category_title,
+            //                 'b' => ''
+            //             ]);
+            //         }
+            //         return $result;
+            //     } else {
+            //         return '-';
+            //     }
+
+            // })
             ->addColumn('category', function ($item) {
                 if ($item->categories()->count() > 0) {
                     $result = "";
-                    foreach($item->categories()->get() as $category) {
+                    foreach($item->categories as $category) {
                         $result .= view('back-office.components.chips', [
                             'a' => $category->category_title,
                             'b' => ''
                         ]);
                     }
                     return $result;
-                } else {
-                    return '-';
                 }
-
+                return '-';
             })
+            // ->addColumn('signature', function ($item) {
+            //     if ($item->signatures()->count() > 0) {
+            //         $result = "";
+            //         foreach($item->signatures()->get() as $signature) {
+            //             $result .= view('components.chips', [
+            //                 'a' => $signature->signature_title,
+            //                 'b' => $signature->signature_player_name
+            //             ]);
+            //         }
+            //         return $result;
+            //     } else {
+            //          return '-';
+            //      }
+            // })
             ->addColumn('signature', function ($item) {
                 if ($item->signatures()->count() > 0) {
                     $result = "";
-                    foreach($item->signatures()->get() as $signature) {
+                    foreach($item->signatures as $signature) {
                         $result .= view('back-office.components.chips', [
                             'a' => $signature->signature_title,
                             'b' => $signature->signature_player_name
                         ]);
                     }
                     return $result;
-                } else {
-                    return '-';
                 }
-
+                return '-';
             })
             ->editColumn('price', function($item) {
                 $data = $item->details()->select('retail_price' ,'after_discount_price')->orderBy('retail_price')->first();
@@ -157,8 +195,8 @@ class ProductDatatables extends DataTable
             ->whereHas('details')
             // ->crossJoin('product_details as pd', 'pd.product_id', '=', 'products.id')
             ->select('products.*')
-            ->orderBy('products.updated_at', 'DESC')
-            ->newQuery();
+            ->orderBy('products.updated_at', 'DESC');
+            // ->newQuery();
     }
 
     /**

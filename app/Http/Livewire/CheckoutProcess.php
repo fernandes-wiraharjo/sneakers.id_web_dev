@@ -5,8 +5,15 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Facades\Cart;
 use App\Facades\CekOngkir;
+use App\Facades\CheckoutMidtrans;
 use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
+use App\Services\MidtransService;
+use App\Models\ShippingCourier;
+use App\Models\UserAddress;
+use Ramsey\Uuid\Uuid;
+use Xendit\Transaction;
+use Illuminate\Support\Str;
 
 class CheckoutProcess extends Component
 {
@@ -17,6 +24,7 @@ class CheckoutProcess extends Component
     public $selectedDistrict = '';
     public $selectedProvince = '';
     public $selectedArea = 0;
+    public $selectedPaymentGateway = null;
 
     public $shippingEmail = '';
     public $shippingFirstName = '';
@@ -32,6 +40,7 @@ class CheckoutProcess extends Component
     public $shippingCost = 0;
     public $shippingCourier = [];
     public $shippingWeight;
+    public $originSubdistrict;
 
     public $userRegion;
     public $districtList = [];
@@ -41,9 +50,14 @@ class CheckoutProcess extends Component
     public $invoiceUrl;
     public $grandTotal = 0;
     public $currentUrl = '';
+    public $saveAddress = false;
     protected $note;
     protected $total;
     protected $content;
+    
+    // Voucher properties
+    public $voucherData = null;
+    public $voucherDiscount = 0;
 
     /**
      * Mounts the component on the template.
@@ -52,10 +66,25 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
+        // init origin
+        $originRegionId = config('irfa.rajaongkir.origin_region_id');
+        $this->originSubdistrict = ModelRegion::where('region_id', $originRegionId)->first()->subdistrict_ro;
+
         $this->total = Cart::total();
         $this->content = Cart::content();
+        
+        // Load voucher from cart
+        $this->voucherData = Cart::getVoucher();
+        $this->voucherDiscount = $this->calculateVoucherDiscount();
 
-        $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? 18093)->where('subdistrict_ro', '<>', 'NULL')->first();
+        // Initialize region only if user is authenticated and has an address
+        if (auth()->check() && auth()->user()->user_address) {
+            $regionId = auth()->user()->user_address->region_id;
+            $this->userRegion = ModelRegion::where('region_id', $regionId)->where('subdistrict_ro', '<>', 'NULL')->first();
+        } else {
+            // For guests or users without address, no default region - they must select
+            $this->userRegion = null;
+        }
         $this->updateCart();
         $this->districtList = [];
         $this->subdistrictList = [];
@@ -64,12 +93,13 @@ class CheckoutProcess extends Component
         $this->currentUrl = url()->current();
         $this->note = Cart::getNotes();
 
+        // Populate user data if authenticated
         if(auth()->check()){
             $user = auth()->user();
             $this->shippingEmail = $user->email;
             $this->shippingFirstName = $user->first_name;
             $this->shippingLastName = $user->last_name;
-            if($user->user_address) {
+            if($user->user_address && $this->userRegion) {
                 $this->selectedProvince = $this->userRegion->province;
                 $this->selectedDistrict = $this->userRegion->district;
                 $this->selectedSubdistrict = $this->userRegion->subdistrict_ro; //unused but safety for not updating data
@@ -81,14 +111,17 @@ class CheckoutProcess extends Component
                 $this->selectedArea = $this->userRegion->region_id;
                 $this->shippingZipCode = $this->userRegion->post_code;
             }
-            $this->shippingWeight = Cart::totalWeight();
-
+        } else {
+            // For guests, populate email from voucher data if available
+            if ($this->voucherData && isset($this->voucherData['email'])) {
+                $this->shippingEmail = $this->voucherData['email'];
+            }
         }
-        //courier list 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
-        if($this->selectedSubdistrict) {
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, 'subdistrict',Cart::totalWeight(), 'jnt');
-            $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
-        }
+        
+        // Set shipping weight for both guest and authenticated users
+        $this->shippingWeight = Cart::totalWeight();
+        
+        $this->filterCourierService();
     }
 
     protected function rules()
@@ -131,6 +164,27 @@ class CheckoutProcess extends Component
     public function informationStepSubmit()
     {
         $this->validate();
+        
+        // Save or update user address if checkbox is checked and user is logged in
+        if ($this->saveAddress && auth()->check()) {
+            $existingAddress = UserAddress::where('user_id', auth()->user()->id)->first();
+            
+            $addressData = [
+                'user_id' => auth()->user()->id,
+                'region_id' => $this->selectedArea,
+                'address' => $this->shippingAddress,
+                'phone_number' => $this->shippingPhoneNumber,
+            ];
+            
+            if ($existingAddress) {
+                // Update existing address
+                $existingAddress->update($addressData);
+            } else {
+                // Create new address
+                UserAddress::create($addressData);
+            }
+        }
+        
         $this->currentStep = 2;
         if($this->shippingCourier->count() == 0){
             $this->back(1);
@@ -144,8 +198,15 @@ class CheckoutProcess extends Component
         //submit shipping information into session TransactionSession
     }
 
+    public function setSelectedPaymentGateway($value)
+    {
+        $this->selectedPaymentGateway = $value;
+    }
+
     public function paymentStepSubmit()
     {
+        // updated orderID to prevent race condition on same seconds
+        $orderID = Str::upper('SNK-'.time().'-'.Str::random(4));
         $items = [];
         $totalQuantity = 0;
         foreach(Cart::content() as $item) {
@@ -155,6 +216,7 @@ class CheckoutProcess extends Component
             }
 
             $items[] = [
+                'id' => $item['id'],
                 'name' => $item['name'],
                 'quantity' => $item['quantity'],
                 'price' => $price,
@@ -163,6 +225,30 @@ class CheckoutProcess extends Component
             ];
 
             $totalQuantity += $item['quantity'];
+        }
+        
+        // Add voucher discount as a line item (if applied)
+        if ($this->voucherDiscount > 0) {
+            $items[] = [
+                'id'       => 'VOUCHER_DISCOUNT',
+                'name'     => 'Voucher Discount (' . ($this->voucherData['code'] ?? '') . ')',
+                'quantity' => 1,
+                'price'    => -intval($this->voucherDiscount), // Negative amount for discount
+                'category' => 'discount',
+                'url'      => null
+            ];
+        }
+        
+        // Add shipping as an item (moved outside loop - was a bug)
+        if ($this->shippingCost > 0) {
+            $items[] = [
+                'id'       => 'SHIPPING',
+                'name'     => 'Shipping Fee',
+                'quantity' => 1,
+                'price'    => intval($this->shippingCost),
+                'category' => 'shipping',
+                'url'      => null
+            ];
         }
         /**
          * if not logged in
@@ -180,69 +266,95 @@ class CheckoutProcess extends Component
         //shippingcost
         //subtotal
         //grandtotal
-        $this->invoiceUrl = CheckoutXendit::createInvoice([
-            'currency' => 'IDR',
-            'amount'    => intval($this->grandTotal),
-            'error_redirect_url' => route('customer.payment.error'),
-            //make new pages for thankyou after success -> to recheck transaction id and update current status and give invoice response,
-            'customer' => [
-                'given_names' => $this->shippingFirstName,
-                'surname' => $this->shippingLastName,
-                'email' => $this->shippingEmail,
-                'mobile_number' => $this->shippingPhoneNumber,
-                'addresses' => [
-                    [
-                        'city' => $this->shippingDistrict,
-                        'country' => 'indonesia',
-                        'postal_code' => $this->shippingZipCode,
-                        'state' => $this->shippingProvince,
-                        'street_line1' => $this->shippingAddress,
-                        'street_line2' => $this->shippingSubDistrict.', '.$this->shippingArea
-                    ]
-                ]
-            ],
-            'items' => $items,
-            'fees' => [
-                [
-                    'type' => 'Shipping',
-                    'value' => $this->shippingCost
-                ]
-            ]
-        ], [
-            'transactions' => [
-                'date' => date('Y-m-d'),
-                'gateway' => 'Xendit',
-                'total_quantity' =>  $totalQuantity,
-                'total_weight' =>  Cart::totalWeight(),
-                'sub_total' => Cart::total(),
-                'description' => Cart::getNotes(),
-                'grand_total' => $this->grandTotal
-            ],
-            'transaction_destinations' => [
-                'region_id' => $this->selectedArea,
-                'email' => $this->shippingEmail,
-                'first_name' => $this->shippingFirstName,
-                'last_name' => $this->shippingLastName,
-                'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingPhoneNumber,
-                'is_user' => auth()->check() ? 1 : 0,
-                'user_id' => auth()->user()->id ?? 0,
 
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderID,
+                'gross_amount'  => intval($this->grandTotal),
             ],
+            'customer_details' => [
+                'first_name'    => $this->shippingFirstName,
+                'last_name'     => $this->shippingLastName,
+                'email'         => $this->shippingEmail,
+                'phone'         => $this->shippingPhoneNumber,
+                'billing_address' => [
+                    'first_name'   => $this->shippingFirstName,
+                    'last_name'    => $this->shippingLastName,
+                    'address'      => $this->shippingAddress,
+                    'city'         => $this->shippingDistrict,
+                    'postal_code'  => $this->shippingZipCode,
+                    'phone'        => $this->shippingPhoneNumber,
+                    'country_code' => 'IDN',
+                ],
+                'shipping_address' => [
+                    'first_name'   => $this->shippingFirstName,
+                    'last_name'    => $this->shippingLastName,
+                    'address'      => $this->shippingAddress,
+                    'city'         => $this->shippingDistrict,
+                    'postal_code'  => $this->shippingZipCode,
+                    'phone'        => $this->shippingPhoneNumber,
+                    'country_code' => 'IDN',
+                ]
+            ],
+            'item_details' => $items,
+            'callbacks' => [
+                'error'  => route('customer.payment.error'),
+                'finish' => route('customer.payment.success', $orderID),
+                'sucess' => route('customer.payment.success', $orderID),
+            ],
+            'custom_field1' => 'Gateway: Midtrans', // optional metadata
+            'custom_field2' => Cart::getNotes() ?? '',
+        ];
+
+        // Get voucher data from cart
+        $voucherData = Cart::getVoucher();
+        
+        $transactions = [
+            'transactions' => [
+                'date'            => date('Y-m-d'),
+                'gateway'         => 'Midtrans',
+                'total_quantity'  => $totalQuantity,
+                'total_weight'    => Cart::totalWeight(),
+                'sub_total'       => Cart::total(),
+                'description'     => Cart::getNotes(),
+                'grand_total'     => $this->grandTotal,
+                'discount_voucher_id' => $voucherData['id'] ?? null,
+                'voucher_code'    => $voucherData['code'] ?? null,
+                'voucher_discount' => $voucherData ? $this->calculateVoucherDiscount($voucherData, Cart::total()) : null,
+            ],
+
+            'transaction_destinations' => [
+                'region_id'    => $this->selectedArea,
+                'email'        => $this->shippingEmail,
+                'first_name'   => $this->shippingFirstName,
+                'last_name'    => $this->shippingLastName,
+                'address'      => $this->shippingAddress,
+                'phone_number' => $this->shippingPhoneNumber,
+                'is_user'      => auth()->check() ? 1 : 0,
+                'user_id'      => auth()->user()->id ?? null,
+            ],
+
             'transaction_items' => [
                 'items' => Cart::content(),
             ],
-            'transaction_shippings' => [
-                 'shipping_method' => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
-                 'shipping_cost' => $this->selectedCourier['cost'],
-                 'shipping_weight' => $this->shippingWeight,
-                 'origin_ro_id' => 2088,
-                 'destination_ro_id' => $this->selectedSubdistrict,
-            ],
-        ]);
 
-        //send mail confimarion payment here
-        $this->currentStep = 4;
+            'transaction_shippings' => [
+                'courier_code'       => Str::lower($this->selectedCourier['courier']),
+                'shipping_method'    => $this->selectedCourier['courier'].' '.$this->selectedCourier['service'].' '.$shipping_etd,
+                'shipping_cost'      => $this->selectedCourier['cost'],
+                'shipping_weight'    => $this->shippingWeight,
+                'origin_ro_id'       => config('irfa.rajaongkir.origin_region_id'),
+                'destination_ro_id'  => $this->selectedSubdistrict,
+            ],
+        ];
+
+
+        $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
+        
+        // Clear cart after order is created (for both guests and registered users)
+        Cart::clear();
+        
+        return redirect()->away($paymentUrl);
     }
 
     public function paymentSuccess(){
@@ -267,7 +379,10 @@ class CheckoutProcess extends Component
 
     public function updateShippingCost($value, $courier, $service, $etd, $cartTotal)
     {
-        $this->grandTotal = intval($cartTotal) + intval($value);
+        // Calculate grand total: cart total - voucher discount + shipping
+        $subtotal = intval($cartTotal);
+        $this->grandTotal = $subtotal - $this->voucherDiscount + intval($value);
+        
         $this->shippingCost = $value;
         $this->selectedCourier = [
             'courier'   => $courier,
@@ -300,37 +415,103 @@ class CheckoutProcess extends Component
 
     public function updateZipCode($value) {
         $this->shippingZipCode = $value;
+        $regionData = ModelRegion::where('post_code', $value)->first();
+        $this->selectedArea = $regionData->region_id;
     }
 
     public function updateArea($value) {
         $this->shippingSubDistrict = $value;
         $getDistrict = ModelRegion::where(['district' => $this->selectedDistrict, 'subdistrict' => $value])->first();
         if($getDistrict) {
-            if($getDistrict->subdistrict_ro){
-                $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
-                $destinationType = 'subdistrict';
-            } else {
-                $this->selectedSubdistrict = $getDistrict->city_ro;
-                $destinationType = 'city';
-            }
-            //courier list : 'jne:jnt:pos:ninja:lion:anteraja:sicepat'
-            if($this->selectedSubdistrict) {
-                $courier = CekOngkir::CostCourier($this->selectedSubdistrict, $destinationType, Cart::totalWeight(), 'jnt');
-                $this->shippingCourier = CekOngkir::CostRangeCourier($courier);
-            }
-        } else {
-            $this->selectedSubdistrict = 0;
-        }
+            // V1 uses subdistrict / city RO
+            // if($getDistrict->subdistrict_ro){
+            //     $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
+            //     $destinationType = 'subdistrict';
+            // } else {
+            //     $this->selectedSubdistrict = $getDistrict->city_ro;
+            //     $destinationType = 'city';
+            // }
 
-        $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
-        $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
-        $this->selectedArea = 0;
-        $this->shippingZipCode = '';
+            // V2 uses region_id
+            $this->selectedSubdistrict = $getDistrict->region_id;
+            $this->filterCourierService();
+
+            $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
+            $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
+            $this->selectedArea = 0;
+            $this->shippingZipCode = '';
+        }
     }
 
     public function areaUpdate($value) {
+        $regionData = ModelRegion::where('region_id', $value)->first();
         $this->selectedArea = $value;
-        $this->shippingArea = ModelRegion::where('region_id', $value)->first()->area;
+        $this->shippingZipCode = $regionData->post_code;
+        $this->shippingArea = $regionData->area;
+    }
+
+    public function filterCourierService()
+    {
+        // Get enabled couriers and their services from database
+        if($this->selectedSubdistrict) {
+            $enabledCouriers = ShippingCourier::where('is_active', true)
+                ->pluck('code')
+                ->implode(':');
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
+            $courierResponse = CekOngkir::CostRangeCourier($courier);
+
+            // Filter services based on what's configured for each courier
+            $this->shippingCourier = $courierResponse->map(function($courierData) {
+                $courier = ShippingCourier::where('code', strtolower($courierData['code']))->first();
+                if (!$courier) {
+                    return null;
+                }
+
+                // normalize "day / days" from response
+                $courierData['etd'] = trim(preg_replace('/\s*days?/i', '', $courierData['etd']));
+
+                // Get active service codes for this courier
+                $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
+
+                // Filter services that are configured and active
+                if (in_array($courierData['service'], $activeServiceCodes)) {
+                    return $courierData;
+                }
+                return null;
+            })->filter()->values();
+        } else {
+            $this->selectedSubdistrict = 0;
+        }
+    }
+
+    /**
+     * Calculate voucher discount amount
+     * 
+     * @param array|null $voucherData Voucher data (uses $this->voucherData if null)
+     * @param int|null $subtotal Subtotal amount (uses $this->total if null)
+     * @return int The discount amount
+     */
+    protected function calculateVoucherDiscount($voucherData = null, $subtotal = null)
+    {
+        $voucher = $voucherData ?? $this->voucherData;
+        $amount = $subtotal ?? $this->total;
+        
+        if (!$voucher) {
+            return 0;
+        }
+        
+        if ($voucher['discount_type'] === 'percent') {
+            $discount = ($amount * $voucher['discount_rate']) / 100;
+            
+            // Apply max discount cap if set
+            if (isset($voucher['discount_amount']) && $voucher['discount_amount'] > 0 && $discount > $voucher['discount_amount']) {
+                $discount = $voucher['discount_amount'];
+            }
+            
+            return $discount;
+        } else {
+            return $voucher['discount_amount'];
+        }
     }
 
     public function render()

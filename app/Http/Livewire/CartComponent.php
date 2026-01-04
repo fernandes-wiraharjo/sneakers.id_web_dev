@@ -61,6 +61,7 @@ class CartComponent extends Component
     public function clearCart(): void
     {
         Cart::clear();
+        // Cart::clearOrderId();
         $this->updateCart();
         $this->emit('cartCounter');
     }
@@ -81,7 +82,37 @@ class CartComponent extends Component
                 Cart::update($size_id, $action);
             } else {
                 $this->disabledPlus[$size_id] = true;
-                $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
+                $this->emit('showToast', ['type' => 'error', 'message' => 'Product stock has reached the limit']);
+            }
+        } elseif($action == 'minus') {
+            $this->disabledPlus[$size_id] = false;
+            Cart::update($size_id, $action);
+        } elseif($action == 'change') {
+            // Handle direct input change
+            $newQty = intval($current_qty);
+            $originalQty = intval($current_qty);
+            
+            // Ensure minimum quantity is 1
+            if ($newQty < 1) {
+                $newQty = 1;
+            }
+            
+            // Check if new quantity exceeds available stock
+            if ($newQty > $qty) {
+                $newQty = $qty;
+                $this->disabledPlus[$size_id] = true;
+                $this->emit('showToast', ['type' => 'warning', 'message' => 'Product stock has reached the limit. Set to maximum: ' . $qty]);
+            }
+            
+            Cart::setQuantity($size_id, $newQty);
+            $this->disabledPlus[$size_id] = ($newQty >= $qty);
+            
+            // If quantity was corrected, dispatch event to update the input field
+            if ($originalQty != $newQty) {
+                $this->dispatchBrowserEvent('quantity-corrected', [
+                    'size_id' => $size_id,
+                    'quantity' => $newQty
+                ]);
             }
         } else {
             $this->disabledPlus[$size_id] = false;
@@ -89,10 +120,11 @@ class CartComponent extends Component
         }
 
         if((intval($current_qty)+1 >= $qty) && ($action == 'plus')) {
-            $this->emit('modalQty', ['message' => 'product stock has reach the limit']);
+            $this->emit('showToast', ['type' => 'error', 'message' => 'Product stock has reached the limit']);
         }
 
         $this->updateCart();
+        $this->emit('cartCounter');
     }
     /**
      * Rerenders the cart items and total price on the browser.

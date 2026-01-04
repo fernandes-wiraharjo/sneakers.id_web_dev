@@ -51,10 +51,19 @@ class StoreController extends Controller
 
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
-        $data['size'] = $data['product']->details()->get();
+      
+        // if product exists, get its details, otherwise return empty collection
+        $data['size'] = $data['product']
+            ? $data['product']->details()->get()
+            : collect();
+        // $data['size'] = $data['product']->details()->where('product_details.qty', '>' , 0)->get();
+
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
-        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json')
+            ? json_decode(Storage::disk('local')->get('footer-setting.json'))
+            : [];
+      
         activity()->log('Someone look into my product');
         return view('display-store.product-detail', $data);
     }

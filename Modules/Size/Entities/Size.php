@@ -49,4 +49,10 @@ class Size extends Model
     {
         return $this->hasOne(SizeKid::class, 'size_id', 'id');
     }
+
+    public function filters()
+    {
+        return $this->belongsToMany(\Modules\SizeFilter\Entities\SizeFilter::class, 'size_filter_sizes', 'size_id', 'size_filter_id')
+            ->withTimestamps();
+    }
 }

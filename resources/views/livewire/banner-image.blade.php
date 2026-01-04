@@ -11,10 +11,6 @@
                             "pageDots": true
                           }'>
 @foreach ($banner as $key => $item)
-@php
-    $image_size = getimagesize(getImage($item->banner_image, 'banner'));
-    $ratio = $image_size[0] / $image_size[1];
-@endphp
 <div class="Slideshow__Slide Carousel__Cell {{ $key == 0 ? 'is-selected' : '' }}" style="{{ $key == 0 ? 'visibility: visible;' : '' }}" data-slide-index="{{$key}}">
     {{-- Banner Mobile 1x1 = 800x800 --}}
     <a href="{{ $item->banner_url }}">
@@ -29,11 +25,7 @@
     </a>
     {{-- End Banner Mobile --}}
     {{-- Banner Web with data width --}}
-    <a href="{{ $item->banner_url }}">
-        <!-- <div class="Slideshow__Image Container Image--contrast AspectRatio AspectRatio--withFallback hidden-phone"
-                {{-- 1x1 Mobile_Banner_mocca_1x1.jpg?v=1644823129 --}}
-            style="padding-bottom: 66.66666666666667%; --aspect-ratio: {{round($ratio,2)}}; background-image: url({{ getImage($item->banner_image, 'banner') }}); background-repeat: no-repeat; background-size: cover;">
-        </div> -->
+    <a href="{{ $item->banner_url }}">\
         <div class="Slideshow__Image Container Image--contrast AspectRatio AspectRatio--withFallback hidden-phone"
             style="width: 100%;
                 height: auto;

@@ -1,0 +1,13 @@
+{
+    "name": "DiscountVoucher",
+    "alias": "discountvoucher",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DiscountVoucher\\Providers\\DiscountVoucherServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

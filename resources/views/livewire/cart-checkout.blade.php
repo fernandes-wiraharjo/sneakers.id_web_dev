@@ -23,7 +23,6 @@
                             <span class="Cart__HeadItem Heading Text--subdued u-h7" style="text-align: right">Total</span>
                         </div>
                         @foreach ($content as $id => $item)
-                        {{ $disabledPlus[$id] ? 'true' : 'false'}}
                         <div class="CartItem">
                             <input type="hidden" name="cart_item[{{ $id }}][id]" value="{{ $id }}">
                             <input type="hidden" name="cart_item[{{ $id }}][product_code]" value="{{ $item->get('product_code') }}">
@@ -69,7 +68,12 @@
                                                 </svg>
                                             </a>
 
-                                            <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
+                                            <input type="text" 
+                                                   name="updates[]"
+                                                   class="QuantitySelector__CurrentQuantity" 
+                                                   value="{{ $item->get('quantity') }}"
+                                                   min="1"
+                                                   readonly>
 
                                             @isset($disabledPlus)
                                                 @isset($disabledPlus[$id])
@@ -77,8 +81,7 @@
                                                         class="QuantitySelector__Button Link Link--primary"
                                                         wire:disabled="{{ $disabledPlus[$id] ? 'true' : 'false'}}" style="{{ $disabledPlus[$id] ? 'cursor: not-allowed;' : ''}}"
                                                         title="Set quantity to {{ $item->get('quantity') }} + 1"
-                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
-                                                        >
+                                                        wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})">
                                                             <svg class="Icon Icon--plus" role="presentation" viewBox="0 0 16 16">
                                                                 <g stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square">
                                                                     <path d="M8,1 L8,15"></path>
@@ -103,7 +106,12 @@
                                                 <path d="M1,1 L15,1" stroke="currentColor" fill="none" fill-rule="evenodd" stroke-linecap="square"></path>
                                             </svg>
                                         </a>
-                                        <input type="text" name="updates[]"class="QuantitySelector__CurrentQuantity" value="{{ $item->get('quantity') }}">
+                                        <input type="text" 
+                                               name="updates[]"
+                                               class="QuantitySelector__CurrentQuantity" 
+                                               value="{{ $item->get('quantity') }}"
+                                               min="1"
+                                               readonly>
 
                                         @isset($disabledPlus)
                                             @isset($disabledPlus[$id])
@@ -141,19 +149,79 @@
                         @livewire('product-quantity-modal', key('modal-checkout-1'))
                     </div>
                     <footer class="Cart__Footer">
-                        <div class="Cart__NoteContainer">
-                            <span class="Cart__NoteButton">{{ $note == '' ? 'Add Order Note' : 'Edit Order Note'}}</span>
-                            <textarea class="Cart__Note Form__Textarea" wire:model.debounce.1000ms="note" id="cart-note" rows="4" placeholder="How can we help you?">{{ $note }}</textarea>
+                        <div>
+                            {{-- Voucher Code Section --}}
+                            <div class="Cart__VoucherContainer" style="margin-bottom: 20px;">
+                                <label for="voucher_code" style="display: block; margin-bottom: 8px; font-weight: 600;">Have a voucher code?</label>
+                                
+                                {{-- Email field for guests only (authenticated users use their account email) --}}
+                                @guest
+                                <div style="margin-bottom: 12px;">
+                                    <label for="guest_email" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px;">Email Address <span style="color: #c83532;">*</span></label>
+                                    <input type="email" 
+                                        wire:model="guestEmail" 
+                                        id="guest_email" 
+                                        class="Form__Input" 
+                                        placeholder="Enter your email address"
+                                        style="width: 100%;"
+                                        {{ $voucherApplied ? 'disabled' : '' }}>
+                                </div>
+                                @endguest
+                                
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" 
+                                        wire:model="voucherCode" 
+                                        id="voucher_code" 
+                                        class="Form__Input" 
+                                        placeholder="Enter voucher code"
+                                        style="flex: 1;"
+                                        {{ $voucherApplied ? 'disabled' : '' }}>
+                                    @if(!$voucherApplied)
+                                        <button type="button" 
+                                                wire:click="applyVoucher" 
+                                                wire:loading.attr="disabled"
+                                                class="Button Button--primary"
+                                                style="white-space: nowrap;">
+                                            <span wire:loading.remove wire:target="applyVoucher">Check Voucher</span>
+                                            <span wire:loading wire:target="applyVoucher">Checking...</span>
+                                        </button>
+                                    @else
+                                        <button type="button" 
+                                                wire:click="removeVoucher" 
+                                                class="Button Button--primary"
+                                                style="white-space: nowrap;">
+                                            Remove
+                                        </button>
+                                    @endif
+                                </div>
+                                @if($voucherMessage)
+                                    <div style="margin-top: 8px; font-size: 14px; color: {{ $voucherApplied ? '#008060' : '#c83532' }};">
+                                        {{ $voucherMessage }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="Cart__NoteContainer">
+                                <span class="Cart__NoteButton">{{ $note == '' ? 'Add Order Note' : 'Edit Order Note'}}</span>
+                                <textarea class="Cart__Note Form__Textarea" wire:model.debounce.1000ms="note" id="cart-note" rows="4" placeholder="How can we help you?">{{ $note }}</textarea>
+                            </div>
                         </div>
                         <div class="Cart__Recap">
-                            <p class="Cart__Total Heading u-h6">Total:
+                            <p class="Cart__Total Heading u-h6" style="margin-bottom: 10px;">Subtotal:
                                 <span class="saso-cart-original-total">
                                     <span data-money-convertible="">
                                         <span class="money">Rp {{ rupiah_format($total) }}</span>
                                     </span>
                                 </span>
-                                <span class="saso-cart-total"></span>
                             </p>
+                            @if($voucherApplied && $discountAmount > 0)
+                                <p class="Cart__Discount" style="margin-bottom: 10px; color: #c83532;">Discount:
+                                    <span style="color: #c83532; font-weight: 600;">- Rp {{ rupiah_format($discountAmount) }}</span>
+                                </p>
+                                <p class="Cart__Total Heading u-h6" style="margin-bottom: 10px; border-top: 1px solid #e5e5e5; padding-top: 10px;">Total:
+                                    <span style="font-weight: 700;">Rp {{ rupiah_format($finalTotal) }}</span>
+                                </p>
+                            @endif
                             <p class="Cart__Taxes Text--subdued">Ongkir &amp; PPN dihitung saat checkout</p>
                             <button type="submit" name="checkout" class="Cart__Checkout Button Button--primary Button--full">Checkout</button>
                         </div>
@@ -179,6 +247,18 @@
             Livewire.on('updateNote', () => {
                 const textarea = document.getElementById('cart-note');
                 Livewire.emit('updateNote', textarea.value); // Emit the updated note value to the Livewire component
+            });
+        });
+
+        // Listen for quantity correction events
+        window.addEventListener('quantity-corrected', event => {
+            const sizeId = event.detail.size_id;
+            const correctedQty = event.detail.quantity;
+            
+            // Find and update ALL input fields for this size_id (there are multiple for mobile/desktop views)
+            const inputs = document.querySelectorAll(`input[data-size-id="${sizeId}"]`);
+            inputs.forEach(input => {
+                input.value = correctedQty;
             });
         });
     </script>

@@ -25,24 +25,69 @@ class TransactionDatatables extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'customer_info', 'status', 'shipping_status'])
+            ->editColumn('status', function ($item) {
+                $status = $item->status ?? '-';
+                $badgeClass = match($status) {
+                    'PENDING' => 'badge-warning',
+                    'SUCCESS' => 'badge-success',
+                    'COMPLETED' => 'badge-primary',
+                    'REFUNDED' => 'badge-danger',
+                    'CANCELLED' => 'badge-dark',
+                    'FAILED' => 'badge-danger',
+                    'EXPIRED' => 'badge-secondary',
+                    default => 'badge-light',
+                };
+                return '<span class="badge ' . $badgeClass . ' fs-7">' . $status . '</span>';
+            })
             ->editColumn('shipping_status', function ($item) {
-                return $item->shipping->status ?? '-' ;
+                // Only show WAITING PAYMENT for CREATED status
+                if ($item->status == 'CREATED') {
+                    return '<span class="badge badge-warning fs-7">WAITING PAYMENT</span>';
+                }
+                
+                // For all other statuses (SUCCESS, COMPLETED, REFUNDED, PENDING, EXPIRED, etc.), show actual shipping status
+                $shippingStatus = $item->shipping->status ?? 'DIKEMAS';
+                $badgeClass = match($shippingStatus) {
+                    'DIKEMAS' => 'badge-warning',
+                    'DIKIRIM' => 'badge-info',
+                    'SEDANG DIKIRIM' => 'badge-primary',
+                    'DELIVERED' => 'badge-success',
+                    'COMPLETE' => 'badge-success',
+                    default => 'badge-light',
+                };
+                return '<span class="badge ' . $badgeClass . ' fs-7">' . $shippingStatus . '</span>';
             })
             ->editColumn('method',  function ($item) {
-                return $item->type.'-'.$item->method;
+                if ($item->type == 'PENDING') {
+                    return 'PENDING';
+                } else {
+                    return $item->type.'-'.$item->method;
+                }
             })
-            ->editColumn('customer_email',  function ($item) {
-                return $item->email ?? '-';
+            ->editColumn('customer_info',  function ($item) {
+                $email = $item->email ?? '-';
+                $phone = $item->destination->phone_number ?? '-';
+                
+                $emailLink = $email !== '-' ? '<a href="mailto:' . $email . '">' . $email . '</a>' : '-';
+                $phoneLink = $phone !== '-' ? '<a href="tel:' . $phone . '">' . $phone . '</a>' : '-';
+                
+                return '<div class="d-flex flex-column">
+                    <span>' . $emailLink . '</span>
+                    <span>' . $phoneLink . '</span>
+                </div>';
             })
             ->editColumn('total_weight',  function ($item) {
-                return $item->total_weight / 1000 . ' Kg';
+                return number_format($item->total_weight / 1000, 2) . ' Kg';
             })
             ->editColumn('grand_total',  function ($item) {
                 return 'Rp '.rupiah_format(intval($item->grand_total));
             })
             ->editColumn('created_at', function ($item) {
-                return $item->created_at->format('d-m-Y H:i');
+                return $item->created_at->format('d-M-Y H:i');
+            })
+            ->editColumn('paid_at', function ($item) {
+                return $item->paid_at ? $item->paid_at->format('d-M-Y H:i') : '-';
             })
             ->addColumn('action', function ($item) {
                 // dd($item);
@@ -51,9 +96,15 @@ class TransactionDatatables extends DataTable
                 $data['histories'] = $item->histories;
                 $data['transaction'] = $item;
                 $data['items'] = $item->items;
-                $data['user_info'] = $item->getUserData;
-                $data['user_address'] = $item->getUserData->user_address()->first();
-                $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
+                
+                // Handle both guest and registered user orders
+                $userData = $item->getUserData;
+                $data['user_info'] = $userData;
+                $data['user_address'] = $userData ? $userData->user_address()->first() : null;
+                
+                // Always use destination region for shipping info (user might ship to different address than their saved one)
+                $data['region'] = $item->destination->region;
+                
                 return view('transaction::_partial.action-burger', $data);
             });
     }
@@ -66,8 +117,11 @@ class TransactionDatatables extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->with('destination', 'destination.user')
-            ->select('transactions.*', 'transaction_destinations.email', 'transaction_destinations.transaction_id')
+        return $model->with('destination', 'destination.user', 'refund', 'shipping')
+            ->select('transactions.*', 
+                'transaction_destinations.email', 
+                'transaction_destinations.transaction_id',
+                'transaction_destinations.phone_number')
             ->leftJoin('transaction_destinations','transactions.id','=', 'transaction_destinations.transaction_id')
             ->newQuery();
     }
@@ -109,12 +163,19 @@ class TransactionDatatables extends DataTable
                 ->searchable(false)
                 ->width(300)
                 ->addClass('text-center'),
-            Column::make('date')
-                ->title(__('Payment date')),
-            Column::make('customer_email')
-                ->name('destination.user.email')
-                ->title('Customer Email')
+            Column::make('created_at')
                 ->width(150)
+                ->searchable(false)
+                ->sortable(true),
+            Column::make('paid_at')
+                ->title(__('Payment date'))
+                ->width(150)
+                ->searchable(false)
+                ->sortable(true),
+            Column::make('customer_info')
+                ->name('destination.user.email')
+                ->title('Customer Info')
+                ->width(200)
                 ->sortable(true)
                 ->orderable(true) // Allow sorting on this column
                 ->orderColumn('destination.user.email $1'),
@@ -133,10 +194,6 @@ class TransactionDatatables extends DataTable
                 ->searchable(false)
                 ->sortable(false),
             Column::make('shipping_status')
-                ->width(150)
-                ->searchable(false)
-                ->sortable(false),
-            Column::make('created_at')
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),

@@ -24,6 +24,6 @@ class HeaderImage extends Model
         if ($imageData) {
             return $imageData->image_url;
         }
-        return 'https://placehold.co/1280x400?text='.$menu_name.'+Placeholder';
+        return 'https://placehold.co/1280x400?text=Header+Image+Placeholder';
     }
 }

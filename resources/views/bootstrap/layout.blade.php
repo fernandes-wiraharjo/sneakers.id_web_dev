@@ -85,7 +85,7 @@
             object-position: bottom;
         }
         .product-list-container {
-            margin-top: -3rem;
+            margin-top: -1.5rem;
         }
         /* Pagination Styles */
         .pagination .page-item {

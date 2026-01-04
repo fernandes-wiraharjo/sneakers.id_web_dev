@@ -346,7 +346,9 @@ class ProductList extends Component
                 }
             } else {
                 $category = $categoryRepository->getCategoryByName($keyword_array[0]);
-                $this->page_title = $category->category_title;
+                if ($category) {
+                    $this->page_title = $category->category_title;
+                }
                 $category_id = $category ? $category->id : null;
                 if($category_id) {
                     $this->category[] = intval($category_id);

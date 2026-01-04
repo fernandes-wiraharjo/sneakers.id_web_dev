@@ -11,7 +11,7 @@
             <h1 class="display-5 fw-bold">Welcome</h1>
             <p class="text-muted mb-3 mb-md-4">Enter your Email and Password to login</p>
 
-            <form action="{{ route('customer.login') }}" method="POST">
+            <form action="{{ route('login') }}" method="POST">
                 @csrf
                 <p class="mb-2">Email</p>
                 <input type="email" name="email" id="email" class="form-control" placeholder="Masukkan Email">

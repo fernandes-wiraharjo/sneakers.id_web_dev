@@ -42,6 +42,6 @@ class Region extends Component
     public function render()
     {
         $province = ModelRegion::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
-        return view('livewire.region', compact('province'));
+        return view('bootstrap.livewire.region', compact('province'));
     }
 }

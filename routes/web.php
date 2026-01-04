@@ -8,6 +8,7 @@ use App\Http\Controllers\Administrator\DashboardController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\InstagramFeedController;
 use App\Http\Controllers\Administrator\Auth\LoginController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -26,8 +27,8 @@ Route::get('/v2/test', function() {
 })->name('test');
 
 Route::get('/', [StoreController::class, 'index'])->name('store');
-Route::get('/instagram-feed', [App\Http\Controllers\InstagramFeedController::class, 'show'])->name('instagram.feed');
-Route::get('/instagram-feed/refresh', [App\Http\Controllers\InstagramFeedController::class, 'refresh'])->name('instagram.refresh')->middleware('auth');
+Route::get('/instagram-feed', [InstagramFeedController::class, 'show'])->name('instagram.feed');
+Route::get('/instagram-feed/refresh', [InstagramFeedController::class, 'refresh'])->name('instagram.refresh')->middleware('auth');
 
 Route::get('/product-detail/{id}/{product_name}', [StoreController::class, 'productDetail'])->name('product-detail');
 

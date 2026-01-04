@@ -1,4 +1,7 @@
 @extends('bootstrap.layout')
+
+@section('title', $pageTitle)
+
 @section('content')
 <div class="container-fluid">
     <div class="row">

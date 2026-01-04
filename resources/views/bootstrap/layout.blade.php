@@ -55,6 +55,12 @@
             align-items: center;
             justify-content: center;
         }
+        .navbar .dropdown-item:focus,
+        .navbar .dropdown-item:active,
+        .navbar .dropdown-item:hover {
+            background: black;
+            color: white;
+        }
         #footer {
             background: linear-gradient(150deg, #000000 0%, #000000 70%, #01132a 100%);
         }

@@ -37,8 +37,11 @@
                 <span class="iconify fs-3" data-icon="stash:arrow-left-duotone"></span>
             </a>
             <h1 class="fw-bold mb-0 text-uppercase">
-                {{ $total_product }} PRODUCTS ABOUT "{{ strtoupper($keyword) }}"
+                ALL PRODUCT
             </h1>
+            <span>
+                Search Result: "{{ $keyword }}"
+            </span>
         </div>
         <div class="col-12 col-md-6 mb-3 d-flex align-items-center justify-content-end flex-column flex-md-row">
             <div class="d-none d-md-flex align-items-center">
@@ -170,11 +173,17 @@
                 </div>
             </div>
             <div wire:loading.remove>
-                <div class="product-grid">
-                    @foreach ($products as $product)
+                @forelse ($products as $product)
+                    <div class="product-grid">
                         @include('bootstrap.parts.product-card', ['item' => $product])
-                    @endforeach
-                </div>
+                    </div>
+                @empty
+                    <div class="text-center py-5">
+                        <img src="{{ asset('stores-info/product-not-found.webp') }}" alt="Not Found" class="img-fluid">
+                        <h4 class="fw-bold">Oops, product not found</h4>
+                        <p class="text-muted">Try another keyword</p>
+                    </div>
+                @endforelse
                 
                 <!-- Pagination -->
                 <div class="mt-4 d-flex justify-content-center">

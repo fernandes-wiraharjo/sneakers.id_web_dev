@@ -232,6 +232,7 @@ class StoreController extends Controller
         }
         $data['headerImageURL'] = (new HeaderImage())->getHeaderImage($menu_parent_name, $menu_name);
         $data['keyword'] = $keyword;
+        $data['pageTitle'] = $menu_name;
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         return view('bootstrap.collections', $data);
     }

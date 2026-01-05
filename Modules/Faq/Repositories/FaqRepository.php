@@ -36,7 +36,7 @@ class FaqRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getAllFaq(){
-      return $this->model->get();
+      return $this->model->where('is_home', 1)->get();
   }
 
   public function getFaqById($id){

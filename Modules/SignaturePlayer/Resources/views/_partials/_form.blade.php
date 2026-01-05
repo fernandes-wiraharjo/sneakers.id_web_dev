@@ -10,13 +10,44 @@
 	<input type="text" placeholder="Signature Player Name" class="form-control" name="signature_player_name" id="signature_player_name" required value="{{ old('signature_player_name', $signature->signature_player_name) }}">
 </x-ladmin-form-group>
 
-{{-- <x-ladmin-form-group name="signature_image" label="Image">
-	<input type="file" class="form-control" name="image" id="image" value="{{ old('signature_image', $signature->signature_image) }}">
-</x-ladmin-form-group> --}}
-
-<x-ladmin-form-group name="signature_description" label="Description *">
-	<textarea placeholder="Signature Player Description" class="form-control" name="signature_description" id="signature_description">{{ old('signature_description', $signature->signature_description) }}</textarea>
+<x-ladmin-form-group name="signature_image" label="Image">
+	<input type="file" class="form-control" name="signature_image" id="signature_image" value="{{ old('signature_image', $signature->signature_image) }}">
+    <div class="col-sm-12">
+        <span class="text-muted fw-bold fs-6">
+            signature image will be cropped to 427x856 pixels
+        </span>
+    </div>
 </x-ladmin-form-group>
+
+<x-ladmin-form-group name="emblem" label="Emblem">
+	<input type="file" class="form-control" name="emblem" id="emblem" accept="image/*">
+    <div class="col-sm-12">
+        <span class="text-muted fw-bold fs-6">
+            use WHITE image with TRANSPARENT background. emblem will be cropped to 500x500 pixels. 
+        </span>
+    </div>
+</x-ladmin-form-group>
+
+<!--begin::Input group-->
+<div class="d-flex flex-stack w-lg-50 mb-5">
+    <!--begin::Label-->
+    <div class="me-5">
+        <label class="fs-6 fw-bold form-label">Show Player on Homepage?</label>
+    </div>
+    <!--end::Label-->
+
+    <!--begin::Switch-->
+    <label class="form-check form-switch form-check-custom form-check-solid fv-row">
+        <input type="hidden" name="is_home_display" value="0"/>
+        <input class="form-check-input" type="checkbox" name="is_home_display" value="1"
+            {{ $edit ? (intval($signature->is_home_display) ? 'checked' : '') : 'checked' }} />
+        <span class="form-check-label fw-bold text-muted">
+            Active
+        </span>
+    </label>
+    <!--end::Switch-->
+</div>
+<!--end::Input group-->
 
 @include('back-office.components.is_active', ['is_active' => $signature->is_active, 'edit' => $edit])
 

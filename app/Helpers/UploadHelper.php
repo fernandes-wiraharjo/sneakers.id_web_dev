@@ -4,6 +4,7 @@ use BaconQrCode\Renderer\Path\Path;
 use Illuminate\Validation\Rules\Exists;
 use Intervention\Image\Facades\Image;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('cleanDirectory')){
     function cleanDirectory($path){
@@ -268,6 +269,49 @@ if(!function_exists('moveImage')) {
         return true;
     }
 }
+
+/**
+ * uploadAsWebp function
+ * @param \Illuminate\Http\UploadedFile $file
+ * @param string $path
+ * @param string $storage
+ * @param int $width
+ * @param int $height
+ * @param string $saveAsFilename
+ * @return string => URL of the uploaded image
+ */
+if (!function_exists('uploadAsWebp')) {
+    function uploadAsWebp($file, $path, $storage = 'public', $width = 1200, $height = 1200, $saveAsFilename = null) {
+        if ($saveAsFilename) {
+            $imageName = $saveAsFilename . '.webp';
+        } else {
+            $imageName = time() . '.webp';
+        }
+        $img = Image::make($file);
+        $img->fit($width, $height)->encode('webp', 80);
+        Storage::disk($storage)->put($path . '/' . $imageName, $img);
+        $uploadedUrl = Storage::disk($storage)->url($path . '/' . $imageName);
+        return $uploadedUrl;
+    }
+}
+
+/**
+ * deletePublicFileByUrl function
+ * @param string $url
+ * @return bool
+ */
+if(!function_exists('deletePublicFileByUrl')) {
+    function deletePublicFileByUrl($url)
+    {
+        if (! $url) return false;
+
+        $relativePath = ltrim(parse_url($url, PHP_URL_PATH), '/');
+        $storagePath = str_replace('storage/', '', $relativePath);
+
+        return Storage::disk('public')->delete($storagePath);
+    }
+}
+
 
 if(!function_exists('convertToWebpAndDelete')) {
     function convertToWebpAndDelete($sourcePath, $quality = 80) {

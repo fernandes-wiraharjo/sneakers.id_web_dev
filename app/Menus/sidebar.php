@@ -317,6 +317,31 @@ return [
         ]
     ],
     [
+        'gate' => 'administrator.master-data.header-image.index',
+        'name' => 'Header Image',
+        'route' => ['administrator.master-data.header-image.index', []],
+        'isActive' => 'master-data/header-image*',
+        'icon' => 'hand-point-down',
+        'id' => '',
+        'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.header-image.create',
+                        'title' => 'Create Header Image',
+                        'description' => 'User can create new header-image'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.header-image.update',
+                        'title' => 'Update Header Image',
+                        'description' => 'User can update header-image'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.header-image.destroy',
+                        'title' => 'Delete Header Image',
+                        'description' => 'User can delete header-image'
+                    ]
+                ],
+    ],
+    [
         'gate' => 'administrator.master-data.footer-setting.index',
         'name' => 'Footer Setting',
         'route' => ['administrator.master-data.footer-setting.index', []],

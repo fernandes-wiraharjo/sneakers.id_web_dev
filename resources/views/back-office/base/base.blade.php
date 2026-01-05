@@ -116,6 +116,7 @@ License: {{ theme()->getOption('product', 'license') }}
 @include('sweetalert::alert')
 
 @auth
+@if (config('app.env') !== 'local')
 <script>
     $(document).ready(function() {
         setInterval(function() {
@@ -135,6 +136,7 @@ License: {{ theme()->getOption('product', 'license') }}
         }, 30000);
     });
 </script>
+@endif
 @endauth
 </body>
 {{-- end::Body --}}

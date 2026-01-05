@@ -42,6 +42,16 @@
 <br>
 <div class="row">
     <h5>Sizes, Quantity & Prices</h5>
+    
+<x-ladmin-form-group name="products_size_chart_image" label="Size-chart Image">
+	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="{{ old('products_size_chart_image', $edit ? $size_chart_image : '') }}" accept="image/*">
+</x-ladmin-form-group>
+@if ($size_chart_image)
+<div class="col-sm-12 col-md-6 offset-md-6">
+    <img src="{{ $size_chart_image }}" alt="Size Chart Image" class="img-fluid">
+</div>
+@endif
+
     <div class="col-sm-12 m-5">
     <!--begin::Repeater-->
     <div id="size_price">
@@ -331,6 +341,19 @@
                             }
                         }
                     },
+                    // 'products_size_chart_image': {
+                    //     validators: {
+                    //         // notEmpty: {
+                    //         //     message: 'Image is required'
+                    //         // },
+                    //         file: {
+                    //             extension: 'jpeg,jpg,png',
+                    //             type: 'image/jpeg,image/png',
+                    //             maxSize: 2097152, // 2048 * 1024
+                    //             message: 'The selected file is not valid',
+                    //         },
+                    //     }
+                    // },
                     'category': {
                         validators: {
                             notEmpty: {

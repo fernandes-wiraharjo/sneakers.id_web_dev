@@ -41,10 +41,11 @@ class ProductService {
         if($insertedProduct) {
             $idNewProduct = $insertedProduct->id;
 
-            $afterPath = 'images/products/'.$request['product_code'];
             $beforePath = 'images/upload-buckets';
 
             if(isset($request['products_image'])){
+                $afterPath = 'images/products/'.$request['product_code'];
+
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
@@ -89,6 +90,18 @@ class ProductService {
 
                     }
                 }
+            }
+
+            if(isset($request['products_size_chart_image'])){
+                $path = 'images/products/'.$request['product_code'];
+                $saveAsFilename = 'size-chart';
+                $sizeChartImageURL = uploadAsWebp($request['products_size_chart_image'], $path, 'public', 1200, 1200, $saveAsFilename);
+                $productImage = [
+                    'product_id' => $idNewProduct,
+                    'size_chart_image_url' => $sizeChartImageURL
+                ];
+
+                $this->productRepository->insertProductSizeChart($productImage);
             }
 
             if(isset($request['size_price'])) {
@@ -187,7 +200,6 @@ class ProductService {
         $updatedProduct = $getProduct->update($product);
 
         if($updatedProduct) {
-            $afterPath = 'images/products/'.$request['product_code'];
             $beforePath = 'images/upload-buckets';
 
             if($beforeProductCode != $request['product_code']){
@@ -211,6 +223,8 @@ class ProductService {
             }
 
             if(isset($request['products_image'])){
+                $afterPath = 'images/products/'.$request['product_code'];
+
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
@@ -238,12 +252,35 @@ class ProductService {
 
                     }
                 }
+
+                //sync unused file
+                $imagePack = $getProduct->images()->pluck('image_url')->toArray();
+
+                foreach (File::allFiles(public_path($afterPath)) as $file) {
+                // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
+                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
+                    removeImageFromStorage($afterPath, $file->getFilename());
+                }
+            }
+        }
+
+            if(isset($request['products_size_chart_image'])){
+                $path = 'images/products/'.$request['product_code'];
+                $saveAsFilename = 'size-chart';
+                $sizeChartImageURL = uploadAsWebp($request['products_size_chart_image'], $path, 'public', 1200, 1200, $saveAsFilename);
+
+                $productImage = [
+                    'product_id' => $id,
+                    'size_chart_image_url' => $sizeChartImageURL
+                ];
+
+                $this->productRepository->insertProductSizeChart($productImage);
             }
 
             if(isset($request['is_main'])){
                 $getProduct = $this->productRepository->getProductById($id);
 
-                if($getProduct) {
+                if(isset($afterPath) && $getProduct) {
                     $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
                     $webpPath = public_path($afterPath . '/' . $webpMain);
 
@@ -259,15 +296,6 @@ class ProductService {
                 $updateTimestamps = $getProduct->update([
                     'updated_at' => Carbon::now()
                 ]);
-            }
-
-            //sync unused file
-            $imagePack = $getProduct->images()->pluck('image_url')->toArray();
-            foreach (File::allFiles(public_path($afterPath)) as $file) {
-                // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
-                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
-                    removeImageFromStorage($afterPath, $file->getFilename());
-                }
             }
 
             if($diff = array_diff($oldDetail, $detail_ids)){

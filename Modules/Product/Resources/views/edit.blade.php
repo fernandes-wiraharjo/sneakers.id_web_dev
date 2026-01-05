@@ -27,7 +27,7 @@
                     <input type="hidden" name="before_image[]" value="{{!empty($image[$i]) ? $image[$i]['image_url'] : ''}}" />
                 @endfor
 
-                @include('product::_partials._form', ['product' => $product, 'product_code' => $product->product_code, 'edit' => true, 'main_image' => $product->image ?? ''])
+                @include('product::_partials._form', ['product' => $product, 'size_chart_image' => $size_chart_image ?? '', 'product_code' => $product->product_code, 'edit' => true, 'main_image' => $product->image ?? ''])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary" id="form-submit">

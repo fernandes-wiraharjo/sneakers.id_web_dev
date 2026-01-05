@@ -7,6 +7,7 @@ use Modules\SignaturePlayer\Entities\SignaturePlayer;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
 use App\Services\SignaturePlayerService;
+use Illuminate\Support\Facades\File;
 
 class SignaturePlayerRepository extends Repository implements MasterRepositoryInterface {
 
@@ -23,9 +24,8 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
    * @return Void
    */
   public function updateSignaturePlayer(Request $request, $id) {
-    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
-
     $get_signaturePlayer = $this->model->findOrFail($id);
+    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
 
     return $get_signaturePlayer->update($signaturePlayer);
   }
@@ -66,7 +66,15 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
     if($signature->products()->count() > 0){
         return false;
     } else {
+      try {
+        // delete image from storage
+        deletePublicFileByUrl($signature->signature_image);
+        deletePublicFileByUrl($signature->emblem_url);
+
         return $signature->delete();
+      } catch (\Throwable $th) {
+        return false;
+      }
     }
   }
 

@@ -60,10 +60,8 @@ class StoreController extends Controller
 
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
-        $data['footer'] = Storage::disk('local')->exists('footer-setting.json')
-            ? json_decode(Storage::disk('local')->get('footer-setting.json'))
-            : [];
-      
+        $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;
+        $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         activity()->log('Someone look into my product');
         return view('display-store.product-detail', $data);
     }

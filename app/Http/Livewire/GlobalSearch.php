@@ -440,32 +440,40 @@ class GlobalSearch extends Component
                 ->when($this->size_filter, function ($q, $filterLabels) {
                     if (config('app.size_filter_mode') === 'database') {
                         // Database mode: Get all EU size values from SizeFilter records
-                        $allEuSizes = [];
-                        
-                        foreach ($filterLabels as $filterLabel) {
-                            // Find SizeFilter records by filter_label
-                            $filters = SizeFilter::where('filter_label', $filterLabel)->get();
+                        // Use whereHas to check all product_details, not just the one in pd
+                        return $q->whereHas('details', function ($detailQuery) use ($filterLabels) {
+                            $allEuSizes = [];
                             
-                            // Collect all EU size values from JSON column
-                            foreach ($filters as $filter) {
-                                $euSizes = $filter->eu_sizes ?? [];
-                                $allEuSizes = array_merge($allEuSizes, $euSizes);
-                            }
-                        }
-                        
-                        // Remove duplicates and filter products
-                        $allEuSizes = array_unique($allEuSizes);
-                        
-                        if (!empty($allEuSizes)) {
-                            foreach ($allEuSizes as $index => $euSize) {
-                                // Use %size (ends with) instead of %size%
-                                if ($index == 0) {
-                                    $q->where('pd.size', 'LIKE', '%' . $euSize);
-                                } else {
-                                    $q->orWhere('pd.size', 'LIKE', '%' . $euSize);
+                            foreach ($filterLabels as $filterLabel) {
+                                // Find SizeFilter records by filter_label
+                                $filters = SizeFilter::where('filter_label', $filterLabel)->get();
+                                
+                                // Collect all EU size values from JSON column
+                                foreach ($filters as $filter) {
+                                    $euSizes = $filter->eu_sizes ?? [];
+                                    $allEuSizes = array_merge($allEuSizes, $euSizes);
                                 }
                             }
-                        }
+                            
+                            // Remove duplicates and filter products
+                            $allEuSizes = array_unique($allEuSizes);
+                            
+                            if (!empty($allEuSizes)) {
+                                $detailQuery->where(function ($sizeQuery) use ($allEuSizes) {
+                                    foreach ($allEuSizes as $index => $euSize) {
+                                        // Use %size (ends with) instead of %size%
+                                        if ($index == 0) {
+                                            $sizeQuery->where('size', 'LIKE', '%' . $euSize);
+                                        } else {
+                                            $sizeQuery->orWhere('size', 'LIKE', '%' . $euSize);
+                                        }
+                                    }
+                                });
+                            }
+                            
+                            // Only include product_details with quantity > 0
+                            $detailQuery->where('qty', '>', 0);
+                        });
                     } else {
                         // Hardcoded mode: Use sizes directly as before (ends with)
                         foreach ($filterLabels as $index => $size) {
@@ -475,9 +483,9 @@ class GlobalSearch extends Component
                                 $q->orWhere('pd.size', 'LIKE', '%' . $size);
                             }
                         }
+                        
+                        return $q->where('pd.qty', '>', 0);
                     }
-                    
-                    return $q->where('pd.qty', '>', 0);
                 })
                 ->when(count($keyword_array) >= 2, function($query) {
                     return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');

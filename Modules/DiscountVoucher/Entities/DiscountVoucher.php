@@ -5,7 +5,6 @@ namespace Modules\DiscountVoucher\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Hexters\Ladmin\LadminLogable;
-use App\Models\User;
 
 class DiscountVoucher extends Model
 {
@@ -70,14 +69,19 @@ class DiscountVoucher extends Model
     /**
      * Check if user can use this voucher
      */
-    public function canBeUsedByUser($userId)
+    public function canBeUsedByUser($email)
     {
         if (!$this->isValid()) {
             return false;
         }
 
+        // Email is required in application logic
+        if (empty($email)) {
+            return false;
+        }
+
         $userUsageCount = $this->usages()
-            ->where('user_id', $userId)
+            ->where('email', $email)
             ->count();
 
         return $userUsageCount < $this->quota_per_user;
@@ -114,13 +118,5 @@ class DiscountVoucher extends Model
         return $this->hasMany(DiscountVoucherUsage::class);
     }
 
-    /**
-     * Get users who used this voucher
-     */
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'discount_voucher_usage')
-            ->withTimestamps();
-    }
 }
 

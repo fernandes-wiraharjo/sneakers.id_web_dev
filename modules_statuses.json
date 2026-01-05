@@ -12,6 +12,7 @@
     "Transaction": true,
     "Dashboard": true,
     "HeaderImage": true,
+    "GlobalSetting": true,
     "ShippingCourier": true,
     "DiscountVoucher": true,
     "SizeFilter": true

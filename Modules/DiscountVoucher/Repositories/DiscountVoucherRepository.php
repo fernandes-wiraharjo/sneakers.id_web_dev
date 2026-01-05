@@ -114,8 +114,13 @@ class DiscountVoucherRepository
     /**
      * Validate voucher for user
      */
-    public function validateVoucherForUser($voucherCode, $userId, $subtotal)
+    public function validateVoucherForUser($voucherCode, $subtotal, $email)
     {
+        // Email is required in application logic
+        if (empty($email)) {
+            return ['valid' => false, 'message' => 'Email address is required to apply voucher.'];
+        }
+
         $voucher = $this->getByCode($voucherCode);
 
         if (!$voucher) {
@@ -133,7 +138,7 @@ class DiscountVoucherRepository
             ];
         }
 
-        if (!$voucher->canBeUsedByUser($userId)) {
+        if (!$voucher->canBeUsedByUser($email)) {
             return ['valid' => false, 'message' => 'You have reached the usage limit for this voucher.'];
         }
 
@@ -150,13 +155,18 @@ class DiscountVoucherRepository
     /**
      * Record voucher usage
      */
-    public function recordUsage($voucherId, $userId, $transactionId = null)
+    public function recordUsage($voucherId, $email, $transactionId = null)
     {
-        return DB::transaction(function () use ($voucherId, $userId, $transactionId) {
+        // Email is required in application logic
+        if (empty($email)) {
+            throw new \InvalidArgumentException('Email address is required to record voucher usage.');
+        }
+
+        return DB::transaction(function () use ($voucherId, $email, $transactionId) {
             // Create usage record
             DiscountVoucherUsage::create([
                 'discount_voucher_id' => $voucherId,
-                'user_id' => $userId,
+                'email' => $email,
                 'transaction_id' => $transactionId
             ]);
 
@@ -175,9 +185,12 @@ class DiscountVoucherRepository
     {
         $voucher = $this->getById($id);
         
+        // Count unique emails
+        $uniqueEmails = $voucher->usages()->distinct('email')->count('email');
+        
         return [
             'total_usage' => $voucher->usage_count,
-            'unique_users' => $voucher->usages()->distinct('user_id')->count('user_id'),
+            'unique_users' => $uniqueEmails,
             'remaining_quota' => $voucher->quota_total > 0 ? ($voucher->quota_total - $voucher->usage_count) : 'Unlimited',
             'total_transactions' => $voucher->usages()->whereNotNull('transaction_id')->count()
         ];

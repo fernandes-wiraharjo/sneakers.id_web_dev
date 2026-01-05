@@ -357,6 +357,31 @@ return [
         ],
     ],
     [
+                'gate' => 'administrator.master-data.global-setting.index',
+                'name' => 'Global Setting',
+                'route' => ['administrator.master-data.global-setting.index', []],
+                'isActive' => 'master-data/global-setting*',
+                'icon' => 'book-open',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.global-setting.create',
+                        'title' => 'Create Global Setting',
+                        'description' => 'User can create new global-setting'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.global-setting.update',
+                        'title' => 'Update Global Setting',
+                        'description' => 'User can update global-setting'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.global-setting.destroy',
+                        'title' => 'Delete Global Setting',
+                        'description' => 'User can delete global-setting'
+                    ]
+                ],
+    ],
+    [
                 'gate' => 'administrator.master-data.lookbook.index',
                 'name' => 'Look Book',
                 'route' => ['administrator.master-data.lookbook.index', []],
@@ -380,7 +405,7 @@ return [
                         'description' => 'User can delete lookbook'
                     ]
                 ],
-            ],
+    ],
     [
         'gate' => 'administrator.access',
         'name' => 'Access',

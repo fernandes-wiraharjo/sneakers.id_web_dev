@@ -10,9 +10,9 @@ class SignaturePlayer extends Component
     public $current_signature;
     public $edit;
 
-    public function render(SignaturePlayerRepository $signature)
+    public function render(SignaturePlayerRepository $signaturePlayerRepository)
     {
-        $signature = $signature->getSignatureTag()->toJson();
-        return view('livewire.signature-player', compact('signature'));
+        $signature_carousel = $signaturePlayerRepository->getSignatureCarousel();
+        return view('bootstrap.livewire.signature-player', compact('signature_carousel'));
     }
 }

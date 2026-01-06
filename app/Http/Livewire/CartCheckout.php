@@ -88,7 +88,7 @@ class CartCheckout extends Component
         
         $this->calculateDiscount();
         
-        return view('livewire.cart-checkout', [
+        return view('bootstrap.livewire.cart-checkout', [
             'session_id' => Cart::hashID(),
             'total' => intval($this->total),
             'content' => $this->content,

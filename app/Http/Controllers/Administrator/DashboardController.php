@@ -57,10 +57,10 @@ class DashboardController extends Controller {
 
         $data['token'] = $token;
 
-        return view('display-store.customer.dashboard', $data);
+        return view('bootstrap.customer-dashboard', $data);
     }
 
-    return view('display-store.customer.dashboard', $data);
+    return view('bootstrap.customer-dashboard', $data);
   }
 
     public function detail($external_id){

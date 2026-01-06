@@ -197,7 +197,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             $q->where('tag_title', 'NEW RELEASE');
             $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
         })
-        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price')
+        ->select('products.*', 'pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
         ->leftJoin('product_details as pd', function($join) {
             $join->on('pd.product_id', '=', 'products.id')
                 ->where('pd.retail_price', '=', DB::raw('(
@@ -213,7 +213,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
         ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)
@@ -227,7 +227,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         ->whereHas('tags', function($q) {
             $q->where('tag_title', 'BEST SELLER');
         })
-        ->select('products.*', 'pd.retail_price', 'pd.after_discount_price')
+        ->select('products.*', 'pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
         ->leftJoin('product_details as pd', function($join) {
             $join->on('pd.product_id', '=', 'products.id')
                 ->where('pd.retail_price', '=', DB::raw('(
@@ -243,7 +243,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price')
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
         ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)

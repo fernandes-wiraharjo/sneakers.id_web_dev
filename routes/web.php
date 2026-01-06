@@ -8,6 +8,7 @@ use App\Http\Controllers\Administrator\DashboardController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\InstagramFeedController;
 use App\Http\Controllers\Administrator\Auth\LoginController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -21,8 +22,13 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/v2/test', function() {
+    return view('bootstrap.homepage');
+})->name('test');
 
 Route::get('/', [StoreController::class, 'index'])->name('store');
+Route::get('/instagram-feed', [InstagramFeedController::class, 'show'])->name('instagram.feed');
+Route::get('/instagram-feed/refresh', [InstagramFeedController::class, 'refresh'])->name('instagram.refresh')->middleware('auth');
 
 Route::get('/product-detail/{id}/{product_name}', [StoreController::class, 'productDetail'])->name('product-detail');
 

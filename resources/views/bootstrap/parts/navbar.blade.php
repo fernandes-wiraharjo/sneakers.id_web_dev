@@ -1,0 +1,341 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container">
+        <!-- Brand/Logo -->
+        <a class="navbar-brand order-0 me-auto" href="{{ route('store') }}">
+            <img src="{{ asset('stores-info/logo-black-new.png') }}" alt="SNEAKERS.ID">
+        </a>
+
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler border-0 order-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" 
+            aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Content -->
+        <div class="collapse navbar-collapse order-3 order-lg-1" id="navbarMain">
+            <!-- Main Navigation -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <!-- FEATURED Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarFeatured" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Featured
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarFeatured">
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'featured') }}">Featured</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'new-release') }}">New releases</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'best-seller') }}">Best Sellers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale') }}">Sale</a></li>
+                    </ul>
+                </li>
+
+                <!-- MEN'S Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all.MENS') }}" id="navbarMens" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Men's
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarMens">
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all.MENS') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.MENS') }}">Basketball Shoes</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.MENS') }}">Casual Sneakers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.MENS') }}">Apparels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.MENS') }}">Accesories</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.MENS') }}">Sale</a></li>
+                    </ul>
+                </li>
+
+                <!-- WOMEN'S Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all.WOMENS') }}" id="navbarWomens" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Women's
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarWomens">
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all.WOMENS') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.WOMENS') }}">Basketball Shoes</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.WOMENS') }}">Casual Sneakers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.WOMENS') }}">Apparels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.WOMENS') }}">Accesories</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.WOMENS') }}">Sale</a></li>
+                    </ul>
+                </li>
+
+                <!-- KIDS' Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all.KIDS') }}" id="navbarKids" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Kids'
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarKids">
+                        <li><a class="dropdown-item" href="{{ route('collections', 'all.KIDS') }}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'basketball-shoes.KIDS') }}">Basketball Shoes</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'casual-sneakers.KIDS') }}">Casual Sneakers</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'apparels.KIDS') }}">Apparels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'accesories.KIDS') }}">Accesories</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('collections', 'sale.KIDS') }}">Sale</a></li>
+                    </ul>
+                </li>
+
+                <!-- Signature Player -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarSignaturePlayer" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Signature Athlete
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarSignaturePlayer">
+                        @foreach ($signature as $item)
+                            <li><a class="dropdown-item" href="{{ route('collections', 'signatures.' . $item->signature_code) }}">{{ $item->signature_title }}</a></li>
+                        @endforeach
+                    </ul>
+                </li>
+
+                <!-- BRAND Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarBrand" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Brand
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarBrand">
+                        @foreach ($brand_menu as $item)
+                            <li><a class="dropdown-item" href="{{ route('collections', 'brand.' . $item->brand_code) }}">{{ strtoupper($item->brand_title) }}</a></li>
+                        @endforeach
+                    </ul>
+                </li>
+
+                <!-- PRE OWNED -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('collections', 'all.PREOWNED') }}">Pre Owned</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('blog') }}">Blog</a>
+                </li>
+
+                <!-- SIZE CHART -->
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{ route('size-chart') }}">SIZE CHART</a>
+                </li> -->
+            </ul>
+        </div>
+
+        <!-- Right Side Icons -->
+        <ul class="navbar-nav ms-lg-auto fs-3 d-flex flex-row gap-1 align-items-center order-1 order-lg-2">
+            <!-- User Account -->
+            @if(auth()->check())
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fs-6" href="#" id="navbarAccount" 
+                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="iconify fs-3" data-icon="majesticons:user-line"></span>
+                        <span class="fs-6">
+                            {{ auth()->user()->name }}
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarAccount">
+                        <li><a class="dropdown-item" href="{{ route('customer.dashboard') }}">MY ACCOUNT</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:void(0);" onclick="document.getElementById('ladmin-logout').submit()">
+                                SIGN OUT
+                            </a>
+                            <form action="{{ route('administrator.logout') }}" id="ladmin-logout" method="post" class="d-none">@csrf</form>
+                        </li>
+                    </ul>
+                </li>
+            @else
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('customer.login') }}">
+                        <span class="iconify" data-icon="majesticons:user-line"></span>
+                    </a>
+                </li>
+            @endif
+
+            <!-- Search -->
+            <li class="nav-item">
+                <button class="d-flex align-items-center nav-link border-0 bg-transparent p-0" type="button" id="toggleSearchBtn" aria-label="Toggle search">
+                    <span class="iconify" data-icon="material-symbols:search-rounded"></span>
+                </button>
+            </li>
+
+            <!-- Cart -->
+            <li class="nav-item">
+                <button class="d-flex align-items-center nav-link position-relative border-0 bg-transparent p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas" aria-controls="cartOffcanvas">
+                    <span class="iconify" data-icon="uil:cart"></span>
+                    @livewire('cart-counter')
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Search Bar (Hidden by default) -->
+<div class="container-fluid bg-light border-bottom" id="searchBar" style="display: none;">
+    <div class="container py-3">
+        <div class="d-flex align-items-center">
+            <!-- Search Icon -->
+            <div class="me-3" style="color: #939393;">
+                <span class="iconify" data-icon="material-symbols:search-rounded" style="font-size: 21px;"></span>
+            </div>
+            
+            <!-- Search Input -->
+            <input type="text" 
+                   class="form-control border-0 bg-transparent flex-grow-1" 
+                   id="global_search" 
+                   name="q" 
+                   placeholder="Search..." 
+                   autocomplete="off" 
+                   autocorrect="off" 
+                   autocapitalize="off"
+                   style="font-size: 15px; box-shadow: none;"
+                   aria-label="Search">
+            
+            <!-- Close Button -->
+            <button class="btn btn-link text-decoration-none p-0 ms-3" type="button" id="closeSearchBtn" aria-label="Close search" style="color: #939393;">
+                <span class="iconify" data-icon="mdi:close" style="font-size: 16px;"></span>
+            </button>
+        </div>
+        
+        <!-- Search Results Container -->
+        <div id="searchResults" class="mt-3" style="display: none;">
+            <div class="border-top pt-3">
+                <div class="fw-semibold text-uppercase small mb-2" style="color: #666;">Products</div>
+                <ul id="searchResultsList" class="list-unstyled mb-0"></ul>
+                <div class="mt-2">
+                    <a href="#" id="total_result" class="text-decoration-none fw-semibold small"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        const toggleSearchBtn = $('#toggleSearchBtn');
+        const searchBar = $('#searchBar');
+        const globalSearch = $('#global_search');
+        const closeSearchBtn = $('#closeSearchBtn');
+        const searchResults = $('#searchResults');
+        const searchResultsList = $('#searchResultsList');
+        const totalResult = $('#total_result');
+
+        // Toggle search bar visibility
+        function toggleSearch() {
+            if (searchBar.is(':visible')) {
+                searchBar.slideUp(300, function() {
+                    globalSearch.val('');
+                    searchResults.hide();
+                    searchResultsList.html('');
+                });
+            } else {
+                searchBar.slideDown(300, function() {
+                    globalSearch.focus();
+                });
+            }
+        }
+
+        // Open/close search
+        toggleSearchBtn.on('click', function(e) {
+            e.preventDefault();
+            toggleSearch();
+        });
+
+        // Close search
+        closeSearchBtn.on('click', function(e) {
+            e.preventDefault();
+            searchBar.slideUp(300, function() {
+                globalSearch.val('');
+                searchResults.hide();
+                searchResultsList.html('');
+            });
+        });
+
+        // Search input handler - AJAX search
+        globalSearch.on('input', function() {
+            const searchQuery = $(this).val().trim();
+            
+            if (searchQuery.length > 0) {
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route('search') }}',
+                    data: {'search': searchQuery},
+                    success: function(data) {
+                        const result = JSON.parse(data);
+                        const items = result.item;
+                        let searchResultHtml = '';
+
+                        if (items && items.length > 0) {
+                            for (let index = 0; index < items.length; index++) {
+                                const imageUrl = '{{ asset("images/") }}/products/' + items[index].product_code + '/' + items[index].image;
+                                const productUrl = '/product-detail/' + items[index].id + '/' + items[index].product_name.replace(/ /g, '_');
+                                
+                                searchResultHtml += 
+                                    '<li>' +
+                                        '<a href="' + productUrl + '">' +
+                                            '<img src="' + imageUrl + '" alt="' + items[index].product_name + '" class="search-result-image">' +
+                                            '<div class="search-result-info">' +
+                                                '<div class="fw-semibold">' + items[index].product_name + '</div>' +
+                                            '</div>' +
+                                        '</a>' +
+                                    '</li>';
+                            }
+                            searchResults.show();
+                            searchResultsList.html(searchResultHtml);
+                            totalResult.html('View All ' + result.total_result + ' Products').attr('href', '/search-result/' + encodeURIComponent(searchQuery));
+                        } else {
+                            searchResultHtml = '<li class="text-muted">Search not found!</li>';
+                            searchResults.show();
+                            searchResultsList.html(searchResultHtml);
+                            totalResult.html('').attr('href', '#');
+                        }
+                    },
+                    error: function() {
+                        searchResults.hide();
+                        searchResultsList.html('');
+                    }
+                });
+            } else {
+                searchResults.hide();
+                searchResultsList.html('');
+                totalResult.html('').attr('href', '#');
+            }
+        });
+
+        // Close search on Escape key
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape' && searchBar.is(':visible')) {
+                searchBar.slideUp(300, function() {
+                    globalSearch.val('');
+                    searchResults.hide();
+                    searchResultsList.html('');
+                });
+            }
+        });
+
+        // Close search results when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('#searchBar').length && searchBar.is(':visible')) {
+                searchResults.hide();
+            }
+        });
+    });
+</script>
+@endpush
+
+<!-- Cart Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel" style="width: 400px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="cartOffcanvasLabel">Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0 d-flex flex-column" style="height: calc(100vh - 73px);">
+        <form action="{{ route('customer.cart') }}" method="POST" novalidate class="d-flex flex-column h-100">
+            @csrf
+            @livewire('cart-component')
+        </form>
+    </div>
+</div>

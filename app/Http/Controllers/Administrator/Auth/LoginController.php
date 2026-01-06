@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Cache;
 use App\Services\CartService;
 
@@ -47,7 +48,7 @@ class LoginController extends Controller
     protected $repository;
 
     public function __construct(UserRepository $repository, BrandRepository $brandRepository) {
-        $this->middleware([LadminGuestMiddleware::class])->except('logout');
+        $this->middleware([LadminGuestMiddleware::class])->except(['logout', 'sendVerificationEmail', 'verifyAccount']);
         $this->repository = $repository;
         $this->brandRepository = $brandRepository;
     }
@@ -59,7 +60,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('back-office.auth.login');
+        return view('bootstrap.login');
     }
 
         /**
@@ -69,7 +70,7 @@ class LoginController extends Controller
      */
     public function showCustomerLoginForm()
     {
-        return view('display-store.auth.login');
+        return view('bootstrap.login');
     }
 
     /**
@@ -81,7 +82,7 @@ class LoginController extends Controller
     {
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.register', $data);
+        return view('bootstrap.register', $data);
     }
 
     /**
@@ -96,13 +97,13 @@ class LoginController extends Controller
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|min:6',
+                'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->letters()->numbers()],
             ]);
 
             $token = Str::random(64);
             $request['role_id'] = 2;
             $request['remember_token'] = $token;
-            $request['name'] = $request['first_name'].' '.$request['last_name'];
+            $request['name'] = $request->first_name.' '.$request->last_name;
 
             $createUser = $this->repository->createUserCustomer($request);
 
@@ -131,7 +132,13 @@ class LoginController extends Controller
 
             return redirect()->route("customer.login")->with(['success'=> ['send email verification, pleace check your email to login!']]);
         } catch (ValidationException $e) {
-            throw $e;
+            $errorMessage = 'Failed to register. ' . $e->getMessage();
+            if ($e->errors()) {
+                $errorMessage = 'Failed to register. ' . implode(' ', array_map(function($errors) {
+                    return implode(' ', $errors);
+                }, $e->errors()));
+            }
+            return back()->with(['toast_error' => $errorMessage])->withInput();
         } catch (\Exception $e) {
             // $mailPort = env('MAIL_PORT', 587);
             // Log::error("Regitration failed: (". $mailPort .") " . $e->getMessage());
@@ -149,7 +156,7 @@ class LoginController extends Controller
     {
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.forgot-password', $data);
+        return view('bootstrap.forgot-password', $data);
     }
 
     /**
@@ -191,36 +198,29 @@ class LoginController extends Controller
     }
 
     public function sendVerificationEmail($token){
-        $verifyUser = UserVerify::where('token', $token)->first();
+        try {
+            $verifyUser = UserVerify::where('token', $token)->first();
+            if (!$verifyUser) {
+                throw new \Exception('Token not found');
+            }
 
-        $message = 'Sorry your email cannot be identified.';
+            if ($verifyUser->user->is_email_verified) {
+                return redirect()->back()->with('error', 'Your email is already verified.');
+            }
 
-        if(!is_null($verifyUser) ){
-            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
+            $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($verifyUser){
                 $message->to($verifyUser->user->email);
                 $message->subject('Email Verification Mail');
             });
+            if (count(Mail::failures()) > 0) {
+                Log::error('Failed to send verification email: ' . json_encode(Mail::failures()));
+                throw new \Exception('Failed to send verification email');
+            }
+            return redirect()->back()->with('success', 'Resend email verification, please check your email to verify.');
 
-            return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
-
-            // $user = $verifyUser->user;
-
-            // if(!$user->is_email_verified) {
-            //     $verifyUser->user->is_email_verified = 1;
-            //     $verifyUser->user->save();
-            //     $message = "Your e-mail is verified. You can now login.";
-            // } else {
-            //     $message = "Your e-mail is already verified. You can now login.";
-            // }
-        } else {
-            return redirect()->back()->with(['error', $message]);
-
-            // $sendMail = Mail::send('email.emailVerificationEmail', ['token' => $verifyUser->token], function($message) use($request){
-            //     $message->to($verifyUser->user->email);
-            //     $message->subject('Email Verification Mail');
-            // });
-
-            // return redirect()->back()->with(['success', 'resend email verification, pleace check your email to verify']);
+        } catch (\Exception $e) {
+            Log::error("Failed to send verification email: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to send verification email. Please try again later.');
         }
     }
 

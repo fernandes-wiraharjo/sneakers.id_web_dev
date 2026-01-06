@@ -50,7 +50,7 @@ class Product extends Component
      */
     public function render(): View
     {
-        return view('livewire.product');
+        return view('bootstrap.livewire.product');
     }
     /**
      * Adds an item to cart.     *

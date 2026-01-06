@@ -44,6 +44,10 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
       return $this->model->find($id);
   }
 
+  public function getSignaturePlayerByCode($code){
+      return $this->model->where('signature_code', $code)->first();
+  }
+
   public function getSignatureByName($keyword){
     return $this->model
       ->where('signature_title', 'LIKE', '%'.$keyword.'%')
@@ -84,5 +88,13 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
           'signature_code as code',
           'signature_player_name as title'
           )->get();
+  }
+
+  public function getSignatureCarousel(){
+    return $this->model->where('is_active', 1)
+      ->where('is_home_display', 1)
+      ->whereNotNull('signature_image')
+      ->select('id', 'signature_code', 'signature_title', 'emblem_url', 'signature_image')
+      ->get();
   }
 }

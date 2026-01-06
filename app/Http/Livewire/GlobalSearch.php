@@ -92,6 +92,14 @@ class GlobalSearch extends Component
         $this->sort_column = $sort_column;
     }
 
+    public function handleSortChange($value)
+    {
+        if ($value) {
+            list($sort_column, $sort_by) = explode(':', $value);
+            $this->sort($sort_column, strtoupper($sort_by));
+        }
+    }
+
     public function mount(): void
     {
         $this->keyword = str_replace("+", " ", $this->keyword);
@@ -494,6 +502,6 @@ class GlobalSearch extends Component
 
         $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
-        return view('livewire.global-search', $data);
+        return view('bootstrap.livewire.global-search', $data);
     }
 }

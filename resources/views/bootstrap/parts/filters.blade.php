@@ -1,3 +1,12 @@
+@php
+    // Check if current URL contains any locked category (to lock tag filter)
+    $lockedCategories = ['best-seller', 'new-release', 'sale', 'featured'];
+    $currentUrl = request()->url();
+    $segmentUrl = explode('/', $currentUrl);
+    $lastSegment = end($segmentUrl);
+    $isTagLocked = in_array($lastSegment, $lockedCategories);
+@endphp
+
 <p class="fs-5 fw-bold mb-4">Filter</p>
 
 <!-- Brand Section -->
@@ -79,12 +88,28 @@
 
 <!-- Tag Section -->
 @if(isset($tag) && count($tag) > 0)
+    @php
+        // Get selected tags from Livewire component if available
+        $selectedTags = [];
+        if (isset($this) && property_exists($this, 'tag') && is_array($this->tag)) {
+            $selectedTags = $this->tag;
+        }
+    @endphp
     <p class="fw-bold mt-4 mb-2">Tag</p>
     @foreach ($tag as $item)
+        @php
+            $isTagSelected = in_array($item->id, $selectedTags);
+        @endphp
         <div class="form-check">
-            <input class="form-check-input" wire:model="tag" wire:loading.attr="disabled" type="checkbox" value="{{ $item->id }}" id="tag{{ $item->id }}">
-            <label class="form-check-label" for="tag{{ $item->id }}">
-                <span class="text-muted">{{ $item->tag_title }}</span>
+            <input class="form-check-input" 
+                   wire:model="tag"
+                   @if(!$isTagLocked) wire:loading.attr="disabled" @endif
+                   type="checkbox" 
+                   value="{{ $item->id }}" 
+                   id="tag{{ $item->id }}"
+                   @if($isTagLocked) disabled @endif>
+            <label class="form-check-label @if($isTagLocked && !$isTagSelected) text-muted opacity-50 @endif" for="tag{{ $item->id }}">
+                {{ $item->tag_title }}
             </label>
         </div>
     @endforeach

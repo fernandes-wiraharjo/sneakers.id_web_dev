@@ -137,10 +137,39 @@
             {{-- Footer Section --}}
             <div class="row">
                 <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+                    {{-- Order Note Section --}}
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <label for="cart-note" class="form-label fw-semibold mb-2">
+                                {{ $note == '' ? 'Add Order Note' : 'Edit Order Note' }}
+                            </label>
+                            <textarea class="form-control" 
+                                      wire:model.debounce.1000ms="note" 
+                                      id="cart-note" 
+                                      rows="4" 
+                                      placeholder="How can we help you?">{{ $note }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 mb-4 mb-lg-0">
                     {{-- Voucher Code Section --}}
-                    <div class="card mb-3">
+                    <div class="card h-100">
                         <div class="card-body">
                             <label for="voucher_code" class="form-label fw-semibold mb-3">Have a voucher code?</label>
+                            
+                            {{-- Email field for guests only (authenticated users use their account email) --}}
+                            @guest
+                            <div class="mb-3">
+                                <label for="guest_email" class="form-label small fw-semibold">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" 
+                                       wire:model.defer="guestEmail" 
+                                       id="guest_email" 
+                                       class="form-control" 
+                                       placeholder="Enter your email address"
+                                       {{ $voucherApplied ? 'disabled' : '' }}>
+                            </div>
+                            @endguest
+                            
                             <div class="input-group">
                                 <input type="text" 
                                        wire:model.defer="voucherCode" 
@@ -175,25 +204,11 @@
                             @endif
                         </div>
                     </div>
-
-                    {{-- Order Note Section --}}
-                    <div class="card">
-                        <div class="card-body">
-                            <label for="cart-note" class="form-label fw-semibold mb-2">
-                                {{ $note == '' ? 'Add Order Note' : 'Edit Order Note' }}
-                            </label>
-                            <textarea class="form-control" 
-                                      wire:model.debounce.1000ms="note" 
-                                      id="cart-note" 
-                                      rows="4" 
-                                      placeholder="How can we help you?">{{ $note }}</textarea>
-                        </div>
-                    </div>
                 </div>
 
                 {{-- Order Summary --}}
-                <div class="col-12 col-lg-4 offset-lg-4">
-                    <div class="card">
+                <div class="col-12 col-lg-4">
+                    <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title mb-4">Order Summary</h5>
                             

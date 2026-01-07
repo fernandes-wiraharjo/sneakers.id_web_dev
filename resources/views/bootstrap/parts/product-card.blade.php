@@ -5,12 +5,14 @@
     $discount_percentage = $item->discount_percentage;
     $selling_price = $item->after_discount_price;
 @endphp
-<a href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">
+<a class="h-100" href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">
     <div class="card shadow rounded-5 h-100 position-relative">
-        <span class="iconify fs-3 position-absolute text-secondary top-0 end-0 mt-3 me-3" data-icon="uil:cart"></span>
-        <img src="{{ $image_url }}" class="card-img-top rounded-top-5" alt="...">
+        <span class="z-2 iconify fs-3 position-absolute text-secondary top-0 end-0 mt-3 me-3" data-icon="uil:cart"></span>
+        <div class="ratio ratio-1x1 z-1">
+            <img src="{{ $image_url }}" class="object-fit-contain rounded-top-5 img-fluid" alt="...">
+        </div>
         <div class="card-body">
-            <p class="mb-1 text-uppercase">{{ $title }}</p>
+            <p class="mb-1 text-uppercase" style="min-height: 3rem">{{ $title }}</p>
             <p class="mb-1 text-danger">
                 <span class="fw-bolder text-decoration-line-through">{{ rupiah_format($price) }}</span>
                 <span>{{ $discount_percentage }}% OFF</span>

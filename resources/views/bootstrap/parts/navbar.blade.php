@@ -26,8 +26,12 @@
                         <li><a class="dropdown-item" href="{{ route('collections', 'featured') }}">Featured</a></li>
                         <li><a class="dropdown-item" href="{{ route('collections', 'new-release') }}">New releases</a></li>
                         <li><a class="dropdown-item" href="{{ route('collections', 'best-seller') }}">Best Sellers</a></li>
-                        <li><a class="dropdown-item" href="{{ route('collections', 'sale') }}">Sale</a></li>
                     </ul>
+                </li>
+
+                <!-- SALE -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('collections', 'sale') }}">Sale</a>
                 </li>
 
                 <!-- MEN'S Dropdown -->

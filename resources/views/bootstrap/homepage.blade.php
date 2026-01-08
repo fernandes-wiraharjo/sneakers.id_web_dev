@@ -20,7 +20,7 @@
                 </div>
                 <div class="mt-5 slick-featured-products">
                     @forelse ($new_release as $item)
-                        <div class="px-2">
+                        <div class="px-2 h-100">
                             @include('bootstrap.parts.product-card', ['item' => $item])
                         </div>
                     @empty
@@ -38,7 +38,7 @@
                 </div>
                 <div class="mt-5 slick-featured-products">
                     @forelse ($best_seller as $item)
-                        <div class="px-2">
+                        <div class="px-2 h-100">
                             @include('bootstrap.parts.product-card', ['item' => $item])
                         </div>
                     @empty

@@ -15,9 +15,23 @@
 </x-ladmin-form-group>
 
 <x-ladmin-form-group name="header_image" label="Image">
-    <input type="file" class="form-control" name="image" id="image"
-        value="{{ $edit ? old('image', $header_image->image_url) : old('image') }}">
-    <div class="col-sm-12">
+    @if($edit && isset($header_image->image_url) && $header_image->image_url)
+        <div class="mb-3">
+            <label class="form-label">Current Image:</label>
+            <div style="max-width: 512px;">
+                <img src="{{ $header_image->image_url }}" 
+                     alt="Current Header Image" 
+                     class="img-thumbnail" 
+                     style="width: 100%; aspect-ratio: 1280 / 500; object-fit: contain;"
+                     onerror="this.src='/images/placeholder.png'; this.onerror=null;">
+            </div>
+            <small class="text-muted d-block mt-2">Upload a new image to replace the current one</small>
+        </div>
+    @endif
+    <div class="col-12">
+        <input type="file" class="form-control" name="image" id="image" accept="image/*">
+    </div>
+    <div class="col-sm-12 mt-2">
         <span class="text-muted fw-bold fs-6">
             banner image will be cropped to 1280x500 pixels
         </span>

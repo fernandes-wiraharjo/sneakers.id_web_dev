@@ -129,7 +129,6 @@ class ProductService {
             // $sizes = json_decode($request['size']);
             $categories = json_decode($request['category']);
             $tags = json_decode($request['tag']);
-            $signatures = json_decode($request['signature']);
 
             // $sizes_id = [];
             $categories_id = [];
@@ -160,11 +159,8 @@ class ProductService {
                 $this->productRepository->attachProductTags($idNewProduct, $tags_id);
             }
 
-            if(isset($signatures)){
-                foreach($signatures as $item){
-                    $signatures_id[] = intval($item->value);
-                }
-
+            if(isset($request['signature_player_id']) && $request['signature_player_id'] != ''){
+                $signatures_id[] = intval($request['signature_player_id']);
                 $this->productRepository->attachProductSignatures($idNewProduct, $signatures_id);
             }
 
@@ -359,7 +355,6 @@ class ProductService {
             // $sizes = json_decode($request['size']);
             $categories = json_decode($request['category']);
             $tags = json_decode($request['tag']);
-            $signatures = json_decode($request['signature']);
 
             // $sizes_id = [];
             $categories_id = [];
@@ -412,11 +407,8 @@ class ProductService {
                 ]);
             }
 
-            if(isset($signatures)){
-                foreach($signatures as $item){
-                    $signatures_id[] = intval($item->value);
-                }
-
+            if(isset($request['signature_player_id']) && $request['signature_player_id'] != ''){
+                $signatures_id[] = intval($request['signature_player_id']);
                 $this->productRepository->syncProductSignatures($id, $signatures_id);
 
                 $updateTimestamps = $getProduct->update([

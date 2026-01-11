@@ -99,7 +99,7 @@
                 </li>
 
                 <!-- BRAND Dropdown -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarBrand" 
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Brand
@@ -109,6 +109,9 @@
                             <li><a class="dropdown-item" href="{{ route('collections', 'brand.' . $item->brand_code) }}">{{ strtoupper($item->brand_title) }}</a></li>
                         @endforeach
                     </ul>
+                </li> -->
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="nav-link dropdown-toggle" onclick="toggleCustomDropdown('brand')">Brand</a>
                 </li>
 
                 <!-- PRE OWNED -->
@@ -175,6 +178,25 @@
     </div>
 </nav>
 
+<!-- Brand dropdown -->
+ <div class="container-fluid dropdown-menu bg-white border-0 shadow brandDropdownWrapper" style="display: none;">
+    <div class="container py-3">
+        <div class="row mb-2">
+            <div class="col-12">
+                <span class="fs-3 fw-bold text-uppercase">BRAND</span>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap gap-5 justify-content-evenly">
+            @foreach ($brand_menu as $brand)
+            <a href="{{ route('collections', 'all.' . $brand->brand_code) }}" class="d-flex flex-column p-2 justify-content-center align-items-center shadow-sm">
+                <img src="{{ getImage($brand->brand_image, 'brand') }}" alt="{{ $brand->brand_title }}">
+                <span>{{ strtoupper($brand->brand_title) }}</span>
+            </a>
+            @endforeach
+        </div>
+    </div>
+ </div>
+
 <!-- Search Bar (Hidden by default) -->
 <div class="container-fluid bg-light border-bottom" id="searchBar" style="display: none;">
     <div class="container py-3">
@@ -215,6 +237,20 @@
     </div>
 </div>
 
+<style>
+    .brandDropdownWrapper a {
+        width: 206px;
+        height: 150px;
+    }
+    .brandDropdownWrapper a img {
+        max-width: 110px;
+        max-height: 110px;
+    }
+    .brandDropdownWrapper a:hover {
+        border: 1px solid black;
+        border-radius: 1rem;
+    }
+</style>
 
 @push('scripts')
 <script>
@@ -326,6 +362,34 @@
                 searchResults.hide();
             }
         });
+    });
+
+    // Make toggleCustomDropdown globally available
+    function toggleCustomDropdown(dropdownId) {
+        console.log('toggleCustomDropdown called with:', dropdownId);
+        
+        // Hide search bar if open
+        $('#searchBar').slideUp(300);
+        
+        // Toggle the requested dropdown
+        if (dropdownId === 'brand') {
+            const brandDropdown = $('.brandDropdownWrapper');
+            if (brandDropdown.is(':visible')) {
+                brandDropdown.slideUp(300);
+            } else {
+                // Hide all other custom dropdowns first
+                $('.brandDropdownWrapper').not(brandDropdown).slideUp(300);
+                brandDropdown.slideDown(300);
+            }
+        }
+    }
+    
+    // Close brand dropdown when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.brandDropdownWrapper').length && 
+            !$(e.target).closest('[onclick*="toggleCustomDropdown"]').length) {
+            $('.brandDropdownWrapper').slideUp(300);
+        }
     });
 </script>
 @endpush

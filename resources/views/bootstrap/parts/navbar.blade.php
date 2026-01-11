@@ -206,7 +206,7 @@
  </div>
 
 <!-- Search Bar (Hidden by default) -->
-<div class="container-fluid bg-light border-bottom" id="searchBar" style="display: none;">
+<div class="container-fluid bg-white border-0 shadow" id="searchBar" style="display: none;">
     <div class="container py-3">
         <div class="d-flex align-items-center">
             <!-- Search Icon -->
@@ -261,7 +261,8 @@
     .navbar,
     .navbar .dropdown-menu,
     .brandDropdownWrapper,
-    .signatureDropdownWrapper {
+    .signatureDropdownWrapper,
+    #searchBar {
         position: relative;
         z-index: 1041;
     }
@@ -322,10 +323,17 @@
                     globalSearch.val('');
                     searchResults.hide();
                     searchResultsList.html('');
+                    // Hide backdrop if no dropdowns are open
+                    const hasOpenDropdown = $('.dropdown-menu.show').not('.brandDropdownWrapper, .signatureDropdownWrapper').length > 0;
+                    const hasOpenCustomDropdown = $('.brandDropdownWrapper:visible, .signatureDropdownWrapper:visible').length > 0;
+                    if (!hasOpenDropdown && !hasOpenCustomDropdown) {
+                        hideBackdrop();
+                    }
                 });
             } else {
                 searchBar.slideDown(300, function() {
                     globalSearch.focus();
+                    showBackdrop();
                 });
             }
         }
@@ -343,6 +351,12 @@
                 globalSearch.val('');
                 searchResults.hide();
                 searchResultsList.html('');
+                // Hide backdrop if no dropdowns are open
+                const hasOpenDropdown = $('.dropdown-menu.show').not('.brandDropdownWrapper, .signatureDropdownWrapper').length > 0;
+                const hasOpenCustomDropdown = $('.brandDropdownWrapper:visible, .signatureDropdownWrapper:visible').length > 0;
+                if (!hasOpenDropdown && !hasOpenCustomDropdown) {
+                    hideBackdrop();
+                }
             });
         });
 
@@ -404,6 +418,12 @@
                     globalSearch.val('');
                     searchResults.hide();
                     searchResultsList.html('');
+                    // Hide backdrop if no dropdowns are open
+                    const hasOpenDropdown = $('.dropdown-menu.show').not('.brandDropdownWrapper, .signatureDropdownWrapper').length > 0;
+                    const hasOpenCustomDropdown = $('.brandDropdownWrapper:visible, .signatureDropdownWrapper:visible').length > 0;
+                    if (!hasOpenDropdown && !hasOpenCustomDropdown) {
+                        hideBackdrop();
+                    }
                 });
             }
         });

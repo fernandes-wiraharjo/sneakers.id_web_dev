@@ -518,7 +518,7 @@ class CheckoutProcess extends Component
     {
         $province = ModelRegion::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
 
-        return view('livewire.checkout-process', [
+        return view('bootstrap.livewire.checkout-process', [
             'session_id' => Cart::hashID(),
             'total' => intval(Cart::total()),
             'content' => Cart::content(),

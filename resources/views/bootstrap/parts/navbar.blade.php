@@ -1,3 +1,6 @@
+<!-- Dropdown Backdrop -->
+<div class="dropdown-backdrop" id="dropdownBackdrop" style="display: none;"></div>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container">
         <!-- Brand/Logo -->
@@ -243,11 +246,32 @@
 </div>
 
 <style>
+    /* Dropdown backdrop */
+    .dropdown-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1039;
+    }
+    
+    /* Ensure navbar and dropdowns stay above backdrop */
+    .navbar,
+    .navbar .dropdown-menu,
+    .brandDropdownWrapper,
+    .signatureDropdownWrapper {
+        position: relative;
+        z-index: 1041;
+    }
+    
     /* Bootstrap default dropdown styling */
     .navbar-nav .dropdown-menu {
         border: none;
         border-radius: 0;
         padding: 1rem 0;
+        z-index: 1041;
     }
     .navbar-nav .dropdown-menu .dropdown-item {
         padding: 0.75rem 5rem 0.75rem 1.5rem;
@@ -392,6 +416,15 @@
         });
     });
 
+    // Show/hide backdrop
+    function showBackdrop() {
+        $('#dropdownBackdrop').css('display', 'block');
+    }
+    
+    function hideBackdrop() {
+        $('#dropdownBackdrop').css('display', 'none');
+    }
+    
     // Make toggleCustomDropdown globally available
     function toggleCustomDropdown(dropdownId) {
         console.log('toggleCustomDropdown called with:', dropdownId);
@@ -412,17 +445,54 @@
         if (targetDropdown.length) {
             if (targetDropdown.is(':visible')) {
                 targetDropdown.slideUp(300);
+                hideBackdrop();
             } else {
                 targetDropdown.slideDown(300);
+                showBackdrop();
             }
         }
     }
     
+    // Handle Bootstrap dropdown events
+    $(document).on('show.bs.dropdown', '.dropdown', function() {
+        showBackdrop();
+    });
+    
+    $(document).on('hide.bs.dropdown', '.dropdown', function() {
+        // Check if any dropdown is still open
+        setTimeout(function() {
+            const hasOpenDropdown = $('.dropdown-menu.show').not('.brandDropdownWrapper, .signatureDropdownWrapper').length > 0;
+            const hasOpenCustomDropdown = $('.brandDropdownWrapper:visible, .signatureDropdownWrapper:visible').length > 0;
+            if (!hasOpenDropdown && !hasOpenCustomDropdown) {
+                hideBackdrop();
+            }
+        }, 150);
+    });
+    
+    // Close dropdowns when clicking backdrop
+    $(document).on('click', '#dropdownBackdrop', function() {
+        // Hide Bootstrap dropdowns
+        $('.dropdown-menu').not('.brandDropdownWrapper, .signatureDropdownWrapper').removeClass('show');
+        $('.dropdown').removeClass('show');
+        
+        // Hide custom dropdowns
+        $('.brandDropdownWrapper, .signatureDropdownWrapper').slideUp(300);
+        
+        hideBackdrop();
+    });
+    
     // Close custom dropdowns when clicking outside
     $(document).on('click', function(e) {
         if (!$(e.target).closest('.brandDropdownWrapper, .signatureDropdownWrapper').length && 
-            !$(e.target).closest('[onclick*="toggleCustomDropdown"]').length) {
+            !$(e.target).closest('[onclick*="toggleCustomDropdown"]').length &&
+            !$(e.target).closest('.dropdown-toggle').length) {
             $('.brandDropdownWrapper, .signatureDropdownWrapper').slideUp(300);
+            
+            // Check if any dropdown is still open
+            const hasOpenDropdown = $('.dropdown-menu.show').not('.brandDropdownWrapper, .signatureDropdownWrapper').length > 0;
+            if (!hasOpenDropdown) {
+                hideBackdrop();
+            }
         }
     });
 </script>

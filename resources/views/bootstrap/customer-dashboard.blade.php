@@ -90,7 +90,7 @@
                                             <span class="badge 
                                                 @if($item->transaction->status == 'PENDING' || $item->transaction->status == 'CREATED') bg-warning
                                                 @elseif($item->transaction->status == 'PAID' || $item->transaction->status == 'COMPLETED') bg-success
-                                                @elseif($item->transaction->status == 'CANCELLED') bg-danger
+                                                @elseif($item->transaction->status == 'CANCELLED' || $item->transaction->status == 'EXPIRED') bg-danger
                                                 @else bg-secondary
                                                 @endif">
                                                 {{ $item->transaction->status }}

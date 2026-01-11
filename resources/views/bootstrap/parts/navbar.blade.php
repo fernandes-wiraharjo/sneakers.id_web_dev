@@ -87,29 +87,10 @@
 
                 <!-- Signature Player -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarSignaturePlayer" 
-                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Signature Athlete
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarSignaturePlayer">
-                        @foreach ($signature as $item)
-                            <li><a class="dropdown-item" href="{{ route('collections', 'signatures.' . $item->signature_code) }}">{{ $item->signature_title }}</a></li>
-                        @endforeach
-                    </ul>
+                    <a href="javascript:void(0)" class="nav-link dropdown-toggle" onclick="toggleCustomDropdown('signature')">Signature Athlete</a>
                 </li>
 
                 <!-- BRAND Dropdown -->
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{{ route('collections', 'all') }}" id="navbarBrand" 
-                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Brand
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarBrand">
-                        @foreach ($brand_menu as $item)
-                            <li><a class="dropdown-item" href="{{ route('collections', 'brand.' . $item->brand_code) }}">{{ strtoupper($item->brand_title) }}</a></li>
-                        @endforeach
-                    </ul>
-                </li> -->
                 <li class="nav-item dropdown">
                     <a href="javascript:void(0)" class="nav-link dropdown-toggle" onclick="toggleCustomDropdown('brand')">Brand</a>
                 </li>
@@ -181,7 +162,7 @@
 <!-- Brand dropdown -->
  <div class="container-fluid dropdown-menu bg-white border-0 shadow brandDropdownWrapper" style="display: none;">
     <div class="container py-3">
-        <div class="row mb-2">
+        <div class="row mb-4">
             <div class="col-12">
                 <span class="fs-3 fw-bold text-uppercase">BRAND</span>
             </div>
@@ -191,6 +172,30 @@
             <a href="{{ route('collections', 'all.' . $brand->brand_code) }}" class="d-flex flex-column p-2 justify-content-center align-items-center shadow-sm">
                 <img src="{{ getImage($brand->brand_image, 'brand') }}" alt="{{ $brand->brand_title }}">
                 <span>{{ strtoupper($brand->brand_title) }}</span>
+            </a>
+            @endforeach
+        </div>
+    </div>
+ </div>
+
+<!-- Signature Player dropdown -->
+ <div class="container-fluid dropdown-menu bg-white border-0 shadow signatureDropdownWrapper" style="display: hidden;">
+    <div class="container py-3">
+        <div class="d-flex mb-4 justify-content-between align-items-center">
+            <span class="fs-3 fw-bold text-uppercase">SIGNATURE ATHLETE</span>
+            <a href="{{ url('signature-athlete') }}" class="d-flex align-items-center gap-2 text-decoration-none justify-content-end">
+                <span>View All</span>
+                <span class="iconify fs-3" data-icon="stash:arrow-right-duotone"></span>
+            </a>
+        </div>
+        <div class="d-flex flex-wrap gap-3 justify-content-start">
+            @foreach ($signature as $item)
+            <a href="{{ route('collections', 'signatures.' . $item->signature_code) }}" class="position-relative signaturePlayerItem rounded">
+                <img src="{{ $item->signature_image }}" alt="{{ $item->signature_title }}" class="signaturePlayerImage rounded" onerror="this.src='https://placehold.co/110x220/black/white?text=No+Image'">
+                <div class="position-absolute w-100 mx-auto d-flex flex-column align-items-center" style="bottom: 5px;">
+                    <img src="{{ $item->emblem_url }}" alt="{{ $item->signature_title }}" class="signaturePlayerEmblem" onerror="this.src='https://placehold.co/50x50/grey/white?text=No+Emblem'">
+                    <span class="mt-2 text-center text-white signaturePlayerName"><?= str_replace(' ', '<br>', $item->signature_title) ?></span>
+                </div>
             </a>
             @endforeach
         </div>
@@ -238,6 +243,17 @@
 </div>
 
 <style>
+    /* Bootstrap default dropdown styling */
+    .navbar-nav .dropdown-menu {
+        border: none;
+        border-radius: 0;
+        padding: 1rem 0;
+    }
+    .navbar-nav .dropdown-menu .dropdown-item {
+        padding: 0.75rem 5rem 0.75rem 1.5rem;
+    }
+    
+    /* Custom dropdown styling */
     .brandDropdownWrapper a {
         width: 206px;
         height: 150px;
@@ -249,6 +265,18 @@
     .brandDropdownWrapper a:hover {
         border: 1px solid black;
         border-radius: 1rem;
+    }
+    .signatureDropdownWrapper .signaturePlayerImage {
+        width: 115px;
+        height: 230px;
+        object-fit: cover;
+    }
+    .signatureDropdownWrapper .signaturePlayerItem:hover {
+        box-shadow: 0 0 10px grey;
+    }
+    .signatureDropdownWrapper .signaturePlayerEmblem {
+        width: 50px;
+        height: 50px;
     }
 </style>
 
@@ -371,24 +399,30 @@
         // Hide search bar if open
         $('#searchBar').slideUp(300);
         
-        // Toggle the requested dropdown
-        if (dropdownId === 'brand') {
-            const brandDropdown = $('.brandDropdownWrapper');
-            if (brandDropdown.is(':visible')) {
-                brandDropdown.slideUp(300);
+        // Hide all Bootstrap dropdown menus (removes 'show' class) - only target Bootstrap dropdowns, not custom ones
+        $('.dropdown-menu').not('.brandDropdownWrapper, .signatureDropdownWrapper').removeClass('show');
+        
+        // Get the target dropdown by appending DropdownWrapper to dropdownId
+        const targetDropdown = $('.' + dropdownId + 'DropdownWrapper');
+        
+        // Hide all custom dropdowns first
+        $('.brandDropdownWrapper, .signatureDropdownWrapper').not(targetDropdown).slideUp(300);
+        
+        // Toggle the target dropdown
+        if (targetDropdown.length) {
+            if (targetDropdown.is(':visible')) {
+                targetDropdown.slideUp(300);
             } else {
-                // Hide all other custom dropdowns first
-                $('.brandDropdownWrapper').not(brandDropdown).slideUp(300);
-                brandDropdown.slideDown(300);
+                targetDropdown.slideDown(300);
             }
         }
     }
     
-    // Close brand dropdown when clicking outside
+    // Close custom dropdowns when clicking outside
     $(document).on('click', function(e) {
-        if (!$(e.target).closest('.brandDropdownWrapper').length && 
+        if (!$(e.target).closest('.brandDropdownWrapper, .signatureDropdownWrapper').length && 
             !$(e.target).closest('[onclick*="toggleCustomDropdown"]').length) {
-            $('.brandDropdownWrapper').slideUp(300);
+            $('.brandDropdownWrapper, .signatureDropdownWrapper').slideUp(300);
         }
     });
 </script>

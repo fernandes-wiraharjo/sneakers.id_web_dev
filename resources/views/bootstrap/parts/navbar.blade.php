@@ -9,13 +9,13 @@
         </a>
 
         <!-- Mobile Toggle Button -->
-        <button class="navbar-toggler border-0 order-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" 
-            aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler border-0 order-2 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenuOffcanvas" 
+            aria-controls="mobileMenuOffcanvas" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- Navbar Content -->
-        <div class="collapse navbar-collapse order-3 order-lg-1" id="navbarMain">
+        <div class="collapse navbar-collapse order-3 order-lg-1 d-none d-lg-block" id="navbarMain">
             <!-- Main Navigation -->
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <!-- FEATURED Dropdown -->

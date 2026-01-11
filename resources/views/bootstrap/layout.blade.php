@@ -167,12 +167,20 @@
         .search-result-info {
             flex: 1;
         }
+        
+        /* Mobile Menu Offcanvas - Fit Content */
+        #mobileMenuOffcanvas.offcanvas {
+            --bs-offcanvas-height: fit-content !important;
+            height: fit-content !important;
+            max-height: 100vh;
+        }
     </style>
     @stack('styles')
     @livewireStyles
 </head>
 <body>
     @include('bootstrap.parts.navbar')
+    @include('bootstrap.parts.navbar-mobile')
     @livewire('toast-notification')
 
     @yield('content')

@@ -54,6 +54,6 @@ class CartController extends Controller
         $data['notes'] = $request->note;
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('bootstrap.cart.checkout-order', $data);
+        return view('display-store.cart.checkout-order', $data);
     }
 }

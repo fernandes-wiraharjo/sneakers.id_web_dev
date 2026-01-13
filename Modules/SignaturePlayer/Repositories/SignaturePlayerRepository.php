@@ -97,4 +97,8 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
       ->select('id', 'signature_code', 'signature_title', 'emblem_url', 'signature_image')
       ->get();
   }
+
+  public function getSignatureIdAndNameLivewire(){
+      return $this->model->where('is_active', 1)->select('id', 'signature_player_name as value')->get();
+  }
 }

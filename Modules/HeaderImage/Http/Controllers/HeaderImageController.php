@@ -117,7 +117,7 @@ class HeaderImageController extends Controller
             $validation = [
                  'menu_parent_name' => 'required|string',
                  'menu_name' => 'required|string',
-                 'image' => 'required|image|max:2048',
+                 'image' => 'nullable|image|max:2048',
             ];
 
             $validator = $request->validate($validation);

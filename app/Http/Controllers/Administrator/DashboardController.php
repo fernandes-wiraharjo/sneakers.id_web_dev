@@ -85,7 +85,7 @@ class DashboardController extends Controller {
             'shipping' => $transaction->shipping()->first(),
             'shipping_waybill' => CekOngkir::CheckWaybill($transaction->shipping()->first()->shipping_waybill, $transaction->shipping()->first()->courier_code, $lastFiveDigitPhoneNumber) ?? null,
         ];
-        return view('bootstrap.customer.transaction', $data);
+        return view('display-store.customer.transaction', $data);
     }
 
   public function saveAccount(Request $request) {

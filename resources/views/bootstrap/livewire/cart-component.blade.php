@@ -1,3 +1,4 @@
+<div>
 @if ($content->count() > 0)
     <div class="d-flex flex-column h-100">
         <!-- Cart Items (Scrollable) -->
@@ -175,10 +176,9 @@
         </a>
     </div>
 @endif
-
 <script>
     function saveNote() {
-        const noteValue = document.getElementById('cart-note').value.trim();
+        const noteValue = document.getElementById('cart-note')?.value.trim();
         if (noteValue !== '') {
             Livewire.emit('noteUpdated', noteValue);
             Livewire.emit('noteSaved', noteValue);
@@ -196,4 +196,5 @@
         });
     });
 </script>
+</div>
 

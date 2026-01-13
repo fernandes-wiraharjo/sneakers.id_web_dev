@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\ReviewProduct;
 use Illuminate\Support\Facades\Auth;
 
-class ReviewProduct extends Component
+class ProductReviewForm extends Component
 {
     public $transactionToken;
     public $productId;
@@ -14,6 +14,9 @@ class ReviewProduct extends Component
     public $rating = 0;
     public $review = '';
     public $isSubmitted = false;
+    public $productName;
+    public $productImage;
+    public $productCode;
 
     protected $rules = [
         'rating' => 'required|integer|min:1|max:5',
@@ -29,15 +32,19 @@ class ReviewProduct extends Component
         'review.max' => 'Review cannot exceed 1000 characters.',
     ];
 
-    public function mount($transactionToken, $productId, $productSize)
+    public function mount($transactionToken, $productId, $productSize, $productName = '', $productImage = '', $productCode = '')
     {
         $this->transactionToken = $transactionToken;
         $this->productId = $productId;
         $this->productSize = $productSize;
+        $this->productName = $productName;
+        $this->productImage = $productImage;
+        $this->productCode = $productCode;
 
         // Check if review already exists
         $existingReview = ReviewProduct::where('transaction_token', $transactionToken)
             ->where('product_id', $productId)
+            ->where('product_size', $productSize)
             ->where('user_id', Auth::id())
             ->first();
 
@@ -73,12 +80,11 @@ class ReviewProduct extends Component
         ]);
 
         $this->isSubmitted = true;
-        $this->dispatchBrowserEvent('review-submitted', ['productId' => $this->productId]);
+        session()->flash('review_success', 'Review submitted successfully!');
     }
 
     public function render()
     {
-        return view('livewire.review-product');
+        return view('bootstrap.livewire.product-review-form');
     }
 }
-

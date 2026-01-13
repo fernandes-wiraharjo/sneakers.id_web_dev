@@ -85,5 +85,6 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     {
         Route::post('/address/save', [DashboardController::class, 'saveAccount'])->name('address.save');
         Route::post('/transaction/cancel/{orderId}', [CheckoutController::class, 'cancelTransaction'])->name('transaction.cancel');
+        Route::get('/transaction/{transaction_token}/review', [\App\Http\Controllers\ReviewController::class, 'index'])->name('transaction.review');
     });
 });

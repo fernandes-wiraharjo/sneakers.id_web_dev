@@ -58,6 +58,9 @@ class CheckoutProcess extends Component
     // Voucher properties
     public $voucherData = null;
     public $voucherDiscount = 0;
+    
+    // View type property to persist across Livewire updates
+    public $useBootstrapView = false;
 
     /**
      * Mounts the component on the template.
@@ -66,6 +69,11 @@ class CheckoutProcess extends Component
      */
     public function mount(): void
     {
+        // Determine if we should use bootstrap view based on current URL or route
+        $this->useBootstrapView = request()->routeIs('customer.checkout.order') 
+            || str_contains(url()->current(), '/checkout/order')
+            || str_contains(url()->current(), 'bootstrap');
+        
         // init origin
         $originRegionId = config('irfa.rajaongkir.origin_region_id');
         $this->originSubdistrict = ModelRegion::where('region_id', $originRegionId)->first()->subdistrict_ro;
@@ -518,7 +526,13 @@ class CheckoutProcess extends Component
     {
         $province = ModelRegion::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
 
-        return view('livewire.checkout-process', [
+        // Use the persisted property to determine which view to use
+        // This ensures the view stays consistent during Livewire updates
+        $viewName = $this->useBootstrapView 
+            ? 'bootstrap.livewire.checkout-process' 
+            : 'livewire.checkout-process';
+
+        return view($viewName, [
             'session_id' => Cart::hashID(),
             'total' => intval(Cart::total()),
             'content' => Cart::content(),

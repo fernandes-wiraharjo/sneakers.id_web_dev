@@ -9,12 +9,27 @@ class ModalMessageCheckout extends Component
 
     public $message;
     public $showModal = false; // Add a property to control the visibility of the modal
+    public $useBootstrapView = false; // View type property to persist across Livewire updates
 
     protected $listeners = ['modalMessage'];
 
+    public function mount()
+    {
+        // Determine if we should use bootstrap view based on current URL or route
+        $this->useBootstrapView = request()->routeIs('customer.checkout.order') 
+            || str_contains(url()->current(), '/checkout/order')
+            || str_contains(url()->current(), 'bootstrap');
+    }
+
     public function render()
     {
-        return view('livewire.modal-message-checkout');
+        // Use the persisted property to determine which view to use
+        // This ensures the view stays consistent during Livewire updates
+        $viewName = $this->useBootstrapView 
+            ? 'bootstrap.livewire.modal-message-checkout' 
+            : 'livewire.modal-message-checkout';
+
+        return view($viewName);
     }
 
     public function modalMessage($data)

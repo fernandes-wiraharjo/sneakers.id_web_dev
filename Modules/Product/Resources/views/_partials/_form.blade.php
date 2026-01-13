@@ -44,9 +44,9 @@
     <h5>Sizes, Quantity & Prices</h5>
     
 <x-ladmin-form-group name="products_size_chart_image" label="Size-chart Image">
-	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="{{ old('products_size_chart_image', $edit ? $size_chart_image : '') }}" accept="image/*">
+	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="{{ old('products_size_chart_image', $edit && isset($size_chart_image) ? $size_chart_image : '') }}" accept="image/*">
 </x-ladmin-form-group>
-@if ($size_chart_image)
+@if (isset($size_chart_image) && $size_chart_image)
 <div class="col-sm-12 col-md-6 offset-md-6">
     <img src="{{ $size_chart_image }}" alt="Size Chart Image" class="img-fluid">
 </div>
@@ -259,12 +259,7 @@
         </x-ladmin-form-group>
         <x-ladmin-form-group name="models" label="Signature Player">
             @livewire('signature-player', [
-                'current_signature' => $product->signatures()
-                    ->select(
-                        'signature_player_id as value',
-                        'signature_code as code',
-                        'signature_player_name as title'
-                    )->get(),
+                'current_signature' => $product->signatures()->get(),
                 'edit' => $edit ])
         </x-ladmin-form-group>
     </div>

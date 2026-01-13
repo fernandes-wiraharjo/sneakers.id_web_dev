@@ -11,31 +11,6 @@
             <h1 class="display-5 fw-bold">Forgot Password</h1>
             <p class="text-muted mb-3 mb-md-4">Enter your email address and we'll send you a link to reset your password</p>
 
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ is_array($message) ? (isset($message[0]) ? (is_array($message[0]) ? implode(', ', $message[0]) : $message[0]) : implode(', ', $message)) : $message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if ($message = Session::get('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ is_array($message) ? (isset($message[0]) ? (is_array($message[0]) ? implode(', ', $message[0]) : $message[0]) : implode(', ', $message)) : $message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <form method="POST" action="{{ route('administrator.password.email') }}" id="forgotPasswordForm">
                 @csrf
                 <p class="mb-2">Email<span class="text-danger">*</span></p>

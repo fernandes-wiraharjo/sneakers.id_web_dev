@@ -168,7 +168,24 @@ class LoginController extends Controller
     {
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.confirm-password', $data);
+        return view('bootstrap.auth.confirm-password', $data);
+    }
+
+    /**
+     * Confirm the user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function confirmPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|password:web',
+        ]);
+
+        $request->session()->passwordConfirmed();
+
+        return redirect()->intended();
     }
 
     /**
@@ -180,7 +197,7 @@ class LoginController extends Controller
     {
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.reset-password', $data)->with(
+        return view('bootstrap.auth.reset-password', $data)->with(
             ['token' => $token, 'email' => $request->email]
         );
     }
@@ -194,7 +211,7 @@ class LoginController extends Controller
         $data['token'] = $token;
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        return view('display-store.auth.verify-email', $data);
+        return view('bootstrap.auth.verify-email', $data);
     }
 
     public function sendVerificationEmail($token){

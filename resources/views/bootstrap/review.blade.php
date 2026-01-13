@@ -36,11 +36,6 @@
         margin-bottom: 0.25rem;
         color: #6c757d;
     }
-    .review-section {
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #dee2e6;
-    }
     @media (max-width: 768px) {
         .product-info {
             flex-direction: column;

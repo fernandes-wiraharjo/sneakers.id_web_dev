@@ -60,40 +60,25 @@
                 Order placed on {{ date('d F Y h:iA', strtotime($transaction->created_at))}}
             </p>
         </div>
-        <div class="d-flex flex-column gap-2 align-items-end">
-            @if($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
-                <a href="{{ $transaction->snap_payment_url }}" id="btn-continue-payment" class="btn btn-primary">
-                    Continue Payment
+        
+        @if($transaction->status == 'PENDING' || $transaction->status == 'CREATED')
+            <a href="{{ $transaction->snap_payment_url }}" id="btn-continue-payment" class="btn btn-primary">
+                Continue Payment
+            </a>
+        @endif
+        
+        {{-- Review Button --}}
+        @if($shipping && $shipping->shipping_waybill && auth()->check())
+            @php
+                $transactionDestination = $transaction->destination()->first();
+                $canReview = $transactionDestination && $transactionDestination->user_id == auth()->id();
+            @endphp
+            @if($canReview)
+                <a href="{{ route('customer.transaction.review', $transaction->token) }}" class="btn btn-dark">
+                    Write Review
                 </a>
             @endif
-
-            @if(!$shipping_waybill && $transaction->status == 'SUCCESS')
-                <span class="status-badge status-pending">AWAITING SHIPMENT</span>
-            @endif
-
-            @if($shipping_waybill && $transaction->status == 'SUCCESS')
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCheckShipping">
-                    CEK RESI
-                </button>
-            @endif
-
-            @if ($shipping_waybill && $transaction->status == 'COMPLETED')
-                <span class="status-badge status-completed">DELIVERED</span>
-            @endif
-
-            {{-- Review Button --}}
-            @if($shipping && $shipping->shipping_waybill && auth()->check())
-                @php
-                    $transactionDestination = $transaction->destination()->first();
-                    $canReview = $transactionDestination && $transactionDestination->user_id == auth()->id();
-                @endphp
-                @if($canReview)
-                    <a href="{{ route('customer.transaction.review', $transaction->token) }}" class="btn btn-dark">
-                        Write Review
-                    </a>
-                @endif
-            @endif
-        </div>
+        @endif
     </div>
 
     <div class="row">
@@ -217,34 +202,22 @@
                             </div>
                         @endif
 
-                        @if($shipping_waybill && $shipping_waybill['meta']['code'] == 200)
-                            <div class="mb-3">
-                                <p class="mb-1 text-muted small"><strong>Delivery Status:</strong></p>
-                                <p class="mb-0 fw-semibold">{{ $shipping_waybill['data']['delivery_status']['status'] ?? 'N/A' }}</p>
-                            </div>
-                            @if(isset($shipping_waybill['data']['delivery_status']['pod_receiver']))
-                                <div class="mb-3">
-                                    <p class="mb-1 text-muted small"><strong>Received By:</strong></p>
-                                    <p class="mb-0">{{ $shipping_waybill['data']['delivery_status']['pod_receiver'] }}</p>
-                                </div>
+
+                        {{-- Shipping Status --}}
+                        <div class="mb-3">
+                            <p class="mb-1 text-muted small"><strong>Shipping Status:</strong></p>
+                            @if(!$shipping_waybill && $transaction->status == 'SUCCESS')
+                                <span class="status-badge status-pending">AWAITING SHIPMENT</span>
                             @endif
-                            @if(isset($shipping_waybill['data']['delivery_status']['pod_date']))
-                                <div class="mb-3">
-                                    <p class="mb-1 text-muted small"><strong>Received At:</strong></p>
-                                    <p class="mb-0">{{ $shipping_waybill['data']['delivery_status']['pod_date'] }} {{ $shipping_waybill['data']['delivery_status']['pod_time'] ?? '' }}</p>
-                                </div>
+                            @if($shipping_waybill && $transaction->status == 'SUCCESS')
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCheckShipping">
+                                    CEK RESI
+                                </button>
                             @endif
-                        @elseif($shipping->shipping_waybill)
-                            <div class="mb-3">
-                                <p class="mb-1 text-muted small"><strong>Delivery Status:</strong></p>
-                                <p class="mb-0 text-muted">Awaiting shipment update</p>
-                            </div>
-                        @else
-                            <div class="mb-3">
-                                <p class="mb-1 text-muted small"><strong>Delivery Status:</strong></p>
-                                <p class="mb-0 text-muted">AWB not yet inputted</p>
-                            </div>
-                        @endif
+                            @if ($shipping_waybill && $transaction->status == 'COMPLETED')
+                                <span class="status-badge status-completed">DELIVERED</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endif

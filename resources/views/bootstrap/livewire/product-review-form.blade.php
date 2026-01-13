@@ -7,7 +7,6 @@
     @endif
 
     <div class="mb-3">
-        <label class="form-label fw-semibold">Rating</label>
         <div class="d-flex gap-2">
             @for ($i = 1; $i <= 5; $i++)
                 <button 
@@ -24,7 +23,6 @@
     </div>
 
     <div class="mb-3">
-        <label for="review-{{ $productId }}-{{ $productSize }}" class="form-label fw-semibold">Review</label>
         <textarea 
             class="form-control" 
             id="review-{{ $productId }}-{{ $productSize }}"

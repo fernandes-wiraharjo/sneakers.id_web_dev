@@ -45,14 +45,14 @@ class CheckoutController extends BaseController {
         $data['shipping'] = $transaction->shipping()->first();
         $data['destination'] = $transaction->destination()->with('region')->first();
         $data['response'] = MidtransTransaction::status($external_id);
-        return view('display-store.customer.payment.success', $data);
+        return view('bootstrap.customer.payment.success', $data);
     }
 
     public function errorPayments()
     {
         // Allow both authenticated and guest users to view payment error
         //after few second redirect to cart
-        return view('display-store.customer.payment.error');
+        return view('bootstrap.customer.payment.error');
     }
 
     public function handleWebhook(Request $request)

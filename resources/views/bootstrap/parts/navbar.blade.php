@@ -475,6 +475,8 @@
     
     // Handle Bootstrap dropdown events
     $(document).on('show.bs.dropdown', '.dropdown', function() {
+        // Close custom dropdowns when Bootstrap dropdown opens
+        $('.brandDropdownWrapper, .signatureDropdownWrapper').slideUp(300);
         showBackdrop();
     });
     

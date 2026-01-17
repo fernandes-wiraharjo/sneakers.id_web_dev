@@ -67,7 +67,6 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/register', [LoginController::class, 'showCustomerRegisterForm'])->name('register');
     Route::post('/register', [LoginController::class, 'postRegistration'])->name('submit.register');
     Route::get('/forgot-password', [LoginController::class, 'showCustomerForgotPasswordForm'])->name('forgot-password');
-    Route::get('/confirm-password', [LoginController::class, 'showCustomerConfirmPasswordForm'])->name('confirm-password');
     Route::get('/reset-password', [LoginController::class, 'showCustomerResetPasswordForm'])->name('reset-password');
     Route::get('/verify/{token}', [LoginController::class, 'sendVerificationEmail'])->name('verify-email');
     Route::get('/verify-email/{token}', [LoginController::class, 'verifyAccount'])->name('user.verify');
@@ -83,7 +82,10 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     // Auth required routes
     Route::group( ['middleware' => 'auth' ], function()
     {
+        Route::get('/confirm-password', [LoginController::class, 'showCustomerConfirmPasswordForm'])->name('confirm-password');
+        Route::post('/confirm-password', [LoginController::class, 'confirmPassword'])->name('password.confirm');
         Route::post('/address/save', [DashboardController::class, 'saveAccount'])->name('address.save');
         Route::post('/transaction/cancel/{orderId}', [CheckoutController::class, 'cancelTransaction'])->name('transaction.cancel');
+        Route::get('/transaction/{transaction_token}/review', [\App\Http\Controllers\ReviewController::class, 'index'])->name('transaction.review');
     });
 });

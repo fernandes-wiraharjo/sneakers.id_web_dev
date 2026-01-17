@@ -35,7 +35,7 @@ class ResetPasswordController extends Controller
 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('display-store.auth.reset-password')->with(
+        return view('bootstrap.auth.reset-password')->with(
             ['token' => $token, 'email' => $request->email]
         );
     }

@@ -172,7 +172,7 @@
         </div>
         <div class="d-flex flex-wrap gap-5 justify-content-evenly">
             @foreach ($brand_menu as $brand)
-            <a href="{{ route('collections', 'all.' . $brand->brand_code) }}" class="d-flex flex-column p-2 justify-content-center align-items-center shadow-sm">
+            <a href="{{ route('collections', 'brand.' . $brand->brand_code) }}" class="d-flex flex-column p-2 justify-content-center align-items-center shadow-sm">
                 <img src="{{ getImage($brand->brand_image, 'brand') }}" alt="{{ $brand->brand_title }}">
                 <span>{{ strtoupper($brand->brand_title) }}</span>
             </a>
@@ -475,6 +475,8 @@
     
     // Handle Bootstrap dropdown events
     $(document).on('show.bs.dropdown', '.dropdown', function() {
+        // Close custom dropdowns when Bootstrap dropdown opens
+        $('.brandDropdownWrapper, .signatureDropdownWrapper').slideUp(300);
         showBackdrop();
     });
     

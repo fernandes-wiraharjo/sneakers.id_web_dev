@@ -66,18 +66,10 @@
         </div>
     </div>
 
-    @livewire('signature-player')
+    @livewire('signature-player-carousel')
 
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-2">
-                    TODO: Customer Review
-                </h1>
-            </div>
-        </div>
-    </div>
-
+    @include('bootstrap.parts.review-products')
+    
     <div class="container py-5">
         <div class="row">
             <div class="col-12 text-center">

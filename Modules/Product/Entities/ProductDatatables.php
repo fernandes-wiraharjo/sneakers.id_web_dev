@@ -109,7 +109,7 @@ class ProductDatatables extends DataTable
                     foreach($item->signatures as $signature) {
                         $result .= view('back-office.components.chips', [
                             'a' => $signature->signature_title,
-                            'b' => $signature->signature_player_name
+                            'b' => ''
                         ]);
                     }
                     return $result;

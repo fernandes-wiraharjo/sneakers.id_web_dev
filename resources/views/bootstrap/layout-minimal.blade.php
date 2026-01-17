@@ -25,40 +25,90 @@
         .anton {
             font-family: 'Anton', sans-serif;
         }
+        .floating-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+            animation: slideInRight 0.3s ease-out;
+        }
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @media (max-width: 576px) {
+            .floating-alert {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                max-width: none;
+            }
+        }
     </style>
     @stack('styles')
 </head>
 <body>
-    @livewire('toast-notification')
+    {{-- Floating Alert Container --}}
+    <div id="floatingAlertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 9999; max-width: 500px; width: 100%;">
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show floating-alert" role="alert">
+                {{ is_array(session('success')) ? (isset(session('success')[0]) ? (is_array(session('success')[0]) ? implode(', ', session('success')[0]) : session('success')[0]) : implode(', ', session('success'))) : session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show floating-alert" role="alert">
+                {{ is_array(session('error')) ? (isset(session('error')[0]) ? (is_array(session('error')[0]) ? implode(', ', session('error')[0]) : session('error')[0]) : implode(', ', session('error'))) : session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if(session('toast_error'))
+            <div class="alert alert-danger alert-dismissible fade show floating-alert" role="alert">
+                {{ is_array(session('toast_error')) ? (isset(session('toast_error')[0]) ? (is_array(session('toast_error')[0]) ? implode(', ', session('toast_error')[0]) : session('toast_error')[0]) : implode(', ', session('toast_error'))) : session('toast_error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if(session('toast_success'))
+            <div class="alert alert-success alert-dismissible fade show floating-alert" role="alert">
+                {{ is_array(session('toast_success')) ? (isset(session('toast_success')[0]) ? (is_array(session('toast_success')[0]) ? implode(', ', session('toast_success')[0]) : session('toast_success')[0]) : implode(', ', session('toast_success'))) : session('toast_success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if(session('toast_warning'))
+            <div class="alert alert-warning alert-dismissible fade show floating-alert" role="alert">
+                {{ is_array(session('toast_warning')) ? (isset(session('toast_warning')[0]) ? (is_array(session('toast_warning')[0]) ? implode(', ', session('toast_warning')[0]) : session('toast_warning')[0]) : implode(', ', session('toast_warning'))) : session('toast_warning') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if(session('toast_info'))
+            <div class="alert alert-info alert-dismissible fade show floating-alert" role="alert">
+                {{ is_array(session('toast_info')) ? (isset(session('toast_info')[0]) ? (is_array(session('toast_info')[0]) ? implode(', ', session('toast_info')[0]) : session('toast_info')[0]) : implode(', ', session('toast_info'))) : session('toast_info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+    </div>
+
     @yield('content')
     @stack('scripts')
-    @livewireScripts
     <script>
+        // Auto-dismiss alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
-            @if(session('toast_error'))
-                Livewire.emit('showToast', {
-                    type: 'error',
-                    message: {!! json_encode(session('toast_error')) !!}
-                });
-            @endif
-            @if(session('toast_success'))
-                Livewire.emit('showToast', {
-                    type: 'success',
-                    message: {!! json_encode(session('toast_success')) !!}
-                });
-            @endif
-            @if(session('toast_warning'))
-                Livewire.emit('showToast', {
-                    type: 'warning',
-                    message: {!! json_encode(session('toast_warning')) !!}
-                });
-            @endif
-            @if(session('toast_info'))
-                Livewire.emit('showToast', {
-                    type: 'info',
-                    message: {!! json_encode(session('toast_info')) !!}
-                });
-            @endif
+            const alerts = document.querySelectorAll('.floating-alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
         });
     </script>
 </body>

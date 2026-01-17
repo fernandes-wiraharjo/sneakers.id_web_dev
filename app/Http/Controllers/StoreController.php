@@ -16,6 +16,7 @@ use Modules\Category\Repositories\CategoryRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
 use Spatie\SlackAlerts\Facades\SlackAlert;
+use App\Repositories\ReviewRepository;
 
 class StoreController extends Controller
 {
@@ -27,7 +28,8 @@ class StoreController extends Controller
         FaqRepository $faqRepository,
         CategoryRepository $categoryRepository,
         TagRepository $tagRepository,
-        SignaturePlayerRepository $signaturePlayerRepository) {
+        SignaturePlayerRepository $signaturePlayerRepository,
+        ReviewRepository $reviewRepository) {
             $this->brandRepository = $brandRepository;
             $this->productRepository = $productRepository;
             $this->lookBookRepository = $lookBookRepository;
@@ -36,6 +38,7 @@ class StoreController extends Controller
             $this->categoryRepository = $categoryRepository;
             $this->tagRepository = $tagRepository;
             $this->signaturePlayerRepository = $signaturePlayerRepository;
+            $this->reviewRepository = $reviewRepository;
     }
 
     public function index() {
@@ -47,6 +50,12 @@ class StoreController extends Controller
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
         $data['faq'] = $this->faqRepository->getFaq(5);
         $data['signature_carousel'] = $this->signaturePlayerRepository->getSignatureCarousel();
+        
+        // Get customer reviews for homepage carousel
+        $reviewsData = $this->reviewRepository->getReviewsForHomepage(20);
+        $data['reviews_line1'] = $reviewsData['reviews_line1'];
+        $data['reviews_line2'] = $reviewsData['reviews_line2'];
+        
         activity()->log('Someone Accessing my website');
         // return view('display-store.landing', $data);
         return view('bootstrap.homepage', $data);

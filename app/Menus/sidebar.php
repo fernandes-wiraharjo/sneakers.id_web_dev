@@ -317,6 +317,67 @@ return [
         ]
     ],
     [
+        'gate' => 'administrator.blog',
+        'name' => 'Blog',
+        'route' => null,
+        'isActive' => 'blog*',
+        'icon' => 'file-alt',
+        'id' => '',
+        'gates' => [],
+        'submenus' => [
+            // [
+            //     'gate' => 'administrator.blog.article.index',
+            //     'name' => 'Blog Article',
+            //     'route' => ['administrator.blog.article.index', []],
+            //     'isActive' => 'blog/article*',
+            //     'icon' => 'file-alt',
+            //     'id' => '',
+            //     'gates' => [
+            //         [
+            //             'gate' => 'administrator.blog.article.create',
+            //             'title' => 'Create Blog Article',
+            //             'description' => 'User can create new blog article'
+            //         ],
+            //         [
+            //             'gate' => 'administrator.blog.article.update',
+            //             'title' => 'Update Blog Article',
+            //             'description' => 'User can update blog article'
+            //         ],
+            //         [
+            //             'gate' => 'administrator.blog.article.destroy',
+            //             'title' => 'Delete Blog Article',
+            //             'description' => 'User can delete blog article'
+            //         ]
+            //     ],
+            // ],
+            [
+                'gate' => 'administrator.blog.category.index',
+                'name' => 'Blog Category',
+                'route' => ['administrator.blog.category.index', []],
+                'isActive' => 'blog/category*',
+                'icon' => 'folder',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.blog.category.create',
+                        'title' => 'Create Blog Category',
+                        'description' => 'User can create new blog category'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.category.update',
+                        'title' => 'Update Blog Category',
+                        'description' => 'User can update blog category'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.category.destroy',
+                        'title' => 'Delete Blog Category',
+                        'description' => 'User can delete blog category'
+                    ]
+                ],
+            ],
+        ]
+    ],
+    [
         'gate' => 'administrator.master-data.header-image.index',
         'name' => 'Header Image',
         'route' => ['administrator.master-data.header-image.index', []],

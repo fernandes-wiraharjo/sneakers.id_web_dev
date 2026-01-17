@@ -36,7 +36,8 @@ class CreateBlogTable extends Migration
             $table->string('header_image_url');
             $table->string('author');
             $table->boolean('is_carousel')->default(false);
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(true)->index();
+            $table->unsignedBigInteger('visitor_count')->default(0)->index();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('blog_categories')->onDelete('set null');

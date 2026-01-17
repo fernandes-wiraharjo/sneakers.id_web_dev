@@ -5,6 +5,7 @@
     "Brand": true,
     "SignaturePlayer": true,
     "Banner": true,
+    "Blog": true,
     "Tag": true,
     "Faq": true,
     "FooterSetting": true,
@@ -15,6 +16,5 @@
     "GlobalSetting": true,
     "ShippingCourier": true,
     "DiscountVoucher": true,
-    "SizeFilter": true,
-    "Blog": true
+    "SizeFilter": true
 }

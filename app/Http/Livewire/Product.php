@@ -11,6 +11,7 @@ class Product extends Component
     public $quantity;
     public $size;
     public $sizeList;
+    public $reviews;
     public $size_chart_image; 
     public $showRetailPrice;
     public $showDiscountPrice;

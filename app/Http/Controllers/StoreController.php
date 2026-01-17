@@ -70,6 +70,16 @@ class StoreController extends Controller
             : collect();
         // $data['size'] = $data['product']->details()->where('product_details.qty', '>' , 0)->get();
 
+        // get reviews
+        $reviews = $this->reviewRepository->getReviewsForProduct($id);
+        $data['reviews'] = [
+            'summary' => [
+                'rating' => $reviews->avg('rating'),
+                'count' => $reviews->count()
+            ],
+            'data' => $reviews->sortByDesc('rating')->values()->take(5)
+        ];
+
         $data['brand_menu'] = $this->brandRepository->getActiveMenuBrand();
         $data['signature'] = $this->signaturePlayerRepository->getAllSignatures();
         $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;

@@ -41,5 +41,10 @@ class ReviewRepository extends Repository
             ];
         }
     }
+
+    public function getReviewsForProduct($id)
+    {
+        return $this->model->where('product_id', $id)->with('user')->get();
+    }
 }
 

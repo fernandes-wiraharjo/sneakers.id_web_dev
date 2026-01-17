@@ -325,31 +325,31 @@ return [
         'id' => '',
         'gates' => [],
         'submenus' => [
-            // [
-            //     'gate' => 'administrator.blog.article.index',
-            //     'name' => 'Blog Article',
-            //     'route' => ['administrator.blog.article.index', []],
-            //     'isActive' => 'blog/article*',
-            //     'icon' => 'file-alt',
-            //     'id' => '',
-            //     'gates' => [
-            //         [
-            //             'gate' => 'administrator.blog.article.create',
-            //             'title' => 'Create Blog Article',
-            //             'description' => 'User can create new blog article'
-            //         ],
-            //         [
-            //             'gate' => 'administrator.blog.article.update',
-            //             'title' => 'Update Blog Article',
-            //             'description' => 'User can update blog article'
-            //         ],
-            //         [
-            //             'gate' => 'administrator.blog.article.destroy',
-            //             'title' => 'Delete Blog Article',
-            //             'description' => 'User can delete blog article'
-            //         ]
-            //     ],
-            // ],
+            [
+                'gate' => 'administrator.blog.article.index',
+                'name' => 'Blog Article',
+                'route' => ['administrator.blog.article.index', []],
+                'isActive' => 'blog/article*',
+                'icon' => 'file-alt',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.blog.article.create',
+                        'title' => 'Create Blog Article',
+                        'description' => 'User can create new blog article'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.article.update',
+                        'title' => 'Update Blog Article',
+                        'description' => 'User can update blog article'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.article.destroy',
+                        'title' => 'Delete Blog Article',
+                        'description' => 'User can delete blog article'
+                    ]
+                ],
+            ],
             [
                 'gate' => 'administrator.blog.category.index',
                 'name' => 'Blog Category',

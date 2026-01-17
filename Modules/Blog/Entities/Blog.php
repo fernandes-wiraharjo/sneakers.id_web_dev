@@ -18,7 +18,7 @@ class Blog extends Model
         'category_id',
         'content',
         'plain_text',
-        'header_image_url',
+        'featured_image_url',
         'author',
         'is_carousel',
         'is_active',

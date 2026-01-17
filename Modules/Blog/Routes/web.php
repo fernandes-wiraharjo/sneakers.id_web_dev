@@ -24,3 +24,14 @@ Route::group(['prefix' => 'administrator/blog/category', 'middleware' => 'auth']
     Route::post('/store', 'BlogCategoryController@store')->name('administrator.blog.category.store');
     Route::put('/update/{id}', 'BlogCategoryController@update')->name('administrator.blog.category.update');
 });
+
+Route::group(['prefix' => 'administrator/blog/article', 'middleware' => 'auth'], function() {
+    Route::get('/', 'BlogArticleController@index')->name('administrator.blog.article.index');
+    Route::get('/create', 'BlogArticleController@create')->name('administrator.blog.article.create');
+    Route::get('/show/{id}', 'BlogArticleController@show')->name('administrator.blog.article.show');
+    Route::get('/edit-{id}', 'BlogArticleController@edit')->name('administrator.blog.article.edit');
+    Route::delete('/destroy/{id}', 'BlogArticleController@destroy')->name('administrator.blog.article.destroy');
+    Route::post('/store', 'BlogArticleController@store')->name('administrator.blog.article.store');
+    Route::put('/update/{id}', 'BlogArticleController@update')->name('administrator.blog.article.update');
+    Route::post('/upload-image', 'BlogArticleController@uploadImage')->name('administrator.blog.article.upload-image');
+});

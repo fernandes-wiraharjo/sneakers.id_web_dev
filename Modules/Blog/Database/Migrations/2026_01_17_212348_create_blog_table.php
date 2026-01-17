@@ -33,7 +33,7 @@ class CreateBlogTable extends Migration
             $table->string('category_id')->nullable();
             $table->text('content');
             $table->text('plain_text')->index();
-            $table->string('header_image_url');
+            $table->string('featured_image_url');
             $table->string('author');
             $table->boolean('is_carousel')->default(false);
             $table->boolean('is_active')->default(true)->index();

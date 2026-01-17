@@ -281,14 +281,19 @@ if(!function_exists('moveImage')) {
  * @return string => URL of the uploaded image
  */
 if (!function_exists('uploadAsWebp')) {
-    function uploadAsWebp($file, $path, $storage = 'public', $width = 1200, $height = 1200, $saveAsFilename = null) {
+    function uploadAsWebp($file, $path, $storage = 'public', $width = 1200, $height = 1200, $saveAsFilename = null, $method = 'crop') {
         if ($saveAsFilename) {
             $imageName = $saveAsFilename . '.webp';
         } else {
             $imageName = time() . '.webp';
         }
         $img = Image::make($file);
-        $img->fit($width, $height)->encode('webp', 80);
+        if ($method == 'crop') {
+            $img->fit($width, $height);
+        } else {
+            $img->resize($width, $height);
+        }
+        $img->encode('webp', 80);
         Storage::disk($storage)->put($path . '/' . $imageName, $img);
         $uploadedUrl = Storage::disk($storage)->url($path . '/' . $imageName);
         return $uploadedUrl;

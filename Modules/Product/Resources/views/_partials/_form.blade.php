@@ -259,7 +259,12 @@
         </x-ladmin-form-group>
         <x-ladmin-form-group name="models" label="Signature Player">
             @livewire('signature-player', [
-                'current_signature' => $product->signatures()->get(),
+                'current_signature' => $product->signatures()
+                    ->select(
+                        'signature_player_id as value',
+                        'signature_code as code',
+                        'signature_player_name as title'
+                    )->get(),
                 'edit' => $edit ])
         </x-ladmin-form-group>
     </div>

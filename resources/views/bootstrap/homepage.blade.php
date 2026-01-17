@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    @livewire('signature-player')
+    @livewire('signature-player-carousel')
 
     @if(isset($reviews_line1) && $reviews_line1->isNotEmpty())
     <div class="container-fluid bg-black py-5">

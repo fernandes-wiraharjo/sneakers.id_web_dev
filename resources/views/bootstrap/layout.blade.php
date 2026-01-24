@@ -154,7 +154,20 @@
         #searchResultsList a:hover {
             color: #000;
         }
-        
+
+        .category-pills {
+            border: 1px solid var(--bs-danger);
+            color: var(--bs-danger);
+            border-radius: var(--bs-border-radius-pill);
+            padding: .25rem 1rem;
+            width: fit-content;
+            text-transform: uppercase;
+            font-size: .85rem;
+        }
+        .nowrap, .no-wrap {
+            white-space: nowrap;
+        }
+
         .search-result-image {
             width: 70px;
             height: 70px;

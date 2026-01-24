@@ -4,6 +4,7 @@ namespace Modules\Blog\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Hexters\Ladmin\LadminLogable;
 
 class Blog extends Model
@@ -39,6 +40,20 @@ class Blog extends Model
     public function category()
     {
         return $this->belongsTo(BlogCategory::class, 'category_id');
+    }
+
+    /**
+     * Short text excerpt derived from plain_text.
+     *
+     * @return string
+     */
+    public function getExcerptAttribute(): string
+    {
+        if (!empty($this->plain_text)) {
+            return Str::limit($this->plain_text, 140);
+        }
+
+        return '';
     }
 }
 

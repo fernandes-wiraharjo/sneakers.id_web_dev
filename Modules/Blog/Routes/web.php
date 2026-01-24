@@ -11,10 +11,6 @@
 |
 */
 
-Route::prefix('blog')->group(function() {
-    Route::get('/', 'BlogController@index');
-});
-
 Route::group(['prefix' => 'administrator/blog/category', 'middleware' => 'auth'], function() {
     Route::get('/', 'BlogCategoryController@index')->name('administrator.blog.category.index');
     Route::get('/create', 'BlogCategoryController@create')->name('administrator.blog.category.create');

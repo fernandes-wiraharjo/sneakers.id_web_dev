@@ -26,7 +26,7 @@
 	@endif
 	<input type="file" class="form-control" name="featured_image" id="featured_image" {{ $edit ? '' : 'required' }} accept="image/*">
 	<p class="d-block mt-2">
-		<span class="text-muted">Size: 1200x630px</span>
+		<span class="text-muted">Ratio: 14:3</span>
     </p>
 </x-ladmin-form-group>
 

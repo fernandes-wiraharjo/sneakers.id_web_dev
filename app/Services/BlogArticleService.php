@@ -17,7 +17,7 @@ class BlogArticleService {
 		if(isset($data['featured_image'])) {
 			$path = 'images/blog';
 			$saveAsFilename = Str::slug($data['title']) . '_' . time();
-			$data['featured_image_url'] = uploadAsWebp($data['featured_image'], $path, 'public', 1200, 630, $saveAsFilename);
+			$data['featured_image_url'] = uploadAsWebp($data['featured_image'], $path, 'public', 1600, 900, $saveAsFilename);
 			unset($data['featured_image']);
 		}
 		
@@ -55,7 +55,7 @@ class BlogArticleService {
 		if(isset($data['featured_image'])) {
 			$path = 'images/blog';
 			$saveAsFilename = Str::slug($data['title']) . '_' . time();
-			$data['featured_image_url'] = uploadAsWebp($data['featured_image'], $path, 'public', 1200, 630, $saveAsFilename);
+			$data['featured_image_url'] = uploadAsWebp($data['featured_image'], $path, 'public', 1600, 900, $saveAsFilename);
 			unset($data['featured_image']);
 		}
 		

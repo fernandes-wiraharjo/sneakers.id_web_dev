@@ -54,19 +54,52 @@ class BlogController extends Controller
             ->take(6)
             ->get();
 
+        // Other categories with posts (except promo) for home sections
+        $blog_categories = [];
+
+        $homeCategories = BlogCategory::query()
+            ->where('id', '!=', 'promo')
+            ->where('is_show_home', true)
+            ->orderBy('sequence')
+            ->get();
+
+        foreach ($homeCategories as $category) {
+            $baseQuery = Blog::query()
+                ->where('is_active', true)
+                ->where('category_id', $category->id)
+                ->with('category')
+                ->orderByDesc('created_at');
+
+            $posts = (clone $baseQuery)
+                ->take(4)
+                ->get();
+
+            $totalPosts = $baseQuery->count();
+            $hasMore = $totalPosts > $posts->count();
+
+            if ($posts->isNotEmpty()) {
+                $blog_categories[] = [
+                    'category' => $category,
+                    'posts' => $posts,
+                    'has_more' => $hasMore,
+                ];
+            }
+        }
+
         // Sidebar data
         $sidebar = $this->getSidebarData();
         $blog_popular = $sidebar['popular'];
         $brands = $sidebar['brands'];
 
-        return view('bootstrap.blog-home', compact(
-            'headerImageURL',
-            'blog_carousel',
-            'blog_promo',
-            'blog_latest',
-            'blog_popular',
-            'brands'
-        ));
+        return view('bootstrap.blog-home', [
+            'headerImageURL' => $headerImageURL,
+            'blog_carousel' => $blog_carousel,
+            'blog_promo' => $blog_promo,
+            'blog_latest' => $blog_latest,
+            'blog_categories' => $blog_categories,
+            'blog_popular' => $blog_popular,
+            'brands' => $brands,
+        ]);
     }
 
     /**

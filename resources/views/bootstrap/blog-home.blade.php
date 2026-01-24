@@ -115,7 +115,6 @@
                 </div>
                 @endforelse
 
-                
                 @if (count($blog_latest) > 0)
                 <div class="d-flex justify-content-center mt-3">
                     <a href="{{ route('blog.all') }}" class="btn btn-dark px-4 d-flex align-items-center w-fit-content">
@@ -125,6 +124,51 @@
                 </div>
                 @endif
             </div>
+
+            @if (!empty($blog_categories))
+                @foreach ($blog_categories as $categoryData)
+                    @php
+                        $category = $categoryData['category'];
+                        $posts = $categoryData['posts'];
+                        $hasMore = $categoryData['has_more'] ?? false;
+                    @endphp
+
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-start mb-3">
+                                <h3 class="fw-bold text-uppercase nowrap mb-0">{{ $category->name }}</h3>
+                                <hr class="w-100 ms-3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @foreach ($posts as $item)
+                            <div class="col-12 col-md-6 mb-3">
+                                <a href="{{ route('blog.show', $item->slug) }}">
+                                    <img class="img-fluid rounded-4" src="{{ $item->featured_image_url }}" alt="{{ $item->title }}">
+                                </a>
+                                @if($item->category)
+                                    <a href="{{ url('blog/category/' . $item->category->id) }}" class="category-pills mt-2 d-inline-block">
+                                        {{ $item->category->name }}
+                                    </a>
+                                @endif
+                                <a href="{{ route('blog.show', $item->slug) }}">
+                                    <h2 class="fs-5 fw-bold my-2">{{ $item->title }}</h2>
+                                </a>
+                                <p class="text-danger mb-0">{{ date('d F Y', strtotime($item->created_at)) }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('blog.category', $category->id) }}" class="btn btn-dark px-4 d-flex align-items-center w-fit-content">
+                            <span class="lh-1">Load More</span>
+                            <i class="iconify fs-4" data-icon="eva:arrow-down-fill"></i>
+                        </a>
+                    </div>
+                @endforeach
+            @endif
         </div>
 
         <div class="col-12 col-md-4">

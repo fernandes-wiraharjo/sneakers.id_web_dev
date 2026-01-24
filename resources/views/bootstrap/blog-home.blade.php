@@ -77,7 +77,7 @@
             @endforelse
 
             @if ($count_promo > 0)
-            <div class="d-flex justify-content-center mt-5">
+            <div class="d-flex justify-content-center mt-3">
                 <a href="{{ route('blog.category', 'promo') }}" class="btn btn-dark px-4 d-flex align-items-center w-fit-content">
                     <span class="lh-1">Load More</span>
                     <i class="iconify fs-4" data-icon="eva:arrow-down-fill"></i>
@@ -117,7 +117,7 @@
 
                 
                 @if (count($blog_latest) > 0)
-                <div class="d-flex justify-content-center mt-5">
+                <div class="d-flex justify-content-center mt-3">
                     <a href="{{ route('blog.all') }}" class="btn btn-dark px-4 d-flex align-items-center w-fit-content">
                         <span class="lh-1">Load More</span>
                         <i class="iconify fs-4" data-icon="eva:arrow-down-fill"></i>

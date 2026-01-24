@@ -3,31 +3,23 @@
     <hr class="w-50 me-3">
     <h3 class="mb-0 fw-bold text-uppercase nowrap">POPULAR</h3>
     <hr class="w-50 ms-3">
+    </div>
+
+<div id="blog-popular-list">
+    @include('bootstrap.parts.blog-popular-items', ['popular' => $popular])
 </div>
-@forelse ($popular as $item)
-    <div class="row align-items-center mb-3">
-        <div class="col-7">
-            @if($item->category)
-                <a href="{{ url('blog/category/' . $item->category->id) }}" class="category-pills d-inline-block">
-                    {{ $item->category->name }}
-                </a>
-            @endif
-            <a href="{{ route('blog.show', $item->slug) }}">
-                <h2 class="fs-5 fw-bold my-1">{{ $item->title }}</h2>
-            </a>
-            <p class="text-danger mb-0">{{ date('d F Y', strtotime($item->created_at)) }}</p>
-        </div>
-        <div class="col-5">
-            <a href="{{ route('blog.show', $item->slug) }}">
-                <img class="img-fluid rounded-4" src="{{ $item->featured_image_url }}" alt="{{ $item->title }}">
-            </a>
-        </div>
+
+@if ($popular->count() > 0 && !empty($popularHasMore) && $popularHasMore)
+    <div class="d-flex justify-content-center mt-3">
+        <button id="blog-popular-load-more"
+                class="btn btn-dark px-3 d-flex align-items-center w-fit-content"
+                data-next-page="2"
+                data-exclude-id="{{ isset($blog) ? $blog->id : '' }}">
+            <span class="lh-1">Load More</span>
+            <i class="iconify fs-5 ms-1" data-icon="eva:arrow-down-fill"></i>
+        </button>
     </div>
-@empty
-    <div class="col-12">
-        <p>No popular blog posts</p>
-    </div>
-@endforelse
+@endif
 
 <div class="d-flex align-items-center justify-content-center mt-5 mb-3">
     <hr class="w-50 me-3">
@@ -40,4 +32,47 @@
     </a>
 @endforeach
 
+@once
+    @push('scripts')
+    <script>
+        $(document).ready(function () {
+            const $loadMoreBtn = $('#blog-popular-load-more');
+            if (!$loadMoreBtn.length) {
+                return;
+            }
+
+            let isLoading = false;
+
+            $loadMoreBtn.on('click', function (e) {
+                e.preventDefault();
+                if (isLoading) return;
+
+                const nextPage = $(this).data('next-page') || 2;
+                const excludeId = $(this).data('exclude-id') || '';
+                const $btn = $(this);
+
+                isLoading = true;
+                $btn.prop('disabled', true).addClass('disabled');
+
+                $.get("{{ route('blog.popular') }}", { page: nextPage, exclude_id: excludeId }, function (response) {
+                    if (response.html) {
+                        $('#blog-popular-list').append(response.html);
+                    }
+
+                    if (response.has_more) {
+                        $btn.data('next-page', response.next_page);
+                        $btn.prop('disabled', false).removeClass('disabled');
+                        isLoading = false;
+                    } else {
+                        $btn.remove();
+                    }
+                }).fail(function () {
+                    $btn.prop('disabled', false).removeClass('disabled');
+                    isLoading = false;
+                });
+            });
+        });
+    </script>
+    @endpush
+@endonce
 

@@ -199,7 +199,7 @@ class BlogController extends Controller
 
         $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
 
-        $perPage = 2;
+        $perPage = 4;
 
         $blog_results = Blog::query()
             ->where('is_active', true)
@@ -242,7 +242,7 @@ class BlogController extends Controller
     {
         $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
 
-        $perPage = 2;
+        $perPage = 4;
 
         $blog_results = Blog::query()
             ->where('is_active', true)
@@ -277,37 +277,90 @@ class BlogController extends Controller
     }
 
     /**
-     * Get popular posts for sidebar.
+     * Get base query for popular posts.
      *
      * @param int|null $excludeId  Optional blog ID to exclude (e.g. current post).
      */
-    protected function getPopularPosts(int $excludeId = null)
+    protected function popularQuery(int $excludeId = null)
     {
         $query = Blog::query()
             ->where('is_active', true)
             ->with('category')
             ->orderByDesc('visitor_count')
-            ->orderByDesc('created_at')
-            ->take(5);
+            ->orderByDesc('created_at');
 
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
 
-        return $query->get();
+        return $query;
+    }
+
+    /**
+     * Get popular posts for sidebar.
+     *
+     * @param int|null $excludeId  Optional blog ID to exclude (e.g. current post).
+     * @param int $page
+     * @param int $perPage
+     */
+    protected function getPopularPosts(int $excludeId = null, int $page = 1, int $perPage = 6)
+    {
+        $offset = max(0, ($page - 1) * $perPage);
+
+        return $this->popularQuery($excludeId)
+            ->skip($offset)
+            ->take($perPage)
+            ->get();
     }
 
     /**
      * Get common sidebar data (popular posts + brands).
      *
      * @param int|null $excludeBlogId
-     * @return array{popular:\Illuminate\Support\Collection,brands:\Illuminate\Support\Collection}
+     * @return array{popular:\Illuminate\Support\Collection,popularHasMore:bool,brands:\Illuminate\Support\Collection}
      */
     protected function getSidebarData(int $excludeBlogId = null): array
     {
+        $perPage = 4;
+        $baseQuery = $this->popularQuery($excludeBlogId);
+        $totalPopular = $baseQuery->count();
+
+        $popular = $this->getPopularPosts($excludeBlogId, 1, $perPage);
+        $popularHasMore = $totalPopular > $popular->count();
+
         return [
-            'popular' => $this->getPopularPosts($excludeBlogId),
+            'popular' => $popular,
+            'popularHasMore' => $popularHasMore,
             'brands' => $this->brandRepository->getActiveMenuBrand(),
         ];
+    }
+
+    /**
+     * Load more popular posts for sidebar (AJAX).
+     */
+    public function popular(Request $request)
+    {
+        $page = (int) $request->get('page', 1);
+        $perPage = 4;
+        $excludeId = $request->get('exclude_id');
+        $excludeId = $excludeId ? (int) $excludeId : null;
+
+        $query = $this->popularQuery($excludeId);
+        $total = $query->count();
+
+        $popular = $this->getPopularPosts($excludeId, $page, $perPage);
+
+        $html = view('bootstrap.parts.blog-popular-items', [
+            'popular' => $popular,
+        ])->render();
+
+        $offset = ($page - 1) * $perPage;
+        $hasMore = ($offset + $popular->count()) < $total;
+
+        return response()->json([
+            'html' => $html,
+            'has_more' => $hasMore,
+            'next_page' => $page + 1,
+        ]);
     }
 }

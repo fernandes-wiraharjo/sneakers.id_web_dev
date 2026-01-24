@@ -16,8 +16,7 @@
             <h1 class="fw-bold text-uppercase">BLOG</h1>
         </div>
         <div class="col-12 col-md-4">
-            <form action="{{ url('blog/search') }}" method="get">
-                @csrf
+            <form action="{{ route('blog.search') }}" method="get">
                 <div class="input-group rounded-pill border py-1 px-2">
                     <span class="input-group-text rounded-pill bg-white border-0 pe-0">
                         <span class="iconify fs-4" data-icon="material-symbols:search-rounded"></span>

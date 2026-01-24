@@ -50,6 +50,7 @@ Route::get('/email', [StoreController::class, 'email'])->name('email');
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleWebhook']);
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/search', [BlogController::class, 'search'])->name('blog.search');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Ladmin::route(function() {

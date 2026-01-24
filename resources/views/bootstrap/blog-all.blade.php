@@ -1,7 +1,7 @@
 @extends('bootstrap.layout')
 
-@section('title', $category->name)
-@section('description', 'Blog category: ' . $category->name)
+@section('title', 'Latest Articles')
+@section('description', 'All latest blog articles')
 
 @section('content')
 <div class="container">
@@ -11,23 +11,22 @@
                 <span class="iconify fs-3" data-icon="stash:arrow-left-duotone"></span>
             </a>
             <h1 class="fw-bold mb-0 text-uppercase">
-                {{ $category->name }}
+                Latest Articles
             </h1>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-12 col-md-8 pe-md-5">
-            <div id="blog-category-list">
+        <div class="col-12 col-md-8 pe-5">
+            <div id="blog-all-list">
                 @include('bootstrap.parts.blog-all-items', ['blog_results' => $blog_results])
             </div>
 
             @if ($blog_results->hasMorePages())
                 <div class="d-flex justify-content-center mt-4">
-                    <button id="blog-category-load-more"
+                    <button id="blog-all-load-more"
                             class="btn btn-dark px-4 d-flex align-items-center w-fit-content"
-                            data-next-page="{{ $blog_results->currentPage() + 1 }}"
-                            data-category-id="{{ $category->id }}">
+                            data-next-page="{{ $blog_results->currentPage() + 1 }}">
                         <span class="lh-1">Load More</span>
                         <i class="iconify fs-4" data-icon="eva:arrow-down-fill"></i>
                     </button>
@@ -45,7 +44,7 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
-        const $loadMoreBtn = $('#blog-category-load-more');
+        const $loadMoreBtn = $('#blog-all-load-more');
         if (!$loadMoreBtn.length) {
             return;
         }
@@ -57,16 +56,15 @@
             if (isLoading) return;
 
             const nextPage = $(this).data('next-page');
-            const categoryId = $(this).data('category-id');
-            if (!nextPage || !categoryId) return;
+            if (!nextPage) return;
 
             isLoading = true;
             const $btn = $(this);
             $btn.prop('disabled', true).addClass('disabled');
 
-            $.get("{{ url('blog/category') }}/" + categoryId, { page: nextPage }, function (response) {
+            $.get('{{ route('blog.all') }}', { page: nextPage }, function (response) {
                 if (response.html) {
-                    $('#blog-category-list').append(response.html);
+                    $('#blog-all-list').append(response.html);
                 }
 
                 if (response.has_more) {
@@ -84,4 +82,5 @@
     });
 </script>
 @endpush
+
 

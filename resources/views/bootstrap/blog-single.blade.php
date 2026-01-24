@@ -6,7 +6,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-12 col-md-8 mb-5">
+        <div class="col-12 col-md-8 mb-5 pe-md-5">
             <h1 class="fw-bold text-uppercase">{{ $blog->title }}</h1>
             <div class="d-flex align-items-center justify-content-start gap-3">
                 <div>

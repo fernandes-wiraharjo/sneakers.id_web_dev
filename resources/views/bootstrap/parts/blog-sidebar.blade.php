@@ -1,4 +1,9 @@
-<h3 class="fw-bold text-uppercase">POPULAR</h3>
+
+<div class="d-flex align-items-center justify-content-center mb-3">
+    <hr class="w-50 me-3">
+    <h3 class="mb-0 fw-bold text-uppercase nowrap">POPULAR</h3>
+    <hr class="w-50 ms-3">
+</div>
 @forelse ($popular as $item)
     <div class="row align-items-center mb-3">
         <div class="col-7">
@@ -24,7 +29,11 @@
     </div>
 @endforelse
 
-<h2 class="mt-5">BUY BY PRODUCT</h2>
+<div class="d-flex align-items-center justify-content-center mt-5 mb-3">
+    <hr class="w-50 me-3">
+    <h3 class="mb-0 fw-bold text-uppercase nowrap">BUY BY PRODUCT</h3>
+    <hr class="w-50 ms-3">
+</div>
 @foreach ($brands as $brand)
     <a class="w-100 btn btn-dark mb-2" href="{{ route('collections', 'brand.' . $brand->brand_code) }}">
         {{ $brand->brand_title }}

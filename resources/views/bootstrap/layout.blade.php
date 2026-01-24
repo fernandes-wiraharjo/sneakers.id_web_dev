@@ -167,7 +167,9 @@
         .nowrap, .no-wrap {
             white-space: nowrap;
         }
-
+        .w-fit-content {
+            width: fit-content;
+        }
         .search-result-image {
             width: 70px;
             height: 70px;

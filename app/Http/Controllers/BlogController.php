@@ -193,18 +193,34 @@ class BlogController extends Controller
     /**
      * Blog category page – list posts in a given category.
      */
-    public function category(string $id)
+    public function category(Request $request, string $id)
     {
         $category = BlogCategory::query()->findOrFail($id);
 
         $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
+
+        $perPage = 2;
 
         $blog_results = Blog::query()
             ->where('is_active', true)
             ->where('category_id', $id)
             ->with('category')
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate($perPage);
+
+        // AJAX request for "Load More" – return only rows HTML
+        if ($request->ajax()) {
+            $html = view('bootstrap.parts.blog-all-items', [
+                'blog_results' => $blog_results,
+                'is_append' => true,
+            ])->render();
+
+            return response()->json([
+                'html' => $html,
+                'has_more' => $blog_results->hasMorePages(),
+                'next_page' => $blog_results->currentPage() + 1,
+            ]);
+        }
 
         // Sidebar data
         $sidebar = $this->getSidebarData();
@@ -215,6 +231,47 @@ class BlogController extends Controller
                 'headerImageURL' => $headerImageURL,
                 'blog_results' => $blog_results,
                 'category' => $category,
+            ], $sidebar)
+        );
+    }
+
+    /**
+     * Blog "all" page – latest articles with load more (append rows).
+     */
+    public function all(Request $request)
+    {
+        $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
+
+        $perPage = 2;
+
+        $blog_results = Blog::query()
+            ->where('is_active', true)
+            ->with('category')
+            ->orderByDesc('created_at')
+            ->paginate($perPage);
+
+        // AJAX request for "Load More" – return only rows HTML
+        if ($request->ajax()) {
+            $html = view('bootstrap.parts.blog-all-items', [
+                'blog_results' => $blog_results,
+                'is_append' => true,
+            ])->render();
+
+            return response()->json([
+                'html' => $html,
+                'has_more' => $blog_results->hasMorePages(),
+                'next_page' => $blog_results->currentPage() + 1,
+            ]);
+        }
+
+        // Sidebar data
+        $sidebar = $this->getSidebarData();
+
+        return view(
+            'bootstrap.blog-all',
+            array_merge([
+                'headerImageURL' => $headerImageURL,
+                'blog_results' => $blog_results,
             ], $sidebar)
         );
     }

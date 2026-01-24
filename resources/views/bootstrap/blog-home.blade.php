@@ -46,9 +46,9 @@
     </div>
 
     <div class="row mt-5">
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-8 pe-md-5">
             <div class="d-flex align-items-center justify-content-start mb-3">
-                <h3 class="fw-bold text-uppercase nowrap">PROMO SNEAKERS.ID</h3>
+                <h3 class="fw-bold text-uppercase nowrap mb-0">PROMO SNEAKERS.ID</h3>
                 <hr class="w-100 ms-3">
             </div>
             @php
@@ -76,10 +76,19 @@
             </div>
             @endforelse
 
+            @if ($count_promo > 0)
+            <div class="d-flex justify-content-center mt-5">
+                <a href="{{ route('blog.category', 'promo') }}" class="btn btn-dark px-4 d-flex align-items-center w-fit-content">
+                    <span class="lh-1">Load More</span>
+                    <i class="iconify fs-4" data-icon="eva:arrow-down-fill"></i>
+                </a>
+            </div>
+            @endif
+
             <div class="row">
                 <div class="col-12">            
                     <div class="d-flex align-items-center justify-content-start mb-3 mt-5">
-                        <h3 class="fw-bold text-uppercase nowrap">LATEST ARTICLES</h3>
+                        <h3 class="fw-bold text-uppercase nowrap mb-0">LATEST ARTICLES</h3>
                         <hr class="w-100 ms-3">
                     </div>
                 </div>
@@ -105,6 +114,16 @@
                     <p>No latest blog posts</p>
                 </div>
                 @endforelse
+
+                
+                @if (count($blog_latest) > 0)
+                <div class="d-flex justify-content-center mt-5">
+                    <a href="{{ route('blog.all') }}" class="btn btn-dark px-4 d-flex align-items-center w-fit-content">
+                        <span class="lh-1">Load More</span>
+                        <i class="iconify fs-4" data-icon="eva:arrow-down-fill"></i>
+                    </a>
+                </div>
+                @endif
             </div>
         </div>
 

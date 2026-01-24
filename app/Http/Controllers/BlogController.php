@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\Blog\Entities\Blog;
 use Modules\Brand\Repositories\BrandRepository;
+use Modules\Blog\Entities\BlogCategory;
 use App\Models\HeaderImage;
 use Illuminate\Support\Str;
 
@@ -53,17 +54,10 @@ class BlogController extends Controller
             ->take(6)
             ->get();
 
-        // Popular posts sorted by visitor count (then by latest)
-        $blog_popular = Blog::query()
-            ->where('is_active', true)
-            ->with('category')
-            ->orderByDesc('visitor_count')
-            ->orderByDesc('created_at')
-            ->take(5)
-            ->get();
-
-        // Brand list for "BUY BY PRODUCT"
-        $brands = $this->brandRepository->getActiveMenuBrand();
+        // Sidebar data
+        $sidebar = $this->getSidebarData();
+        $blog_popular = $sidebar['popular'];
+        $brands = $sidebar['brands'];
 
         return view('bootstrap.blog-home', compact(
             'headerImageURL',
@@ -92,24 +86,15 @@ class BlogController extends Controller
         $blog->increment('visitor_count');
 
         $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
-        $brands = $this->brandRepository->getActiveMenuBrand();
+        $sidebar = $this->getSidebarData($blog->id);
 
-        // Popular posts for sidebar (exclude current)
-        $popular = Blog::query()
-            ->where('is_active', true)
-            ->where('id', '!=', $blog->id)
-            ->with('category')
-            ->orderByDesc('visitor_count')
-            ->orderByDesc('created_at')
-            ->take(5)
-            ->get();
-
-        return view('bootstrap.blog-single', [
-            'headerImageURL' => $headerImageURL,
-            'blog' => $blog,
-            'brands' => $brands,
-            'popular' => $popular,
-        ]);
+        return view(
+            'bootstrap.blog-single',
+            array_merge([
+                'headerImageURL' => $headerImageURL,
+                'blog' => $blog,
+            ], $sidebar)
+        );
     }
 
     /**
@@ -148,25 +133,17 @@ class BlogController extends Controller
             }
         }
 
-        // Popular posts for sidebar
-        $popular = Blog::query()
-            ->where('is_active', true)
-            ->with('category')
-            ->orderByDesc('visitor_count')
-            ->orderByDesc('created_at')
-            ->take(5)
-            ->get();
+        // Sidebar data
+        $sidebar = $this->getSidebarData();
 
-        // Brand list for "BUY BY PRODUCT"
-        $brands = $this->brandRepository->getActiveMenuBrand();
-
-        return view('bootstrap.blog-search', [
-            'headerImageURL' => $headerImageURL,
-            'blog_results' => $blog_results,
-            'popular' => $popular,
-            'brands' => $brands,
-            'keyword' => $keyword,
-        ]);
+        return view(
+            'bootstrap.blog-search',
+            array_merge([
+                'headerImageURL' => $headerImageURL,
+                'blog_results' => $blog_results,
+                'keyword' => $keyword,
+            ], $sidebar)
+        );
     }
 
     /**
@@ -211,5 +188,69 @@ class BlogController extends Controller
         $suffix = ($start + $length) < $totalLen ? '...' : '';
 
         return trim($prefix . $snippet . $suffix);
+    }
+
+    /**
+     * Blog category page – list posts in a given category.
+     */
+    public function category(string $id)
+    {
+        $category = BlogCategory::query()->findOrFail($id);
+
+        $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
+
+        $blog_results = Blog::query()
+            ->where('is_active', true)
+            ->where('category_id', $id)
+            ->with('category')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Sidebar data
+        $sidebar = $this->getSidebarData();
+
+        return view(
+            'bootstrap.blog-category',
+            array_merge([
+                'headerImageURL' => $headerImageURL,
+                'blog_results' => $blog_results,
+                'category' => $category,
+            ], $sidebar)
+        );
+    }
+
+    /**
+     * Get popular posts for sidebar.
+     *
+     * @param int|null $excludeId  Optional blog ID to exclude (e.g. current post).
+     */
+    protected function getPopularPosts(int $excludeId = null)
+    {
+        $query = Blog::query()
+            ->where('is_active', true)
+            ->with('category')
+            ->orderByDesc('visitor_count')
+            ->orderByDesc('created_at')
+            ->take(5);
+
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * Get common sidebar data (popular posts + brands).
+     *
+     * @param int|null $excludeBlogId
+     * @return array{popular:\Illuminate\Support\Collection,brands:\Illuminate\Support\Collection}
+     */
+    protected function getSidebarData(int $excludeBlogId = null): array
+    {
+        return [
+            'popular' => $this->getPopularPosts($excludeBlogId),
+            'brands' => $this->brandRepository->getActiveMenuBrand(),
+        ];
     }
 }

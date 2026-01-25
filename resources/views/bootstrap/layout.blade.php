@@ -192,6 +192,12 @@
     @stack('scripts')
     @livewireScripts
 
+    <a href="https://api.whatsapp.com/send?phone=6289617925925" class="position-fixed bottom-0 end-0 m-5" style="z-index: 9999;" target="_blank">
+        <div class="rounded rounded-circle bg-success text-white p-3 shadow">
+            <span class="iconify fs-1" data-icon="mdi:whatsapp"></span>
+        </div>
+    </a>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             @if(session('toast_error'))

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - SNEAKERS.ID</title>
+    <title>SNEAKERS.ID</title>
     <meta name="description" content="@yield('description')">
     <link rel="shortcut icon" href="{{ $favicon }}">
     <link rel="apple-touch-icon" href="{{ $favicon }}">

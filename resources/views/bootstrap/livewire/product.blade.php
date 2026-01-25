@@ -106,7 +106,7 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
                 <span class="lh-1">Order via WhatsApp</span> 
             </a>
 
-            @if(isset($reviews) && $reviews['data']->count() > 0)
+            @if(isset($reviews) && count($reviews['data']) > 0)
             <div class="mt-5">
                 <div class="card rounded-4 p-3">
                     <div class="d-flex justify-content-between align-items-center">
@@ -129,18 +129,18 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
                     @foreach($reviews['data'] as $review)
                     <div class="row mt-3 align-items-center">
                         <div class="col-12 col-md-5 fs-5">
-                            @for($i = 0; $i < $review->rating; $i++)
+                            @for($i = 0; $i < $review['rating']; $i++)
                                 <span class="iconify text-warning" data-icon="material-symbols:star"></span>
                             @endfor
-                            @for($i = $review->rating; $i < 5; $i++)
+                            @for($i = $review['rating']; $i < 5; $i++)
                                 <span class="iconify text-secondary" data-icon="material-symbols:star"></span>
                             @endfor
                         </div>
                         <div class="col-12 col-md-7 text-secondary text-end">
-                            {{ $review->user->name }} - {{ $review->created_at->format('d/m/Y') }}
+                            {{ $review['user']['name'] }} - {{ date('d/m/Y', strtotime($review['created_at'])) }}
                         </div>
                         <div class="col-12 text-secondary">
-                            {{ $review->review }}
+                            {{ $review['review'] }}
                         </div>
                     </div>
                     @endforeach

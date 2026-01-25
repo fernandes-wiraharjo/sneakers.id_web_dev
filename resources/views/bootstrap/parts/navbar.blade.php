@@ -5,7 +5,7 @@
     <div class="container">
         <!-- Brand/Logo -->
         <a class="navbar-brand order-0 me-auto" href="{{ route('store') }}">
-            <img src="{{ $logo_navbar }}" alt="SNEAKERS.ID" class="img-fluid" style="max-height: 70px;">
+            <img src="{{ $logo_navbar }}" alt="SNEAKERS.ID" class="img-fluid">
         </a>
 
         <!-- Mobile Toggle Button -->

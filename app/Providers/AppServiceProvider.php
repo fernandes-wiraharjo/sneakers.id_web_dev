@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\View;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\Brand\Repositories\BrandRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Modules\GlobalSetting\Entities\GlobalSetting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -45,6 +46,13 @@ class AppServiceProvider extends ServiceProvider
 
         // Share theme adapter class
         View::share('theme', $theme);
+
+        $global_settings = GlobalSetting::all();
+        View::share('favicon', $global_settings->where('setting_code', 'favicon')->first()->setting_value);
+        View::share('logo_navbar', $global_settings->where('setting_code', 'logo_navbar')->first()->setting_value);
+        View::share('logo_footer', $global_settings->where('setting_code', 'logo_footer')->first()->setting_value);
+        View::share('auth_page_side_image_website', $global_settings->where('setting_code', 'auth_page_side_image_website')->first()->setting_value);
+        View::share('auth_page_side_image_mobile', $global_settings->where('setting_code', 'auth_page_side_image_mobile')->first()->setting_value);
 
         // Share common data across all views
         View::share('brand', $brandRepository->getAllBrand());

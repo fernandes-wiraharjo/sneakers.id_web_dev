@@ -27,6 +27,7 @@
                     <p class="mt-5 fs-2">Developed by</p>
                     <p>Fernandes Wiraharjo</p>
                     <p>Aldy Satria Gumilar</p>
+                    <p>Nikko Agustino</p>
                 </div>
                 
                 <div class="d-flex gap-4 flex-wrap mt-5">

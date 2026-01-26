@@ -7,6 +7,7 @@ use App\Http\Controllers\Administrator\NotificationController;
 use App\Http\Controllers\Administrator\DashboardController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\InstagramFeedController;
 use App\Http\Controllers\Administrator\Auth\LoginController;
@@ -48,6 +49,12 @@ Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
 Route::get('/email', [StoreController::class, 'email'])->name('email');
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleWebhook']);
 
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/search', [BlogController::class, 'search'])->name('blog.search');
+Route::get('/blog/all', [BlogController::class, 'all'])->name('blog.all');
+Route::get('/blog/category/{id}', [BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/popular', [BlogController::class, 'popular'])->name('blog.popular');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Ladmin::route(function() {
     //Route::resource('/withdrawal', WithdrawalController::class); // Example

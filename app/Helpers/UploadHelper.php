@@ -291,7 +291,10 @@ if (!function_exists('uploadAsWebp')) {
         if ($method == 'crop') {
             $img->fit($width, $height);
         } else {
-            $img->resize($width, $height);
+            $img->resize($width, $height, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
         }
         $img->encode('webp', 80);
         Storage::disk($storage)->put($path . '/' . $imageName, $img);

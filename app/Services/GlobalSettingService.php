@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GlobalSettingService {
 	public function insertGlobalSetting($request){
@@ -9,20 +10,12 @@ class GlobalSettingService {
 
         if (isset($data['image'])) {
             $path = 'images/global-setting';
-            $do_upload = imageUpload($data['image'], $path ,'public');
-
-            if(!$do_upload){
-                abort(500, 'Failed upload image');
-            } else {
-                // Rewrite value to image URL
-                $data['setting_value'] = asset($path.'/'.$do_upload);
-            }
-
-            unset($data['image']);
+            $do_upload = uploadAsWebp($data['image'], $path ,'public', 1200, 1200, Str::slug($data['setting_code']), 'resize');
+            $data['setting_value'] = $do_upload;
         }
 
-        foreach ($data as $key => $value){ $brand[$key] = $value; }
-        return $brand;
+        foreach ($data as $key => $value){ $global_setting[$key] = $value; }
+        return $global_setting;
 	}
 
     public function updateGlobalSetting($request){
@@ -30,19 +23,11 @@ class GlobalSettingService {
 
         $path = 'images/global-setting';
         if(isset($data['image'])) {
-            $do_upload = imageUpload($data['image'], $path, 'public');
-
-            if(!$do_upload){
-                abort(500, 'Failed upload image');
-            } else {
-                // Rewrite value to image URL
-                $data['setting_value'] = asset($path.'/'.$do_upload);
-            }
-
-            unset($data['image']);
+            $do_upload = uploadAsWebp($data['image'], $path, 'public', 1200, 1200, Str::slug($data['setting_code']), 'resize');
+            $data['setting_value'] = $do_upload;
         }
 
-        foreach ($data as $key => $value) { $brand[$key] = $value; }
-        return $brand;
+        foreach ($data as $key => $value) { $global_setting[$key] = $value; }
+        return $global_setting;
     }
 }

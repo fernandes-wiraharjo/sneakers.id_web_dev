@@ -2,7 +2,7 @@
     <div class="container text-white">
         <div class="row">
             <div class="col-12 col-md-3 pe-md-0">
-                <img src="{{ asset('stores-info/logo-white-new.png') }}" alt="Footer Logo" class="img-fluid">
+                <img src="{{ $logo_footer }}" alt="Footer Logo" class="img-fluid">
                 <p class="mt-5 fs-1">
                     SNEAKERS.ID
                 </p>

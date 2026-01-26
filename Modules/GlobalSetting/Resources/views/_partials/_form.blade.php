@@ -10,7 +10,7 @@
 	<input type="text" placeholder="Setting Value" class="form-control" name="setting_value" id="setting_value" required value="{{ old('setting_value', $setting->setting_value) }}">
     <div class="col-sm-12">
          <span class="text-muted fw-bold fs-6">
-            you can only use either <strong>Value</strong> or <strong>Image</strong>, not both.
+            existing value will be replaced with new image below
          </span>
     </div>
 </x-ladmin-form-group>
@@ -19,7 +19,7 @@
 	<input type="file" class="form-control" name="image" id="image" value="{{ old('setting_image', $setting->brand_image) }}">
     <div class="col-sm-12">
         <span class="text-muted fw-bold fs-6">
-            recommended banner resolution is 500p or 1000p and aspect ratio is 1:1. make sure the image not below this resolution.
+            no resize available on this function, please use proper image resolution for each global settings
         </span>
     </div>
 </x-ladmin-form-group>

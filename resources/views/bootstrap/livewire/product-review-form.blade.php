@@ -11,6 +11,7 @@
             @for ($i = 1; $i <= 5; $i++)
                 <button 
                     type="button" 
+                    wire:key="rating-{{ $i }}"
                     class="btn btn-link p-0 border-0 {{ $rating >= $i ? 'text-warning' : 'text-secondary' }}"
                     wire:click="setRating({{ $i }})"
                     @if($isSubmitted) disabled @endif
@@ -27,7 +28,7 @@
             class="form-control" 
             id="review-{{ $productId }}-{{ $productSize }}"
             rows="4" 
-            wire:model="review"
+            wire:model.defer="review"
             @if($isSubmitted) disabled @endif
             placeholder="Write your review here (minimum 10 characters)..."></textarea>
         @error('review') <span class="text-danger small">{{ $message }}</span> @enderror

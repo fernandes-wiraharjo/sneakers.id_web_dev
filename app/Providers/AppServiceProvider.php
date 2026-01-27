@@ -48,11 +48,16 @@ class AppServiceProvider extends ServiceProvider
         View::share('theme', $theme);
 
         $global_settings = GlobalSetting::all();
-        View::share('favicon', $global_settings->where('setting_code', 'favicon')->first()->setting_value);
-        View::share('logo_navbar', $global_settings->where('setting_code', 'logo_navbar')->first()->setting_value);
-        View::share('logo_footer', $global_settings->where('setting_code', 'logo_footer')->first()->setting_value);
-        View::share('auth_page_side_image_website', $global_settings->where('setting_code', 'auth_page_side_image_website')->first()->setting_value);
-        View::share('auth_page_side_image_mobile', $global_settings->where('setting_code', 'auth_page_side_image_mobile')->first()->setting_value);
+        $gs_favicon = $global_settings->where('setting_code', 'favicon')->first();
+        $gs_logo_navbar = $global_settings->where('setting_code', 'logo_navbar')->first();
+        $gs_logo_footer = $global_settings->where('setting_code', 'logo_footer')->first();
+        $gs_auth_page_side_image_website = $global_settings->where('setting_code', 'auth_page_side_image_website')->first();
+        $gs_auth_page_side_image_mobile = $global_settings->where('setting_code', 'auth_page_side_image_mobile')->first();
+        View::share('favicon', $gs_favicon ? $gs_favicon->setting_value : asset('stores-info/logos.png'));
+        View::share('logo_navbar', $gs_logo_navbar ? $gs_logo_navbar->setting_value : asset('stores-info/logo-black-new.png'));
+        View::share('logo_footer', $gs_logo_footer ? $gs_logo_footer->setting_value : asset('stores-info/logo-white-new.png'));
+        View::share('auth_page_side_image_website', $gs_auth_page_side_image_website ? $gs_auth_page_side_image_website->setting_value : asset('stores-info/login-img-md.webp'));
+        View::share('auth_page_side_image_mobile', $gs_auth_page_side_image_mobile ? $gs_auth_page_side_image_mobile->setting_value : asset('stores-info/login-img.webp'));
 
         // Share common data across all views
         View::share('brand', $brandRepository->getAllBrand());

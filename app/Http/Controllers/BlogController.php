@@ -28,7 +28,7 @@ class BlogController extends Controller
      */
     public function index(Request $request)
     {
-        $headerImageURL = (new HeaderImage())->getHeaderImage('common', 'Blog');
+        $headerImageURL = (new HeaderImage())->getHeaderImage('category', 'Blog');
 
         // Carousel posts
         $blog_carousel = Blog::query()

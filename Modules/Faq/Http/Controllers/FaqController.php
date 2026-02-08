@@ -56,6 +56,7 @@ class FaqController extends Controller
                 'faq_question' => 'required',
                 'faq_answer' => 'required',
                 'is_home' => 'required',
+                'is_active' => 'required',
             ]);
 
             if($validator) {

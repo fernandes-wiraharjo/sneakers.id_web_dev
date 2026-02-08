@@ -24,6 +24,27 @@
         <input class="form-check-input" type="checkbox" name="is_home" value="1"
             {{ $edit ? (intval($faq->is_home) ? 'checked' : '') : 'checked' }} />
         <span class="form-check-label fw-bold text-muted">
+            Yes
+        </span>
+    </label>
+    <!--end::Switch-->
+</div>
+<!--end::Input group-->
+
+<!--begin::Input group-->
+<div class="d-flex flex-stack w-lg-50 mb-5">
+    <!--begin::Label-->
+    <div class="me-5">
+        <label class="fs-6 fw-bold form-label">Is Active?</label>
+    </div>
+    <!--end::Label-->
+
+    <!--begin::Switch-->
+    <label class="form-check form-switch form-check-custom form-check-solid fv-row">
+        <input type="hidden" name="is_active" value="0"/>
+        <input class="form-check-input" type="checkbox" name="is_active" value="1"
+            {{ $edit ? (intval($faq->is_active) ? 'checked' : '') : 'checked' }} />
+        <span class="form-check-label fw-bold text-muted">
             Active
         </span>
     </label>

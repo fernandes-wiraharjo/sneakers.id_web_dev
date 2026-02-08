@@ -39,10 +39,8 @@ class BlogCategoryController extends Controller
         ladmin()->allow('administrator.blog.category.create');
         $blogCategory = new BlogCategory();
         
-        // Prefill sequence fields with latest + 1
+        // Prefill sequence field with latest + 1
         $blogCategory->sequence = $this->repository->getLatestSequence();
-        $blogCategory->sequence_single_post = $this->repository->getLatestSequenceSinglePost();
-        $blogCategory->sequence_search = $this->repository->getLatestSequenceSearch();
         
         $data['blogCategory'] = $blogCategory;
 
@@ -61,8 +59,6 @@ class BlogCategoryController extends Controller
                 'id' => 'required|unique:blog_categories,id|max:255',
                 'name' => 'required|max:255',
                 'sequence' => 'required|integer',
-                'sequence_single_post' => 'required|integer',
-                'sequence_search' => 'required|integer',
             ]);
 
             if($validator) {
@@ -126,16 +122,12 @@ class BlogCategoryController extends Controller
                     'id' => 'required|exists:blog_categories,id|max:255',
                     'name' => 'required|max:255',
                     'sequence' => 'required|integer',
-                    'sequence_single_post' => 'required|integer',
-                    'sequence_search' => 'required|integer',
                 ];
             } else {
                 $validation = [
                     'id' => 'required|unique:blog_categories,id|max:255',
                     'name' => 'required|max:255',
                     'sequence' => 'required|integer',
-                    'sequence_single_post' => 'required|integer',
-                    'sequence_search' => 'required|integer',
                 ];
             }
 

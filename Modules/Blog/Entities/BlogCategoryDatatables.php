@@ -21,15 +21,9 @@ class BlogCategoryDatatables extends DataTable
         return datatables()
             ->eloquent($query)
             ->addIndexColumn()
-            ->rawColumns(['action', 'is_show_home', 'is_show_single_post', 'is_show_search'])
+            ->rawColumns(['action', 'is_show_home'])
             ->addColumn('is_show_home', function ($item) {
                 return $item->is_show_home ? "<span class='badge badge-primary'>Yes</span>" : "<span class='badge badge-light-dark'>No</span>";
-            })
-            ->addColumn('is_show_single_post', function ($item) {
-                return $item->is_show_single_post ? "<span class='badge badge-primary'>Yes</span>" : "<span class='badge badge-light-dark'>No</span>";
-            })
-            ->addColumn('is_show_search', function ($item) {
-                return $item->is_show_search ? "<span class='badge badge-primary'>Yes</span>" : "<span class='badge badge-light-dark'>No</span>";
             })
             ->addColumn('action', function ($item) {
                 if($item->blogs()->count() > 0){
@@ -68,18 +62,6 @@ class BlogCategoryDatatables extends DataTable
                 ->searchable(false)
                 ->sortable(false),
             Column::make('sequence'),
-            Column::make('is_show_single_post')
-                ->title(__('Show Single Post'))
-                ->searchable(false)
-                ->sortable(false),
-            Column::make('sequence_single_post')
-                ->title(__('Sequence Single Post')),
-            Column::make('is_show_search')
-                ->title(__('Show Search'))
-                ->searchable(false)
-                ->sortable(false),
-            Column::make('sequence_search')
-                ->title(__('Sequence Search')),
             Column::computed('action')
                 ->sortable(false)
                 ->searchable(false)

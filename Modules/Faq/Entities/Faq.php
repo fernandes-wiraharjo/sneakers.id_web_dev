@@ -14,7 +14,8 @@ class Faq extends Model
         'faq_title',
         'faq_question',
         'faq_answer',
-        'is_home'
+        'is_home',
+        'is_active'
     ];
 
     protected static function newFactory()

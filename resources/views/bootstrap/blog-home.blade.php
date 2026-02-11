@@ -22,7 +22,7 @@
                         <span class="iconify fs-4" data-icon="material-symbols:search-rounded"></span>
                     </span>
                     <input type="text" class="form-control border-0" name="q" placeholder="Search keyword..." aria-label="Search">
-                    <button type="button" class="btn btn-dark rounded-pill px-4 shadow">Search</button>
+                    <button type="submit" class="btn btn-dark rounded-pill px-4 shadow">Search</button>
                 </div>
             </form>
         </div>

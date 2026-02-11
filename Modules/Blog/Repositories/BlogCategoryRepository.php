@@ -32,16 +32,6 @@ class BlogCategoryRepository extends Repository implements MasterRepositoryInter
       $this->resequence('sequence', $oldData['sequence'], $newData['sequence'], $id);
     }
     
-    // Resequence if sequence_single_post changed
-    if(isset($newData['sequence_single_post']) && $oldData['sequence_single_post'] != $newData['sequence_single_post']) {
-      $this->resequence('sequence_single_post', $oldData['sequence_single_post'], $newData['sequence_single_post'], $id);
-    }
-    
-    // Resequence if sequence_search changed
-    if(isset($newData['sequence_search']) && $oldData['sequence_search'] != $newData['sequence_search']) {
-      $this->resequence('sequence_search', $oldData['sequence_search'], $newData['sequence_search'], $id);
-    }
-    
     $blogCategory = $this->blogCategoryService->updateBlogCategory($request);
 
     return $get_blogCategory->update($blogCategory);
@@ -80,16 +70,6 @@ class BlogCategoryRepository extends Repository implements MasterRepositoryInter
       $this->model->where('sequence', '>=', $data['sequence'])->increment('sequence');
     }
     
-    // Resequence if sequence_single_post already exists
-    if(isset($data['sequence_single_post'])) {
-      $this->model->where('sequence_single_post', '>=', $data['sequence_single_post'])->increment('sequence_single_post');
-    }
-    
-    // Resequence if sequence_search already exists
-    if(isset($data['sequence_search'])) {
-      $this->model->where('sequence_search', '>=', $data['sequence_search'])->increment('sequence_search');
-    }
-    
     $blogCategory = $this->blogCategoryService->insertBlogCategory($request);
 
     return $this->model->create($blogCategory);
@@ -105,16 +85,6 @@ class BlogCategoryRepository extends Repository implements MasterRepositoryInter
 
   public function getLatestSequence(){
       $latest = $this->model->orderBy('sequence', 'DESC')->pluck('sequence')->first();
-      return $latest ? $latest + 1 : 1;
-  }
-
-  public function getLatestSequenceSinglePost(){
-      $latest = $this->model->orderBy('sequence_single_post', 'DESC')->pluck('sequence_single_post')->first();
-      return $latest ? $latest + 1 : 1;
-  }
-
-  public function getLatestSequenceSearch(){
-      $latest = $this->model->orderBy('sequence_search', 'DESC')->pluck('sequence_search')->first();
       return $latest ? $latest + 1 : 1;
   }
 }

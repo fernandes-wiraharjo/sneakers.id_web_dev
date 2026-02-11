@@ -48,7 +48,7 @@ class StoreController extends Controller
         $data['featured_air_jordan'] = $this->productRepository->getProductOneFeaturedAirJordan();
         $data['featured_nike'] = $this->productRepository->getProductOneFeaturedNike();
         $data['footer'] = Storage::disk('local')->exists('footer-setting.json') ? json_decode(Storage::disk('local')->get('footer-setting.json')) : [];
-        $data['faq'] = $this->faqRepository->getFaq(5);
+        $data['faq'] = $this->faqRepository->getHomeFaq(5);
         $data['signature_carousel'] = $this->signaturePlayerRepository->getSignatureCarousel();
         
         // Get customer reviews for homepage carousel

@@ -23,7 +23,7 @@ class HeaderImageRepository extends Repository implements MasterRepositoryInterf
    * @return Void
    */
   public function updateHeaderImage(Request $request, $id) {
-    $headerImage = $this->headerImageService->updateHeaderImage($request);
+    $headerImage = $this->headerImageService->updateHeaderImage($request, $id);
 
     $get_header_image = $this->model->findOrFail($id);
 

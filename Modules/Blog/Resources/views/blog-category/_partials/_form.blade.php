@@ -32,56 +32,6 @@
 </div>
 <!--end::Input group-->
 
-<x-ladmin-form-group name="sequence_single_post" label="Sequence (Single Post) *">
-	<input type="number" placeholder="Sequence Single Post" class="form-control" name="sequence_single_post" id="sequence_single_post" required value="{{ old('sequence_single_post', $blogCategory->sequence_single_post ?? 0) }}" min="0">
-</x-ladmin-form-group>
-
-<!--begin::Input group-->
-<div class="d-flex flex-stack w-lg-50 mb-5">
-    <!--begin::Label-->
-    <div class="me-5">
-        <label class="fs-6 fw-bold form-label">Show on Single Post?</label>
-    </div>
-    <!--end::Label-->
-
-    <!--begin::Switch-->
-    <label class="form-check form-switch form-check-custom form-check-solid fv-row">
-        <input type="hidden" name="is_show_single_post" value="0"/>
-        <input class="form-check-input" type="checkbox" name="is_show_single_post" value="1"
-            {{ $edit ? (intval($blogCategory->is_show_single_post) ? 'checked' : '') : 'checked' }} />
-        <span class="form-check-label fw-bold text-muted">
-            Active
-        </span>
-    </label>
-    <!--end::Switch-->
-</div>
-<!--end::Input group-->
-
-<x-ladmin-form-group name="sequence_search" label="Sequence (Search) *">
-	<input type="number" placeholder="Sequence Search" class="form-control" name="sequence_search" id="sequence_search" required value="{{ old('sequence_search', $blogCategory->sequence_search ?? 0) }}" min="0">
-</x-ladmin-form-group>
-
-<!--begin::Input group-->
-<div class="d-flex flex-stack w-lg-50 mb-5">
-    <!--begin::Label-->
-    <div class="me-5">
-        <label class="fs-6 fw-bold form-label">Show on Search?</label>
-    </div>
-    <!--end::Label-->
-
-    <!--begin::Switch-->
-    <label class="form-check form-switch form-check-custom form-check-solid fv-row">
-        <input type="hidden" name="is_show_search" value="0"/>
-        <input class="form-check-input" type="checkbox" name="is_show_search" value="1"
-            {{ $edit ? (intval($blogCategory->is_show_search) ? 'checked' : '') : 'checked' }} />
-        <span class="form-check-label fw-bold text-muted">
-            Active
-        </span>
-    </label>
-    <!--end::Switch-->
-</div>
-<!--end::Input group-->
-
 @push('scripts')
 <script>
     // Make ID lowercase on input
@@ -129,26 +79,6 @@
                         },
                         integer: {
                             message: 'Sequence must be a number'
-                        }
-                    }
-                },
-                'sequence_single_post': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Sequence Single Post is required'
-                        },
-                        integer: {
-                            message: 'Sequence Single Post must be a number'
-                        }
-                    }
-                },
-                'sequence_search': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Sequence Search is required'
-                        },
-                        integer: {
-                            message: 'Sequence Search must be a number'
                         }
                     }
                 },

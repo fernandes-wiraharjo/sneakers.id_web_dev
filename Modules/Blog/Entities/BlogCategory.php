@@ -19,19 +19,11 @@ class BlogCategory extends Model
         'name',
         'is_show_home',
         'sequence',
-        'is_show_single_post',
-        'sequence_single_post',
-        'is_show_search',
-        'sequence_search',
     ];
 
     protected $casts = [
         'is_show_home' => 'boolean',
-        'is_show_single_post' => 'boolean',
-        'is_show_search' => 'boolean',
         'sequence' => 'integer',
-        'sequence_single_post' => 'integer',
-        'sequence_search' => 'integer',
     ];
 
     protected static function newFactory()

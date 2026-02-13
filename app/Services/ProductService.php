@@ -406,16 +406,14 @@ class ProductService {
                     'updated_at' => Carbon::now()
                 ]);
             }
+            
+            $signatures_id = [];
+            foreach (json_decode($request['signature']) as $signature) {
+                $signatures_id[] = intval($signature->value);
+            }
 
-            if(isset($request['signature_player_id']) && $request['signature_player_id'] != ''){
-                $signatures_id[] = intval($request['signature_player_id']);
+            if(isset($signatures_id) && count($signatures_id) > 0){
                 $this->productRepository->syncProductSignatures($id, $signatures_id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
-            } else {
-                $this->productRepository->syncProductSignatures($id);
 
                 $updateTimestamps = $getProduct->update([
                     'updated_at' => Carbon::now()

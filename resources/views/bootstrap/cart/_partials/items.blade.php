@@ -27,9 +27,9 @@
                                 <p class="mb-1 fw-semibold">{{ $item->get('name') }}</p>
                                 <div class="mb-1">
                                     @if ($item->get('discount_price') != 0)
-                                        <span class="text-danger fw-bold">{{ rupiah_format($item->get('discount_price')) }}</span>
+                                        <span class="text-danger fw-bold">{{ rupiah_format($item->get('discount_price'), true) }}</span>
                                     @else
-                                        <span class="fw-semibold">{{ rupiah_format($item->get('retail_price')) }}</span>
+                                        <span class="fw-semibold">{{ rupiah_format($item->get('retail_price'), true) }}</span>
                                     @endif
                                 </div>
                                 <div class="text-muted small">Size: {{ $item->get('size') }}</div>
@@ -39,9 +39,9 @@
                             </td>
                             <td class="text-end">
                                 @if ($item->get('discount_price') != 0)
-                                    <span class="fw-bold">{{ rupiah_format($item->get('quantity') * $item->get('discount_price')) }}</span>
+                                    <span class="fw-bold">{{ rupiah_format($item->get('quantity') * $item->get('discount_price'), true) }}</span>
                                 @else
-                                    <span class="fw-bold">{{ rupiah_format($item->get('quantity') * $item->get('retail_price')) }}</span>
+                                    <span class="fw-bold">{{ rupiah_format($item->get('quantity') * $item->get('retail_price'), true) }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -55,26 +55,26 @@
         
         <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Subtotal</span>
-            <span class="fw-semibold">{{ rupiah_format($total) }}</span>
+            <span class="fw-semibold">{{ rupiah_format($total, true) }}</span>
         </div>
         
         @if(isset($voucherData) && isset($voucherDiscount) && $voucherDiscount > 0)
             <div class="d-flex justify-content-between mb-2 text-danger">
                 <span>Discount ({{ $voucherData['code'] }})</span>
-                <span class="fw-bold">- {{ rupiah_format($voucherDiscount) }}</span>
+                <span class="fw-bold">- {{ rupiah_format($voucherDiscount, true) }}</span>
             </div>
         @endif
         
         <div class="d-flex justify-content-between mb-2">
             <span class="text-muted">Shipping</span>
-            <span class="fw-semibold">{{ rupiah_format(intval($shippingCost ?? 0)) }}</span>
+            <span class="fw-semibold">{{ rupiah_format(intval($shippingCost ?? 0), true) }}</span>
         </div>
         
         <hr>
         
         <div class="d-flex justify-content-between">
             <span class="fw-bold fs-5">Total</span>
-            <span class="fw-bold fs-5">{{ rupiah_format($total - ($voucherDiscount ?? 0) + intval($shippingCost ?? 0)) }}</span>
+            <span class="fw-bold fs-5">{{ rupiah_format($total - ($voucherDiscount ?? 0) + intval($shippingCost ?? 0), true) }}</span>
         </div>
     </div>
 </aside>

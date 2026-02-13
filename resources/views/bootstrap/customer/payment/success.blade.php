@@ -68,13 +68,13 @@
                             <div class="mb-4">
                                 <h6 class="fw-bold mb-2">Payment Method</h6>
                                 <p class="mb-1">{{ str_replace('_', ' ', ucwords($response->payment_type)) }}</p>
-                                <p class="mb-0 fw-bold">{{ rupiah_format(intval($response->gross_amount)) }}</p>
+                                <p class="mb-0 fw-bold">{{ rupiah_format(intval($response->gross_amount), true) }}</p>
                             </div>
 
                             {{-- Shipping Method --}}
                             <div>
                                 <h6 class="fw-bold mb-2">Shipping Method</h6>
-                                <p class="mb-0">{{ $shipping->shipping_method }} - {{ rupiah_format(intval($shipping->shipping_cost)) }}</p>
+                                <p class="mb-0">{{ $shipping->shipping_method }} - {{ rupiah_format(intval($shipping->shipping_cost), true) }}</p>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                                                 <span class="small">{{ $item->quantity }}</span>
                                             </td>
                                             <td class="text-end">
-                                                <span class="small fw-semibold">{{ rupiah_format($item->price) }}</span>
+                                                <span class="small fw-semibold">{{ rupiah_format($item->price, true) }}</span>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -146,26 +146,26 @@
                             <h6 class="fw-semibold mb-3">Cost summary</h6>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="small">Subtotal</span>
-                                <span class="small fw-semibold">{{ rupiah_format($transaction->sub_total) }}</span>
+                                <span class="small fw-semibold">{{ rupiah_format($transaction->sub_total, true) }}</span>
                             </div>
                             
                             @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
                                 <div class="d-flex justify-content-between mb-2 text-danger">
                                     <span class="small">Discount ({{ $transaction->voucher_code }})</span>
-                                    <span class="small fw-bold">- {{ rupiah_format($transaction->voucher_discount) }}</span>
+                                    <span class="small fw-bold">- {{ rupiah_format($transaction->voucher_discount, true) }}</span>
                                 </div>
                             @endif
                             
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="small">Shipping</span>
-                                <span class="small fw-semibold">{{ rupiah_format(intval($shipping->shipping_cost)) }}</span>
+                                <span class="small fw-semibold">{{ rupiah_format(intval($shipping->shipping_cost), true) }}</span>
                             </div>
                             
                             <hr>
                             
                             <div class="d-flex justify-content-between">
                                 <span class="fw-bold">Total</span>
-                                <span class="fw-bold">{{ rupiah_format($transaction->grand_total) }}</span>
+                                <span class="fw-bold">{{ rupiah_format($transaction->grand_total, true) }}</span>
                             </div>
                         </div>
                     </div>

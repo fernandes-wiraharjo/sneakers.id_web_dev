@@ -96,7 +96,7 @@
                                                 {{ $item->transaction->status }}
                                             </span>
                                         </td>
-                                        <td class="fw-semibold">{{ rupiah_format(intval($item->transaction->grand_total)) }}</td>
+                                        <td class="fw-semibold">{{ rupiah_format(intval($item->transaction->grand_total), true) }}</td>
                                         <td>
                                             @if ($item->transaction->status == 'PENDING' || $item->transaction->status == 'CREATED')
                                                 <a href="{{ $item->transaction->snap_payment_url }}" class="btn btn-dark btn-sm px-5">PAY</a>

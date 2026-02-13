@@ -34,7 +34,7 @@
                                             (2-3 Days)
                                         @endif
                                         ({{ number_format($shippingWeight / 1000, 2) }} Kg)
-                                        <span class="fw-bold">{{ rupiah_format(intval($selectedCourier['cost'])) }}</span>
+                                        <span class="fw-bold">{{ rupiah_format(intval($selectedCourier['cost']), true) }}</span>
                                     </td>
                                     <td class="text-end">
                                         <a href="#" class="btn btn-link btn-sm p-0" wire:click="back(2)">Change</a>

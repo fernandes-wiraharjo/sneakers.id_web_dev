@@ -37,14 +37,14 @@
                                 <div class="mb-2">
                                     @if($item->get('discount_price') != 0)
                                         <div>
-                                            <del class="text-muted small">{{ rupiah_format($item->get('retail_price')) }}</del>
+                                            <del class="text-muted small">{{ rupiah_format($item->get('retail_price'), true) }}</del>
                                         </div>
                                         <div class="fw-bold text-danger">
-                                            {{ rupiah_format($item->get('discount_price')) }}
+                                            {{ rupiah_format($item->get('discount_price'), true) }}
                                         </div>
                                     @else
                                         <div class="fw-bold">
-                                            {{ rupiah_format($item->get('retail_price')) }}
+                                            {{ rupiah_format($item->get('retail_price'), true) }}
                                         </div>
                                     @endif
                                 </div>
@@ -159,7 +159,7 @@
             <a href="{{ route('customer.cart') }}" 
                class="btn btn-dark w-100 d-flex justify-content-between align-items-center">
                 <span>Checkout</span>
-                <span class="fw-bold">{{ rupiah_format($total) }}</span>
+                <span class="fw-bold">{{ rupiah_format($total, true) }}</span>
             </a>
         </div>
     </div>

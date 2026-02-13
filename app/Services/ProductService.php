@@ -253,12 +253,12 @@ class ProductService {
                 $imagePack = $getProduct->images()->pluck('image_url')->toArray();
 
                 foreach (File::allFiles(public_path($afterPath)) as $file) {
-                // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
-                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
-                    removeImageFromStorage($afterPath, $file->getFilename());
+                    // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
+                    if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
+                        removeImageFromStorage($afterPath, $file->getFilename());
+                    }
                 }
             }
-        }
 
             if(isset($request['products_size_chart_image'])){
                 $path = 'images/products/'.$request['product_code'];

@@ -159,8 +159,12 @@ class ProductService {
                 $this->productRepository->attachProductTags($idNewProduct, $tags_id);
             }
 
-            if(isset($request['signature_player_id']) && $request['signature_player_id'] != ''){
-                $signatures_id[] = intval($request['signature_player_id']);
+            $signatures_id = [];
+            foreach (json_decode($request['signature']) as $signature) {
+                $signatures_id[] = intval($signature->value);
+            }
+
+            if(isset($signatures_id) && count($signatures_id) > 0){
                 $this->productRepository->attachProductSignatures($idNewProduct, $signatures_id);
             }
 

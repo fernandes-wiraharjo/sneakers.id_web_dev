@@ -31,9 +31,9 @@
                             </td>
                             <td class="text-end">
                                 @if ($item->get('discount_price') != 0)
-                                    <span class="small fw-semibold">{{ rupiah_format($item->get('quantity') * $item->get('discount_price')) }}</span>
+                                    <span class="small fw-semibold">{{ rupiah_format($item->get('quantity') * $item->get('discount_price'), true) }}</span>
                                 @else
-                                    <span class="small fw-semibold">{{ rupiah_format($item->get('quantity') * $item->get('retail_price')) }}</span>
+                                    <span class="small fw-semibold">{{ rupiah_format($item->get('quantity') * $item->get('retail_price'), true) }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -48,26 +48,26 @@
         <h6 class="fw-semibold mb-3">Cost summary</h6>
         <div class="d-flex justify-content-between mb-2">
             <span class="small">Subtotal</span>
-            <span class="small fw-semibold">{{ rupiah_format($total) }}</span>
+            <span class="small fw-semibold">{{ rupiah_format($total, true) }}</span>
         </div>
         
         @if(isset($voucherData) && isset($voucherDiscount) && $voucherDiscount > 0)
             <div class="d-flex justify-content-between mb-2 text-danger">
                 <span class="small">Discount ({{ $voucherData['code'] }})</span>
-                <span class="small fw-bold">- {{ rupiah_format($voucherDiscount) }}</span>
+                <span class="small fw-bold">- {{ rupiah_format($voucherDiscount, true) }}</span>
             </div>
         @endif
         
         <div class="d-flex justify-content-between mb-2">
             <span class="small">Shipping</span>
-            <span class="small fw-semibold">{{ rupiah_format(intval($shippingCost ?? 0)) }}</span>
+            <span class="small fw-semibold">{{ rupiah_format(intval($shippingCost ?? 0), true) }}</span>
         </div>
         
         <hr>
         
         <div class="d-flex justify-content-between">
             <span class="fw-bold">Total</span>
-            <span class="fw-bold">{{ rupiah_format($total - ($voucherDiscount ?? 0) + intval($shippingCost ?? 0)) }}</span>
+            <span class="fw-bold">{{ rupiah_format($total - ($voucherDiscount ?? 0) + intval($shippingCost ?? 0), true) }}</span>
         </div>
     </div>
 </aside>

@@ -38,10 +38,10 @@
                                     </h5>
                                     <div class="mb-2">
                                         @if($item->get('discount_price') != 0)
-                                            <span class="text-muted text-decoration-line-through me-2">{{ rupiah_format($item->get('retail_price')) }}</span>
-                                            <span class="fw-bold text-danger">{{ rupiah_format($item->get('discount_price')) }}</span>
+                                            <span class="text-muted text-decoration-line-through me-2">{{ rupiah_format($item->get('retail_price'), true) }}</span>
+                                            <span class="fw-bold text-danger">{{ rupiah_format($item->get('discount_price'), true) }}</span>
                                         @else
-                                            <span class="fw-semibold">{{ rupiah_format($item->get('retail_price')) }}</span>
+                                            <span class="fw-semibold">{{ rupiah_format($item->get('retail_price'), true) }}</span>
                                         @endif
                                     </div>
                                     <div class="text-muted small">
@@ -107,10 +107,10 @@
                         {{-- Unit Price --}}
                         <div class="col-6 col-md-2 text-end mb-3 mb-md-0 d-md-block d-none">
                             @if($item->get('discount_price') != 0)
-                                <span class="text-muted text-decoration-line-through d-block small">{{ rupiah_format($item->get('retail_price')) }}</span>
-                                <span class="fw-semibold text-danger">{{ rupiah_format($item->get('discount_price')) }}</span>
+                                <span class="text-muted text-decoration-line-through d-block small">{{ rupiah_format($item->get('retail_price'), true) }}</span>
+                                <span class="fw-semibold text-danger">{{ rupiah_format($item->get('discount_price'), true) }}</span>
                             @else
-                                <span class="fw-semibold">{{ rupiah_format($item->get('retail_price')) }}</span>
+                                <span class="fw-semibold">{{ rupiah_format($item->get('retail_price'), true) }}</span>
                             @endif
                         </div>
 
@@ -118,9 +118,9 @@
                         <div class="col-6 col-md-2 text-end">
                             <span class="fw-bold">
                                 @if($item->get('discount_price') != 0)
-                                    {{ rupiah_format($item->get('quantity') * $item->get('discount_price')) }}
+                                    {{ rupiah_format($item->get('quantity') * $item->get('discount_price'), true) }}
                                 @else
-                                    {{ rupiah_format($item->get('quantity') * $item->get('retail_price')) }}
+                                    {{ rupiah_format($item->get('quantity') * $item->get('retail_price'), true) }}
                                 @endif
                             </span>
                         </div>
@@ -214,18 +214,18 @@
                             
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Subtotal:</span>
-                                <span class="fw-semibold">{{ rupiah_format($total) }}</span>
+                                <span class="fw-semibold">{{ rupiah_format($total, true) }}</span>
                             </div>
 
                             @if($voucherApplied && $discountAmount > 0)
                                 <div class="d-flex justify-content-between mb-2 text-danger">
                                     <span>Discount:</span>
-                                    <span class="fw-bold">- {{ rupiah_format($discountAmount) }}</span>
+                                    <span class="fw-bold">- {{ rupiah_format($discountAmount, true) }}</span>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between mb-3">
                                     <span class="fw-bold">Total:</span>
-                                    <span class="fw-bold fs-5">{{ rupiah_format($finalTotal) }}</span>
+                                    <span class="fw-bold fs-5">{{ rupiah_format($finalTotal, true) }}</span>
                                 </div>
                             @endif
 

@@ -110,12 +110,12 @@
                                             <div>
                                                 <h6 class="mb-1">{{ $item->detail->product->product_name }}</h6>
                                                 <p class="text-muted small mb-1">Size: {{ $item->detail->size }}</p>
-                                                <p class="mb-0 fw-semibold">{{ rupiah_format($item->price) }}</p>
+                                                <p class="mb-0 fw-semibold">{{ rupiah_format($item->price, true) }}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="text-center align-middle">{{ $item->quantity }}</td>
-                                    <td class="text-end align-middle fw-bold">{{ rupiah_format($item->quantity * $item->price) }}</td>
+                                    <td class="text-end align-middle fw-bold">{{ rupiah_format($item->quantity * $item->price, true) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -130,12 +130,12 @@
                                         <strong>Total</strong>
                                     </td>
                                     <td class="text-end">
-                                        <strong>{{ rupiah_format($transaction->sub_total) }}</strong> <br>
+                                        <strong>{{ rupiah_format($transaction->sub_total, true) }}</strong> <br>
                                         @if($transaction->voucher_discount && $transaction->voucher_discount > 0)
-                                            <span class="text-danger fw-bold">- {{ rupiah_format($transaction->voucher_discount) }}</span> <br>
+                                            <span class="text-danger fw-bold">- {{ rupiah_format($transaction->voucher_discount, true) }}</span> <br>
                                         @endif
-                                        <strong>{{ rupiah_format($shipping->shipping_cost) }}</strong> <br>
-                                        <strong class="fs-5">{{ rupiah_format($transaction->grand_total) }}</strong>
+                                        <strong>{{ rupiah_format($shipping->shipping_cost, true) }}</strong> <br>
+                                        <strong class="fs-5">{{ rupiah_format($transaction->grand_total, true) }}</strong>
                                     </td>
                                 </tr>
                             </tfoot>

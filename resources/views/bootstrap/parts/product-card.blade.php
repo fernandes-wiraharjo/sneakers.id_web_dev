@@ -15,12 +15,12 @@
             <p class="mb-1 text-uppercase" style="min-height: 3rem">{{ $title }}</p>
             @if ($discount_percentage > 0)
             <p class="mb-1 text-danger small">
-                <span class="fw-bolder text-decoration-line-through">{{ rupiah_format($price) }}</span>
+                <span class="fw-bolder text-decoration-line-through">{{ rupiah_format($price, true) }}</span>
                 <span>{{ $discount_percentage }}% OFF</span>
             </p>
             @endif
             <p class="anton fs-5 mb-0">
-                {{ rupiah_format($selling_price) }}
+                {{ rupiah_format($selling_price, true) }}
             </p>    
         </div>
     </div>

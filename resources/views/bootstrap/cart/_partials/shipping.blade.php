@@ -75,7 +75,7 @@
                                                         @endif
                                                     </div>
                                                     <div class="fw-bold">
-                                                        {{ rupiah_format(intval($courierVendor['cost'])) }}
+                                                        {{ rupiah_format(intval($courierVendor['cost']), true) }}
                                                     </div>
                                                 </div>
                                             </label>

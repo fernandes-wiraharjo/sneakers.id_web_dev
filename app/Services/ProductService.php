@@ -159,8 +159,12 @@ class ProductService {
                 $this->productRepository->attachProductTags($idNewProduct, $tags_id);
             }
 
-            if(isset($request['signature_player_id']) && $request['signature_player_id'] != ''){
-                $signatures_id[] = intval($request['signature_player_id']);
+            $signatures_id = [];
+            foreach (json_decode($request['signature']) as $signature) {
+                $signatures_id[] = intval($signature->value);
+            }
+
+            if(isset($signatures_id) && count($signatures_id) > 0){
                 $this->productRepository->attachProductSignatures($idNewProduct, $signatures_id);
             }
 
@@ -253,12 +257,12 @@ class ProductService {
                 $imagePack = $getProduct->images()->pluck('image_url')->toArray();
 
                 foreach (File::allFiles(public_path($afterPath)) as $file) {
-                // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
-                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
-                    removeImageFromStorage($afterPath, $file->getFilename());
+                    // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
+                    if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
+                        removeImageFromStorage($afterPath, $file->getFilename());
+                    }
                 }
             }
-        }
 
             if(isset($request['products_size_chart_image'])){
                 $path = 'images/products/'.$request['product_code'];
@@ -406,16 +410,14 @@ class ProductService {
                     'updated_at' => Carbon::now()
                 ]);
             }
+            
+            $signatures_id = [];
+            foreach (json_decode($request['signature']) as $signature) {
+                $signatures_id[] = intval($signature->value);
+            }
 
-            if(isset($request['signature_player_id']) && $request['signature_player_id'] != ''){
-                $signatures_id[] = intval($request['signature_player_id']);
+            if(isset($signatures_id) && count($signatures_id) > 0){
                 $this->productRepository->syncProductSignatures($id, $signatures_id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
-            } else {
-                $this->productRepository->syncProductSignatures($id);
 
                 $updateTimestamps = $getProduct->update([
                     'updated_at' => Carbon::now()

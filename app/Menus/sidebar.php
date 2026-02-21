@@ -11,6 +11,31 @@ return [
         'gates' => [],
     ],
     [
+        'gate' => 'administrator.report-purchase.index',
+        'name' => 'Report Purchase',
+        'route' => ['administrator.report-purchase.index', []],
+        'isActive' => 'report-purchase*',
+        'icon' => 'file-invoice-dollar',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.report-purchase.create',
+                'title' => 'Create Report Purchase',
+                'description' => 'User can create new report purchase'
+            ],
+            [
+                'gate' => 'administrator.report-purchase.update',
+                'title' => 'Update Report Purchase',
+                'description' => 'User can update report purchase'
+            ],
+            [
+                'gate' => 'administrator.report-purchase.destroy',
+                'title' => 'Delete Report Purchase',
+                'description' => 'User can delete report purchase'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.transaction.index',
         'name' => 'Transaction',
         'route' => ['administrator.transaction.index', []],

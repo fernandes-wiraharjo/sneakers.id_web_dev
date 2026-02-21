@@ -16,5 +16,6 @@
     "GlobalSetting": true,
     "ShippingCourier": true,
     "DiscountVoucher": true,
-    "SizeFilter": true
+    "SizeFilter": true,
+    "Reporting": true
 }

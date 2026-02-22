@@ -27,6 +27,7 @@ class CreateReportPurchaseTable extends Migration
             $table->integer('price_ongkir')->nullable();
             $table->integer('price_modal')->nullable();
             $table->integer('price_jual')->nullable();
+            $table->integer('price_voucher')->nullable();
             $table->integer('price_total_payment')->nullable();
             $table->integer('dp_owner')->nullable();
             $table->integer('dp_supplier')->nullable();

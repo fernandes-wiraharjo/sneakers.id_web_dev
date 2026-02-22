@@ -114,6 +114,14 @@
             </div>
         </x-ladmin-form-group>
 
+        <x-ladmin-form-group name="price_voucher" label="Voucher (Rp)">
+            <div class="input-group">
+                <span class="input-group-text">Rp</span>
+                <input type="text" class="form-control price-input" name="price_voucher" id="price_voucher" placeholder="-"
+                    value="{{ old('price_voucher', $formatRp($rp->price_voucher)) }}">
+            </div>
+        </x-ladmin-form-group>
+
         <x-ladmin-form-group name="price_total_payment" label="Price Total Payment (Rp)">
             <div class="input-group">
                 <span class="input-group-text">Rp</span>
@@ -255,16 +263,17 @@ $(function() {
         });
     });
 
-    // Auto-fill derived prices on keyup: price_total_payment, margin_net, modal_net
+    // Auto-fill derived prices on keyup: price_total_payment = price_jual + price_ongkir - price_voucher; margin_net; modal_net
     function updateDerivedPrices() {
         var pJual = parseNum($('#price_jual').val());
         var pOngkir = parseNum($('#price_ongkir').val());
         var pModal = parseNum($('#price_modal').val());
-        $('#price_total_payment').val(formatRp(pJual + pOngkir));
+        var pVoucher = parseNum($('#price_voucher').val());
+        $('#price_total_payment').val(formatRp(pJual + pOngkir - pVoucher));
         $('#margin_net').val(formatRp(pJual - pModal));
         $('#modal_net').val(formatRp((pJual - pModal) / 2 + pModal));
     }
-    $('#price_jual, #price_ongkir, #price_modal').on('input keyup', function() {
+    $('#price_jual, #price_ongkir, #price_modal, #price_voucher').on('input keyup', function() {
         updateDerivedPrices();
     });
 

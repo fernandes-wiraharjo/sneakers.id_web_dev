@@ -5,9 +5,9 @@ namespace Modules\Reporting\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Reporting\Entities\ReportPurchase;
-use Modules\Reporting\Entities\ReportPurchaseHistory;
 use Modules\Reporting\Entities\ReportPurchaseDatatables;
 use Modules\Reporting\Repositories\ReportPurchaseRepository;
+use Modules\Reporting\Services\SyncTransactionToReportService;
 use Modules\Product\Entities\Product;
 use Modules\Product\Entities\ProductDetail;
 use Modules\Transaction\Entities\Transaction;
@@ -16,11 +16,16 @@ use Alert;
 
 class ReportPurchaseController extends Controller
 {
-    protected $repository;
+    /** When true, sync will replace existing report rows for the same order_id; when false, skip when order_id already exists. */
+    protected $allow_overwrite = true;
 
-    public function __construct(ReportPurchaseRepository $repository)
+    protected $repository;
+    protected $syncService;
+
+    public function __construct(ReportPurchaseRepository $repository, SyncTransactionToReportService $syncService)
     {
         $this->repository = $repository;
+        $this->syncService = $syncService;
     }
 
     public function index(ReportPurchaseDatatables $dataTable)
@@ -95,13 +100,14 @@ class ReportPurchaseController extends Controller
 
     /**
      * Sync report_purchase from transactions that have AWB (shipping waybill).
-     * Uses transaction token as order_id. Re-syncs on each run: existing rows for an order_id are deleted then re-inserted.
+     * Uses transaction token as order_id. Skips transactions whose order_id already exists in report table.
      * Location = full destination address. One row per transaction item; dp_*, sisa_*, status_supplier = null; status_owner = lunas.
      */
     public function syncFromTransactions(Request $request)
     {
         ladmin()->allow('administrator.report-purchase.index');
         $synced = 0;
+        $skipped = 0;
         $transactions = Transaction::query()
             ->whereHas('shipping', function ($q) {
                 $q->whereNotNull('shipping_waybill')->where('shipping_waybill', '!=', '');
@@ -109,65 +115,16 @@ class ReportPurchaseController extends Controller
             ->with(['items.detail.product', 'destination', 'shipping'])
             ->get();
         foreach ($transactions as $transaction) {
-            $orderId = $transaction->token ?: ('TXN-' . $transaction->id);
-            $existingIds = ReportPurchase::where('order_id', $orderId)->pluck('id');
-            if ($existingIds->isNotEmpty()) {
-                ReportPurchaseHistory::whereIn('report_purchase_id', $existingIds)->delete();
-            }
-            ReportPurchase::where('order_id', $orderId)->delete();
-            $destination = $transaction->destination;
-            $shipping = $transaction->shipping;
-            $customerName = $destination ? trim(($destination->first_name ?? '') . ' ' . ($destination->last_name ?? '')) : '';
-            $fullAddress = $destination ? trim((string) ($destination->address ?? '')) : '';
-            $transactionDate = $transaction->paid_at ?? $transaction->date;
-            $transactionDate = $transactionDate ? (\Carbon\Carbon::parse($transactionDate)->format('Y-m-d')) : now()->format('Y-m-d');
-            $priceOngkir = (int) ($shipping->shipping_cost ?? 0);
-            $grandTotal = (int) ($transaction->grand_total ?? 0);
-            $items = $transaction->items;
-            $first = true;
-            foreach ($items as $item) {
-                $detail = $item->detail;
-                if (!$detail || !$detail->product) {
-                    continue;
-                }
-                $product = $detail->product;
-                $qty = (int) $item->quantity;
-                $priceModal = (int) ($detail->base_price ?? 0) * $qty;
-                $priceJual = (int) ($item->price ?? 0) * $qty;
-                $marginNet = $priceJual - $priceModal;
-                $modalNet = (int) (($marginNet / 2) + $priceModal);
-                $this->repository->create([
-                    'order_id' => strtoupper($orderId),
-                    'transaction_date' => $transactionDate,
-                    'customer_name' => strtoupper($customerName ?: '-'),
-                    'transaction_type' => strtoupper($transaction->type ?? 'WEB'),
-                    'location' => $fullAddress !== '' ? strtoupper($fullAddress) : null,
-                    'article_number' => strtoupper($product->product_code ?? ''),
-                    'product_name' => strtoupper($product->product_name ?? ''),
-                    'size' => strtoupper((string) ($detail->size ?? '')),
-                    'quantity' => $qty,
-                    'price_ongkir' => $first ? $priceOngkir : 0,
-                    'price_modal' => $priceModal,
-                    'price_jual' => $priceJual,
-                    'price_total_payment' => $first ? $grandTotal : 0,
-                    'dp_owner' => null,
-                    'dp_supplier' => null,
-                    'sisa_owner' => null,
-                    'sisa_supplier' => null,
-                    'status_owner' => 'lunas',
-                    'status_supplier' => null,
-                    'margin_net' => $marginNet,
-                    'modal_net' => $modalNet,
-                    'phone_number' => $destination ? strtoupper((string) ($destination->phone_number ?? '')) : null,
-                    'awb_number' => $shipping ? strtoupper((string) ($shipping->shipping_waybill ?? '')) : null,
-                ]);
-                $synced++;
-                $first = false;
+            $n = $this->syncService->syncTransaction($transaction, $this->allow_overwrite);
+            if ($n === 0 && $transaction->shipping && !empty(trim((string) $transaction->shipping->shipping_waybill ?? ''))) {
+                $skipped++;
+            } else {
+                $synced += $n;
             }
         }
         $message = $synced > 0
-            ? "Synced {$synced} report row(s) from transactions."
-            : 'No transactions with AWB found.';
+            ? "Synced {$synced} report row(s) from transactions." . ($skipped > 0 ? " Skipped {$skipped} transaction(s) (already in report)." : '')
+            : ($skipped > 0 ? "No new data. Skipped {$skipped} transaction(s) (already in report)." : 'No transactions with AWB found.');
         Alert::info($message);
         return redirect()->route('administrator.report-purchase.index')->with('success', $message);
     }
@@ -227,6 +184,16 @@ class ReportPurchaseController extends Controller
                 }
             }
         }
+        // price_voucher: default null when empty so UI can show "-"
+        if (array_key_exists('price_voucher', $data)) {
+            $raw = $data['price_voucher'];
+            $cleaned = is_string($raw) ? preg_replace('/\D/', '', $raw) : $raw;
+            if ($cleaned === '' || $cleaned === null) {
+                $data['price_voucher'] = null;
+            } else {
+                $data['price_voucher'] = (int) $cleaned;
+            }
+        }
         if (isset($data['transaction_date'])) {
             $data['transaction_date'] = $data['transaction_date'];
         }
@@ -242,7 +209,7 @@ class ReportPurchaseController extends Controller
             'transaction_type' => 'nullable|string|max:255',
             'quantity' => 'required|integer|min:0',
         ];
-        foreach (['price_ongkir', 'price_modal', 'price_jual', 'price_total_payment', 'dp_owner', 'dp_supplier', 'sisa_owner', 'sisa_supplier', 'modal_net'] as $f) {
+        foreach (['price_ongkir', 'price_modal', 'price_jual', 'price_voucher', 'price_total_payment', 'dp_owner', 'dp_supplier', 'sisa_owner', 'sisa_supplier', 'modal_net'] as $f) {
             $rules[$f] = 'nullable|integer|min:0';
         }
         $rules['margin_net'] = 'nullable|integer'; // can be negative
@@ -255,7 +222,7 @@ class ReportPurchaseController extends Controller
         if ($validator->fails()) {
             throw new \Illuminate\Validation\ValidationException($validator);
         }
-        $priceFields = ['price_ongkir', 'price_modal', 'price_jual', 'price_total_payment', 'dp_owner', 'dp_supplier', 'sisa_owner', 'sisa_supplier', 'modal_net'];
+        $priceFields = ['price_ongkir', 'price_modal', 'price_jual', 'price_voucher', 'price_total_payment', 'dp_owner', 'dp_supplier', 'sisa_owner', 'sisa_supplier', 'modal_net'];
         foreach ($priceFields as $f) {
             $v = $data[$f] ?? 0;
             if ($v > 0 && $v < 1000) {

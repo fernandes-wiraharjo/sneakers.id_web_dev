@@ -27,6 +27,9 @@ class ReportPurchaseDatatables extends DataTable
             ->editColumn('price_jual', function ($item) {
                 return $item->price_jual !== null ? 'Rp ' . rupiah_format($item->price_jual) : '-';
             })
+            ->editColumn('price_voucher', function ($item) {
+                return $item->price_voucher !== null ? 'Rp ' . rupiah_format($item->price_voucher) : '-';
+            })
             ->editColumn('price_total_payment', function ($item) {
                 return $item->price_total_payment !== null ? 'Rp ' . rupiah_format($item->price_total_payment) : '-';
             })
@@ -105,6 +108,7 @@ class ReportPurchaseDatatables extends DataTable
             Column::make('price_ongkir')->title('Ongkir')->searchable(false)->orderable(false),
             Column::make('price_modal')->title('Modal')->searchable(false)->orderable(false),
             Column::make('price_jual')->title('Jual')->searchable(false)->orderable(false),
+            Column::make('price_voucher')->title('Voucher')->searchable(false)->orderable(false),
             Column::make('price_total_payment')->title('Total Bayar')->searchable(false)->orderable(false),
             Column::make('dp_owner')->title('DP Owner')->searchable(false)->orderable(false),
             Column::make('dp_supplier')->title('DP Supplier')->searchable(false)->orderable(false),

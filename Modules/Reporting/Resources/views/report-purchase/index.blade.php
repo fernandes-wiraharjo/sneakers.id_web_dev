@@ -14,7 +14,7 @@
             @endcan
             @can('administrator.report-purchase.index')
             <div data-bs-toggle="tooltip" data-bs-placement="left" data-bs-trigger="hover" title="Sync from transactions that have AWB">
-                <form action="{{ route('administrator.report-purchase.sync-from-transactions') }}" method="post" class="d-inline" onsubmit="return confirm('Sync transactions with AWB into this report? Existing rows for the same order will be replaced.');">
+                <form action="{{ route('administrator.report-purchase.sync-from-transactions') }}" method="post" class="d-inline" onsubmit="return confirm('Sync transactions with AWB into this report? Transactions already in the report will be skipped.');">
                     @csrf
                     <button type="submit" class="btn btn-sm btn-info fw-bolder">
                         Sync from Transactions

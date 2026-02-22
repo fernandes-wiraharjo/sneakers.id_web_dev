@@ -18,4 +18,5 @@ Route::group(['prefix' => 'administrator/report-purchase', 'middleware' => ['web
     Route::put('/update/{id}', 'ReportPurchaseController@update')->name('administrator.report-purchase.update');
     Route::delete('/destroy/{id}', 'ReportPurchaseController@destroy')->name('administrator.report-purchase.destroy');
     Route::get('/typeahead-article', 'ReportPurchaseController@typeaheadArticle')->name('administrator.report-purchase.typeahead-article');
+    Route::post('/sync-from-transactions', 'ReportPurchaseController@syncFromTransactions')->name('administrator.report-purchase.sync-from-transactions');
 });

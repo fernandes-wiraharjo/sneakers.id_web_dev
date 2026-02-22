@@ -5,10 +5,12 @@ namespace Modules\Reporting\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Reporting\Entities\ReportPurchase;
+use Modules\Reporting\Entities\ReportPurchaseHistory;
 use Modules\Reporting\Entities\ReportPurchaseDatatables;
 use Modules\Reporting\Repositories\ReportPurchaseRepository;
 use Modules\Product\Entities\Product;
 use Modules\Product\Entities\ProductDetail;
+use Modules\Transaction\Entities\Transaction;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Alert;
 
@@ -89,6 +91,85 @@ class ReportPurchaseController extends Controller
             Alert::error($e->getMessage());
             return redirect()->back()->withErrors([$e->getMessage()]);
         }
+    }
+
+    /**
+     * Sync report_purchase from transactions that have AWB (shipping waybill).
+     * Uses transaction token as order_id. Re-syncs on each run: existing rows for an order_id are deleted then re-inserted.
+     * Location = full destination address. One row per transaction item; dp_*, sisa_*, status_supplier = null; status_owner = lunas.
+     */
+    public function syncFromTransactions(Request $request)
+    {
+        ladmin()->allow('administrator.report-purchase.index');
+        $synced = 0;
+        $transactions = Transaction::query()
+            ->whereHas('shipping', function ($q) {
+                $q->whereNotNull('shipping_waybill')->where('shipping_waybill', '!=', '');
+            })
+            ->with(['items.detail.product', 'destination', 'shipping'])
+            ->get();
+        foreach ($transactions as $transaction) {
+            $orderId = $transaction->token ?: ('TXN-' . $transaction->id);
+            $existingIds = ReportPurchase::where('order_id', $orderId)->pluck('id');
+            if ($existingIds->isNotEmpty()) {
+                ReportPurchaseHistory::whereIn('report_purchase_id', $existingIds)->delete();
+            }
+            ReportPurchase::where('order_id', $orderId)->delete();
+            $destination = $transaction->destination;
+            $shipping = $transaction->shipping;
+            $customerName = $destination ? trim(($destination->first_name ?? '') . ' ' . ($destination->last_name ?? '')) : '';
+            $fullAddress = $destination ? trim((string) ($destination->address ?? '')) : '';
+            $transactionDate = $transaction->paid_at ?? $transaction->date;
+            $transactionDate = $transactionDate ? (\Carbon\Carbon::parse($transactionDate)->format('Y-m-d')) : now()->format('Y-m-d');
+            $priceOngkir = (int) ($shipping->shipping_cost ?? 0);
+            $grandTotal = (int) ($transaction->grand_total ?? 0);
+            $items = $transaction->items;
+            $first = true;
+            foreach ($items as $item) {
+                $detail = $item->detail;
+                if (!$detail || !$detail->product) {
+                    continue;
+                }
+                $product = $detail->product;
+                $qty = (int) $item->quantity;
+                $priceModal = (int) ($detail->base_price ?? 0) * $qty;
+                $priceJual = (int) ($item->price ?? 0) * $qty;
+                $marginNet = $priceJual - $priceModal;
+                $modalNet = (int) (($marginNet / 2) + $priceModal);
+                $this->repository->create([
+                    'order_id' => strtoupper($orderId),
+                    'transaction_date' => $transactionDate,
+                    'customer_name' => strtoupper($customerName ?: '-'),
+                    'transaction_type' => strtoupper($transaction->type ?? 'WEB'),
+                    'location' => $fullAddress !== '' ? strtoupper($fullAddress) : null,
+                    'article_number' => strtoupper($product->product_code ?? ''),
+                    'product_name' => strtoupper($product->product_name ?? ''),
+                    'size' => strtoupper((string) ($detail->size ?? '')),
+                    'quantity' => $qty,
+                    'price_ongkir' => $first ? $priceOngkir : 0,
+                    'price_modal' => $priceModal,
+                    'price_jual' => $priceJual,
+                    'price_total_payment' => $first ? $grandTotal : 0,
+                    'dp_owner' => null,
+                    'dp_supplier' => null,
+                    'sisa_owner' => null,
+                    'sisa_supplier' => null,
+                    'status_owner' => 'lunas',
+                    'status_supplier' => null,
+                    'margin_net' => $marginNet,
+                    'modal_net' => $modalNet,
+                    'phone_number' => $destination ? strtoupper((string) ($destination->phone_number ?? '')) : null,
+                    'awb_number' => $shipping ? strtoupper((string) ($shipping->shipping_waybill ?? '')) : null,
+                ]);
+                $synced++;
+                $first = false;
+            }
+        }
+        $message = $synced > 0
+            ? "Synced {$synced} report row(s) from transactions."
+            : 'No transactions with AWB found.';
+        Alert::info($message);
+        return redirect()->route('administrator.report-purchase.index')->with('success', $message);
     }
 
     /**

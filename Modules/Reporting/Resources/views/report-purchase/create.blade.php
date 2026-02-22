@@ -6,7 +6,7 @@
         <div class="card-body pt-6">
             <form action="{{ route('administrator.report-purchase.store') }}" method="post" id="report-purchase-form">
                 @csrf
-                @include('reporting::report-purchase._partials._form', ['reportPurchase' => $reportPurchase, 'edit' => false])
+                @include('reporting::report-purchase._partials._form', ['reportPurchase' => $reportPurchase, 'transactionTypes' => $transactionTypes ?? collect(), 'edit' => false])
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary" id="form-submit">
                         <span class="indicator-label">Submit</span>

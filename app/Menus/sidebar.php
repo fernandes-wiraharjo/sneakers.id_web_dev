@@ -282,10 +282,35 @@ return [
                         'title' => 'Update Tag',
                         'description' => 'User can update tag'
                     ],
-                    [
-                        'gate' => 'administrator.master-data.tag.destroy',
+[
+                'gate' => 'administrator.master-data.tag.destroy',
                         'title' => 'Delete Tag',
                         'description' => 'User can delete tag'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.master-data.transaction-type.index',
+                'name' => 'Report: Transaction Type',
+                'route' => ['administrator.master-data.transaction-type.index', []],
+                'isActive' => 'master-data/transaction-type*',
+                'icon' => 'list',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.create',
+                        'title' => 'Create Transaction Type',
+                        'description' => 'User can create new transaction type'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.update',
+                        'title' => 'Update Transaction Type',
+                        'description' => 'User can update transaction type'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.destroy',
+                        'title' => 'Delete Transaction Type',
+                        'description' => 'User can delete transaction type'
                     ]
                 ],
             ],

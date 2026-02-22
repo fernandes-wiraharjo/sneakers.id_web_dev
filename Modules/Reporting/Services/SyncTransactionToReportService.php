@@ -5,13 +5,15 @@ namespace Modules\Reporting\Services;
 use Modules\Reporting\Entities\ReportPurchase;
 use Modules\Reporting\Entities\ReportPurchaseHistory;
 use Modules\Reporting\Repositories\ReportPurchaseRepository;
+use Modules\Reporting\Repositories\TransactionTypeRepository;
 use Modules\Transaction\Entities\Transaction;
 
 class SyncTransactionToReportService
 {
-    public function __construct(ReportPurchaseRepository $repository)
+    public function __construct(ReportPurchaseRepository $repository, TransactionTypeRepository $transactionTypeRepository)
     {
         $this->repository = $repository;
+        $this->transactionTypeRepository = $transactionTypeRepository;
     }
 
     /**
@@ -64,7 +66,7 @@ class SyncTransactionToReportService
                 'order_id' => strtoupper($orderId),
                 'transaction_date' => $transactionDate,
                 'customer_name' => strtoupper($customerName ?: '-'),
-                'transaction_type' => 'WEB',
+                'transaction_type' => $this->transactionTypeRepository->getDefaultCode(),
                 'location' => $fullAddress !== '' ? strtoupper($fullAddress) : null,
                 'article_number' => strtoupper($product->product_code ?? ''),
                 'product_name' => strtoupper($product->product_name ?? ''),

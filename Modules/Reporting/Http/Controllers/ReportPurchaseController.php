@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Modules\Reporting\Entities\ReportPurchase;
 use Modules\Reporting\Entities\ReportPurchaseDatatables;
 use Modules\Reporting\Repositories\ReportPurchaseRepository;
+use Modules\Reporting\Repositories\TransactionTypeRepository;
 use Modules\Reporting\Services\SyncTransactionToReportService;
 use Modules\Product\Entities\Product;
 use Modules\Product\Entities\ProductDetail;
@@ -21,11 +22,13 @@ class ReportPurchaseController extends Controller
 
     protected $repository;
     protected $syncService;
+    protected $transactionTypeRepository;
 
-    public function __construct(ReportPurchaseRepository $repository, SyncTransactionToReportService $syncService)
+    public function __construct(ReportPurchaseRepository $repository, SyncTransactionToReportService $syncService, TransactionTypeRepository $transactionTypeRepository)
     {
         $this->repository = $repository;
         $this->syncService = $syncService;
+        $this->transactionTypeRepository = $transactionTypeRepository;
     }
 
     public function index(ReportPurchaseDatatables $dataTable)
@@ -38,6 +41,7 @@ class ReportPurchaseController extends Controller
     {
         ladmin()->allow('administrator.report-purchase.create');
         $data['reportPurchase'] = new ReportPurchase();
+        $data['transactionTypes'] = $this->transactionTypeRepository->getForDropdown();
         return view('reporting::report-purchase.create', $data);
     }
 
@@ -63,6 +67,7 @@ class ReportPurchaseController extends Controller
     {
         ladmin()->allow('administrator.report-purchase.update');
         $data['reportPurchase'] = $this->repository->getById($id);
+        $data['transactionTypes'] = $this->transactionTypeRepository->getForDropdown();
         return view('reporting::report-purchase.edit', $data);
     }
 
@@ -206,7 +211,7 @@ class ReportPurchaseController extends Controller
             'order_id' => 'required|string|max:255',
             'transaction_date' => 'required|date',
             'customer_name' => 'required|string|max:255',
-            'transaction_type' => 'nullable|string|max:255',
+            'transaction_type' => 'nullable|string|max:64|exists:transaction_types,code',
             'quantity' => 'required|integer|min:0',
         ];
         foreach (['price_ongkir', 'price_modal', 'price_jual', 'price_voucher', 'price_total_payment', 'dp_owner', 'dp_supplier', 'sisa_owner', 'sisa_supplier', 'modal_net'] as $f) {

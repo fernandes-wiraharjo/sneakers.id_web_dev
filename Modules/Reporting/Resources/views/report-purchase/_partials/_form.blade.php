@@ -35,8 +35,14 @@
             </div>
             <div class="col-md-6">
                 <x-ladmin-form-group name="transaction_type" label="Transaction Type">
-                    <input type="text" class="form-control text-uppercase" name="transaction_type" id="transaction_type"
-                        value="{{ old('transaction_type', $rp->transaction_type ?? 'WEB') }}" placeholder="e.g. WEB">
+                    <select class="form-control form-select" name="transaction_type" id="transaction_type">
+                        <option value="">— Select —</option>
+                        @foreach ($transactionTypes ?? [] as $tt)
+                            <option value="{{ $tt->code }}" {{ old('transaction_type', $rp->transaction_type ?? '') == $tt->code ? 'selected' : '' }}>
+                                {{ $tt->name ?: $tt->code }}
+                            </option>
+                        @endforeach
+                    </select>
                 </x-ladmin-form-group>
             </div>
         </div>

@@ -7,7 +7,7 @@
             <form action="{{ route('administrator.report-purchase.update', $reportPurchase->id) }}" method="post" id="report-purchase-form">
                 @csrf
                 @method('PUT')
-                @include('reporting::report-purchase._partials._form', ['reportPurchase' => $reportPurchase, 'edit' => true])
+                @include('reporting::report-purchase._partials._form', ['reportPurchase' => $reportPurchase, 'transactionTypes' => $transactionTypes ?? collect(), 'edit' => true])
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary" id="form-submit">
                         <span class="indicator-label">Update</span>

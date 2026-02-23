@@ -11,6 +11,31 @@ return [
         'gates' => [],
     ],
     [
+        'gate' => 'administrator.report-purchase.index',
+        'name' => 'Report Purchase',
+        'route' => ['administrator.report-purchase.index', []],
+        'isActive' => 'report-purchase*',
+        'icon' => 'file-invoice-dollar',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.report-purchase.create',
+                'title' => 'Create Report Purchase',
+                'description' => 'User can create new report purchase'
+            ],
+            [
+                'gate' => 'administrator.report-purchase.update',
+                'title' => 'Update Report Purchase',
+                'description' => 'User can update report purchase'
+            ],
+            [
+                'gate' => 'administrator.report-purchase.destroy',
+                'title' => 'Delete Report Purchase',
+                'description' => 'User can delete report purchase'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.transaction.index',
         'name' => 'Transaction',
         'route' => ['administrator.transaction.index', []],
@@ -257,10 +282,35 @@ return [
                         'title' => 'Update Tag',
                         'description' => 'User can update tag'
                     ],
-                    [
-                        'gate' => 'administrator.master-data.tag.destroy',
+[
+                'gate' => 'administrator.master-data.tag.destroy',
                         'title' => 'Delete Tag',
                         'description' => 'User can delete tag'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.master-data.transaction-type.index',
+                'name' => 'Report: Transaction Type',
+                'route' => ['administrator.master-data.transaction-type.index', []],
+                'isActive' => 'master-data/transaction-type*',
+                'icon' => 'list',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.create',
+                        'title' => 'Create Transaction Type',
+                        'description' => 'User can create new transaction type'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.update',
+                        'title' => 'Update Transaction Type',
+                        'description' => 'User can update transaction type'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.destroy',
+                        'title' => 'Delete Transaction Type',
+                        'description' => 'User can delete transaction type'
                     ]
                 ],
             ],

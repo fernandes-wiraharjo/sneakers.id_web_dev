@@ -19,6 +19,7 @@ use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionItems;
 use Modules\Transaction\Entities\Refund;
+use Modules\Reporting\Services\SyncTransactionToReportService;
 use Intervention\Image\Facades\Image;
 
 class TransactionController extends Controller
@@ -101,9 +102,14 @@ class TransactionController extends Controller
             }
 
             $shipping->update([
-                'shipping_waybill' => $request->shipping_waybill, 
+                'shipping_waybill' => $request->shipping_waybill,
                 'status' => $response['data']['summary']['status'] ?? 'RESI NOT VALID'
             ]);
+
+            $transaction = Transaction::find($shipping->transaction_id);
+            if ($transaction) {
+                app(SyncTransactionToReportService::class)->syncTransaction($transaction);
+            }
 
             DB::commit();
 

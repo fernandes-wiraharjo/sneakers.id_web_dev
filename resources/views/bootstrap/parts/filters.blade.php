@@ -16,9 +16,6 @@
         <div class="form-check">
             <input class="form-check-input" wire:model="brand" wire:loading.attr="disabled" type="checkbox" value="{{ $item->id }}" id="brand{{ $item->id }}">
             <label class="form-check-label" for="brand{{ $item->id }}">
-                @if(isset($item->brand_image))
-                    <img src="{{ getImage($item->brand_image, 'brand') }}" alt="{{ $item->brand_title }}" class="img-fluid mx-1" style="width: 20px; height: 20px;">
-                @endif
                 <span class="text-muted">{{ $item->brand_title }}</span>
             </label>
         </div>
@@ -124,8 +121,13 @@
 
 <!-- Signature Player Section -->
 @if(isset($signature_player) && count($signature_player) > 0)
+    @php
+        $signaturePlayerList = is_array($signature_player) ? collect($signature_player) : $signature_player;
+        $signatureFirst = $signaturePlayerList->take(7);
+        $signatureRest = $signaturePlayerList->skip(7);
+    @endphp
     <p class="fw-bold mt-4 mb-2">Signature Player</p>
-    @foreach ($signature_player as $item)
+    @foreach ($signatureFirst as $item)
         <div class="form-check">
             <input class="form-check-input" wire:model="signature" wire:loading.attr="disabled" type="checkbox" value="{{ $item->id }}" id="signature{{ $item->id }}">
             <label class="form-check-label" for="signature{{ $item->id }}">
@@ -133,4 +135,34 @@
             </label>
         </div>
     @endforeach
+    @if($signatureRest->isNotEmpty())
+        <div class="filter-more-wrap mt-1">
+            <div class="filter-more-items" style="display:none;">
+                @foreach ($signatureRest as $item)
+                    <div class="form-check">
+                        <input class="form-check-input" wire:model="signature" wire:loading.attr="disabled" type="checkbox" value="{{ $item->id }}" id="signature{{ $item->id }}">
+                        <label class="form-check-label" for="signature{{ $item->id }}">
+                            <span class="text-muted">{{ $item->signature_title }}</span>
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+            <a href="#" class="filter-more-link text-danger small text-decoration-underline" data-more-text="{{ $signatureRest->count() }} more">{{ $signatureRest->count() }} more</a>
+        </div>
+    @endif
 @endif
+
+@push('scripts')
+<script>
+(function($) {
+    $(document).off('click.filterMore', '.filter-more-link').on('click.filterMore', '.filter-more-link', function(e) {
+        e.preventDefault();
+        var $wrap = $(this).closest('.filter-more-wrap');
+        var $items = $wrap.find('.filter-more-items');
+        var $link = $(this);
+        $items.toggle();
+        $link.text($items.is(':visible') ? 'Less' : $link.data('more-text'));
+    });
+})(jQuery);
+</script>
+@endpush

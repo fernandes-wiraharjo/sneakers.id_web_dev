@@ -172,3 +172,28 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+(function() {
+    function restoreBodyScroll() {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        var filterEl = document.getElementById('filterOffcanvas');
+        if (filterEl) {
+            filterEl.addEventListener('hidden.bs.offcanvas', restoreBodyScroll);
+        }
+        if (typeof Livewire !== 'undefined') {
+            Livewire.hook('message.processed', function() {
+                var el = document.getElementById('filterOffcanvas');
+                if (el && !el.classList.contains('show')) {
+                    restoreBodyScroll();
+                }
+            });
+        }
+    });
+})();
+</script>
+@endpush

@@ -359,6 +359,7 @@ class ProductService {
             // $sizes = json_decode($request['size']);
             $categories = json_decode($request['category']);
             $tags = json_decode($request['tag']);
+            $signatures = json_decode($request['signature']);
 
             // $sizes_id = [];
             $categories_id = [];
@@ -411,17 +412,19 @@ class ProductService {
                 ]);
             }
             
-            $signatures_id = [];
-            foreach (json_decode($request['signature']) as $signature) {
-                $signatures_id[] = intval($signature->value);
-            }
+            if (isset($signatures)) {
+                $signatures_id = [];
+                foreach ($signatures as $signature) {
+                    $signatures_id[] = intval($signature->value);
+                }
 
-            if(isset($signatures_id) && count($signatures_id) > 0){
-                $this->productRepository->syncProductSignatures($id, $signatures_id);
+                if(isset($signatures_id) && count($signatures_id) > 0){
+                    $this->productRepository->syncProductSignatures($id, $signatures_id);
 
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
+                    $updateTimestamps = $getProduct->update([
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
             }
         }
         return ['status' => true, 'message' => $message];

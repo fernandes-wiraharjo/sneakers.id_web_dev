@@ -15,6 +15,8 @@ class AddMarketplacePriceToProductDetails extends Migration
     {
         Schema::table('product_details', function (Blueprint $table) {
             $table->integer('marketplace_price')->nullable()->after('discount_percentage');
+            $table->double('marketplace_after_discount_price', 20, 2)->nullable()->after('marketplace_price');
+            $table->integer('marketplace_discount_percentage')->nullable()->after('marketplace_after_discount_price');
         });
     }
 
@@ -26,7 +28,7 @@ class AddMarketplacePriceToProductDetails extends Migration
     public function down()
     {
         Schema::table('product_details', function (Blueprint $table) {
-            $table->dropColumn('marketplace_price');
+            $table->dropColumn(['marketplace_price', 'marketplace_after_discount_price', 'marketplace_discount_percentage']);
         });
     }
 }

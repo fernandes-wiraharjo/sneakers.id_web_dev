@@ -90,6 +90,8 @@ class ProductController extends Controller
                         $size_price[$index]['retail_price'] = intval(str_replace('.','',$item['retail_price'] ));
                         $size_price[$index]['after_discount_price'] = intval(str_replace('.','',$item['after_discount_price']));
                         $size_price[$index]['marketplace_price'] = isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? intval(str_replace('.','',$item['marketplace_price'])) : null;
+                        $size_price[$index]['marketplace_after_discount_price'] = isset($item['marketplace_after_discount_price']) && $item['marketplace_after_discount_price'] !== '' ? intval(str_replace('.','',$item['marketplace_after_discount_price'])) : null;
+                        $size_price[$index]['marketplace_discount_percentage'] = isset($item['marketplace_discount_percentage']) && $item['marketplace_discount_percentage'] !== '' ? intval($item['marketplace_discount_percentage']) : null;
                     }
                 }
             }
@@ -173,7 +175,7 @@ class ProductController extends Controller
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
         $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;
-        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty, weight,  FORMAT(COALESCE(marketplace_price, 0), 0, "id_ID") AS marketplace_price ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
+        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty, weight,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage,  FORMAT(COALESCE(marketplace_price, 0), 0, "id_ID") AS marketplace_price ,  FORMAT(COALESCE(marketplace_after_discount_price, 0), 0, "id_ID") AS marketplace_after_discount_price ,  marketplace_discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
         cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }

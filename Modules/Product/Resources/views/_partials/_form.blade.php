@@ -113,6 +113,14 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-5">
+                                <label class="form-label">Marketplace Price :</label>
+                                <div class="input-group mb-5">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="text" class="form-control bulk-marketplace-price" name="bulk_marketplace_price"
+                                    value="" aria-label="Amount (to the nearest rupiah)" placeholder="Optional"/>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
                                 <label class="form-label">Retail Price :</label>
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">Rp</span>
@@ -181,7 +189,15 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <label class="form-label">Marketplace Price:</label>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control marketplace-price" name="marketplace_price"
+                                        value="{{ old('size_prize[0][marketplace_price]', '') }}" aria-label="Amount (optional)" placeholder="Optional"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
                                     <label class="form-label">Retail Price:</label>
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
@@ -189,7 +205,7 @@
                                         value="{{ old('size_prize[0][retail_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label class="form-label">After Discount Price:</label>
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
@@ -420,9 +436,11 @@
     <script>
         var base = document.getElementsByClassName("base-price");
         var retail = document.getElementsByClassName("retail-price");
+        var marketplace = document.getElementsByClassName("marketplace-price");
         var after_discount = document.getElementsByClassName("after-discount-price");
         var bulkBase = document.getElementsByClassName("bulk-base-price");
         var bulkRetail = document.getElementsByClassName("bulk-retail-price");
+        var bulkMarketplace = document.getElementsByClassName("bulk-marketplace-price");
         var bulkAfterDiscount = document.getElementsByClassName("bulk-after-discount-price");
 
         // base = [].slice.call(base, 0);
@@ -436,9 +454,11 @@
 
         attachRupiahFormatter(base);
         attachRupiahFormatter(retail);
+        attachRupiahFormatter(marketplace);
         attachRupiahFormatter(after_discount);
         attachRupiahFormatter(bulkBase);
         attachRupiahFormatter(bulkRetail);
+        attachRupiahFormatter(bulkMarketplace);
         attachRupiahFormatter(bulkAfterDiscount);
 
         /* Fungsi formatRupiah */
@@ -499,6 +519,10 @@
 
                     if($('.bulk-weight').val() != "") {
                         $(this).find('.weight').val($('.bulk-weight').val());
+                    }
+
+                    if($('.bulk-marketplace-price').val() != ""){
+                        $(this).find('.marketplace-price').val($('.bulk-marketplace-price').val());
                     }
 
                     if($('.bulk-retail-price').val() != ""){
@@ -571,6 +595,7 @@
                 'qty': 0,
                 'weight': 0,
                 'discount_percentage': 0,
+                'marketplace_price': '',
             },
 
             show: function () {
@@ -578,6 +603,7 @@
 
                 var base = document.getElementsByClassName("base-price");
                 var retail = document.getElementsByClassName("retail-price");
+                var marketplace = document.getElementsByClassName("marketplace-price");
                 var after_discount = document.getElementsByClassName("after-discount-price");
                 for (var i = 0; i < base.length; ++i){
                     base[i].addEventListener("keyup", function(e) {
@@ -587,6 +613,12 @@
 
                 for (var i = 0; i < retail.length; ++i){
                     retail[i].addEventListener("keyup", function(e) {
+                        this.value = formatRupiah(this.value);
+                    });
+                }
+
+                for (var i = 0; i < marketplace.length; ++i){
+                    marketplace[i].addEventListener("keyup", function(e) {
                         this.value = formatRupiah(this.value);
                     });
                 }

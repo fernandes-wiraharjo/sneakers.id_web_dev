@@ -115,7 +115,8 @@ class ProductService {
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                            'discount_percentage' => intval($item['discount_percentage'])
+                            'discount_percentage' => intval($item['discount_percentage']),
+                            'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
                         ]);
 
                         if(!$inserted_product_detail){
@@ -322,7 +323,8 @@ class ProductService {
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                            'discount_percentage' => intval($item['discount_percentage'])
+                            'discount_percentage' => intval($item['discount_percentage']),
+                            'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
                         ]);
 
                         $updateTimestamps = $getProduct->update([
@@ -337,7 +339,8 @@ class ProductService {
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                            'discount_percentage' => intval($item['discount_percentage'])
+                            'discount_percentage' => intval($item['discount_percentage']),
+                            'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
                         ]);
 
                         $updateTimestamps = $getProduct->update([
@@ -512,7 +515,8 @@ class ProductService {
                     'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
                     'retail_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
                     'after_discount_price' => $item->after_discount_price ? str_replace('.','',$item->after_discount_price) : 0,
-                    'discount_percentage' => $item->discount_percentage ? intval($item->discount_percentage) : 0
+                    'discount_percentage' => $item->discount_percentage ? intval($item->discount_percentage) : 0,
+                    'marketplace_price' => isset($item->marketplace_price) && $item->marketplace_price !== '' ? (int) str_replace('.','',$item->marketplace_price) : null,
                 ]);
             }
             //find product_details by id & size updates new data

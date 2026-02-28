@@ -18,6 +18,7 @@ class TransactionTypeRepository
 
     public function create(array $data)
     {
+        $data['code'] = strtoupper($data['code']);
         return $this->model->create($data);
     }
 

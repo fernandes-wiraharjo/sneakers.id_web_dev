@@ -200,7 +200,7 @@ class ReportPurchaseController extends Controller
             }
         }
         if (isset($data['transaction_date'])) {
-            $data['transaction_date'] = $data['transaction_date'];
+            $data['transaction_date'] = \Carbon\Carbon::parse($data['transaction_date'])->format('Y-m-d H:i:s');
         }
         return $data;
     }

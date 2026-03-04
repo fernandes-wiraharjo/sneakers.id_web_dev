@@ -21,8 +21,8 @@
             </div>
             <div class="col-md-6">
                 <x-ladmin-form-group name="transaction_date" label="Transaction Date *">
-                    <input type="date" class="form-control" name="transaction_date" id="transaction_date" required
-                        value="{{ old('transaction_date', $rp->transaction_date ? $rp->transaction_date->format('Y-m-d') : '') }}">
+                    <input type="datetime-local" class="form-control" name="transaction_date" id="transaction_date" required
+                        value="{{ old('transaction_date', $rp->transaction_date ? $rp->transaction_date->format('Y-m-d\TH:i') : '') }}">
                 </x-ladmin-form-group>
             </div>
         </div>

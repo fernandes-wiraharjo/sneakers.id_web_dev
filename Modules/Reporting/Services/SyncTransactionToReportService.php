@@ -44,7 +44,6 @@ class SyncTransactionToReportService
         $customerName = $destination ? trim(($destination->first_name ?? '') . ' ' . ($destination->last_name ?? '')) : '';
         $fullAddress = $destination ? trim((string) ($destination->address ?? '')) : '';
         $transactionDate = $transaction->paid_at ?? $transaction->date;
-        $transactionDate = $transactionDate ? (\Carbon\Carbon::parse($transactionDate)->format('Y-m-d')) : now()->format('Y-m-d');
         $priceOngkir = (int) ($shipping->shipping_cost ?? 0);
         $grandTotal = (int) ($transaction->grand_total ?? 0);
         $priceDiscount = (int) ($transaction->voucher_discount ?? 0);

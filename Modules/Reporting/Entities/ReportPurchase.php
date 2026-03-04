@@ -39,7 +39,7 @@ class ReportPurchase extends Model
     ];
 
     protected $casts = [
-        'transaction_date' => 'date',
+        'transaction_date' => 'datetime',
         'quantity' => 'integer',
         'price_ongkir' => 'integer',
         'price_modal' => 'integer',

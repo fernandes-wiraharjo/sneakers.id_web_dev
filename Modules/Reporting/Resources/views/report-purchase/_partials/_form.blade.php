@@ -38,7 +38,7 @@
                     <select class="form-control form-select" name="transaction_type" id="transaction_type">
                         <option value="">— Select —</option>
                         @foreach ($transactionTypes ?? [] as $tt)
-                            <option value="{{ $tt->code }}" {{ old('transaction_type', $rp->transaction_type ?? '') == $tt->code ? 'selected' : '' }}>
+                            <option value="{{ strtoupper($tt->code) }}" {{ strtoupper(old('transaction_type', $rp->transaction_type ?? '')) == strtoupper($tt->code) ? 'selected' : '' }}>
                                 {{ $tt->name ?: $tt->code }}
                             </option>
                         @endforeach

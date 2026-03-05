@@ -58,16 +58,19 @@ class ReportPurchaseDatatables extends DataTable
                 return $this->formatStatusBadge($item->status_supplier);
             })
             ->addColumn('action', function ($item) {
-                return view('reporting::report-purchase._partials.action-burger', [
-                    'edit' => [
-                        'gate' => 'administrator.report-purchase.update',
-                        'url' => route('administrator.report-purchase.edit', [$item->id, 'back' => request()->fullUrl()]),
-                    ],
+                $data = [
                     'destroy' => [
                         'gate' => 'administrator.report-purchase.destroy',
                         'url' => route('administrator.report-purchase.destroy', [$item->id, 'back' => request()->fullUrl()]),
                     ],
-                ]);
+                ];
+                if (strtoupper((string) ($item->transaction_type ?? '')) !== 'WEB') {
+                    $data['edit'] = [
+                        'gate' => 'administrator.report-purchase.update',
+                        'url' => route('administrator.report-purchase.edit', [$item->id, 'back' => request()->fullUrl()]),
+                    ];
+                }
+                return view('reporting::report-purchase._partials.action-burger', $data);
             });
     }
 

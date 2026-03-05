@@ -40,6 +40,7 @@ class ReportPurchaseRepository
 
     public function delete($id)
     {
+        $this->historyModel->where('report_purchase_id', $id)->delete();
         $item = $this->model->findOrFail($id);
         return $item->delete();
     }

@@ -19,7 +19,10 @@ class ProductDetail extends Model
         'base_price',
         'retail_price',
         'after_discount_price',
-        'discount_percentage'
+        'discount_percentage',
+        'marketplace_price',
+        'marketplace_after_discount_price',
+        'marketplace_discount_percentage',
     ];
 
     protected static function newFactory()

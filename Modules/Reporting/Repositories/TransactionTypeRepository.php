@@ -46,13 +46,4 @@ class TransactionTypeRepository
     {
         return $this->model->where('is_active', true)->orderBy('code')->get();
     }
-
-    /**
-     * Get default code (first active, or 'WEB' if none).
-     */
-    public function getDefaultCode()
-    {
-        $first = $this->model->where('is_active', true)->orderBy('code')->value('code');
-        return $first ?? 'WEB';
-    }
 }

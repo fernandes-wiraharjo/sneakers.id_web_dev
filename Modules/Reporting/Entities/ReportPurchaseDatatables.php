@@ -16,7 +16,7 @@ class ReportPurchaseDatatables extends DataTable
             ->addIndexColumn()
             ->rawColumns(['action', 'status_owner', 'status_supplier'])
             ->editColumn('transaction_date', function ($item) {
-                return $item->transaction_date ? $item->transaction_date->format('d-M-Y') : '-';
+                return $item->transaction_date ? $item->transaction_date->format('d-M-Y H:i') : '-';
             })
             ->editColumn('price_ongkir', function ($item) {
                 return $item->price_ongkir !== null ? 'Rp ' . rupiah_format($item->price_ongkir) : '-';

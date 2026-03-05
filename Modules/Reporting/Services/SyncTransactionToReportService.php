@@ -44,7 +44,6 @@ class SyncTransactionToReportService
         $customerName = $destination ? trim(($destination->first_name ?? '') . ' ' . ($destination->last_name ?? '')) : '';
         $fullAddress = $destination ? trim((string) ($destination->address ?? '')) : '';
         $transactionDate = $transaction->paid_at ?? $transaction->date;
-        $transactionDate = $transactionDate ? (\Carbon\Carbon::parse($transactionDate)->format('Y-m-d')) : now()->format('Y-m-d');
         $priceOngkir = (int) ($shipping->shipping_cost ?? 0);
         $grandTotal = (int) ($transaction->grand_total ?? 0);
         $priceDiscount = (int) ($transaction->voucher_discount ?? 0);
@@ -66,7 +65,7 @@ class SyncTransactionToReportService
                 'order_id' => strtoupper($orderId),
                 'transaction_date' => $transactionDate,
                 'customer_name' => strtoupper($customerName ?: '-'),
-                'transaction_type' => $this->transactionTypeRepository->getDefaultCode(),
+                'transaction_type' => 'WEB',
                 'location' => $fullAddress !== '' ? strtoupper($fullAddress) : null,
                 'article_number' => strtoupper($product->product_code ?? ''),
                 'product_name' => strtoupper($product->product_name ?? ''),
@@ -82,7 +81,7 @@ class SyncTransactionToReportService
                 'sisa_owner' => null,
                 'sisa_supplier' => null,
                 'status_owner' => 'lunas',
-                'status_supplier' => null,
+                'status_supplier' => 'lunas',
                 'margin_net' => $marginNet,
                 'modal_net' => $modalNet,
                 'phone_number' => $destination ? strtoupper((string) ($destination->phone_number ?? '')) : null,

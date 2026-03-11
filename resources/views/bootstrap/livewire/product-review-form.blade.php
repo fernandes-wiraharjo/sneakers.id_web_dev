@@ -1,4 +1,9 @@
 <div class="review-form-container">
+@php
+    // Make a CSS-safe key for IDs/selectors (sizes can contain spaces/slashes)
+    $safeSize = \Str::slug((string) $productSize);
+    $formId = $productId . '-' . $safeSize;
+@endphp
     @if (session()->has('review_success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('review_success') }}
@@ -7,8 +12,8 @@
     @endif
 
     <div class="mb-3">
-        <input type="hidden" id="rating-input-{{ $productId }}-{{ $productSize }}" value="{{ $rating }}">
-        <div class="d-flex gap-2 rating-stars" data-form-id="{{ $productId }}-{{ $productSize }}">
+        <input type="hidden" id="rating-input-{{ $formId }}" value="{{ $rating }}">
+        <div class="d-flex gap-2 rating-stars" data-form-id="{{ $formId }}">
             @for ($i = 1; $i <= 5; $i++)
                 <button 
                     type="button" 
@@ -27,7 +32,7 @@
     <div class="mb-3">
         <textarea 
             class="form-control" 
-            id="review-{{ $productId }}-{{ $productSize }}"
+            id="review-{{ $formId }}"
             rows="4" 
             wire:model.defer="review"
             @if($isSubmitted) disabled @endif
@@ -38,7 +43,7 @@
     <button 
         type="button" 
         class="btn btn-dark w-100"
-        id="submit-review-{{ $productId }}-{{ $productSize }}"
+        id="submit-review-{{ $formId }}"
         @if($isSubmitted) disabled @endif>
         @if($isSubmitted)
             <span class="iconify me-2" data-icon="material-symbols:check-circle"></span>
@@ -52,7 +57,7 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        var formId = '{{ $productId }}-{{ $productSize }}';
+        var formId = '{{ $formId }}';
         var ratingInput = $('#rating-input-' + formId);
         var stars = $('.rating-stars[data-form-id="' + formId + '"] .rating-star');
         var submitButton = $('button[wire\\:click="submitReview"]');

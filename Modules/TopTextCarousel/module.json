@@ -1,0 +1,13 @@
+{
+    "name": "TopTextCarousel",
+    "alias": "toptextcarousel",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\TopTextCarousel\\Providers\\TopTextCarouselServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Schema;
+use Modules\TopTextCarousel\Repositories\TopTextCarouselRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(BrandRepository $brandRepository, SignaturePlayerRepository $signaturePlayerRepository)
+    public function boot(BrandRepository $brandRepository, SignaturePlayerRepository $signaturePlayerRepository, TopTextCarouselRepository $topTextCarouselRepository)
     {
 
         \Midtrans\Config::$serverKey    = config('services.midtrans.serverKey');
@@ -63,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
         View::share('brand', $brandRepository->getAllBrand());
         View::share('brand_menu', $brandRepository->getActiveMenuBrand());
         View::share('signature', $signaturePlayerRepository->getAllSignatures());
+        View::share('top_text_carousel', Schema::hasTable('top_text_carousel') ? $topTextCarouselRepository->getActiveTopTextCarousel() : collect([]));
 
         // Set demo globally
         $theme->setDemo(request()->input('demo', 'demo1'));

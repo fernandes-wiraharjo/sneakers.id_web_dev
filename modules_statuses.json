@@ -17,5 +17,6 @@
     "ShippingCourier": true,
     "DiscountVoucher": true,
     "SizeFilter": true,
-    "Reporting": true
+    "Reporting": true,
+    "TopTextCarousel": true
 }

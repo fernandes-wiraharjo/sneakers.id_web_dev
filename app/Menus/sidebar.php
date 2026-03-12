@@ -428,6 +428,31 @@ return [
         ]
     ],
     [
+        'gate' => 'administrator.master-data.top-text-carousel.index',
+        'name' => 'Top Text Carousel',
+        'route' => ['administrator.master-data.top-text-carousel.index', []],
+        'isActive' => 'master-data/top-text-carousel*',
+        'icon' => 'align-center',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.master-data.top-text-carousel.create',
+                'title' => 'Create Top Text Carousel',
+                'description' => 'User can create new top text carousel'
+            ],
+            [
+                'gate' => 'administrator.master-data.top-text-carousel.update',
+                'title' => 'Update Top Text Carousel',
+                'description' => 'User can update top text carousel'
+            ],
+            [
+                'gate' => 'administrator.master-data.top-text-carousel.destroy',
+                'title' => 'Delete Top Text Carousel',
+                'description' => 'User can delete top text carousel'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.master-data.header-image.index',
         'name' => 'Header Image',
         'route' => ['administrator.master-data.header-image.index', []],

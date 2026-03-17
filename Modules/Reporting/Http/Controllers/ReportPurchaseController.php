@@ -159,6 +159,8 @@ class ReportPurchaseController extends Controller
                     'product_name' => $product->product_name,
                     'size' => $detail->size,
                     'base_price' => (int) $detail->base_price,
+                    'marketplace_price' => $detail->marketplace_price !== null ? (int) $detail->marketplace_price : null,
+                    'retail_price' => $detail->retail_price !== null ? (int) $detail->retail_price : null,
                 ];
             }
         }

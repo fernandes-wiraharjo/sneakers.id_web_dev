@@ -104,6 +104,7 @@
         </x-ladmin-form-group>
 
         <input type="hidden" id="base_price_per_unit" value="">
+        <input type="hidden" id="price_jual_per_unit" value="">
         <x-ladmin-form-group name="price_modal" label="Price Modal (Rp)">
             <div class="input-group">
                 <span class="input-group-text">Rp</span>
@@ -295,8 +296,12 @@ $(function() {
     $('#quantity').on('input change keyup', function() {
         var basePerUnit = parseInt($('#base_price_per_unit').val(), 10);
         if (!basePerUnit) return;
+        var jualPerUnit = parseInt($('#price_jual_per_unit').val(), 10);
         var qty = parseInt($(this).val(), 10) || 0;
         $('#price_modal').val(formatRp(basePerUnit * qty));
+        if (jualPerUnit) {
+            $('#price_jual').val(formatRp(jualPerUnit * qty));
+        }
         updateDerivedPrices();
     });
 
@@ -316,12 +321,16 @@ $(function() {
                 }
                 $.each(items, function(i, item) {
                     var basePrice = parseInt(item.base_price, 10) || 0;
+                    var marketplacePrice = item.marketplace_price !== null && item.marketplace_price !== undefined && item.marketplace_price !== '' ? parseInt(item.marketplace_price, 10) : null;
+                    var retailPrice = item.retail_price !== null && item.retail_price !== undefined && item.retail_price !== '' ? parseInt(item.retail_price, 10) : null;
+                    var jualPerUnit = marketplacePrice !== null ? marketplacePrice : (retailPrice !== null ? retailPrice : 0);
                     var $li = $('<li class="list-group-item list-group-item-action" style="cursor: pointer;"></li>')
-                        .text((item.product_code || '') + ' - ' + (item.product_name || '') + ' - ' + (item.size || '') + ' (Rp ' + formatRp(basePrice) + ')')
+                        .text((item.product_code || '') + ' - ' + (item.product_name || '') + ' - ' + (item.size || '') + ' (Modal Rp ' + formatRp(basePrice) + ' | Jual Rp ' + formatRp(jualPerUnit) + ')')
                         .attr('data-product-code', item.product_code || '')
                         .attr('data-product-name', item.product_name || '')
                         .attr('data-size', item.size || '')
                         .attr('data-base-price', basePrice);
+                    $li.attr('data-price-jual-unit', jualPerUnit);
                     $li.on('mousedown', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -329,12 +338,15 @@ $(function() {
                         var name = ($(this).data('product-name') || '').toString().toUpperCase();
                         var sizeVal = ($(this).data('size') || '').toString().toUpperCase();
                         var base = $(this).data('base-price') || 0;
+                        var jualUnit = $(this).data('price-jual-unit') || 0;
                         var qty = parseInt($('#quantity').val(), 10) || 1;
                         $('#article_number').val(code);
                         $('#product_name').val(name);
                         $('#size').val(sizeVal);
                         $('#base_price_per_unit').val(base);
+                        $('#price_jual_per_unit').val(jualUnit);
                         $('#price_modal').val(formatRp(base * qty));
+                        $('#price_jual').val(formatRp(jualUnit * qty));
                         $list.empty().hide();
                         updateDerivedPrices();
                     });

@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-6">
                 <x-ladmin-form-group name="order_id" label="Order ID *">
-                    <input type="text" class="form-control text-uppercase" name="order_id" id="order_id" required
+                    <input type="text" class="form-control text-uppercase" name="order_id" id="order_id"
                         value="{{ old('order_id', $rp->order_id) }}" placeholder="Order ID">
                 </x-ladmin-form-group>
             </div>

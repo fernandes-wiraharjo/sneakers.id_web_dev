@@ -241,11 +241,19 @@ $(function() {
 
     function parseNum(str) {
         if (str == null || str === '') return 0;
-        return parseInt(String(str).replace(/\D/g, ''), 10) || 0;
+        var s = String(str).trim();
+        var negative = s[0] === '-';
+        var digits = s.replace(/\D/g, '');
+        var n = parseInt(digits, 10) || 0;
+        return negative ? -n : n;
     }
     function formatRp(num) {
         if (num == null || isNaN(num)) return '';
-        return Number(num).toLocaleString('id-ID');
+        var n = Number(num);
+        var negative = n < 0;
+        var abs = Math.abs(n);
+        var formatted = abs.toLocaleString('id-ID');
+        return negative ? '-' + formatted : formatted;
     }
 
     // Uppercase for string inputs
@@ -253,16 +261,16 @@ $(function() {
         $(this).val($(this).val().toUpperCase());
     });
 
-    // Price inputs: focus = raw number, blur = formatted
+    // Price inputs: focus = raw number, blur = formatted (supports negatives)
     $('.price-input').on('focus', function() {
         var n = parseNum($(this).val());
-        $(this).val(n > 0 ? String(n) : '');
+        $(this).val(n !== 0 ? String(n) : '');
     }).on('blur', function() {
         var n = parseNum($(this).val());
-        $(this).val(n > 0 ? formatRp(n) : '');
+        $(this).val(n !== 0 ? formatRp(n) : '');
     });
 
-    // Before submit: strip formatting from price inputs
+    // Before submit: strip formatting from price inputs (keep negative sign)
     $('#report-purchase-form').on('submit', function() {
         $('.price-input').each(function() {
             $(this).val(parseNum($(this).val()));

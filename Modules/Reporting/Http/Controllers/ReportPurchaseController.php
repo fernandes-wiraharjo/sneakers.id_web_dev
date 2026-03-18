@@ -159,6 +159,8 @@ class ReportPurchaseController extends Controller
                     'product_name' => $product->product_name,
                     'size' => $detail->size,
                     'base_price' => (int) $detail->base_price,
+                    'marketplace_price' => $detail->marketplace_price !== null ? (int) $detail->marketplace_price : null,
+                    'retail_price' => $detail->retail_price !== null ? (int) $detail->retail_price : null,
                 ];
             }
         }
@@ -208,7 +210,7 @@ class ReportPurchaseController extends Controller
     protected function validateReportPurchase(array $data)
     {
         $rules = [
-            'order_id' => 'required|string|max:255',
+            'order_id' => 'nullable|string|max:255',
             'transaction_date' => 'required|date',
             'customer_name' => 'required|string|max:255',
             'transaction_type' => 'nullable|string|max:64|exists:transaction_types,code',
@@ -219,7 +221,6 @@ class ReportPurchaseController extends Controller
         }
         $rules['margin_net'] = 'nullable|integer'; // can be negative
         $validator = \Illuminate\Support\Facades\Validator::make($data, $rules, [
-            'order_id.required' => 'Order ID is required.',
             'transaction_date.required' => 'Transaction date is required.',
             'customer_name.required' => 'Customer name is required.',
             'quantity.required' => 'Quantity is required.',

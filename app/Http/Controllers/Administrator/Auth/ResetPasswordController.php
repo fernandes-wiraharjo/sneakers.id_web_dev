@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Administrator\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {
-    
+
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -23,17 +27,52 @@ class ResetPasswordController extends Controller
     */
 
     use ResetsPasswords;
-    
+
     public function redirectTo() {
-        return '/' . config('ladmin.prefix', 'administrator');
+        return redirect(route('customer.login'));
     }
 
 
     public function showResetForm(Request $request, $token = null)
     {
-        return view('ladmin::auth.passwords.reset')->with(
+        return view('bootstrap.auth.reset-password')->with(
             ['token' => $token, 'email' => $request->email]
         );
+    }
+
+    public function reset(Request $request)
+    {
+        {
+            $this->validate($request, $this->rules(), $this->validationErrorMessages());
+
+            $response = Password::reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user, $password) {
+                    $user->forceFill([
+                        'password' => Hash::make($password)
+                    ])->setRememberToken(Str::random(60));
+
+                    $user->save();
+
+                    event(new PasswordReset($user));
+                }
+            );
+
+            if ($response == 'passwords.token') {
+                return redirect()->route('customer.forgot-password')->with(['token'=> 'Token mismatch, please resend email confirmation!']);
+            }
+            // dd(Password::PASSWORD_RESET);
+            // Check the response to see if the password was successfully reset
+            if ($response == Password::PASSWORD_RESET) {
+                session()->flash('success', [
+                   'Password Reset successfully please re-login.'
+                ]);
+
+                return redirect()->route('customer.login');
+            } else {
+                return redirect()->back()->with(['error' => 'something wrong please check your information']);
+            }
+        }
     }
 
     /**

@@ -18,6 +18,8 @@ class SignaturePlayer extends Model
         'signature_player_name',
         'signature_image',
         'signature_description',
+        'emblem_url',
+        'is_home_display',
         'is_active'
     ];
 

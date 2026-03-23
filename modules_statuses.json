@@ -5,8 +5,18 @@
     "Brand": true,
     "SignaturePlayer": true,
     "Banner": true,
+    "Blog": true,
     "Tag": true,
     "Faq": true,
     "FooterSetting": true,
-    "LookBook": true
+    "LookBook": true,
+    "Transaction": true,
+    "Dashboard": true,
+    "HeaderImage": true,
+    "GlobalSetting": true,
+    "ShippingCourier": true,
+    "DiscountVoucher": true,
+    "SizeFilter": true,
+    "Reporting": true,
+    "TopTextCarousel": true
 }

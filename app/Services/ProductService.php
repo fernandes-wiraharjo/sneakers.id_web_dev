@@ -6,6 +6,7 @@ use Modules\Product\Repositories\ProductRepository;
 use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\File;
+use Modules\Transaction\Entities\TransactionItems;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
@@ -40,10 +41,11 @@ class ProductService {
         if($insertedProduct) {
             $idNewProduct = $insertedProduct->id;
 
-            $afterPath = 'images/products/'.$request['product_code'];
             $beforePath = 'images/upload-buckets';
 
             if(isset($request['products_image'])){
+                $afterPath = 'images/products/'.$request['product_code'];
+
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
@@ -90,6 +92,18 @@ class ProductService {
                 }
             }
 
+            if(isset($request['products_size_chart_image'])){
+                $path = 'images/products/'.$request['product_code'];
+                $saveAsFilename = 'size-chart';
+                $sizeChartImageURL = uploadAsWebp($request['products_size_chart_image'], $path, 'public', 1200, 1200, $saveAsFilename);
+                $productImage = [
+                    'product_id' => $idNewProduct,
+                    'size_chart_image_url' => $sizeChartImageURL
+                ];
+
+                $this->productRepository->insertProductSizeChart($productImage);
+            }
+
             if(isset($request['size_price'])) {
                 foreach($request['size_price'] as $item){
                     if(isset($item['update_size'])){
@@ -101,7 +115,10 @@ class ProductService {
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                            'discount_percentage' => intval($item['discount_percentage'])
+                            'discount_percentage' => intval($item['discount_percentage']),
+                            'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
+                            'marketplace_after_discount_price' => isset($item['marketplace_after_discount_price']) && $item['marketplace_after_discount_price'] !== '' ? (int) str_replace('.','',$item['marketplace_after_discount_price']) : null,
+                            'marketplace_discount_percentage' => isset($item['marketplace_discount_percentage']) && $item['marketplace_discount_percentage'] !== '' ? (int) $item['marketplace_discount_percentage'] : null,
                         ]);
 
                         if(!$inserted_product_detail){
@@ -115,7 +132,6 @@ class ProductService {
             // $sizes = json_decode($request['size']);
             $categories = json_decode($request['category']);
             $tags = json_decode($request['tag']);
-            $signatures = json_decode($request['signature']);
 
             // $sizes_id = [];
             $categories_id = [];
@@ -146,11 +162,12 @@ class ProductService {
                 $this->productRepository->attachProductTags($idNewProduct, $tags_id);
             }
 
-            if(isset($signatures)){
-                foreach($signatures as $item){
-                    $signatures_id[] = intval($item->value);
-                }
+            $signatures_id = [];
+            foreach (json_decode($request['signature']) as $signature) {
+                $signatures_id[] = intval($signature->value);
+            }
 
+            if(isset($signatures_id) && count($signatures_id) > 0){
                 $this->productRepository->attachProductSignatures($idNewProduct, $signatures_id);
             }
 
@@ -160,6 +177,7 @@ class ProductService {
 	}
 
     public function updateProduct($id, $request){
+        $message = '';
         $product = [
             'product_code' => $request['product_code'],
             'product_name' => $request['product_name'],
@@ -185,7 +203,6 @@ class ProductService {
         $updatedProduct = $getProduct->update($product);
 
         if($updatedProduct) {
-            $afterPath = 'images/products/'.$request['product_code'];
             $beforePath = 'images/upload-buckets';
 
             if($beforeProductCode != $request['product_code']){
@@ -209,6 +226,8 @@ class ProductService {
             }
 
             if(isset($request['products_image'])){
+                $afterPath = 'images/products/'.$request['product_code'];
+
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
@@ -236,12 +255,35 @@ class ProductService {
 
                     }
                 }
+
+                //sync unused file
+                $imagePack = $getProduct->images()->pluck('image_url')->toArray();
+
+                foreach (File::allFiles(public_path($afterPath)) as $file) {
+                    // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
+                    if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
+                        removeImageFromStorage($afterPath, $file->getFilename());
+                    }
+                }
+            }
+
+            if(isset($request['products_size_chart_image'])){
+                $path = 'images/products/'.$request['product_code'];
+                $saveAsFilename = 'size-chart';
+                $sizeChartImageURL = uploadAsWebp($request['products_size_chart_image'], $path, 'public', 1200, 1200, $saveAsFilename);
+
+                $productImage = [
+                    'product_id' => $id,
+                    'size_chart_image_url' => $sizeChartImageURL
+                ];
+
+                $this->productRepository->insertProductSizeChart($productImage);
             }
 
             if(isset($request['is_main'])){
                 $getProduct = $this->productRepository->getProductById($id);
 
-                if($getProduct) {
+                if(isset($afterPath) && $getProduct) {
                     $webpMain = preg_replace('/\.[^.]+$/', '.webp', $request['is_main']);
                     $webpPath = public_path($afterPath . '/' . $webpMain);
 
@@ -259,20 +301,15 @@ class ProductService {
                 ]);
             }
 
-            //sync unused file
-            $imagePack = $getProduct->images()->pluck('image_url')->toArray();
-            foreach (File::allFiles(public_path($afterPath)) as $file) {
-                // $getProduct = $this->productRepository->getProductByCode($request['product_code']);
-                if(!in_array($file->getFilename(), $imagePack) && !(strpos($file->getFilename(), "1800x1800") !== false) && !(strpos($file->getFilename(), "1200x1200") !== false)){
-                    removeImageFromStorage($afterPath, $file->getFilename());
-                }
-            }
-
             if($diff = array_diff($oldDetail, $detail_ids)){
-                foreach($diff as $itemDiff) {
-                    $this->productRepository->deleteProductDetail($itemDiff);
+              foreach($diff as $itemDiff) {
+                    $check_transactions = TransactionItems::where('product_detail_id', $itemDiff)->first();
+                    if(!$check_transactions) {
+                        $this->productRepository->deleteProductDetail($itemDiff);
+                    } else {
+                        $message = 'There are sizes that cannot be deleted because they already have transaction data';
+                    }
                 }
-
                 $updateTimestamps = $getProduct->update([
                     'updated_at' => Carbon::now()
                 ]);
@@ -288,7 +325,10 @@ class ProductService {
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                            'discount_percentage' => intval($item['discount_percentage'])
+                            'discount_percentage' => intval($item['discount_percentage']),
+                            'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
+                            'marketplace_after_discount_price' => isset($item['marketplace_after_discount_price']) && $item['marketplace_after_discount_price'] !== '' ? (int) str_replace('.','',$item['marketplace_after_discount_price']) : null,
+                            'marketplace_discount_percentage' => isset($item['marketplace_discount_percentage']) && $item['marketplace_discount_percentage'] !== '' ? (int) $item['marketplace_discount_percentage'] : null,
                         ]);
 
                         $updateTimestamps = $getProduct->update([
@@ -303,7 +343,10 @@ class ProductService {
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
-                            'discount_percentage' => intval($item['discount_percentage'])
+                            'discount_percentage' => intval($item['discount_percentage']),
+                            'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
+                            'marketplace_after_discount_price' => isset($item['marketplace_after_discount_price']) && $item['marketplace_after_discount_price'] !== '' ? (int) str_replace('.','',$item['marketplace_after_discount_price']) : null,
+                            'marketplace_discount_percentage' => isset($item['marketplace_discount_percentage']) && $item['marketplace_discount_percentage'] !== '' ? (int) $item['marketplace_discount_percentage'] : null,
                         ]);
 
                         $updateTimestamps = $getProduct->update([
@@ -377,26 +420,23 @@ class ProductService {
                     'updated_at' => Carbon::now()
                 ]);
             }
-
-            if(isset($signatures)){
-                foreach($signatures as $item){
-                    $signatures_id[] = intval($item->value);
+            
+            if (isset($signatures)) {
+                $signatures_id = [];
+                foreach ($signatures as $signature) {
+                    $signatures_id[] = intval($signature->value);
                 }
 
-                $this->productRepository->syncProductSignatures($id, $signatures_id);
+                if(isset($signatures_id) && count($signatures_id) > 0){
+                    $this->productRepository->syncProductSignatures($id, $signatures_id);
 
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
-            } else {
-                $this->productRepository->syncProductSignatures($id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
+                    $updateTimestamps = $getProduct->update([
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
             }
         }
-        return true;
+        return ['status' => true, 'message' => $message];
     }
 
     public function generateProductCode()
@@ -484,7 +524,10 @@ class ProductService {
                     'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
                     'retail_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,
                     'after_discount_price' => $item->after_discount_price ? str_replace('.','',$item->after_discount_price) : 0,
-                    'discount_percentage' => $item->discount_percentage ? intval($item->discount_percentage) : 0
+                    'discount_percentage' => $item->discount_percentage ? intval($item->discount_percentage) : 0,
+                    'marketplace_price' => isset($item->marketplace_price) && $item->marketplace_price !== '' ? (int) str_replace('.','',$item->marketplace_price) : null,
+                    'marketplace_after_discount_price' => isset($item->marketplace_after_discount_price) && $item->marketplace_after_discount_price !== '' ? (int) str_replace('.','',$item->marketplace_after_discount_price) : null,
+                    'marketplace_discount_percentage' => isset($item->marketplace_discount_percentage) && $item->marketplace_discount_percentage !== '' ? (int) $item->marketplace_discount_percentage : null,
                 ]);
             }
             //find product_details by id & size updates new data

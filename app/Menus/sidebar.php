@@ -2,6 +2,60 @@
 
 return [
     [
+        'gate' => 'administrator.dashboard.index',
+        'name' => 'Dashboard',
+        'route' => ['administrator.dashboard.index', []],
+        'isActive' => 'summary*',
+        'icon' => 'percent',
+        'id' => '',
+        'gates' => [],
+    ],
+    [
+        'gate' => 'administrator.report-purchase.index',
+        'name' => 'Report Purchase',
+        'route' => ['administrator.report-purchase.index', []],
+        'isActive' => 'report-purchase*',
+        'icon' => 'file-invoice-dollar',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.report-purchase.create',
+                'title' => 'Create Report Purchase',
+                'description' => 'User can create new report purchase'
+            ],
+            [
+                'gate' => 'administrator.report-purchase.update',
+                'title' => 'Update Report Purchase',
+                'description' => 'User can update report purchase'
+            ],
+            [
+                'gate' => 'administrator.report-purchase.destroy',
+                'title' => 'Delete Report Purchase',
+                'description' => 'User can delete report purchase'
+            ]
+        ],
+    ],
+    [
+        'gate' => 'administrator.transaction.index',
+        'name' => 'Transaction',
+        'route' => ['administrator.transaction.index', []],
+        'isActive' => 'transaction*',
+        'icon' => 'shopping-basket',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.transaction.status',
+                'title' => 'Transaction Status',
+                'description' => 'User can change transaction status'
+            ],
+            [
+                'gate' => 'administrator.transaction.resi',
+                'title' => 'Resi Transaction',
+                'description' => 'User can change resi transaction'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.product.index',
         'name' => 'Product',
         'route' => ['administrator.product.index', []],
@@ -23,6 +77,31 @@ return [
                 'gate' => 'administrator.product.destroy',
                 'title' => 'Delete Product',
                 'description' => 'User can delete product'
+            ]
+        ],
+    ],
+    [
+        'gate' => 'administrator.discount-voucher.index',
+        'name' => 'Discount Voucher',
+        'route' => ['administrator.discount-voucher.index', []],
+        'isActive' => 'discount-voucher*',
+        'icon' => 'ticket-alt',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.discount-voucher.create',
+                'title' => 'Create Discount Voucher',
+                'description' => 'User can create new discount voucher'
+            ],
+            [
+                'gate' => 'administrator.discount-voucher.update',
+                'title' => 'Update Discount Voucher',
+                'description' => 'User can update discount voucher'
+            ],
+            [
+                'gate' => 'administrator.discount-voucher.destroy',
+                'title' => 'Delete Discount Voucher',
+                'description' => 'User can delete discount voucher'
             ]
         ],
     ],
@@ -82,6 +161,31 @@ return [
                         'gate' => 'administrator.master-data.size.destroy',
                         'title' => 'Delete Size',
                         'description' => 'User can delete size'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.master-data.size-filter.index',
+                'name' => 'Size Filter',
+                'route' => ['administrator.master-data.size-filter.index', []],
+                'isActive' => 'master-data/size-filter*',
+                'icon' => 'filter',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.size-filter.create',
+                        'title' => 'Create Size Filter',
+                        'description' => 'User can create new size filter'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.size-filter.update',
+                        'title' => 'Update Size Filter',
+                        'description' => 'User can update size filter'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.size-filter.destroy',
+                        'title' => 'Delete Size Filter',
+                        'description' => 'User can delete size filter'
                     ]
                 ],
             ],
@@ -178,10 +282,35 @@ return [
                         'title' => 'Update Tag',
                         'description' => 'User can update tag'
                     ],
-                    [
-                        'gate' => 'administrator.master-data.tag.destroy',
+[
+                'gate' => 'administrator.master-data.tag.destroy',
                         'title' => 'Delete Tag',
                         'description' => 'User can delete tag'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.master-data.transaction-type.index',
+                'name' => 'Report: Transaction Type',
+                'route' => ['administrator.master-data.transaction-type.index', []],
+                'isActive' => 'master-data/transaction-type*',
+                'icon' => 'list',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.create',
+                        'title' => 'Create Transaction Type',
+                        'description' => 'User can create new transaction type'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.update',
+                        'title' => 'Update Transaction Type',
+                        'description' => 'User can update transaction type'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.transaction-type.destroy',
+                        'title' => 'Delete Transaction Type',
+                        'description' => 'User can delete transaction type'
                     ]
                 ],
             ],
@@ -210,7 +339,143 @@ return [
                     ]
                 ],
             ],
+            [
+                'gate' => 'administrator.master-data.shipping-courier.index',
+                'name' => 'Shipping Couriers',
+                'route' => ['administrator.master-data.shipping-courier.index', []],
+                'isActive' => 'master-data/shipping-courier*',
+                'icon' => 'truck',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.create',
+                        'title' => 'Create Shipping Courier',
+                        'description' => 'User can create new shipping courier'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.update',
+                        'title' => 'Update Shipping Courier',
+                        'description' => 'User can update shipping courier'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.shipping-courier.destroy',
+                        'title' => 'Delete Shipping Courier',
+                        'description' => 'User can delete shipping courier'
+                    ]
+                ],
+            ],
         ]
+    ],
+    [
+        'gate' => 'administrator.blog',
+        'name' => 'Blog',
+        'route' => null,
+        'isActive' => 'blog*',
+        'icon' => 'file-alt',
+        'id' => '',
+        'gates' => [],
+        'submenus' => [
+            [
+                'gate' => 'administrator.blog.article.index',
+                'name' => 'Blog Article',
+                'route' => ['administrator.blog.article.index', []],
+                'isActive' => 'blog/article*',
+                'icon' => 'file-alt',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.blog.article.create',
+                        'title' => 'Create Blog Article',
+                        'description' => 'User can create new blog article'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.article.update',
+                        'title' => 'Update Blog Article',
+                        'description' => 'User can update blog article'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.article.destroy',
+                        'title' => 'Delete Blog Article',
+                        'description' => 'User can delete blog article'
+                    ]
+                ],
+            ],
+            [
+                'gate' => 'administrator.blog.category.index',
+                'name' => 'Blog Category',
+                'route' => ['administrator.blog.category.index', []],
+                'isActive' => 'blog/category*',
+                'icon' => 'folder',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.blog.category.create',
+                        'title' => 'Create Blog Category',
+                        'description' => 'User can create new blog category'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.category.update',
+                        'title' => 'Update Blog Category',
+                        'description' => 'User can update blog category'
+                    ],
+                    [
+                        'gate' => 'administrator.blog.category.destroy',
+                        'title' => 'Delete Blog Category',
+                        'description' => 'User can delete blog category'
+                    ]
+                ],
+            ],
+        ]
+    ],
+    [
+        'gate' => 'administrator.master-data.top-text-carousel.index',
+        'name' => 'Top Text Carousel',
+        'route' => ['administrator.master-data.top-text-carousel.index', []],
+        'isActive' => 'master-data/top-text-carousel*',
+        'icon' => 'align-center',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.master-data.top-text-carousel.create',
+                'title' => 'Create Top Text Carousel',
+                'description' => 'User can create new top text carousel'
+            ],
+            [
+                'gate' => 'administrator.master-data.top-text-carousel.update',
+                'title' => 'Update Top Text Carousel',
+                'description' => 'User can update top text carousel'
+            ],
+            [
+                'gate' => 'administrator.master-data.top-text-carousel.destroy',
+                'title' => 'Delete Top Text Carousel',
+                'description' => 'User can delete top text carousel'
+            ]
+        ],
+    ],
+    [
+        'gate' => 'administrator.master-data.header-image.index',
+        'name' => 'Header Image',
+        'route' => ['administrator.master-data.header-image.index', []],
+        'isActive' => 'master-data/header-image*',
+        'icon' => 'hand-point-down',
+        'id' => '',
+        'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.header-image.create',
+                        'title' => 'Create Header Image',
+                        'description' => 'User can create new header-image'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.header-image.update',
+                        'title' => 'Update Header Image',
+                        'description' => 'User can update header-image'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.header-image.destroy',
+                        'title' => 'Delete Header Image',
+                        'description' => 'User can delete header-image'
+                    ]
+                ],
     ],
     [
         'gate' => 'administrator.master-data.footer-setting.index',
@@ -226,6 +491,31 @@ return [
                 'description' => 'User can update footer setting'
             ],
         ],
+    ],
+    [
+                'gate' => 'administrator.master-data.global-setting.index',
+                'name' => 'Global Setting',
+                'route' => ['administrator.master-data.global-setting.index', []],
+                'isActive' => 'master-data/global-setting*',
+                'icon' => 'book-open',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'administrator.master-data.global-setting.create',
+                        'title' => 'Create Global Setting',
+                        'description' => 'User can create new global-setting'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.global-setting.update',
+                        'title' => 'Update Global Setting',
+                        'description' => 'User can update global-setting'
+                    ],
+                    [
+                        'gate' => 'administrator.master-data.global-setting.destroy',
+                        'title' => 'Delete Global Setting',
+                        'description' => 'User can delete global-setting'
+                    ]
+                ],
     ],
     [
                 'gate' => 'administrator.master-data.lookbook.index',
@@ -251,7 +541,7 @@ return [
                         'description' => 'User can delete lookbook'
                     ]
                 ],
-            ],
+    ],
     [
         'gate' => 'administrator.access',
         'name' => 'Access',
@@ -333,41 +623,41 @@ return [
         ]
     ],
 
-    // [
-    //     'gate' => 'administrator.system',
-    //     'name' => 'System',
-    //     'description' => 'System application control',
-    //     'route' => null,
-    //     'isActive' => null,
-    //     'icon' => 'cog',
-    //     'id' => '',
-    //     'gates' => [],
-    //     'submenus' => [
-    //         [
-    //             'gate' => 'administrator.system.activity.index',
-    //             'name' => 'User Activity',
-    //             'description' => 'List of User activity',
-    //             'route' => ['administrator.system.activity.index', []],
-    //             'isActive' => 'system/activity*',
-    //             'id' => '',
-    //             'gates' => [
-    //                 [
-    //                     'gate' => 'administrator.system.activity.delete',
-    //                     'title' => 'Delete',
-    //                     'description' => 'Delete log activity after 7 days'
-    //                 ],
-    //             ]
-    //         ],
+    [
+        'gate' => 'administrator.system',
+        'name' => 'System',
+        'description' => 'System application control',
+        'route' => null,
+        'isActive' => null,
+        'icon' => 'cog',
+        'id' => '',
+        'gates' => [],
+        'submenus' => [
+            [
+                'gate' => 'system.activity.index',
+                'name' => 'User Activity',
+                'description' => 'List of User activity',
+                'route' => ['system.activity.index', []],
+                'isActive' => 'system/activity*',
+                'id' => '',
+                'gates' => [
+                    [
+                        'gate' => 'system.activity.delete',
+                        'title' => 'Delete',
+                        'description' => 'Delete log activity after 7 days'
+                    ],
+                ]
+            ],
 
-    //         [
-    //             'gate' => 'administrator.system.log.index',
-    //             'name' => 'System Log',
-    //             'description' => 'Display for Ladmin error log',
-    //             'route' => ['administrator.system.log.index', []],
-    //             'isActive' => 'system/log*',
-    //             'id' => '',
-    //             'gates' => []
-    //         ]
-    //     ]
-    // ]
+            [
+                'gate' => 'administrator.system.log.index',
+                'name' => 'System Log',
+                'description' => 'Display for Ladmin error log',
+                'route' => ['administrator.system.log.index', []],
+                'isActive' => 'system/log*',
+                'id' => '',
+                'gates' => []
+            ]
+        ]
+    ]
 ];

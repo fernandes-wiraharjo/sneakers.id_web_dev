@@ -39,6 +39,19 @@ class ProductController extends Controller
      */
     public function index(ProductDatatables $dataTable)
     {
+        ladmin()
+        ->notification()
+            ->setTitle('new Invoice')
+            ->setLink('http://project.test/invoice/31eb6d58-3622-42a4-9206-d36e7a8d6c06')
+            ->setDescription('Pay invoice #123455')
+            ->setImageLink('http://porject.test/icon-invoice.ong') // optional
+            ->setGates(['administrator.accounting', 'administrator.owner']) // optional
+        ->send();
+
+        if(!auth()->user()->can('administrator.product.index')){
+            return redirect()->route('customer.dashboard');
+        }
+
         ladmin()->allow('administrator.product.index');
         return $dataTable->render('product::index');
     }
@@ -76,6 +89,9 @@ class ProductController extends Controller
                         $size_price[$index]['base_price'] = intval( str_replace('.','',$item['base_price']));
                         $size_price[$index]['retail_price'] = intval(str_replace('.','',$item['retail_price'] ));
                         $size_price[$index]['after_discount_price'] = intval(str_replace('.','',$item['after_discount_price']));
+                        $size_price[$index]['marketplace_price'] = isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? intval(str_replace('.','',$item['marketplace_price'])) : null;
+                        $size_price[$index]['marketplace_after_discount_price'] = isset($item['marketplace_after_discount_price']) && $item['marketplace_after_discount_price'] !== '' ? intval(str_replace('.','',$item['marketplace_after_discount_price'])) : null;
+                        $size_price[$index]['marketplace_discount_percentage'] = isset($item['marketplace_discount_percentage']) && $item['marketplace_discount_percentage'] !== '' ? intval($item['marketplace_discount_percentage']) : null;
                     }
                 }
             }
@@ -97,6 +113,7 @@ class ProductController extends Controller
                 'size_price.*.retail_price' => 'required|gte:0',
                 'size_price.*.after_discount_price' => 'required|lte:size_price.0.retail_price|gte:0',
                 'is_main' => 'required',
+                'products_size_chart_image' => 'nullable|image',
                 // 'base_price' => 'gte:0',
                 // 'retail_price' => 'gte:0',
                 // 'after_discount_price' => 'lte:retail_price|gte:0'
@@ -111,7 +128,8 @@ class ProductController extends Controller
                 'size_price.*.retail_price.required' => 'Retail price must be filled!',
                 'size_price.*.retail_price.gte' => 'Retail price must be not 0',
                 'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
-                'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.'
+                'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.',
+                'products_size_chart_image.image' => 'Size chart image must be an image!',
             ]);
 
             if($validator) {
@@ -156,7 +174,8 @@ class ProductController extends Controller
         ladmin()->allow('administrator.product.update');
         $data['product'] = $this->repository->getProductById($id);
         $data['brand'] = $this->brand->getBrandIdAndName();
-        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty ,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
+        $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;
+        $data['product_details'] = $data['product']->details()->selectRaw('id as detail_id , size ,  FORMAT(base_price, 0, "id_ID") AS base_price ,  qty, weight,  FORMAT(retail_price, 0, "id_ID") AS retail_price ,  FORMAT(after_discount_price, 0, "id_ID") AS after_discount_price ,  discount_percentage,  FORMAT(COALESCE(marketplace_price, 0), 0, "id_ID") AS marketplace_price ,  FORMAT(COALESCE(marketplace_after_discount_price, 0), 0, "id_ID") AS marketplace_after_discount_price ,  marketplace_discount_percentage, CASE WHEN qty > 0 THEN 1 ELSE 0 END AS update_size')->get()->toJson();
         cleanDirectory('images/upload-buckets');
         return view('product::edit', $data);
     }
@@ -186,6 +205,7 @@ class ProductController extends Controller
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
                     'size_price.*.after_discount_price' => 'required',
+                    'products_size_chart_image' => 'nullable|image',
                 ];
             } else {
                 $validation = [
@@ -196,6 +216,7 @@ class ProductController extends Controller
                     'size_price.*.base_price' => 'required',
                     'size_price.*.retail_price' => 'required',
                     'size_price.*.after_discount_price' => 'required',
+                    'products_size_chart_image' => 'nullable|image',
                 ];
             }
 
@@ -212,15 +233,16 @@ class ProductController extends Controller
                 'size_price.*.retail_price.gte' => 'Retail price must be not 0',
                 'size_price.*.after_discount_price.required' => 'After discount price must be filled!',
                 'size_price.*.after_discount_price.lte' => 'Discount price must be less than retail price.',
-                'size_price.*.after_discount_price.gte' => 'Discount price must be not below 0.'
+                'size_price.*.after_discount_price.gte' => 'Discount price must be not below 0.',
+                'products_size_chart_image.image' => 'Size chart image must be an image!',
             ]);
 
             if($validator) {
                 $updated = $this->service->updateProduct($id ,$request->all());
-                if($updated){
-                    Alert::success('Product Updated Successfully!');
+                if($updated['status']){
+                    Alert::success('Product Updated Successfully!, '.$updated['message']);
                     return redirect(route('administrator.product.index'))
-                        ->with('success', 'Product Updated Successfully!');
+                        ->with('success', 'Product Updated Successfully!, '.$updated['message']);
                 } else {
                     Alert::error('Failed to updated product, check your info!');
                     return redirect()->back();

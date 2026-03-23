@@ -49,7 +49,7 @@
                 </header>
                 <div class="Drawer__Content">
                   <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                    @include('components.filters', $filters)
+                    @include('back-office.components.filters', $filters)
                   </div>
                 </div>
             </div>
@@ -126,25 +126,24 @@
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
             </div>
             <div class="CollectionInner__Products">
                 <div class="ProductListWrapper">
                     <div class="ProductList ProductList--grid ProductList--removeMargin Grid" data-mobile-count="2"
                         data-desktop-count="4">
                         @foreach ($products as $product)
-                        @php
-                            $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                            $ratio = $image_size[0] / $image_size[1];
-                        @endphp
                             <div class="Grid__Cell 1/2--phone 1/3--tablet-and-up 1/4--desk SOCKS">
                                 <div class="ProductItem" style="visibility: visible;">
                                     <!-- <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
                                         class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage"> -->
                                     <a href="{{ route('product-detail', [$product->id, str_replace(' ', '_', $product->product_name)]) }}"
-                                        class="ProductItem__ImageWrapper">
+                                        class="ProductItem__ImageWrapper ProductItem__ImageWrapper--withAlternateImage">
+                                        @php
+                                            $ratio = getImageAspectRatio($product->image, 'products/'.$product->product_code);
+                                        @endphp
                                         <div class="AspectRatio AspectRatio--withFallback"
-                                            style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{$ratio}};">
+                                            style="max-width: 2000px; padding-bottom: 100%; --aspect-ratio: {{ $ratio }};">
 
                                             <!-- {{-- multi image --}}
                                             @foreach ($product->images()->limit(2)->get() as $key => $image)
@@ -206,7 +205,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 20px;padding: 10px; text-align: center;">
-                    {{ $products->links('store-theme._partials._pagination') }}
+                    {{ $products->links('display-store.store-theme._partials._pagination') }}
                 </div>
             </div>
         </div>

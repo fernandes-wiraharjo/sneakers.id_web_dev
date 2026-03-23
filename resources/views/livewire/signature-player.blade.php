@@ -5,9 +5,7 @@
 @push('scripts')
 <script>
 var input = document.querySelector('#kt_tagify_signature');
-
 const signatureList = JSON.parse(input.dataset.json);
-
 function tagTemplate(tagData) {
     return `
         <tag title="${tagData.code}"
@@ -23,14 +21,12 @@ function tagTemplate(tagData) {
         </tag>
     `
 }
-
 function suggestionItemTemplate(tagData) {
     return `
         <div ${this.getAttributes(tagData)}
             class='tagify__dropdown__item d-flex align-items-center ${tagData.class ? tagData.class : ""}'
             tabindex="0"
             role="option">
-
             <div class="d-flex flex-column">
                 <strong>${tagData.title}</strong>
                 <span>${tagData.code}</span>
@@ -38,7 +34,6 @@ function suggestionItemTemplate(tagData) {
         </div>
     `
 }
-
 // initialize Tagify on the above input node reference
 var tagify = new Tagify(input, {
     tagTextProp: 'code', // very important since a custom template is used with this property as text. allows typing a "value" or a "title" to match input with whitelist
@@ -56,28 +51,21 @@ var tagify = new Tagify(input, {
     },
     whitelist: signatureList
 })
-
 tagify.on('dropdown:show dropdown:updated', onDropdownShow)
 tagify.on('dropdown:select', onSelectSuggestion)
-
 var addAllSuggestionsElm;
-
 function onDropdownShow(e) {
     var dropdownContentElm = e.detail.tagify.DOM.dropdown.content;
-
     if (tagify.suggestedListItems.length > 1) {
         addAllSuggestionsElm = getAddAllSuggestionsElm();
-
         // insert "addAllSuggestionsElm" as the first element in the suggestions list
         dropdownContentElm.insertBefore(addAllSuggestionsElm, dropdownContentElm.firstChild)
     }
 }
-
 function onSelectSuggestion(e) {
     if (e.detail.elm == addAllSuggestionsElm)
         tagify.dropdown.selectAll.call(tagify);
 }
-
 // create a "add all" custom suggestion element every time the dropdown changes
 function getAddAllSuggestionsElm() {
     // suggestions items should be based on "dropdownItem" template

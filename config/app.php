@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Size Filter Mode
+    |--------------------------------------------------------------------------
+    |
+    | This value determines whether the size filter uses hardcoded values
+    | or database-driven values from the size_filters table.
+    | Options: 'hardcoded', 'database'
+    |
+    */
+
+    'size_filter_mode' => env('SIZE_FILTER_MODE', 'hardcoded'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |
@@ -187,8 +200,10 @@ return [
          */
         Yajra\DataTables\DataTablesServiceProvider::class,
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
 
+        Irfa\RajaOngkir\RajaOngkirServiceProvider::class,
+        Nwidart\Modules\LaravelModulesServiceProvider::class,
     ],
 
     /*
@@ -244,7 +259,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'RajaOngkir' => Irfa\RajaOngkir\Facades\Ongkir::class,
     ],
 
 ];

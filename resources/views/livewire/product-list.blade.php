@@ -76,7 +76,7 @@
             </header>
             <div class="Drawer__Content">
               <div class="Drawer__Main" style="padding-left: 20px !important;" data-scrollable>
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
               </div>
             </div>
         </div>
@@ -105,10 +105,10 @@
                     {{-- <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.after_discount_price', 'DESC')">
                     Discount Price
                     </a> --}}
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'ASC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.created_at', 'ASC')">
                     Date, old to new
                     </a>
-                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.created_at', 'DESC')">
+                    <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('pd.created_at', 'DESC')">
                     Date, new to old
                     </a>
                     <a class="Popover__Value  Heading Link Link--primary u-h6" wire:click="sort('products.updated_at', 'DESC')">
@@ -120,7 +120,7 @@
         <div class="CollectionInner">
             <div class="CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar hidden-pocket"
                 style="top: -4.0625px;">
-                @include('components.filters', $filters)
+                @include('back-office.components.filters', $filters)
             </div>
             <div wire:loading>
                 <div class="PageOverlay is-visible"></div>
@@ -139,11 +139,11 @@
                                     $class = '1/2--phone 1/3--tablet-and-up 1/4--desk';
                                 } elseif ($count == 3) {
                                     $class = '1/4--desk';
-                                    $style = 'width: 85vw;';
+                                    $style = 'width: 67vw;';
                                     $desktop_count = 4;
                                 } else {
                                     $class = '1/4--desk';
-                                    $style = 'width: 85vw;';
+                                    $style = 'width: 67vw;';
                                     $desktop_count = 4;
                                 }
                             @endphp
@@ -151,8 +151,7 @@
                             data-desktop-count="{{ $desktop_count }}" style="{{ $style }}">
                             @foreach ($products as $product)
                             @php
-                                $image_size = getimagesize(getImage($product->image, 'products/'.$product->product_code));
-                                $ratio = $image_size[0] / $image_size[1];
+                                $ratio = getImageAspectRatio($product->image, 'products/'.$product->product_code);
                             @endphp
                                 <div class="Grid__Cell {{ $class }}">
                                     <div class="ProductItem" style="visibility: visible;">

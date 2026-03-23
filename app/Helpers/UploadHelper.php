@@ -4,6 +4,7 @@ use BaconQrCode\Renderer\Path\Path;
 use Illuminate\Validation\Rules\Exists;
 use Intervention\Image\Facades\Image;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('cleanDirectory')){
     function cleanDirectory($path){
@@ -184,15 +185,32 @@ if(!function_exists('imageUploadProduct')) {
 if (!function_exists('getImage')) {
     function getImage($filename, $module = ''){
         if ($filename && $module) {
+            // Encode filename
+            $safeFilename = str_replace(' ', '%20', $filename);
+
             $image_path = public_path('images/'.$module.'/'.$filename);
             if(File::exists($image_path)) {
-                return asset('images/'.$module.'/'.$filename);
+                return asset('images/'.$module.'/'.$safeFilename);
             } else {
                 return asset('demo1/media/blank/blank-image.png');
             }
         } else {
             return asset('demo1/media/blank/blank-image.png');
         }
+    }
+}
+
+// get aspect ratio for PHP 8.3+ (getimagesize() not reliable using URL, changed to image path)
+if (!function_exists('getImageAspectRatio')) {
+    function getImageAspectRatio($filename, $module = ''){
+        if ($filename && $module) {
+            $image_path = public_path('images/'.$module.'/'.$filename);
+        } else {
+            $image_path = public_path('demo1/media/blank/blank-image.png');
+        }
+        $image_size = getimagesize($image_path);
+        $ratio = $image_size[0] / $image_size[1];
+        return $ratio;
     }
 }
 
@@ -251,6 +269,57 @@ if(!function_exists('moveImage')) {
         return true;
     }
 }
+
+/**
+ * uploadAsWebp function
+ * @param \Illuminate\Http\UploadedFile $file
+ * @param string $path
+ * @param string $storage
+ * @param int $width
+ * @param int $height
+ * @param string $saveAsFilename
+ * @return string => URL of the uploaded image
+ */
+if (!function_exists('uploadAsWebp')) {
+    function uploadAsWebp($file, $path, $storage = 'public', $width = 1200, $height = 1200, $saveAsFilename = null, $method = 'crop') {
+        if ($saveAsFilename) {
+            $imageName = $saveAsFilename . '.webp';
+        } else {
+            $imageName = time() . '.webp';
+        }
+        $img = Image::make($file);
+        if ($method == 'crop') {
+            $img->fit($width, $height);
+        } else {
+            $img->resize($width, $height, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+        }
+        $img->encode('webp', 80);
+        Storage::disk($storage)->put($path . '/' . $imageName, $img);
+        $uploadedUrl = Storage::disk($storage)->url($path . '/' . $imageName);
+        return $uploadedUrl;
+    }
+}
+
+/**
+ * deletePublicFileByUrl function
+ * @param string $url
+ * @return bool
+ */
+if(!function_exists('deletePublicFileByUrl')) {
+    function deletePublicFileByUrl($url)
+    {
+        if (! $url) return false;
+
+        $relativePath = ltrim(parse_url($url, PHP_URL_PATH), '/');
+        $storagePath = str_replace('storage/', '', $relativePath);
+
+        return Storage::disk('public')->delete($storagePath);
+    }
+}
+
 
 if(!function_exists('convertToWebpAndDelete')) {
     function convertToWebpAndDelete($sourcePath, $quality = 80) {

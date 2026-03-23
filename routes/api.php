@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\SampleDataController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Administrator\Auth\LoginController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Sample API route
+Route::get('/profits', [SampleDataController::class, 'profits'])->name('profits');
+
+Route::get('/check-activity', [LoginController::class, 'checkActivity'])->name('check-activity');

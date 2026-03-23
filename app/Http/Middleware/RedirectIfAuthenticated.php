@@ -23,6 +23,11 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+
+                if(!auth()->user()->can('administrator.product.index')){
+                    return redirect()->route('customer.dashboard');
+                }
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }

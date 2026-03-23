@@ -13,7 +13,9 @@ class Faq extends Model
     protected $fillable = [
         'faq_title',
         'faq_question',
-        'faq_answer'
+        'faq_answer',
+        'is_home',
+        'is_active'
     ];
 
     protected static function newFactory()

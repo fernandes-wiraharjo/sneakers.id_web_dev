@@ -42,6 +42,16 @@
 <br>
 <div class="row">
     <h5>Sizes, Quantity & Prices</h5>
+    
+<x-ladmin-form-group name="products_size_chart_image" label="Size-chart Image">
+	<input type="file" class="form-control" name="products_size_chart_image" id="products_size_chart_image" value="{{ old('products_size_chart_image', $edit && isset($size_chart_image) ? $size_chart_image : '') }}" accept="image/*">
+</x-ladmin-form-group>
+@if (isset($size_chart_image) && $size_chart_image)
+<div class="col-sm-12 col-md-6 offset-md-6">
+    <img src="{{ $size_chart_image }}" alt="Size Chart Image" class="img-fluid">
+</div>
+@endif
+
     <div class="col-sm-12 m-5">
     <!--begin::Repeater-->
     <div id="size_price">
@@ -79,15 +89,20 @@
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                 </div>
                             </div>
-                            {{-- <button type="button" data-repeater-delete="" class="btn btn-sm btn-icon btn-light-danger">
-                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                            </button> --}}
                             <div class="col-md-5">
                                 <label class="form-label">Quantity :</label>
                                 <div class="input-group mb-5">
                                     <input type="number" id="qty" min="0" class="form-control bulk-qty" name="bulk_qty" aria-label="Amount"
                                     value=""/>
                                     <span class="input-group-text"> pcs</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Weight :</label>
+                                <div class="input-group mb-5">
+                                    <input type="number" id="weight" min="0" class="form-control bulk-weight" name="bulk_weight" aria-label="Amount"
+                                    value=""/>
+                                    <span class="input-group-text"> grams</span>
                                 </div>
                             </div>
                             {{-- <div class="col-md-2">
@@ -101,7 +116,7 @@
                                 <label class="form-label">Retail Price :</label>
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">Rp</span>
-                                    <input id="base" type="text" class="form-control bulk-retail-price" name="bulk_retail_price" min=1
+                                    <input type="text" class="form-control bulk-retail-price" name="bulk_retail_price" min="0"
                                     value="" aria-label="Amount (to the nearest rupiah)"/>
                                 </div>
                             </div>
@@ -109,12 +124,34 @@
                                 <label class="form-label">After Discount Price:</label>
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">Rp</span>
-                                    <input id="discount" type="text" class="form-control bulk-after-discount-price" name="bulk_discount_price" min="0"
-                                    value="" aria-label="Amount (to the nearest rupiah)" onfocus="countDiscountPrice(this)"/>
+                                    <input type="text" class="form-control bulk-after-discount-price" name="bulk_discount_price" min="0"
+                                    value="" aria-label="Amount" onfocus="countDiscountPrice(this)"/>
                                     <span class="input-group-text">%</span>
                                     <input type="number" class="form-control bulk-discount-percentage" name="bulk_discount_percentage" min="0" max="100"
                                         value="" onfocus="countDiscountPercentage(this)"
-                                    placeholder="Percentage" aria-label="Percent"/>
+                                    placeholder="%" aria-label="Percent"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-5">
+                                <label class="form-label">Marketplace Price :</label>
+                                <div class="input-group mb-5">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="text" class="form-control bulk-marketplace-price" name="bulk_marketplace_price"
+                                    value="" aria-label="Optional" placeholder="Optional"/>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Marketplace After Discount:</label>
+                                <div class="input-group mb-5">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="text" class="form-control bulk-marketplace-after-discount-price" name="bulk_marketplace_after_discount_price"
+                                    value="" aria-label="Amount" placeholder="Optional" onfocus="countMarketplaceDiscountPrice(this)"/>
+                                    <span class="input-group-text">%</span>
+                                    <input type="number" class="form-control bulk-marketplace-discount-percentage" name="bulk_marketplace_discount_percentage" min="0" max="100"
+                                        value="" onfocus="countMarketplaceDiscountPercentage(this)"
+                                    placeholder="%" aria-label="Percent"/>
                                 </div>
                             </div>
                         </div>
@@ -148,27 +185,33 @@
                                         value="{{ old('size_prize.0.base_price', '') }}" aria-label="Amount (to the nearest rupiah)"/>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-2">
                                     <label class="form-label">Quantity :</label>
                                     <div class="input-group mb-5">
-                                        <button type="button" class="input-group-text" onclick="increment(this)"><i class="fas fa-plus"></i></button>
                                         <input type="text" id="qty" class="form-control qty" name="qty" aria-label="Amount"
                                         value="{{ old('size_prize[0][qty]', '') }}"/>
-                                        <button type="button" class="input-group-text" onclick="decrement(this)"><i class="fas fa-minus"></i></button>
                                         <span class="input-group-text"> pcs</span>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <label class="form-label">Weight :</label>
+                                    <div class="input-group mb-5">
+                                        <input type="text" id="weight" class="form-control weight" name="weight" aria-label="Amount"
+                                        value="{{ old('size_prize[0][weight]', '') }}"/>
+                                        <span class="input-group-text"> grams</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <label class="form-label">Retail Price:</label>
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
                                         <input id="retail" type="text" class="form-control retail-price" name="retail_price" min="0"
-                                        value="{{ old('size_prize[0][retail_price]', '') }}" aria-label="Amount (to the nearest rupiah)"/>
+                                        value="{{ old('size_prize[0][retail_price]', '') }}" aria-label="Amount (to the nearest rupiah)" onfocus="countDiscountPrice(this)"/>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <label class="form-label">After Discount Price:</label>
                                     <div class="input-group mb-5">
                                         <span class="input-group-text">Rp</span>
@@ -177,7 +220,29 @@
                                         <span class="input-group-text">%</span>
                                         <input type="text" class="form-control discount-percentage" name="discount_percentage" min="0" max="100"
                                             value="{{ old('size_prize[0][discount_percentage]', '') }}" onfocus="countDiscountPercentage(this)"
-                                        placeholder="Percentage" aria-label="Percent"/>
+                                        placeholder="%" aria-label="Percent"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-5">
+                                    <label class="form-label">Marketplace Price:</label>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control marketplace-price" name="marketplace_price"
+                                        value="{{ old('size_prize[0][marketplace_price]', '') }}" aria-label="Optional" placeholder="Optional" onfocus="countMarketplaceDiscountPrice(this)"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Marketplace After Discount:</label>
+                                    <div class="input-group mb-5">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="text" class="form-control marketplace-after-discount-price" name="marketplace_after_discount_price"
+                                        value="{{ old('size_prize[0][marketplace_after_discount_price]', '') }}" aria-label="Amount" placeholder="Optional" onfocus="countMarketplaceDiscountPrice(this)"/>
+                                        <span class="input-group-text">%</span>
+                                        <input type="text" class="form-control marketplace-discount-percentage" name="marketplace_discount_percentage" min="0" max="100"
+                                            value="{{ old('size_prize[0][marketplace_discount_percentage]', '') }}" onfocus="countMarketplaceDiscountPercentage(this)"
+                                        placeholder="%" aria-label="Percent"/>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -238,12 +303,7 @@
         </x-ladmin-form-group>
         <x-ladmin-form-group name="models" label="Signature Player">
             @livewire('signature-player', [
-                'current_signature' => $product->signatures()
-                    ->select(
-                        'signature_player_id as value',
-                        'signature_code as code',
-                        'signature_player_name as title'
-                    )->get(),
+                'current_signature' => $product->signatures()->get()->map(fn($s) => ['value' => $s->id, 'code' => $s->signature_code, 'title' => $s->signature_player_name])->values(),
                 'edit' => $edit ])
         </x-ladmin-form-group>
     </div>
@@ -251,7 +311,7 @@
 <hr>
 
 
-@include('components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
+@include('back-office.components.is_active', ['is_active' => $product->is_active, 'edit' => $edit])
 @push('top-scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 @endpush
@@ -320,6 +380,19 @@
                             }
                         }
                     },
+                    // 'products_size_chart_image': {
+                    //     validators: {
+                    //         // notEmpty: {
+                    //         //     message: 'Image is required'
+                    //         // },
+                    //         file: {
+                    //             extension: 'jpeg,jpg,png',
+                    //             type: 'image/jpeg,image/png',
+                    //             maxSize: 2097152, // 2048 * 1024
+                    //             message: 'The selected file is not valid',
+                    //         },
+                    //     }
+                    // },
                     'category': {
                         validators: {
                             notEmpty: {
@@ -391,9 +464,11 @@
     <script>
         var base = document.getElementsByClassName("base-price");
         var retail = document.getElementsByClassName("retail-price");
+        var marketplace = document.getElementsByClassName("marketplace-price");
         var after_discount = document.getElementsByClassName("after-discount-price");
         var bulkBase = document.getElementsByClassName("bulk-base-price");
         var bulkRetail = document.getElementsByClassName("bulk-retail-price");
+        var bulkMarketplace = document.getElementsByClassName("bulk-marketplace-price");
         var bulkAfterDiscount = document.getElementsByClassName("bulk-after-discount-price");
 
         // base = [].slice.call(base, 0);
@@ -407,9 +482,11 @@
 
         attachRupiahFormatter(base);
         attachRupiahFormatter(retail);
+        attachRupiahFormatter(marketplace);
         attachRupiahFormatter(after_discount);
         attachRupiahFormatter(bulkBase);
         attachRupiahFormatter(bulkRetail);
+        attachRupiahFormatter(bulkMarketplace);
         attachRupiahFormatter(bulkAfterDiscount);
 
         /* Fungsi formatRupiah */
@@ -468,6 +545,14 @@
                         $(this).find('.qty').val($('.bulk-qty').val());
                     }
 
+                    if($('.bulk-weight').val() != "") {
+                        $(this).find('.weight').val($('.bulk-weight').val());
+                    }
+
+                    if($('.bulk-marketplace-price').val() != ""){
+                        $(this).find('.marketplace-price').val($('.bulk-marketplace-price').val());
+                    }
+
                     if($('.bulk-retail-price').val() != ""){
                         $(this).find('.retail-price').val($('.bulk-retail-price').val());
                     }
@@ -478,6 +563,16 @@
 
                     if($('.bulk-discount-percentage').val() != ""){
                         $(this).find('.discount-percentage').val($('.bulk-discount-percentage').val());
+                    }
+
+                    if($('.bulk-marketplace-price').val() != ""){
+                        $(this).find('.marketplace-price').val($('.bulk-marketplace-price').val());
+                    }
+                    if($('.bulk-marketplace-after-discount-price').val() != ""){
+                        $(this).find('.marketplace-after-discount-price').val($('.bulk-marketplace-after-discount-price').val());
+                    }
+                    if($('.bulk-marketplace-discount-percentage').val() != ""){
+                        $(this).find('.marketplace-discount-percentage').val($('.bulk-marketplace-discount-percentage').val());
                     }
                 }
             });
@@ -519,6 +614,38 @@
             }
         }
 
+        function countMarketplaceDiscountPercentage(param) {
+            let marketplace_price, after_price, pct;
+            if (param.name.includes('bulk')) {
+                marketplace_price = parseInt(String(document.querySelector('input[name="bulk_marketplace_price"]').value).replaceAll('.', '')) || 0;
+                after_price = parseInt(String(document.querySelector('input[name="bulk_marketplace_after_discount_price"]').value).replaceAll('.', '')) || 0;
+                pct = marketplace_price > 0 ? Math.round(((marketplace_price - after_price) / marketplace_price) * 100) : 0;
+                document.querySelector('input[name="bulk_marketplace_discount_percentage"]').value = pct;
+            } else {
+                const prefix = param.name.replace('[marketplace_discount_percentage]', '');
+                marketplace_price = parseInt(String(document.querySelector('input[name="' + prefix + '[marketplace_price]"]').value).replaceAll('.', '')) || 0;
+                after_price = parseInt(String(document.querySelector('input[name="' + prefix + '[marketplace_after_discount_price]"]').value).replaceAll('.', '')) || 0;
+                pct = marketplace_price > 0 ? Math.round(((marketplace_price - after_price) / marketplace_price) * 100) : 0;
+                document.querySelector('input[name="'+param.name+'"]').value = pct;
+            }
+        }
+
+        function countMarketplaceDiscountPrice(param) {
+            let marketplace_price, pct, after_price;
+            if (param.name.includes('bulk')) {
+                marketplace_price = parseInt(String(document.querySelector('input[name="bulk_marketplace_price"]').value).replaceAll('.', '')) || 0;
+                pct = parseInt(document.querySelector('input[name="bulk_marketplace_discount_percentage"]').value) || 0;
+                after_price = Math.round(marketplace_price - (pct / 100 * marketplace_price));
+                document.querySelector('input[name="bulk_marketplace_after_discount_price"]').value = formatRupiah(after_price.toString());
+            } else {
+                const prefix = param.name.replace('[marketplace_after_discount_price]', '');
+                marketplace_price = parseInt(String(document.querySelector('input[name="' + prefix + '[marketplace_price]"]').value).replaceAll('.', '')) || 0;
+                pct = parseInt(document.querySelector('input[name="' + prefix + '[marketplace_discount_percentage]"]').value) || 0;
+                after_price = Math.round(marketplace_price - (pct / 100 * marketplace_price));
+                document.querySelector('input[name="'+param.name+'"]').value = formatRupiah(after_price.toString());
+            }
+        }
+
         function increment(plus) {
             var input = $(plus).siblings("input");
             console.log('+');
@@ -536,7 +663,11 @@
                 'retail_price': 1,
                 'after_discount_price': 0,
                 'qty': 0,
+                'weight': 0,
                 'discount_percentage': 0,
+                'marketplace_price': '',
+                'marketplace_after_discount_price': '',
+                'marketplace_discount_percentage': 0,
             },
 
             show: function () {
@@ -544,7 +675,9 @@
 
                 var base = document.getElementsByClassName("base-price");
                 var retail = document.getElementsByClassName("retail-price");
+                var marketplace = document.getElementsByClassName("marketplace-price");
                 var after_discount = document.getElementsByClassName("after-discount-price");
+                var marketplace_after = document.getElementsByClassName("marketplace-after-discount-price");
                 for (var i = 0; i < base.length; ++i){
                     base[i].addEventListener("keyup", function(e) {
                         this.value = formatRupiah(this.value);
@@ -557,8 +690,20 @@
                     });
                 }
 
+                for (var i = 0; i < marketplace.length; ++i){
+                    marketplace[i].addEventListener("keyup", function(e) {
+                        this.value = formatRupiah(this.value);
+                    });
+                }
+
                 for (var i = 0; i < after_discount.length; ++i){
                     after_discount[i].addEventListener("keyup", function(e) {
+                        this.value = formatRupiah(this.value);
+                    });
+                }
+
+                for (var i = 0; i < marketplace_after.length; ++i){
+                    marketplace_after[i].addEventListener("keyup", function(e) {
                         this.value = formatRupiah(this.value);
                     });
                 }
@@ -578,7 +723,6 @@
         @endif
 
         @if($edit)
-            console.log('test');
             console.log(JSON.parse($('#product_details').val()));
             repeater.setList(JSON.parse($('#product_details').val()));
 
@@ -586,17 +730,5 @@
                 repeater.setList(JSON.parse($('#old_size_price').val()));
             @endif
         @endif
-
-        // $(document).ready(function() {
-        function increment(item) {
-            var input = $(item).siblings("input");
-            input.val(parseInt(input.val()) + 1);
-        }
-
-        function decrement(item) {
-            var input = $(item).siblings("input");
-            input.val(parseInt(input.val()) - 1);
-        }
-        // });
     </script>
 @endpush

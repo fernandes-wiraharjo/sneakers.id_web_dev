@@ -13,6 +13,7 @@ use Modules\Size\Repositories\SizeRepository;
 use Modules\Tag\Repositories\TagRepository;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
+use Modules\SizeFilter\Entities\SizeFilter;
 
 class GlobalSearch extends Component
 {
@@ -89,6 +90,14 @@ class GlobalSearch extends Component
     public function sort($sort_column = 'products.product_name', $sort_by = 'ASC'){
         $this->sort_by = $sort_by;
         $this->sort_column = $sort_column;
+    }
+
+    public function handleSortChange($value)
+    {
+        if ($value) {
+            list($sort_column, $sort_by) = explode(':', $value);
+            $this->sort($sort_column, strtoupper($sort_by));
+        }
     }
 
     public function mount(): void
@@ -241,6 +250,13 @@ class GlobalSearch extends Component
             'category' => $categoryRepository->getAllCategoriesExceptGender(),
             'signature_player' => $signaturePlayerRepository->getAllSignatures()
         ];
+        
+        // Add size filters if using database mode
+        if (config('app.size_filter_mode') === 'database') {
+            $data['sizeFilters'] = SizeFilter::where('is_active', true)
+                ->orderBy('sort_order')
+                ->get();
+        }
         $where_column = ['product_code', 'product_name', 'description'];
         $keyword_array = [];
         $sale_keyword = '';
@@ -429,15 +445,55 @@ class GlobalSearch extends Component
                         $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
                     });
                 })
-                ->when($this->size_filter, function ($q, $sizes) {
-                            foreach($sizes as $index => $size){
-                                if($index == 0) {
-                                    $q->where('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
-                                } else {
-                                    $q->orWhere('pd.size', 'LIKE', DB::raw('"%'.$size.'%"'));
+                ->when($this->size_filter, function ($q, $filterLabels) {
+                    if (config('app.size_filter_mode') === 'database') {
+                        // Database mode: Get all EU size values from SizeFilter records
+                        // Use whereHas to check all product_details, not just the one in pd
+                        return $q->whereHas('details', function ($detailQuery) use ($filterLabels) {
+                            $allEuSizes = [];
+                            
+                            foreach ($filterLabels as $filterLabel) {
+                                // Find SizeFilter records by filter_label
+                                $filters = SizeFilter::where('filter_label', $filterLabel)->get();
+                                
+                                // Collect all EU size values from JSON column
+                                foreach ($filters as $filter) {
+                                    $euSizes = $filter->eu_sizes ?? [];
+                                    $allEuSizes = array_merge($allEuSizes, $euSizes);
                                 }
                             }
-                            return $q->where('pd.qty', '>', 0);
+                            
+                            // Remove duplicates and filter products
+                            $allEuSizes = array_unique($allEuSizes);
+                            
+                            if (!empty($allEuSizes)) {
+                                $detailQuery->where(function ($sizeQuery) use ($allEuSizes) {
+                                    foreach ($allEuSizes as $index => $euSize) {
+                                        // Use %size (ends with) instead of %size%
+                                        if ($index == 0) {
+                                            $sizeQuery->where('size', 'LIKE', '%' . $euSize);
+                                        } else {
+                                            $sizeQuery->orWhere('size', 'LIKE', '%' . $euSize);
+                                        }
+                                    }
+                                });
+                            }
+                            
+                            // Only include product_details with quantity > 0
+                            $detailQuery->where('qty', '>', 0);
+                        });
+                    } else {
+                        // Hardcoded mode: Use sizes directly as before (ends with)
+                        foreach ($filterLabels as $index => $size) {
+                            if ($index == 0) {
+                                $q->where('pd.size', 'LIKE', '%' . $size);
+                            } else {
+                                $q->orWhere('pd.size', 'LIKE', '%' . $size);
+                            }
+                        }
+                        
+                        return $q->where('pd.qty', '>', 0);
+                    }
                 })
                 ->when(count($keyword_array) >= 2, function($query) {
                     return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');
@@ -446,6 +502,6 @@ class GlobalSearch extends Component
 
         $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
-        return view('livewire.global-search', $data);
+        return view('bootstrap.livewire.global-search', $data);
     }
 }

@@ -7,6 +7,7 @@ use Modules\SignaturePlayer\Entities\SignaturePlayer;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
 use App\Services\SignaturePlayerService;
+use Illuminate\Support\Facades\File;
 
 class SignaturePlayerRepository extends Repository implements MasterRepositoryInterface {
 
@@ -23,9 +24,8 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
    * @return Void
    */
   public function updateSignaturePlayer(Request $request, $id) {
-    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
-
     $get_signaturePlayer = $this->model->findOrFail($id);
+    $signaturePlayer = $this->signaturePlayerService->updateSignaturePlayer($request);
 
     return $get_signaturePlayer->update($signaturePlayer);
   }
@@ -37,11 +37,15 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
   }
 
   public function getAllSignatures() {
-      return $this->model->where('is_active', 1)->orderBy('signature_title', 'ASC')->get();
+      return $this->model->where('is_active', 1)->orderBy('signature_code', 'ASC')->get();
   }
 
   public function getSignaturePlayerById($id){
       return $this->model->find($id);
+  }
+
+  public function getSignaturePlayerByCode($code){
+      return $this->model->where('signature_code', $code)->first();
   }
 
   public function getSignatureByName($keyword){
@@ -66,7 +70,15 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
     if($signature->products()->count() > 0){
         return false;
     } else {
+      try {
+        // delete image from storage
+        deletePublicFileByUrl($signature->signature_image);
+        deletePublicFileByUrl($signature->emblem_url);
+
         return $signature->delete();
+      } catch (\Throwable $th) {
+        return false;
+      }
     }
   }
 
@@ -76,5 +88,17 @@ class SignaturePlayerRepository extends Repository implements MasterRepositoryIn
           'signature_code as code',
           'signature_player_name as title'
           )->get();
+  }
+
+  public function getSignatureCarousel(){
+    return $this->model->where('is_active', 1)
+      ->where('is_home_display', 1)
+      ->whereNotNull('signature_image')
+      ->select('id', 'signature_code', 'signature_title', 'emblem_url', 'signature_image')
+      ->get();
+  }
+
+  public function getSignatureIdAndNameLivewire(){
+      return $this->model->where('is_active', 1)->select('id', 'signature_player_name as value')->get();
   }
 }

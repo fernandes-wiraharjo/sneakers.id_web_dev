@@ -36,7 +36,17 @@ class FaqRepository extends Repository implements MasterRepositoryInterface {
   }
 
   public function getAllFaq(){
-      return $this->model->get();
+      return $this->model->where('is_active', 1)->get();
+  }
+
+  public function getHomeFaq($limit = null){
+      $query = $this->model->where('is_home', 1)->where('is_active', 1);
+      
+      if ($limit) {
+          return $query->limit($limit)->inRandomOrder()->get();
+      }
+      
+      return $query->get();
   }
 
   public function getFaqById($id){
@@ -45,5 +55,9 @@ class FaqRepository extends Repository implements MasterRepositoryInterface {
 
   public function deleteFaq($id){
       return $this->getFaqById($id)->delete();
+  }
+
+  public function getFaq($limit = 10){
+    return $this->model->limit($limit)->get();
   }
 }

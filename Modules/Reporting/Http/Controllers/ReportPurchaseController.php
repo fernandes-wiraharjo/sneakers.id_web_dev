@@ -185,7 +185,14 @@ class ReportPurchaseController extends Controller
         foreach ($intFields as $field) {
             if (isset($data[$field])) {
                 if (is_string($data[$field])) {
-                    $data[$field] = (int) preg_replace('/\D/', '', $data[$field]);
+                    if ($field === 'margin_net') {
+                        // margin_net can be negative; keep a single leading '-'
+                        $clean = preg_replace('/[^0-9\\-]/', '', $data[$field]);
+                        $clean = preg_replace('/(?!^)-/', '', $clean);
+                        $data[$field] = (int) $clean;
+                    } else {
+                        $data[$field] = (int) preg_replace('/\D/', '', $data[$field]);
+                    }
                 } else {
                     $data[$field] = (int) $data[$field];
                 }

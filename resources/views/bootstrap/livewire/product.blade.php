@@ -46,7 +46,7 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
                     </a>
                 @endif
             </div>
-            <div class="d-flex justify-content-start gap-2">
+            <div class="d-flex flex-wrap justify-content-start gap-2">
                 @foreach ($sizeList as $variant)
                 <input type="radio" class="btn-check" name="size" value="{{ $variant->id }}" id="btn-check-{{ $variant->id }}" autocomplete="off" wire:click="updatePrice({{ $variant->id }})" {{ ($size ?? null) == $variant->id ? 'checked' : '' }}>
                 <label class="btn btn-light" for="btn-check-{{ $variant->id }}">{{ $variant->size }}</label>

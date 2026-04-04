@@ -28,11 +28,13 @@ class Product extends Component
     public function mount(): void
     {
         $this->quantity = 1;
-        // $this->size = $this->product->detail->id;
-        $this->showSelectedSize = $this->product->detail->size ?? 'All size';
-        $this->showRetailPrice = $this->product->detail->retail_price;
-        $this->showDiscountPrice = $this->product->detail->after_discount_price;
-        $this->showDiscountPercentage = $this->product->detail->discount_percentage;
+        $detail = $this->product->details()->where('qty', '>', 0)->orderByDesc('qty')->first()
+            ?? $this->product->detail;
+        $this->showSelectedSize = $detail->size ?? 'All size';
+        $this->showRetailPrice = $detail->retail_price;
+        $this->showDiscountPrice = $detail->after_discount_price;
+        $this->showDiscountPercentage = $detail->discount_percentage;
+        $this->showWeight = (int) ($detail->weight ?? 0);
     }
 
     public function updatePrice($id) {
@@ -70,7 +72,7 @@ class Product extends Component
                     $this->emit('showToast', ['type' => 'error', 'message' => 'Product stock has reach the limit']);
                 } else {
                     $url = url('/product-detail/'.$this->product->id.'/'.$this->product->product_name);
-                    Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, $this->product->detail->weight ,getImage($this->product->image, 'products/' . $this->product->product_code), $url);
+                    Cart::add($this->product->id, intval($this->size), $this->product->product_code ,$this->product->product_name, $this->showRetailPrice, $this->showDiscountPrice, $this->showSelectedSize, $this->quantity, (int) ($current_item->weight ?? $this->showWeight), getImage($this->product->image, 'products/' . $this->product->product_code), $url);
                     $this->emit('showToast', ['type' => 'success', 'message' => 'Product added to cart successfully']);
                     $this->emit('productAddedToCart');
                     $this->emit('cartCounter');

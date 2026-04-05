@@ -23,7 +23,12 @@ class CartCheckout extends Component
     public $finalTotal = 0;
     public $appliedVoucher = null;
     public $guestEmail = ''; // Email for guest users
-    
+
+    /** Cart line keys (size_id) that are out of stock or missing in DB */
+    public array $unavailableLines = [];
+
+    public bool $hasUnavailableItems = false;
+
     protected $listeners = [
         'productAddedToCart' => 'updateCart',
         'noteUpdated' => 'updateNote',
@@ -128,7 +133,18 @@ class CartCheckout extends Component
      */
     public function updateCartItem(string $size_id, string $action, string $current_qty): void
     {
-        $qty = ProductDetail::where('id', $size_id)->first()->qty;
+        $detail = ProductDetail::query()->where('id', $size_id)->first();
+        $qty = $detail ? (int) $detail->qty : 0;
+
+        if ($qty <= 0) {
+            if ($action === 'plus') {
+                $this->emit('showToast', ['type' => 'error', 'message' => 'This product is no longer available. Remove it from your cart to continue.']);
+            }
+            $this->updateCart();
+            $this->emit('cartCounter');
+            return;
+        }
+
         $this->disabledPlus[$size_id] = false;
 
         if($action == 'plus') {
@@ -192,14 +208,26 @@ class CartCheckout extends Component
         $this->content = Cart::content();
         Cart::addNotes($this->note);
 
-        foreach(Cart::content() as $item) {
-            $qty = ProductDetail::where('id', $item['size_id'])->first()->qty;
-            if (intval($item['quantity'])+1 <= $qty) {
-                $this->disabledPlus[$item['size_id']] = false;
-            } else {
-                $this->disabledPlus[$item['size_id']] = true;
+        $this->unavailableLines = [];
+        foreach (Cart::content() as $lineKey => $item) {
+            $sizeId = $item['size_id'];
+            $detail = ProductDetail::query()->where('id', $sizeId)->first();
+            $stock = $detail ? (int) $detail->qty : 0;
+
+            if ($stock <= 0) {
+                $this->unavailableLines[$lineKey] = true;
             }
-        };
+
+            if ($stock <= 0) {
+                $this->disabledPlus[$sizeId] = true;
+            } elseif (intval($item['quantity']) + 1 <= $stock) {
+                $this->disabledPlus[$sizeId] = false;
+            } else {
+                $this->disabledPlus[$sizeId] = true;
+            }
+        }
+
+        $this->hasUnavailableItems = count($this->unavailableLines) > 0;
     }
 
     public function updateNote($newNote)
@@ -219,6 +247,11 @@ class CartCheckout extends Component
      */
     public function applyVoucher()
     {
+        if ($this->hasUnavailableItems) {
+            $this->voucherMessage = 'Remove unavailable items from your cart before using a voucher.';
+            return;
+        }
+
         if (empty($this->voucherCode)) {
             $this->voucherMessage = 'Please enter a voucher code.';
             return;

@@ -553,6 +553,8 @@ class ProductList extends Component
                                             }
                                         });
                                     }
+
+                                    $detailQuery->where('qty', '>', 0);
                                 });
                             } else {
                                 // Hardcoded mode: Use sizes directly as before (ends with)

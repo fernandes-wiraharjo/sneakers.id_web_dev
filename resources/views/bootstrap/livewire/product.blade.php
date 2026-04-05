@@ -70,8 +70,10 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             </p>
 
             @php
-            $can_buy = true;
-            if (count($sizeList) < 2 && ($sizeList[0]->size == null || $sizeList[0]->size == '')) $can_buy = false;
+            $can_buy = count($sizeList) > 0;
+            if ($can_buy && count($sizeList) < 2 && ($sizeList[0]->size == null || $sizeList[0]->size == '')) {
+                $can_buy = false;
+            }
             @endphp
             @if ($can_buy)
             <button wire:click="addToCart" class="btn btn-danger rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">

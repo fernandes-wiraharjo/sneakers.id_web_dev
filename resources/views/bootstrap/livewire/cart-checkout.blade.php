@@ -25,14 +25,24 @@
                         </div>
                     </div>
 
+                    @if($hasUnavailableItems)
+                    <div class="alert alert-danger mb-4" role="alert">
+                        One or more items are no longer in stock. Remove them to apply a voucher or checkout.
+                    </div>
+                    @endif
+
                     {{-- Cart Items List --}}
                     @foreach ($content as $id => $item)
-                    <div class="row border-bottom pb-3 mb-3 align-items-center">
+                    @php $lineUnavailable = !empty($unavailableLines[$id]); @endphp
+                    <div class="row border-bottom pb-3 mb-3 align-items-center {{ $lineUnavailable ? 'border border-danger rounded-3 bg-danger bg-opacity-10 px-2 py-2' : '' }}">
                         {{-- Product Image and Info --}}
                         <div class="col-12 col-md-6 mb-3 mb-md-0">
                             <div class="d-flex gap-3">
                                 <img src="{{ $item->get('image') }}" alt="{{ $item->get('name') }}" class="cart-item-image">
                                 <div class="flex-grow-1">
+                                    @if($lineUnavailable)
+                                        <div class="text-danger small fw-bold mb-2">This product is no longer available (out of stock).</div>
+                                    @endif
                                     <h5 class="mb-2">
                                         <a href="{{ $item->get('url') }}" class="text-dark text-decoration-none">{{ $item->get('name') }}</a>
                                     </h5>
@@ -58,7 +68,8 @@
                                     <button type="button" 
                                             class="quantity-btn" 
                                             wire:click="updateCartItem({{ $id }}, 'minus', {{ $item->get('quantity') }})"
-                                            title="Decrease quantity">
+                                            title="Decrease quantity"
+                                            @if($lineUnavailable) disabled @endif>
                                         <span class="iconify" data-icon="mdi:minus" style="font-size: 16px;"></span>
                                     </button>
                                     <input type="text" 
@@ -74,14 +85,15 @@
                                                     wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
                                                     wire:disabled="{{ $disabledPlus[$id] ? 'true' : 'false'}}"
                                                     title="Increase quantity"
-                                                    {{ $disabledPlus[$id] ? 'disabled' : '' }}>
+                                                    {{ $disabledPlus[$id] || $lineUnavailable ? 'disabled' : '' }}>
                                                 <span class="iconify" data-icon="mdi:plus" style="font-size: 16px;"></span>
                                             </button>
                                         @else
                                             <button type="button" 
                                                     class="quantity-btn" 
                                                     wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
-                                                    title="Increase quantity">
+                                                    title="Increase quantity"
+                                                    {{ $lineUnavailable ? 'disabled' : '' }}>
                                                 <span class="iconify" data-icon="mdi:plus" style="font-size: 16px;"></span>
                                             </button>
                                         @endisset
@@ -89,7 +101,8 @@
                                         <button type="button" 
                                                 class="quantity-btn" 
                                                 wire:click="updateCartItem({{ $id }}, 'plus', {{ $item->get('quantity') }})"
-                                                title="Increase quantity">
+                                                title="Increase quantity"
+                                                {{ $lineUnavailable ? 'disabled' : '' }}>
                                             <span class="iconify" data-icon="mdi:plus" style="font-size: 16px;"></span>
                                         </button>
                                     @endisset
@@ -166,7 +179,7 @@
                                        id="guest_email" 
                                        class="form-control" 
                                        placeholder="Enter your email address"
-                                       {{ $voucherApplied ? 'disabled' : '' }}>
+                                       {{ $voucherApplied || $hasUnavailableItems ? 'disabled' : '' }}>
                             </div>
                             @endguest
                             
@@ -176,13 +189,14 @@
                                        id="voucher_code" 
                                        class="form-control" 
                                        placeholder="Enter voucher code"
-                                       {{ $voucherApplied ? 'disabled' : '' }}>
+                                       {{ $voucherApplied || $hasUnavailableItems ? 'disabled' : '' }}>
                                 @if(!$voucherApplied)
                                     <button type="button" 
                                             wire:click="applyVoucher" 
                                             wire:loading.attr="disabled"
                                             class="btn btn-dark"
-                                            wire:target="applyVoucher">
+                                            wire:target="applyVoucher"
+                                            @if($hasUnavailableItems) disabled @endif>
                                         <span wire:loading.remove wire:target="applyVoucher">Check Voucher</span>
                                         <span wire:loading wire:target="applyVoucher">
                                             <span class="spinner-border spinner-border-sm me-2" role="status"></span>
@@ -231,7 +245,7 @@
 
                             <p class="text-muted small mb-4">Ongkir &amp; PPN dihitung saat checkout</p>
                             
-                            <button type="submit" name="checkout" class="btn btn-dark w-100 btn-lg">
+                            <button type="submit" name="checkout" class="btn btn-dark w-100 btn-lg" @if($hasUnavailableItems) disabled @endif>
                                 Checkout
                             </button>
                         </div>

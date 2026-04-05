@@ -64,11 +64,10 @@ class StoreController extends Controller
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
       
-        // if product exists, get its details, otherwise return empty collection
+        // Only show sizes that are in stock
         $data['size'] = $data['product']
-            ? $data['product']->details()->get()
+            ? $data['product']->details()->where('qty', '>', 0)->get()
             : collect();
-        // $data['size'] = $data['product']->details()->where('product_details.qty', '>' , 0)->get();
 
         // get reviews
         $reviews = $this->reviewRepository->getReviewsForProduct($id);

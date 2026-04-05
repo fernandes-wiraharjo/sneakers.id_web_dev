@@ -13,6 +13,7 @@ use Modules\Tag\Repositories\TagRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Facades\Cart;
+use Modules\Product\Entities\ProductDetail;
 
 class CartController extends Controller
 {
@@ -48,6 +49,16 @@ class CartController extends Controller
     }
 
     public function createOrder(Request $request) {
+        foreach (Cart::content() as $item) {
+            $detail = ProductDetail::query()->find($item['size_id']);
+            $stock = $detail ? (int) $detail->qty : 0;
+            if ($stock <= 0) {
+                return redirect()
+                    ->route('customer.cart')
+                    ->with('toast_error', 'One or more items are no longer in stock. Remove them from your cart and try again.');
+            }
+        }
+
         // Guest checkout is now allowed - no authentication check needed
         $data['total'] = Cart::total();
         $data['items'] = Cart::content();

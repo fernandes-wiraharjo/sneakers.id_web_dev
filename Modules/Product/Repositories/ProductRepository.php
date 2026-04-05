@@ -80,6 +80,9 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['products.is_active'=> 1])
+        ->whereHas('details', function ($q) {
+            $q->where('qty', '>', 0);
+        })
         ->where('pd.qty', '<>', 0)
         ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
 

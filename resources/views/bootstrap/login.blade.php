@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 d-md-none px-0">
-            <img src="{{ $auth_page_side_image_mobile }}" alt="Login" class="img-fluid">
+            <img src="{{ $auth_page_side_image_mobile }}" alt="Login" class="w-100">
         </div>
         <div class="col-12 col-md-6 p-4 p-md-5">
             <img src="{{ $logo_navbar }}" alt="">

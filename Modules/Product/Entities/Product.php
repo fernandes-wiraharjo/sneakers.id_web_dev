@@ -20,7 +20,8 @@ class Product extends Model
         'blibli_link',
         'tiktok_link',
         'description',
-        'is_active'
+        'is_active',
+        'updated_at'
     ];
 
     protected static function newFactory()

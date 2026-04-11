@@ -22,6 +22,7 @@ use Modules\Transaction\Entities\TransactionHistories;
 use Modules\Transaction\Entities\TransactionDestination;
 use Modules\Transaction\Entities\TransactionItems;
 use Modules\Product\Entities\ProductDetail;
+use Modules\DiscountVoucher\Entities\DiscountVoucher;
 
 use function App\Services\cancelMidtransTransaction;
 
@@ -121,18 +122,21 @@ class CheckoutController extends BaseController {
                     $transaction->update([
                         'status' => 'EXPIRED'
                     ]);
+                    $this->returnVoucherIfAny($transaction->id);
                     break;
 
                 case 'cancel':
                     $transaction->update([
                         'status' => 'CANCELLED'
                     ]);
+                    $this->returnVoucherIfAny($transaction->id);
                     break;
 
                 case 'deny':
                     $transaction->update([
                         'status' => 'DENIED'
                     ]);
+                    $this->returnVoucherIfAny($transaction->id);
                     break;
 
                 default:
@@ -179,6 +183,8 @@ class CheckoutController extends BaseController {
                 'updated_at' => now(),
             ]);
 
+            $this->returnVoucherIfAny($transaction->id);
+
             Cart::clearOrderId();
             DB::commit();
             return redirect()->route('store')
@@ -189,5 +195,21 @@ class CheckoutController extends BaseController {
             return redirect()->route('customer.cart')
                 ->with('error', 'Failed to cancel transaction.');
         }
+    }
+
+    public function returnVoucherIfAny($transactionId)
+    {
+        $transaction = Transaction::where('id', $transactionId)->first();
+        if (!$transaction) {
+            return;
+        }
+        $voucherCode = $transaction->voucher_code;
+        $voucher = DiscountVoucher::where('voucher_code', $voucherCode)->first();
+        if (!$voucher) {
+            return;
+        }
+        $voucher->update([
+            'usage_count' => $voucher->usage_count - 1
+        ]);
     }
 }

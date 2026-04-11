@@ -187,7 +187,7 @@ class ProductService {
             'blibli_link' => $request['blibli_link'],
             'description' => $request['description'],
             'is_active' => $request['is_active'],
-            'updated_at' => Carbon::now()
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ];
 
         $getProduct = $this->productRepository->getProductById($id);
@@ -219,10 +219,6 @@ class ProductService {
                         $deleted = $this->productRepository->deleteProductImageByImageId($removed_file, $id);
                     }
                 }
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             }
 
             if(isset($request['products_image'])){
@@ -295,10 +291,6 @@ class ProductService {
 
                     $getProduct->save();
                 }
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             }
 
             if($diff = array_diff($oldDetail, $detail_ids)){
@@ -310,9 +302,6 @@ class ProductService {
                         $message = 'There are sizes that cannot be deleted because they already have transaction data';
                     }
                 }
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             }
 
             foreach($request['size_price'] as $item){
@@ -347,10 +336,6 @@ class ProductService {
                             'marketplace_price' => isset($item['marketplace_price']) && $item['marketplace_price'] !== '' ? (int) str_replace('.','',$item['marketplace_price']) : null,
                             'marketplace_after_discount_price' => isset($item['marketplace_after_discount_price']) && $item['marketplace_after_discount_price'] !== '' ? (int) str_replace('.','',$item['marketplace_after_discount_price']) : null,
                             'marketplace_discount_percentage' => isset($item['marketplace_discount_percentage']) && $item['marketplace_discount_percentage'] !== '' ? (int) $item['marketplace_discount_percentage'] : null,
-                        ]);
-
-                        $updateTimestamps = $getProduct->update([
-                            'updated_at' => Carbon::now()
                         ]);
                     }
                 }
@@ -391,16 +376,8 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductCategories($id, $categories_id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             }  else {
                 $this->productRepository->syncProductCategories($id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             }
 
             if(isset($tags)){
@@ -409,16 +386,8 @@ class ProductService {
                 }
 
                 $this->productRepository->syncProductTags($id, $tags_id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             } else {
                 $this->productRepository->syncProductTags($id);
-
-                $updateTimestamps = $getProduct->update([
-                    'updated_at' => Carbon::now()
-                ]);
             }
             
             if (isset($signatures)) {
@@ -429,10 +398,6 @@ class ProductService {
 
                 if(isset($signatures_id) && count($signatures_id) > 0){
                     $this->productRepository->syncProductSignatures($id, $signatures_id);
-
-                    $updateTimestamps = $getProduct->update([
-                        'updated_at' => Carbon::now()
-                    ]);
                 }
             }
         }

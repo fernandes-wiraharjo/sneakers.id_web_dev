@@ -14,6 +14,7 @@ use App\Models\UserAddress;
 use Ramsey\Uuid\Uuid;
 use Xendit\Transaction;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class CheckoutProcess extends Component
 {
@@ -280,6 +281,11 @@ class CheckoutProcess extends Component
                 'order_id' => $orderID,
                 'gross_amount'  => intval($this->grandTotal),
             ],
+            'expiry' => [
+                'start_time' => Carbon::now()->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s').' +0700',
+                'unit' => 'minutes',
+                'duration' => (int) config('app.payment_ttl')
+            ],
             'customer_details' => [
                 'first_name'    => $this->shippingFirstName,
                 'last_name'     => $this->shippingLastName,
@@ -355,7 +361,6 @@ class CheckoutProcess extends Component
                 'destination_ro_id'  => $this->selectedSubdistrict,
             ],
         ];
-
 
         $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
         

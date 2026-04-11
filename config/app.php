@@ -37,7 +37,7 @@ return [
     | allowed to remain idle before it expires.
     |
     */
-    'payment_ttl' => env('PAYMENT_TTL', 3600),
+    'payment_ttl' => env('PAYMENT_TTL', 60),
 
     /*
     |--------------------------------------------------------------------------

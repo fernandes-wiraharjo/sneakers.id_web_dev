@@ -10,15 +10,17 @@
             </a>
         </div>
     </div>
+    <div class="row">
     @if($relatedProducts && $relatedProducts->count() > 0)
-        <div class="col-6 col-md-2 mt-2">
-            @foreach($relatedProducts as $item)
+        @foreach($relatedProducts as $item)
+            <div class="col-6 col-md-2 mt-2">
                 @include('bootstrap.parts.product-card', ['item' => $item])
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     @else
         <div class="col-12 py-5">
             <h2 class="fw-bold mb-4 text-center">No related products found</h2>
         </div>
     @endif
+    </div>
 </div>

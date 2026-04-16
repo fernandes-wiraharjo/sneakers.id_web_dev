@@ -59,12 +59,14 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             $retailPrice = $discountPrice != 0 ? $discountPrice : $originalPrice;
             $discountPercentage = $showDiscountPercentage ?? $product->detail->discount_percentage;
             @endphp
+            @if ($retailPrice != $originalPrice)
             <div class="text-danger mt-3 fs-5" wire:key="price-display-{{ $size ?? 'default' }}">
                 <del class="fw-bold">{{ rupiah_format($originalPrice, true) }}</del>
                 @if($discountPercentage > 0)
                 <span class="text-danger ps-3">{{ $discountPercentage }}% OFF</span>
                 @endif
             </div>
+            @endif
             <p class="fs-1 fw-bold anton" wire:key="price-amount-{{ $size ?? 'default' }}">
                 {{ rupiah_format($retailPrice, true) }}
             </p>

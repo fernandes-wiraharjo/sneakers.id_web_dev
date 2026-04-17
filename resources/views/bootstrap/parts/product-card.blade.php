@@ -3,7 +3,12 @@
     $title = $item->product_name;
     $price = $item->retail_price;
     $selling_price = $item->after_discount_price;
-    $discount_percentage = number_format(($price - $selling_price) / $price * 100, 0);
+    if ($selling_price != 0) {
+        $discount_percentage = number_format(($price - $selling_price) / $price * 100, 0);
+    } else {
+        $discount_percentage = 0;
+        $selling_price = $price;
+    }
 @endphp
 <a class="h-100" href="{{ route('product-detail', [$item->id, str_replace(' ', '_', $item->product_name)]) }}">
     <div class="card shadow rounded-5 h-100 position-relative">

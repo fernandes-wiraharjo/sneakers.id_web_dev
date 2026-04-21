@@ -468,7 +468,7 @@ class ProductService {
             $products = $this->productRepository->getProductByCode($item->product_code);
             $products->update(['product_name' => $item->product_name]);
             $products_details = $this->productRepository->getProductDetailByIdAndSize($products->id, $item->size);
-            if($products_details->count() > 0) {
+            if($products_details && $products_details->count() > 0) {
                 $products_details->update(
                     [
                         'base_price' => $item->base_price ? str_replace('.','',$item->base_price) : 0,

@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNEAKERS.ID</title>
-    <meta name="description" content="@yield('description')">
+    <title>SNEAKERS.ID | Level Up Your Game</title>
+    <meta name="description" content="Dibuat untuk pemain, oleh pemain. SNEAKERS.ID menyediakan sepatu basket original terbaik dengan harga termurah di Indonesia. Lengkapi gear kamu dengan jersey, t-shirt, tas, hingga premium insoles & socks. Authentic gear only.">
     <link rel="shortcut icon" href="{{ $favicon }}">
     <link rel="apple-touch-icon" href="{{ $favicon }}">
     <link rel="icon" href="{{ $favicon }}">
+
+    <meta name="og:title" content="SNEAKERS.ID | Level Up Your Game">
+    <meta name="og:description" content="Dibuat untuk pemain, oleh pemain. SNEAKERS.ID menyediakan sepatu basket original terbaik dengan harga termurah di Indonesia. Lengkapi gear kamu dengan jersey, t-shirt, tas, hingga premium insoles & socks. Authentic gear only.">
+    <meta name="og:type" content="website">
+    <meta name="og:url" content="{{ url()->current() }}">
+    <meta name="og:image" content="{{ asset('stores-info/opengraph-default.jpg') }}">
+    <meta name="og:image:width" content="1200">
+    <meta name="og:image:height" content="630">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

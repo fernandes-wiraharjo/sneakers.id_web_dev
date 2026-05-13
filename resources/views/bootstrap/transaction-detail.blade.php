@@ -50,7 +50,7 @@
                     <span class="status-badge status-pending">AWAITING PAYMENT</span>
                 @elseif($transaction->status == 'SETTLED' || $transaction->status == 'PAID' || $transaction->status == 'SUCCESS')
                     <span class="status-badge status-paid">SUCCESS</span>
-                @elseif($transaction->status == 'EXPIRED' || $transaction->status == 'CANCELLED' || $transaction->status == 'REFUNDED')
+                @elseif($transaction->status == 'EXPIRED' || $transaction->status == 'CANCELLED' || $transaction->status == 'REFUNDED' || $transaction->status == 'FAILED')
                     <span class="status-badge status-expired">{{ $transaction->status }}</span>
                 @elseif($transaction->status == 'COMPLETED')
                     <span class="status-badge status-completed">COMPLETED</span>

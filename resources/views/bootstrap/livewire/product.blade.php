@@ -86,8 +86,8 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             <button class="btn btn-danger rounded-pill w-100" disabled>Out of Stock</button>
             @endif
 
-            @if ($product->tokopedia_link)
-            <a href="{{ $product->tokopedia_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
+            @if ($product->product_link)
+            <a href="{{ $product->product_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Tokopedia</span> 
             </a>
             @endif

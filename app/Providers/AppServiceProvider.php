@@ -12,6 +12,7 @@ use Modules\GlobalSetting\Entities\GlobalSetting;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 use Modules\TopTextCarousel\Repositories\TopTextCarouselRepository;
@@ -60,6 +61,11 @@ class AppServiceProvider extends ServiceProvider
         View::share('logo_footer', $gs_logo_footer ? $gs_logo_footer->setting_value : asset('stores-info/logo-white-new.png'));
         View::share('auth_page_side_image_website', $gs_auth_page_side_image_website ? $gs_auth_page_side_image_website->setting_value : asset('stores-info/login-img-md.webp'));
         View::share('auth_page_side_image_mobile', $gs_auth_page_side_image_mobile ? $gs_auth_page_side_image_mobile->setting_value : asset('stores-info/login-img.webp'));
+
+        $footer = Storage::disk('local')->exists('footer-setting.json')
+            ? json_decode(Storage::disk('local')->get('footer-setting.json'))
+            : json_decode('{}');
+        View::share('footer', $footer);
 
         // Share common data across all views
         View::share('brand', $brandRepository->getAllBrand());

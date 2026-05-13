@@ -195,8 +195,8 @@
             @foreach ($signature as $item)
             <a href="{{ route('collections', 'signatures.' . $item->signature_code) }}" class="position-relative signaturePlayerItem rounded">
                 <img src="{{ $item->signature_image }}" alt="{{ $item->signature_title }}" class="signaturePlayerImage rounded" onerror="this.src='https://placehold.co/110x220/black/white?text=No+Image'">
-                <div class="position-absolute w-100 mx-auto d-flex flex-column align-items-center" style="bottom: 5px;">
-                    <img src="{{ $item->emblem_url }}" alt="{{ $item->signature_title }}" class="signaturePlayerEmblem" onerror="this.src='https://placehold.co/50x50/grey/white?text=No+Emblem'">
+                <div class="position-absolute w-100 mx-auto d-flex flex-column align-items-center bg-signature-player-overlay">
+                    <!-- <img src="{{ $item->emblem_url }}" alt="{{ $item->signature_title }}" class="signaturePlayerEmblem" onerror="this.src='https://placehold.co/50x50/grey/white?text=No+Emblem'"> -->
                     <span class="mt-2 text-center text-white signaturePlayerName"><?= str_replace(' ', '<br>', $item->signature_title) ?></span>
                 </div>
             </a>

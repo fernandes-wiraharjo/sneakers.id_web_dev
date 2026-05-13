@@ -193,6 +193,12 @@
             height: fit-content !important;
             max-height: 100vh;
         }
+
+        .bg-signature-player-overlay {
+            padding: 5px;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.80) 100%);
+        }
     </style>
     @stack('styles')
     @livewireStyles

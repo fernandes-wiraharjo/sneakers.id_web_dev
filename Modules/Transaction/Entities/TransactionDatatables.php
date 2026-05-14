@@ -33,23 +33,25 @@ class TransactionDatatables extends DataTable
                     'SUCCESS' => 'badge-success',
                     'COMPLETED' => 'badge-primary',
                     'REFUNDED' => 'badge-danger',
-                    'CANCELLED' => 'badge-dark',
+                    'CANCELLED' => 'badge-danger',
                     'FAILED' => 'badge-danger',
-                    'EXPIRED' => 'badge-secondary',
+                    'EXPIRED' => 'badge-danger',
                     default => 'badge-light',
                 };
                 return '<span class="badge ' . $badgeClass . ' fs-7">' . $status . '</span>';
             })
             ->editColumn('shipping_status', function ($item) {
-                // Only show WAITING PAYMENT for CREATED status
                 if ($item->status == 'CREATED') {
                     return '<span class="badge badge-warning fs-7">WAITING PAYMENT</span>';
                 }
-                
-                // For all other statuses (SUCCESS, COMPLETED, REFUNDED, PENDING, EXPIRED, etc.), show actual shipping status
+
+                if (in_array($item->status, ['FAILED', 'CANCELLED', 'EXPIRED'], true)) {
+                    return '<span class="badge badge-danger fs-7">FAILED PAYMENT</span>';
+                }
+
                 $shippingStatus = $item->shipping->status ?? 'DIKEMAS';
                 $badgeClass = match($shippingStatus) {
-                    'DIKEMAS' => 'badge-warning',
+                    'DIKEMAS' => 'badge-primary',
                     'DIKIRIM' => 'badge-info',
                     'SEDANG DIKIRIM' => 'badge-primary',
                     'DELIVERED' => 'badge-success',

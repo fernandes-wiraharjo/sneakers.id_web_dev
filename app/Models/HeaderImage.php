@@ -20,10 +20,15 @@ class HeaderImage extends Model
 
     public function getHeaderImage($menu_parent_name, $menu_name)
     {
-        $imageData = $this->where('menu_name', $menu_name)->where('menu_parent_name', $menu_parent_name)->where('is_active', true)->first();
+        $imageData = $this->where('menu_parent_name', $menu_parent_name)
+            ->whereRaw('LOWER(menu_name) = ?', [strtolower($menu_name)])
+            ->where('is_active', true)
+            ->first();
+
         if ($imageData) {
             return $imageData->image_url;
         }
+
         return 'https://placehold.co/1280x400?text=Header+Image+Placeholder';
     }
 }

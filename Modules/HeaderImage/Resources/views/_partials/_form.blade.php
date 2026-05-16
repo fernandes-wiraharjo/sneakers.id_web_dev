@@ -45,6 +45,7 @@
     const form = document.getElementById('form');
     const brands = @json($brands);
     const categories = @json($categories);
+    const collectionPages = @json(config('headerimage.collection_pages', []));
     const signatures = @json($signatures);
     const parentTypeSelect = document.getElementById('menu_parent_name');
     const menuNameSelect = document.getElementById('menu_name');
@@ -64,7 +65,7 @@
         if (type === 'brand') {
             data = brands;
         } else if (type === 'category') {
-            data = categories;
+            data = [...collectionPages, ...categories];
         } else if (type === 'signatures') {
             data = signatures;
         }

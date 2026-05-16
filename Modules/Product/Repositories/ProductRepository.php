@@ -225,32 +225,44 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         return $query;
     }
 
-    public function getProductBestSeller($limit = 10, $offset = 0) {
-        return $this->model->with(['tags','detail', 'detail', 'images', 'signatures', 'categories'])
-        ->whereHas('tags', function($q) {
-            $q->where('tag_title', 'BEST SELLER');
-        })
-        ->select('products.*', 'pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
-        ->leftJoin('product_details as pd', function($join) {
-            $join->on('pd.product_id', '=', 'products.id')
-                ->where('pd.retail_price', '=', DB::raw('(
-                    Select min(retail_price)
-                    from product_details
-                    where product_id = products.id
-                )'))
-                ->where('pd.after_discount_price', '=', DB::raw('(
-                    Select min(after_discount_price)
-                    from product_details
-                    where product_id = products.id
-                )'));
-        })
-        // ->whereRaw('pd.min_retail_price = pd2.retail_price')
-        ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.page_view_count', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
-        ->orderBy('products.created_at', 'DESC')
-        ->offset($offset)
-        ->limit($limit)
-        ->get();
+    /**
+     * Purchased quantity subquery (all sizes) for best-seller ranking.
+     */
+    protected function bestSellerPurchaseCountSql(): string
+    {
+        return '(
+            SELECT COALESCE(SUM(ti.quantity), 0)
+            FROM transaction_items ti
+            INNER JOIN product_details pdt ON pdt.id = ti.product_detail_id
+            INNER JOIN transactions t ON t.id = ti.transaction_id
+            WHERE pdt.product_id = products.id
+            AND t.status IN (\'SUCCESS\', \'COMPLETED\')
+        )';
+    }
+
+    /**
+     * Apply best-seller ranking: purchases, page views, created_at, product name.
+     */
+    public function applyBestSellerOrdering($query)
+    {
+        return $query
+            ->orderByRaw($this->bestSellerPurchaseCountSql() . ' DESC')
+            ->orderByDesc('products.page_view_count')
+            ->orderByDesc('products.created_at')
+            ->orderBy('products.product_name');
+    }
+
+    public function getProductBestSellerQuery()
+    {
+        return $this->applyBestSellerOrdering($this->getProductWhere());
+    }
+
+    public function getProductBestSeller($limit = 10, $offset = 0)
+    {
+        return $this->getProductBestSellerQuery()
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
     }
 
     public function getProductByBrandId($brand_id, $limit = 10, $offset = 0) {

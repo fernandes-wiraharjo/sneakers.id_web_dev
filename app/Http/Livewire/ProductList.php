@@ -372,6 +372,19 @@ class ProductList extends Component
             }
         }
 
+        $isBestSellerPage = $this->keyword === 'best-seller';
+        if ($isBestSellerPage) {
+            $this->page_title = 'Best Sellers';
+            $this->category = [];
+
+            if (empty($this->tag)) {
+                $bestSellerTag = $tagRepository->getTagByName('BEST SELLER');
+                if ($bestSellerTag) {
+                    $this->tag = [intval($bestSellerTag->id)];
+                }
+            }
+        }
+
         $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? null;
         $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? null;
         $discount_id = $tagRepository->getTagByName('discount')->id ?? null;
@@ -428,7 +441,7 @@ class ProductList extends Component
                                     }
                                 });
                         })
-                        ->when($this->tag, function ($query, $tags) {
+                        ->when($this->tag && !$isBestSellerPage, function ($query, $tags) {
                             return $query->whereHas('tags', function ($q) use ($tags){
                                 // rsort($tags);
 
@@ -583,7 +596,12 @@ class ProductList extends Component
         // dump($products->count());
         // $this->total_product = $products->orderBy($this->sort_column, $this->sort_by)->get()->count();
         // dump($products->toSql());
-        $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
+        if ($isBestSellerPage) {
+            $products = $productRepository->applyBestSellerOrdering($products);
+            $data['products'] = $products->paginate(40);
+        } else {
+            $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
+        }
         $this->total_product = $data['products']->total();
         // dd($products->toSql());
         return view('bootstrap.livewire.product-list', $data);

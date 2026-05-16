@@ -1,10 +1,11 @@
 @php
-    // Check if current URL contains any locked category (to lock tag filter)
+    // Lock tag filter on curated collection pages (same as sale)
     $lockedCategories = ['best-seller', 'new-release', 'sale', 'featured'];
     $currentUrl = request()->url();
     $segmentUrl = explode('/', $currentUrl);
     $lastSegment = end($segmentUrl);
-    $isTagLocked = in_array($lastSegment, $lockedCategories);
+    $isTagLocked = (isset($keyword) && in_array($keyword, $lockedCategories, true))
+        || in_array($lastSegment, $lockedCategories, true);
 @endphp
 
 <p class="fs-5 fw-bold mb-4">Filter</p>

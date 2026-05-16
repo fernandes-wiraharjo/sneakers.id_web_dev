@@ -228,16 +228,17 @@ class StoreController extends Controller
 
     public function collections($keyword){
         $keywordArray = explode('.', $keyword);
-        if ($keywordArray[0] !== 'signatures' && $keywordArray[0] !== 'brand') {
-            $menu_parent_name = 'category';
-        } else {
+
+        if ($keywordArray[0] === 'signatures' || $keywordArray[0] === 'brand') {
             $menu_parent_name = $keywordArray[0];
-        }
-        if (!isset($keywordArray[1]) || $keywordArray[1] == '') {
-            $menu_name = 'ALL';
+            $menu_name = $keywordArray[1] ?? 'ALL';
         } else {
-            $menu_name = $keywordArray[1];
+            $menu_parent_name = 'category';
+            $menu_name = (isset($keywordArray[1]) && $keywordArray[1] !== '')
+                ? $keywordArray[1]
+                : $keywordArray[0];
         }
+
         $data['headerImageURL'] = (new HeaderImage())->getHeaderImage($menu_parent_name, $menu_name);
         $data['keyword'] = $keyword;
         $data['pageTitle'] = $menu_name;

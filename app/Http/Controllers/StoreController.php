@@ -6,6 +6,7 @@ use App\Http\Livewire\Category;
 use App\Models\HeaderImage;
 use App\Notifications\SendNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Modules\Brand\Repositories\BrandRepository;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\LookBook\Repositories\LookBookRepository;
@@ -221,7 +222,7 @@ class StoreController extends Controller
 
     public function searchResult($keyword){
         $data['keyword'] = $keyword;
-        $data['headerImageURL'] = (new HeaderImage())->getHeaderImage('common', 'Search Result');
+        $data['headerImageURL'] = Storage::disk('public')->url('images/header-image/bg_search_header_image.webp');
         $data['sizes'] = $this->sizeRepository->getAllActiveSizes();
         $data['men_sizes'] = $this->sizeRepository->getAllMenSize();
         $data['women_sizes'] = $this->sizeRepository->getAllWomenSize();

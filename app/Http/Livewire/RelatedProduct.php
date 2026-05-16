@@ -92,6 +92,7 @@ class RelatedProduct extends Component
                 'products.description',
                 'products.image',
                 'products.product_visit',
+                'products.page_view_count',
                 'products.is_active',
                 'products.created_at',
                 'products.updated_at',

@@ -61,7 +61,11 @@ class StoreController extends Controller
 
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
-      
+
+        if ($data['product']) {
+            $data['product']->increment('page_view_count');
+        }
+
         // Only show sizes that are in stock
         $data['size'] = $data['product']
             ? $data['product']->details()->where('qty', '>', 0)->get()

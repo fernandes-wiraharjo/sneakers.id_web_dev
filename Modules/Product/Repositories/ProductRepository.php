@@ -84,7 +84,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
             $q->where('qty', '>', 0);
         })
         ->where('pd.qty', '<>', 0)
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.page_view_count', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.after_discount_price');
 
         return $q;
     }
@@ -216,7 +216,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.page_view_count', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
         ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)
@@ -246,7 +246,7 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
         })
         // ->whereRaw('pd.min_retail_price = pd2.retail_price')
         ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
+        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.page_view_count', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
         ->orderBy('products.created_at', 'DESC')
         ->offset($offset)
         ->limit($limit)

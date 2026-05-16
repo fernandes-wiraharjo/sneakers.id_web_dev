@@ -3,8 +3,19 @@
         <div class="col-12 px-0">
             <div class="slick-banner">
                 @foreach ($banner as $item)
+                @php 
+                    $banner_url = $item->banner_url ?? 'javascript:void(0)';
+                    $target = '_self';
+                    if ($banner_url && \Str::startsWith($banner_url, 'http')) {
+                        if (!\Str::contains($banner_url, config('app.url'))) {
+                            $target = '_blank';
+                        }
+                    }
+                @endphp
                 <div class="ratio ratio-21x9">
-                    <img class="px-1 px-md-3 img-fluid rounded-5 rounded-sm-3 object-fit-cover" src="{{ getImage($item->banner_image, 'banner') }}" alt="{{ $item->banner_description }}">
+                    <a href="{{ $banner_url }}" target="{{ $target }}">
+                        <img class="px-1 px-md-3 img-fluid rounded-5 rounded-sm-3 object-fit-cover" src="{{ getImage($item->banner_image, 'banner') }}" alt="{{ $item->banner_description }}">
+                    </a>
                 </div>
                 @endforeach
             </div>

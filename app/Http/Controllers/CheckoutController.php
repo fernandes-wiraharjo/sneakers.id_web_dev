@@ -90,6 +90,7 @@ class CheckoutController extends BaseController {
 
             switch ($status) {
                 case 'settlement':
+                case 'capture':
                     $transaction->update([
                         'type'   => strtoupper($payload['payment_type']),
                         'method' => strtoupper($payload['bank'] ?? ''),
@@ -135,6 +136,13 @@ class CheckoutController extends BaseController {
                 case 'deny':
                     $transaction->update([
                         'status' => 'DENIED'
+                    ]);
+                    $this->returnVoucherIfAny($transaction->id);
+                    break;
+
+                case 'failure':
+                    $transaction->update([
+                        'status' => 'FAILED'
                     ]);
                     $this->returnVoucherIfAny($transaction->id);
                     break;

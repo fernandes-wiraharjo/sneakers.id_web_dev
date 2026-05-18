@@ -7,10 +7,22 @@ use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\File;
 use Modules\Transaction\Entities\TransactionItems;
+use Modules\Tag\Entities\Tag;
 
 class ProductService {
     public function __construct(ProductRepository $productRepository) {
         $this->productRepository = $productRepository;
+    }
+
+    protected function excludeBestSellerTagIds(array $tagIds): array
+    {
+        $bestSellerTagId = Tag::where('tag_code', 'BEST-SELLER')->value('id');
+
+        if (!$bestSellerTagId) {
+            return $tagIds;
+        }
+
+        return array_values(array_filter($tagIds, fn ($id) => (int) $id !== (int) $bestSellerTagId));
     }
 
     public function uploadImagetoBuckets($request){
@@ -159,7 +171,7 @@ class ProductService {
                     $tags_id[] = $item->id;
                 }
 
-                $this->productRepository->attachProductTags($idNewProduct, $tags_id);
+                $this->productRepository->attachProductTags($idNewProduct, $this->excludeBestSellerTagIds($tags_id));
             }
 
             $signatures_id = [];
@@ -385,7 +397,7 @@ class ProductService {
                     $tags_id[] = $item->id;
                 }
 
-                $this->productRepository->syncProductTags($id, $tags_id);
+                $this->productRepository->syncProductTags($id, $this->excludeBestSellerTagIds($tags_id));
             } else {
                 $this->productRepository->syncProductTags($id);
             }

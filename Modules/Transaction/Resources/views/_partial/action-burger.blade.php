@@ -329,9 +329,9 @@
                                                         'SUCCESS' => 'badge-success',
                                                         'COMPLETED' => 'badge-primary',
                                                         'REFUNDED' => 'badge-danger',
-                                                        'CANCELLED' => 'badge-dark',
+                                                        'CANCELLED' => 'badge-danger',
                                                         'FAILED' => 'badge-danger',
-                                                        'EXPIRED' => 'badge-secondary',
+                                                        'EXPIRED' => 'badge-danger',
                                                         default => 'badge-light',
                                                     };
                                                 @endphp
@@ -534,6 +534,48 @@
                         </table>
                     </div>
                 </div>
+                @elseif(in_array($transaction->status, ['FAILED', 'CANCELLED', 'EXPIRED'], true))
+                <div class="mb-10">
+                    <div class="alert alert-danger">
+                        <strong><i class="fas fa-times-circle"></i> Payment Failed</strong>
+                    </div>
+                    
+                    <h5>Shipping Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Shipping Status</td>
+                                    <td><span class="badge badge-danger">FAILED PAYMENT</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Courier</td>
+                                    <td>{{ $shipping->shipping_method ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Cost</td>
+                                    <td>Rp {{ rupiah_format($shipping->shipping_cost ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Address</td>
+                                    <td>
+                                        {{ $destination->address ?? '-' }}<br>
+                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
+                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
+                                        {{ $destination->region->post_code ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Recipient</td>
+                                    <td>
+                                        {{ $destination->first_name ?? '' }} {{ $destination->last_name ?? '' }}<br>
+                                        {{ $destination->phone_number ?? '-' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 @elseif($shipping && $shipping->shipping_waybill)
                 <div class="mb-10">
                     <div class="alert alert-info">
@@ -588,8 +630,7 @@
                         </table>
                     </div>
                 </div>
-                @else
-                {{-- Payment received but not shipped yet --}}
+                @elseif($transaction->status == 'SUCCESS')
                 <div class="mb-10">
                     <div class="alert alert-success">
                         <strong><i class="fas fa-check-circle"></i> Payment Received - Ready to Ship</strong>
@@ -602,6 +643,48 @@
                                 <tr>
                                     <td style="width: 200px;">Shipping Status</td>
                                     <td><span class="badge badge-success">Ready to Ship</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Courier</td>
+                                    <td>{{ $shipping->shipping_method ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Cost</td>
+                                    <td>Rp {{ rupiah_format($shipping->shipping_cost ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Shipping Address</td>
+                                    <td>
+                                        {{ $destination->address ?? '-' }}<br>
+                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
+                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
+                                        {{ $destination->region->post_code ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Recipient</td>
+                                    <td>
+                                        {{ $destination->first_name ?? '' }} {{ $destination->last_name ?? '' }}<br>
+                                        {{ $destination->phone_number ?? '-' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @else
+                <div class="mb-10">
+                    <div class="alert alert-warning">
+                        <strong><i class="fas fa-clock"></i> Waiting Payment</strong>
+                    </div>
+                    
+                    <h5>Shipping Information</h5>
+                    <div class="table-responsive" style="text-align: left;">
+                        <table class="table table-hover table-rounded table-striped border gy-7 gs-7">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 200px;">Shipping Status</td>
+                                    <td><span class="badge badge-warning">Waiting Payment</span></td>
                                 </tr>
                                 <tr>
                                     <td>Courier</td>

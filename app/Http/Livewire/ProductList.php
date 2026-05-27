@@ -441,11 +441,11 @@ class ProductList extends Component
                                     }
                                 });
                         })
-                        ->when($this->tag && !$isBestSellerPage, function ($query, $tags) {
+                        ->when(is_array($this->tag) && count($this->tag) > 0 && !$isBestSellerPage, function ($query, $tags) {
                             return $query->whereHas('tags', function ($q) use ($tags){
                                 // rsort($tags);
 
-                                return $q->whereIn('tag_id', array_unique($tags));
+                                return $q->whereIn('tag_id', array_unique((array) $tags));
                                     // ->when($this->search, function ($query, $search){
                                     //     return $query->where('product_name', 'LIKE', '%'.$search.'%');
                                     // });

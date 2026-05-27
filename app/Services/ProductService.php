@@ -216,6 +216,7 @@ class ProductService {
 
         if($updatedProduct) {
             $beforePath = 'images/upload-buckets';
+            $afterPath = 'images/products/'.$request['product_code'];
 
             if($beforeProductCode != $request['product_code']){
                 $image_path = 'images/products/'.$beforeProductCode;

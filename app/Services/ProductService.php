@@ -235,8 +235,6 @@ class ProductService {
             }
 
             if(isset($request['products_image'])){
-                $afterPath = 'images/products/'.$request['product_code'];
-
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);

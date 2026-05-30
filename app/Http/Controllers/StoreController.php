@@ -64,6 +64,7 @@ class StoreController extends Controller
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
 
         if ($data['product']) {
+            $data['product']->timestamps = false;
             $data['product']->increment('page_view_count');
         }
 

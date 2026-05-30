@@ -3,7 +3,7 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
 @endphp
 <div class="container pb-5 pt-md-5">
     <div class="row">
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-8" wire:ignore>
             <div class="row sticky-top">
                 <div class="d-none d-md-flex col-md-2 flex-column gap-2" id="thumbnail-container" style="overflow-y: auto; overflow-x: hidden;">
                     @foreach ($product->images as $index => $item)
@@ -30,7 +30,7 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
         <div class="col-12 col-md-4">
             <p class="text-muted mb-2">{{ $product->product_code }}</p>
             <h1 class="fw-bold">{{ $product->product_name }}</h1>
-            <div>
+            <div wire:ignore>
                 <div id="product-description" class="product-description-text" style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
                     {!! $product->description !!}
                 </div>
@@ -203,8 +203,8 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             matchThumbnailHeight();
         });
         
-        // Handle thumbnail click for both mobile and desktop
-        $('.product-thumbnail').on('click', function() {
+        // Handle thumbnail click for both mobile and desktop (delegated — survives inside wire:ignore)
+        $(document).on('click', '.product-thumbnail', function() {
             var fullImageUrl = $(this).data('full-image');
             if (fullImageUrl) {
                 $('#main-product-image').attr('src', fullImageUrl);
@@ -237,7 +237,7 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             }
             
             var isExpanded = false;
-            $btn.on('click', function() {
+            $btn.off('click.readMore').on('click.readMore', function() {
                 if (!isExpanded) {
                     $description.css({
                         'max-height': originalHeight + 'px',

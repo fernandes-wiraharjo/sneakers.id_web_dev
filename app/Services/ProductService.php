@@ -124,6 +124,7 @@ class ProductService {
                             'brand_id' => $request['brand_id'],
                             'size' => $item['size'],
                             'qty' => intval($item['qty']),
+                            'weight' => isset($item['weight']) && $item['weight'] !== '' ? (int) $item['weight'] : 0,
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
@@ -216,6 +217,7 @@ class ProductService {
 
         if($updatedProduct) {
             $beforePath = 'images/upload-buckets';
+            $afterPath = 'images/products/'.$request['product_code'];
 
             if($beforeProductCode != $request['product_code']){
                 $image_path = 'images/products/'.$beforeProductCode;
@@ -234,8 +236,6 @@ class ProductService {
             }
 
             if(isset($request['products_image'])){
-                $afterPath = 'images/products/'.$request['product_code'];
-
                 foreach($request['products_image'] as $key=>$image){
                     // $do_upload = imageUploadProduct($image, $path ,'public', true, $no);
                     $checkFileExists = imageIsExist($beforePath, $image);
@@ -323,6 +323,7 @@ class ProductService {
                             'brand_id' => $request['brand_id'],
                             'size' => $item['size'],
                             'qty' => intval($item['qty']),
+                            'weight' => isset($item['weight']) && $item['weight'] !== '' ? (int) $item['weight'] : 0,
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),
@@ -341,6 +342,7 @@ class ProductService {
                             'brand_id' => $request['brand_id'],
                             'size' => $item['size'],
                             'qty' => intval($item['qty']),
+                            'weight' => isset($item['weight']) && $item['weight'] !== '' ? (int) $item['weight'] : 0,
                             'base_price' => str_replace('.','',$item['base_price']),
                             'retail_price' => str_replace('.','',$item['retail_price']),
                             'after_discount_price' => str_replace('.','',$item['after_discount_price']),

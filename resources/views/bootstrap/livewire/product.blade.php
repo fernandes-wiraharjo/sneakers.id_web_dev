@@ -145,7 +145,7 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
                             @endfor
                         </div>
                         <div class="col-12 col-md-7 text-secondary text-end">
-                            {{ $review['user']['name'] }} - {{ date('d/m/Y', strtotime($review['created_at'])) }}
+                            {{ $review->reviewer_name }} - {{ date('d/m/Y', strtotime($review->created_at)) }}
                         </div>
                         <div class="col-12 text-secondary">
                             {{ $review['review'] }}

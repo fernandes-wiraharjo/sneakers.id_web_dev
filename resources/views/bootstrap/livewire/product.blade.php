@@ -86,33 +86,35 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             <button class="btn btn-danger rounded-pill w-100" disabled>Out of Stock</button>
             @endif
 
-            @if ($product->product_link)
+            @if (!empty($link_toggles['tokopedia']) && $product->product_link)
             <a href="{{ $product->product_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Tokopedia</span> 
             </a>
             @endif
 
-            @if ($product->shopee_link)
+            @if (!empty($link_toggles['shopee']) && $product->shopee_link)
             <a href="{{ $product->shopee_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Shopee</span> 
             </a>
             @endif
 
-            @if ($product->tiktok_link)
+            @if (!empty($link_toggles['tiktok']) && $product->tiktok_link)
             <a href="{{ $product->tiktok_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via TikTok</span> 
             </a>
             @endif
 
-            @if ($product->blibli_link)
+            @if (!empty($link_toggles['blibli']) && $product->blibli_link)
             <a href="{{ $product->blibli_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Blibli</span> 
             </a>
             @endif
 
+            @if (!empty($link_toggles['whatsapp']))
             <a href="http://wa.me/6289617925925" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via WhatsApp</span> 
             </a>
+            @endif
 
             @if(isset($reviews) && count($reviews['data']) > 0)
             <div class="mt-5">

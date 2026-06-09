@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Livewire;
+
 use App\Facades\Cart;
+use App\Services\GlobalSettingsCache;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Modules\Product\Entities\ProductDetail;
@@ -53,7 +55,9 @@ class Product extends Component
      */
     public function render(): View
     {
-        return view('bootstrap.livewire.product');
+        return view('bootstrap.livewire.product', [
+            'link_toggles' => app(GlobalSettingsCache::class)->getLinkToggles(),
+        ]);
     }
     /**
      * Adds an item to cart.     *

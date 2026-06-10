@@ -2,6 +2,7 @@
 namespace App\Http\Livewire;
 
 use App\Facades\Cart;
+use App\Repositories\ReviewRepository;
 use App\Services\GlobalSettingsCache;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
@@ -13,7 +14,6 @@ class Product extends Component
     public $quantity;
     public $size;
     public $sizeList;
-    public $reviews;
     public $size_chart_image; 
     public $showRetailPrice;
     public $showDiscountPrice;
@@ -55,8 +55,17 @@ class Product extends Component
      */
     public function render(): View
     {
+        $reviewItems = app(ReviewRepository::class)->getReviewsForProduct($this->product->id);
+
         return view('bootstrap.livewire.product', [
             'link_toggles' => app(GlobalSettingsCache::class)->getLinkToggles(),
+            'reviews' => [
+                'summary' => [
+                    'rating' => $reviewItems->avg('rating'),
+                    'count' => $reviewItems->count(),
+                ],
+                'data' => $reviewItems->sortByDesc('rating')->values()->take(5),
+            ],
         ]);
     }
     /**

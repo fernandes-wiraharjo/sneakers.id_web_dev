@@ -73,16 +73,6 @@ class StoreController extends Controller
         // Only show sizes that are in stock
         $data['size'] = $data['product']->details()->where('qty', '>', 0)->get();
 
-        // get reviews
-        $reviews = $this->reviewRepository->getReviewsForProduct($id);
-        $data['reviews'] = [
-            'summary' => [
-                'rating' => $reviews->avg('rating'),
-                'count' => $reviews->count()
-            ],
-            'data' => $reviews->sortByDesc('rating')->values()->take(5)
-        ];
-
         $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;
         activity()->log('Someone look into my product');
         return view('bootstrap.product-detail', $data);

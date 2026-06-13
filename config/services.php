@@ -37,15 +37,9 @@ return [
         'environment' => env('APP_ENV'),
     ],
 
-    'facebook' => [
-        'client_id' => env('FACEBOOK_APP_ID'),
-        'client_secret' => env('FACEBOOK_APP_SECRET'),
-        'redirect' => env('FACEBOOK_REDIRECT_URI', env('APP_URL').'/administrator/instagram/callback'),
-    ],
-
     'instagram' => [
-        'client_id' => env('INSTAGRAM_APP_ID', env('FACEBOOK_APP_ID')),
-        'client_secret' => env('INSTAGRAM_APP_SECRET', env('FACEBOOK_APP_SECRET')),
-        'redirect' => env('INSTAGRAM_REDIRECT_URI', env('FACEBOOK_REDIRECT_URI', env('APP_URL').'/administrator/instagram/callback')),
+        'client_id' => env('INSTAGRAM_APP_ID'),
+        'client_secret' => env('INSTAGRAM_APP_SECRET'),
+        'redirect' => env('INSTAGRAM_REDIRECT_URI', env('APP_URL').'/administrator/instagram/callback'),
     ],
 ];

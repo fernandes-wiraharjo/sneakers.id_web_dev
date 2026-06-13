@@ -9,7 +9,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\InstagramFeedController;
+use App\Http\Controllers\Administrator\InstagramConnectController;
 use App\Http\Controllers\Administrator\Auth\LoginController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -28,8 +28,6 @@ Route::get('/v2/test', function() {
 })->name('test');
 
 Route::get('/', [StoreController::class, 'index'])->name('store');
-Route::get('/instagram-feed', [InstagramFeedController::class, 'show'])->name('instagram.feed');
-Route::get('/instagram-feed/refresh', [InstagramFeedController::class, 'refresh'])->name('instagram.refresh')->middleware('auth');
 
 Route::get('/product-detail/{id}/{product_name}', [StoreController::class, 'productDetail'])->name('product-detail');
 
@@ -64,6 +62,16 @@ Ladmin::route(function() {
 Route::group(['as' => 'system.', 'prefix' => 'system'], function() {
     //Route::resource('/log', LogController::class)->only(['index']);
     Route::resource('/activity', LadminLogableController::class)->only(['index', 'destroy']);
+});
+
+Route::get('/administrator/instagram/callback', [InstagramConnectController::class, 'callback'])
+    ->name('administrator.instagram.callback');
+
+Route::group(['prefix' => 'administrator/instagram', 'middleware' => 'auth'], function () {
+    Route::get('/', [InstagramConnectController::class, 'index'])->name('administrator.instagram.index');
+    Route::get('/connect', [InstagramConnectController::class, 'connect'])->name('administrator.instagram.connect');
+    Route::post('/disconnect', [InstagramConnectController::class, 'disconnect'])->name('administrator.instagram.disconnect');
+    Route::post('/refresh', [InstagramConnectController::class, 'refresh'])->name('administrator.instagram.refresh');
 });
 
 //Customer

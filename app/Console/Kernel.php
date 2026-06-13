@@ -73,13 +73,11 @@ class Kernel extends ConsoleKernel
                      Log::error('Shipping status check failed');
                  });
 
-        // Refresh Instagram feed cache daily at 3 AM
+        // Refresh Instagram feed cache hourly
         $schedule->call(function () {
-            \Illuminate\Support\Facades\Cache::forget('instagram_feed_html');
-            // Trigger a request to rebuild the cache
-            \Illuminate\Support\Facades\Http::get(route('instagram.feed'));
+            app(\App\Services\InstagramService::class)->refreshPosts();
             Log::info('Instagram feed cache refreshed');
-        })->dailyAt('03:00');
+        })->hourly();
     }
 
     /**

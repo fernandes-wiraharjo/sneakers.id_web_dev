@@ -212,7 +212,7 @@
                                                                         align="center">
                                                                         <a href="https://sneakers.id/">
                                                                             <img align="center" border="0"
-                                                                            src="https://sneakers.id/stores-info/logos-black-transparent.png" alt=""
+                                                                            src="https://sneakers.id/stores-info/logo-black-new.png" alt=""
                                                                             title=""
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 25%;max-width: 120px;"
                                                                             width="120" />
@@ -256,6 +256,27 @@
                                                             <div
                                                                 style="font-family: 'Montserrat',sans-serif; font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
                                                                 <p style="line-height: 140%;">Your order with id <strong>#{{ $order_id }}</strong> has been delivered. Thank you for shopping at our store.</p></p>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table style="font-family:arial,helvetica,sans-serif;" role="presentation"
+                                                cellpadding="0" cellspacing="0" width="100%" border="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="overflow-wrap:break-word;word-break:break-word;padding:10px 20px 0;font-family:arial,helvetica,sans-serif;"
+                                                            align="center">
+
+                                                            <div align="center">
+                                                                <a href="{{ $review_url }}" target="_blank" class="v-button"
+                                                                    style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #000000; border-radius: 1px;-webkit-border-radius: 1px; -moz-border-radius: 1px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-family: 'Montserrat',sans-serif; font-size: 14px;">
+                                                                    <span
+                                                                        style="display:block;padding:10px 20px;line-height:120%;"><span
+                                                                            style="line-height: 16.8px;">Write a Review</span></span>
+                                                                </a>
                                                             </div>
 
                                                         </td>

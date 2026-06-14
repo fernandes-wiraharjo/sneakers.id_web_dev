@@ -68,16 +68,10 @@
         @endif
         
         {{-- Review Button --}}
-        @if($shipping && $shipping->shipping_waybill && auth()->check())
-            @php
-                $transactionDestination = $transaction->destination()->first();
-                $canReview = $transactionDestination && $transactionDestination->user_id == auth()->id();
-            @endphp
-            @if($canReview)
-                <a href="{{ route('customer.transaction.review', $transaction->token) }}" class="btn btn-dark">
-                    Write Review
-                </a>
-            @endif
+        @if($shipping && $shipping->shipping_waybill)
+            <a href="{{ route('customer.transaction.review', $transaction->token) }}" class="btn btn-dark">
+                Write Review
+            </a>
         @endif
     </div>
 

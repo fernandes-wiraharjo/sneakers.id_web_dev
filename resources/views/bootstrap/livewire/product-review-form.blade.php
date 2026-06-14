@@ -11,6 +11,13 @@
         </div>
     @endif
 
+    @if (session()->has('review_error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('review_error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="mb-3">
         <input type="hidden" id="rating-input-{{ $formId }}" value="{{ $rating }}">
         <div class="d-flex gap-2 rating-stars" data-form-id="{{ $formId }}">

@@ -2,9 +2,11 @@
 
 namespace App\Http\Livewire;
 
-use Livewire\Component;
+use App\Http\Controllers\ReviewController;
 use App\Models\ReviewProduct;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+use Modules\Transaction\Entities\Transaction;
 
 class ProductReviewForm extends Component
 {
@@ -41,11 +43,9 @@ class ProductReviewForm extends Component
         $this->productImage = $productImage;
         $this->productCode = $productCode;
 
-        // Check if review already exists
         $existingReview = ReviewProduct::where('transaction_token', $transactionToken)
             ->where('product_id', $productId)
             ->where('product_size', $productSize)
-            ->where('user_id', Auth::id())
             ->first();
 
         if ($existingReview) {
@@ -57,7 +57,7 @@ class ProductReviewForm extends Component
 
     public function setRating($rating)
     {
-        if (!$this->isSubmitted) {
+        if (! $this->isSubmitted) {
             $this->rating = $rating;
         }
     }
@@ -65,6 +65,20 @@ class ProductReviewForm extends Component
     public function submitReview()
     {
         if ($this->isSubmitted) {
+            return;
+        }
+
+        $transaction = Transaction::where('token', $this->transactionToken)->first();
+        if (! $transaction || ! ReviewController::canAccessReview($transaction)) {
+            session()->flash('review_error', 'You are not allowed to submit this review.');
+
+            return;
+        }
+
+        $shipping = $transaction->shipping()->first();
+        if (! $shipping || ! $shipping->shipping_waybill) {
+            session()->flash('review_error', 'Review is not available until the order has been shipped.');
+
             return;
         }
 

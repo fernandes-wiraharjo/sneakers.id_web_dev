@@ -3,7 +3,7 @@
         <style>
             .service-item {
                 background: #f5f8fa;
-                padding: 1.5rem;
+                padding: 1rem 1.5rem;
                 border-radius: 0.475rem;
             }
         </style>
@@ -51,50 +51,54 @@
 
                 <!--begin::Services Section-->
                 <div class="separator my-10"></div>
-                
+
                 <div class="mb-7">
-                    <h2 class="fw-bolder text-dark mb-7">Courier Services</h2>
-                    
-                    <div class="d-flex flex-column gap-7" id="services-container">
-                        @foreach($courier->services as $service)
-                        <div class="service-item d-flex flex-row gap-5 align-items-center">
-                            <input type="hidden" name="services[{{ $loop->index }}][id]" value="{{ $service->id }}">
-                            
-                            <div class="flex-grow-1">
-                                <label class="required fw-bold fs-6 mb-2">Service Code</label>
-                                <input type="text" name="services[{{ $loop->index }}][code]" 
-                                    class="form-control form-control-solid" 
-                                    placeholder="Enter service code (e.g. REG, YES)" 
-                                    value="{{ $service->code }}" required />
-                            </div>
-                            
-                            <div class="flex-grow-1">
-                                <label class="required fw-bold fs-6 mb-2">Service Name</label>
-                                <input type="text" name="services[{{ $loop->index }}][name]" 
-                                    class="form-control form-control-solid" 
-                                    placeholder="Enter service name" 
-                                    value="{{ $service->name }}" required />
-                            </div>
-                            
-                            <div class="form-check form-check-custom form-check-solid mt-5">
-                                <input class="form-check-input" type="checkbox" 
-                                    name="services[{{ $loop->index }}][is_active]" 
-                                    value="1" {{ $service->is_active ? 'checked' : '' }} />
-                                <label class="form-check-label">Active</label>
-                            </div>
-                            
-                            <button type="button" class="btn btn-icon btn-light-danger mt-5 remove-service">
-                                <i class="fas fa-times"></i>
-                            </button>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-7">
+                        <div>
+                            <h2 class="fw-bolder text-dark mb-1">Courier Services</h2>
+                            <p class="text-muted mb-0">Services are loaded from RajaOngkir using two queries: intracity (same origin/destination) and intercity (origin to sample destination).</p>
                         </div>
-                        @endforeach
+                        <a href="{{ route('administrator.master-data.shipping-courier.edit', $courier->id) }}" class="btn btn-light-primary btn-sm">
+                            <i class="fas fa-sync-alt me-2"></i>
+                            Refresh from RajaOngkir
+                        </a>
                     </div>
-                    
-                    <div class="d-flex justify-content-center mt-7">
-                        <button type="button" class="btn btn-light-primary" id="add-service">
-                            <i class="fas fa-plus me-2"></i>
-                            Add New Service
-                        </button>
+
+                    @if($apiError)
+                        <div class="alert alert-warning">
+                            {{ $apiError }}
+                        </div>
+                    @endif
+
+                    <div class="d-flex flex-column gap-4" id="services-container">
+                        @php
+                            $displayServices = old('services', $services);
+                        @endphp
+                        @forelse($displayServices as $index => $service)
+                            <div class="service-item d-flex flex-row gap-5 align-items-center">
+                                @if(!empty($service['id']))
+                                    <input type="hidden" name="services[{{ $index }}][id]" value="{{ $service['id'] }}">
+                                @endif
+                                <input type="hidden" name="services[{{ $index }}][code]" value="{{ $service['code'] }}">
+                                <input type="hidden" name="services[{{ $index }}][name]" value="{{ $service['name'] }}">
+
+                                <div class="flex-grow-1">
+                                    <div class="fw-bold text-dark">{{ $service['code'] }}</div>
+                                    <div class="text-muted">{{ $service['name'] }}</div>
+                                </div>
+
+                                <div class="form-check form-check-custom form-check-solid">
+                                    <input class="form-check-input" type="checkbox"
+                                        name="services[{{ $index }}][is_active]"
+                                        value="1" {{ !empty($service['is_active']) ? 'checked' : '' }} />
+                                    <label class="form-check-label">Active</label>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="alert alert-light border">
+                                No services available for this courier.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
                 <!--end::Services Section-->
@@ -110,55 +114,4 @@
         <!--end::Card body-->
     </div>
     <!--end::Card-->
-    @push('scripts')
-    <script>
-        // Template for new service item
-        const serviceTemplate = `
-            <div class="service-item d-flex flex-row gap-5 align-items-center">
-                <div class="flex-grow-1">
-                    <label class="required fw-bold fs-6 mb-2">Service Code</label>
-                    <input type="text" name="services[INDEX][code]" 
-                        class="form-control form-control-solid" 
-                        placeholder="Enter service code (e.g. REG, YES)" 
-                        required />
-                </div>
-                
-                <div class="flex-grow-1">
-                    <label class="required fw-bold fs-6 mb-2">Service Name</label>
-                    <input type="text" name="services[INDEX][name]" 
-                        class="form-control form-control-solid" 
-                        placeholder="Enter service name" 
-                        required />
-                </div>
-                
-                <div class="form-check form-check-custom form-check-solid mt-5">
-                    <input class="form-check-input" type="checkbox" 
-                        name="services[INDEX][is_active]" 
-                        value="1" checked />
-                    <label class="form-check-label">Active</label>
-                </div>
-                
-                <button type="button" class="btn btn-icon btn-light-danger mt-5 remove-service">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-
-        $(document).ready(function() {
-            // Add new service
-            $('#add-service').on('click', function() {
-                const container = $('#services-container');
-                const newIndex = container.children().length;
-                const newService = serviceTemplate.replace(/INDEX/g, newIndex);
-                
-                container.append(newService);
-            });
-
-            // Remove service
-            $('#services-container').on('click', '.remove-service', function() {
-                $(this).closest('.service-item').remove();
-            });
-        });
-    </script>
-    @endpush
 </x-base-layout>

@@ -86,36 +86,38 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             <button class="btn btn-danger rounded-pill w-100" disabled>Out of Stock</button>
             @endif
 
-            @if ($product->product_link)
+            @if (!empty($link_toggles['tokopedia']) && $product->product_link)
             <a href="{{ $product->product_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Tokopedia</span> 
             </a>
             @endif
 
-            @if ($product->shopee_link)
+            @if (!empty($link_toggles['shopee']) && $product->shopee_link)
             <a href="{{ $product->shopee_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Shopee</span> 
             </a>
             @endif
 
-            @if ($product->tiktok_link)
+            @if (!empty($link_toggles['tiktok']) && $product->tiktok_link)
             <a href="{{ $product->tiktok_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via TikTok</span> 
             </a>
             @endif
 
-            @if ($product->blibli_link)
+            @if (!empty($link_toggles['blibli']) && $product->blibli_link)
             <a href="{{ $product->blibli_link }}" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via Blibli</span> 
             </a>
             @endif
 
+            @if (!empty($link_toggles['whatsapp']))
             <a href="http://wa.me/6289617925925" target="_blank" class="mt-3 btn btn-dark rounded-pill w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow">
                 <span class="lh-1">Order via WhatsApp</span> 
             </a>
+            @endif
 
             @if(isset($reviews) && count($reviews['data']) > 0)
-            <div class="mt-5">
+            <div class="mt-5" wire:ignore>
                 <div class="card rounded-4 p-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="fw-bold mb-0">Review ({{ $reviews['summary']['count'] }})</h4>
@@ -137,18 +139,18 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
                     @foreach($reviews['data'] as $review)
                     <div class="row mt-3 align-items-center">
                         <div class="col-12 col-md-5 fs-5">
-                            @for($i = 0; $i < $review['rating']; $i++)
+                            @for($i = 0; $i < $review->rating; $i++)
                                 <span class="iconify text-warning" data-icon="material-symbols:star"></span>
                             @endfor
-                            @for($i = $review['rating']; $i < 5; $i++)
+                            @for($i = $review->rating; $i < 5; $i++)
                                 <span class="iconify text-secondary" data-icon="material-symbols:star"></span>
                             @endfor
                         </div>
                         <div class="col-12 col-md-7 text-secondary text-end">
-                            {{ $review['user']['name'] }} - {{ date('d/m/Y', strtotime($review['created_at'])) }}
+                            {{ $review->reviewer_name }} - {{ $review->created_at->format('d/m/Y') }}
                         </div>
                         <div class="col-12 text-secondary">
-                            {{ $review['review'] }}
+                            {{ $review->review }}
                         </div>
                     </div>
                     @endforeach

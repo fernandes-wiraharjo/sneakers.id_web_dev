@@ -15,10 +15,10 @@
                     <div class="bg-dark rounded-5 text-white p-3">
                         <div class="d-flex align-items-center">
                             @if($review->user && $review->user->profile_photo_url)
-                                <img src="{{ $review->user->profile_photo_url }}" alt="{{ $review->user->name }}" class="rounded-circle me-2" style="max-height: 45px;">
+                                <img src="{{ $review->user->profile_photo_url }}" alt="{{ $review->reviewer_name }}" class="rounded-circle me-2" style="max-height: 45px;">
                             @endif
                             <div class="flex-grow-1">
-                                <p class="mb-0 fw-bold">{{ $review->user->name ?? 'Anonymous' }}</p>
+                                <p class="mb-0 fw-bold">{{ $review->reviewer_name }}</p>
                                 <p class="mb-0 text-secondary">sneakers.id</p>
                             </div>
                             <img src="{{ asset('stores-info/logo-white-new.png') }}" alt="Rating" class="img-fluid" style="max-height: 60px;">
@@ -53,10 +53,10 @@
                     <div class="bg-dark rounded-5 text-white p-3">
                         <div class="d-flex align-items-center">
                             @if($review->user && $review->user->profile_photo_url)
-                                <img src="{{ $review->user->profile_photo_url }}" alt="{{ $review->user->name }}" class="rounded-circle me-2" style="max-height: 45px;">
+                                <img src="{{ $review->user->profile_photo_url }}" alt="{{ $review->reviewer_name }}" class="rounded-circle me-2" style="max-height: 45px;">
                             @endif
                             <div class="flex-grow-1">
-                                <p class="mb-0 fw-bold">{{ $review->user->name ?? 'Anonymous' }}</p>
+                                <p class="mb-0 fw-bold">{{ $review->reviewer_name }}</p>
                                 <p class="mb-0 text-secondary">sneakers.id</p>
                             </div>
                             <img src="{{ asset('stores-info/logo-white-new.png') }}" alt="Rating" class="img-fluid" style="max-height: 60px;">

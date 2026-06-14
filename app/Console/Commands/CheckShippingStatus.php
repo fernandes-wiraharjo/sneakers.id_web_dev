@@ -162,6 +162,7 @@ class CheckShippingStatus extends Command
                             $email = $destination->email;
                             $emailData = [
                                 'transaction_details' => route('customer.transaction.detail', $transaction->token),
+                                'review_url' => route('customer.transaction.review', $transaction->token),
                                 'customer_name' => $destination->first_name . " " . $destination->last_name,
                                 'order_id' => $transaction->token
                             ];

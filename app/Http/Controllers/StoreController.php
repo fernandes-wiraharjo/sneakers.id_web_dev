@@ -63,25 +63,15 @@ class StoreController extends Controller
     public function productDetail($id){
         $data['product'] = $this->productRepository->getProductByIdWithEager($id);
 
-        if ($data['product']) {
-            $data['product']->timestamps = false;
-            $data['product']->increment('page_view_count');
+        if (! $data['product']) {
+            abort(404);
         }
 
-        // Only show sizes that are in stock
-        $data['size'] = $data['product']
-            ? $data['product']->details()->where('qty', '>', 0)->get()
-            : collect();
+        $data['product']->timestamps = false;
+        $data['product']->increment('page_view_count');
 
-        // get reviews
-        $reviews = $this->reviewRepository->getReviewsForProduct($id);
-        $data['reviews'] = [
-            'summary' => [
-                'rating' => $reviews->avg('rating'),
-                'count' => $reviews->count()
-            ],
-            'data' => $reviews->sortByDesc('rating')->values()->take(5)
-        ];
+        // Only show sizes that are in stock
+        $data['size'] = $data['product']->details()->where('qty', '>', 0)->get();
 
         $data['size_chart_image'] = $data['product']->sizeCharts()->first()?->size_chart_image_url;
         activity()->log('Someone look into my product');

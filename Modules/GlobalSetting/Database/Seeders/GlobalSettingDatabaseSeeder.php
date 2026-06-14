@@ -16,7 +16,10 @@ class GlobalSettingDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(GlobalSettingTableSeeder::class);
+        $this->call([
+            GlobalSettingTableSeeder::class,
+            MarketplaceLinkToggleGlobalSettingSeeder::class,
+        ]);
     }
 }
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\ShippingCourier;
 use App\Models\ShippingCourierService;
+use App\Facades\CekOngkir;
 use Modules\ShippingCourier\Entities\ShippingCourierDatatables;
 use Hexters\Ladmin\Exceptions\LadminException;
 use Alert;
@@ -60,14 +61,7 @@ class ShippingCourierController extends Controller
                     $courier = ShippingCourier::create($request->all());
 
                     // Create services
-                    foreach ($request->input('services', []) as $serviceData) {
-                        $serviceData['is_active'] = isset($serviceData['is_active']);
-                        $courier->services()->create([
-                            'code' => $serviceData['code'],
-                            'name' => $serviceData['name'],
-                            'is_active' => $serviceData['is_active']
-                        ]);
-                    }
+                    $this->syncCourierServices($courier, $request->input('services', []));
 
                     DB::commit();
                     Alert::success('Shipping Courier Created Successfully!');
@@ -112,8 +106,72 @@ class ShippingCourierController extends Controller
     public function edit($id)
     {
         ladmin()->allow('administrator.master-data.shipping-courier.update');
-        $courier = ShippingCourier::findOrFail($id);
-        return view('shippingcourier::edit', compact('courier'));
+        $courier = ShippingCourier::with('services')->findOrFail($id);
+        $apiServices = CekOngkir::fetchCourierServices($courier->code);
+        $services = $this->mergeCourierServices($courier, $apiServices);
+        $apiError = empty($apiServices)
+            ? 'Unable to fetch services from RajaOngkir. Please check your API key, RAJAONGKIR_ORIGIN_REGION_ID, and RAJAONGKIR_SAMPLE_DESTINATION_REGION_ID configuration.'
+            : null;
+
+        return view('shippingcourier::edit', compact('courier', 'services', 'apiError'));
+    }
+
+    protected function mergeCourierServices(ShippingCourier $courier, array $apiServices): array
+    {
+        if (empty($apiServices)) {
+            return $courier->services->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'code' => $service->code,
+                    'name' => $service->name,
+                    'is_active' => $service->is_active,
+                ];
+            })->values()->all();
+        }
+
+        $existingByCode = $courier->services->keyBy(function ($service) {
+            return strtoupper($service->code);
+        });
+
+        return collect($apiServices)->map(function ($apiService) use ($existingByCode) {
+            $existing = $existingByCode->get(strtoupper($apiService['code']));
+
+            return [
+                'id' => $existing ? $existing->id : null,
+                'code' => $apiService['code'],
+                'name' => $apiService['name'],
+                'is_active' => $existing ? $existing->is_active : false,
+            ];
+        })->values()->all();
+    }
+
+    protected function syncCourierServices(ShippingCourier $courier, array $services): void
+    {
+        $savedIds = [];
+
+        foreach ($services as $serviceData) {
+            $payload = [
+                'code' => $serviceData['code'],
+                'name' => $serviceData['name'],
+                'is_active' => isset($serviceData['is_active']),
+            ];
+
+            if (!empty($serviceData['id'])) {
+                $courier->services()->where('id', $serviceData['id'])->update($payload);
+                $savedIds[] = (int) $serviceData['id'];
+                continue;
+            }
+
+            $service = $courier->services()->updateOrCreate(
+                ['code' => $serviceData['code']],
+                $payload
+            );
+            $savedIds[] = $service->id;
+        }
+
+        if (!empty($savedIds)) {
+            $courier->services()->whereNotIn('id', $savedIds)->delete();
+        }
     }
 
     /**
@@ -163,32 +221,7 @@ class ShippingCourierController extends Controller
                     $courier->update($data);
 
                     // Update services
-                    $existingServices = collect($request->input('services', []));
-                    $existingServiceIds = $existingServices->pluck('id')->filter()->all();
-
-                    // Delete services that are not in the request
-                    $courier->services()->whereNotIn('id', $existingServiceIds)->delete();
-
-                    // Update or create services
-                    foreach ($existingServices as $serviceData) {
-                        $serviceData['is_active'] = isset($serviceData['is_active']);
-                        
-                        if (isset($serviceData['id'])) {
-                            // Update existing service
-                            $courier->services()->where('id', $serviceData['id'])->update([
-                                'code' => $serviceData['code'],
-                                'name' => $serviceData['name'],
-                                'is_active' => $serviceData['is_active']
-                            ]);
-                        } else {
-                            // Create new service
-                            $courier->services()->create([
-                                'code' => $serviceData['code'],
-                                'name' => $serviceData['name'],
-                                'is_active' => $serviceData['is_active']
-                            ]);
-                        }
-                    }
+                    $this->syncCourierServices($courier, $request->input('services', []));
 
                     DB::commit();
                     Alert::success('Shipping Courier Updated Successfully!');

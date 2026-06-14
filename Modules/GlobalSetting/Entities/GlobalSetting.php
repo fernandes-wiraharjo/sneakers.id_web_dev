@@ -21,4 +21,15 @@ class GlobalSetting extends Model
     {
         return \Modules\Brand\Database\factories\GlobalSettingFactory::new();
     }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \App\Services\GlobalSettingsCache::forgetLinkToggles();
+        });
+
+        static::deleted(function () {
+            \App\Services\GlobalSettingsCache::forgetLinkToggles();
+        });
+    }
 }

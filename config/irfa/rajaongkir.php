@@ -51,4 +51,10 @@ return [
     'cache_type' => env('RAJAONGKIR_CACHE', 'database'),
 
     'origin_region_id' => env('RAJAONGKIR_ORIGIN_REGION_ID', '18080'),
+
+    /*
+    | Used when listing courier services in CMS (intercity rates).
+    | Must differ from origin_region_id.
+    */
+    'sample_destination_region_id' => env('RAJAONGKIR_SAMPLE_DESTINATION_REGION_ID', '4924'),
 ];

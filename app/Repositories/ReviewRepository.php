@@ -22,7 +22,7 @@ class ReviewRepository extends Repository
     {
         // Get customer reviews (limit, randomly)
         $reviews = $this->model
-            ->with(['user', 'product'])
+            ->with(['transaction.destination', 'product'])
             ->inRandomOrder()
             ->limit($limit)
             ->get();
@@ -44,7 +44,7 @@ class ReviewRepository extends Repository
 
     public function getReviewsForProduct($id)
     {
-        return $this->model->where('product_id', $id)->with('user')->get();
+        return $this->model->where('product_id', $id)->with('transaction.destination')->get();
     }
 }
 

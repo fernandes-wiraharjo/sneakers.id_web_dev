@@ -176,8 +176,10 @@ class ProductService {
             }
 
             $signatures_id = [];
-            foreach (json_decode($request['signature']) as $signature) {
-                $signatures_id[] = intval($signature->value);
+            if (isset($request['signature'])) {
+                foreach (json_decode($request['signature']) as $signature) {
+                    $signatures_id[] = intval($signature->value);
+                }
             }
 
             if(isset($signatures_id) && count($signatures_id) > 0){

@@ -40,5 +40,20 @@ class ReviewProduct extends Model
     {
         return $this->belongsTo(Transaction::class, 'transaction_token', 'token');
     }
+
+    public function getReviewerNameAttribute(): string
+    {
+        $destination = $this->transaction?->destination;
+
+        if ($destination) {
+            $name = trim($destination->first_name . ' ' . $destination->last_name);
+
+            if ($name !== '') {
+                return $name;
+            }
+        }
+
+        return 'Guest';
+    }
 }
 

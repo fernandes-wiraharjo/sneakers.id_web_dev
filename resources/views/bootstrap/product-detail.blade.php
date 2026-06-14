@@ -5,7 +5,7 @@
 
 @section('content')
     <!-- product detail -->
-    @livewire('product', ['product' => $product,  'sizeList' => $size, 'size_chart_image' => $size_chart_image ?? '', 'reviews' => $reviews])
+    @livewire('product', ['product' => $product,  'sizeList' => $size, 'size_chart_image' => $size_chart_image ?? ''])
 
     <!-- related product -->
     @livewire('related-product', ['product' => $product])

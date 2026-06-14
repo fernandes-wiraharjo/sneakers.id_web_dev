@@ -85,6 +85,7 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
     Route::get('/success-payment/{external_id}', [CheckoutController::class, 'successPayments'])->name('payment.success');
     Route::get('/error-payment', [CheckoutController::class, 'errorPayments'])->name('payment.error');
     Route::get('/transaction/c/{external_id}', [DashboardController::class, 'detail'])->name('transaction.detail');
+    Route::get('/transaction/{transaction_token}/review', [\App\Http\Controllers\ReviewController::class, 'index'])->name('transaction.review');
     
     // Auth required routes
     Route::group( ['middleware' => 'auth' ], function()
@@ -93,6 +94,5 @@ Route::group(['as' => 'customer.', 'prefix' => 'customer'], function() {
         Route::post('/confirm-password', [LoginController::class, 'confirmPassword'])->name('password.confirm');
         Route::post('/address/save', [DashboardController::class, 'saveAccount'])->name('address.save');
         Route::post('/transaction/cancel/{orderId}', [CheckoutController::class, 'cancelTransaction'])->name('transaction.cancel');
-        Route::get('/transaction/{transaction_token}/review', [\App\Http\Controllers\ReviewController::class, 'index'])->name('transaction.review');
     });
 });

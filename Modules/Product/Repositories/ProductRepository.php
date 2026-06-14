@@ -8,7 +8,6 @@ use Modules\Product\Entities\ProductImage;
 use Modules\Product\Entities\ProductDetail;
 use Hexters\Ladmin\Contracts\MasterRepositoryInterface;
 use App\Repositories\Repository;
-use Carbon\Carbon;
 use DB;
 use Modules\Product\Entities\ProductSizeChart;
 
@@ -192,37 +191,18 @@ class ProductRepository extends Repository implements MasterRepositoryInterface 
     }
 
     public function getProductNewRelease($limit = 10, $offset = 0) {
-        $date = date('Y-m-d H:i:s');
-        $today = Carbon::createFromFormat('Y-m-d H:i:s', $date)->toString();
+        return $this->applyNewReleaseScope($this->getProductWhere())
+            ->orderByDesc('products.created_at')
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
+    }
 
-        $query = $this->model->with(['tags','detail', 'detail', 'images', 'signatures', 'categories'])
-        ->whereHas('tags', function($q) use ($date) {
+    public function applyNewReleaseScope($query)
+    {
+        return $query->whereHas('tags', function ($q) {
             $q->where('tag_title', 'NEW RELEASE');
-            $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
-        })
-        ->select('products.*', 'pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
-        ->leftJoin('product_details as pd', function($join) {
-            $join->on('pd.product_id', '=', 'products.id')
-                ->where('pd.retail_price', '=', DB::raw('(
-                    Select min(retail_price)
-                    from product_details
-                    where product_id = products.id
-                )'))
-                ->where('pd.after_discount_price', '=', DB::raw('(
-                    Select min(after_discount_price)
-                    from product_details
-                    where product_id = products.id
-                )'));
-        })
-        // ->whereRaw('pd.min_retail_price = pd2.retail_price')
-        ->where(['is_active'=> 1])
-        ->groupBy('products.id', 'products.product_code', 'products.product_name', 'products.product_link', 'products.shopee_link', 'products.tiktok_link', 'products.blibli_link', 'products.description', 'products.image', 'products.product_visit', 'products.page_view_count', 'products.is_active', 'products.created_at','products.updated_at','pd.retail_price', 'pd.discount_percentage', 'pd.after_discount_price')
-        ->orderBy('products.created_at', 'DESC')
-        ->offset($offset)
-        ->limit($limit)
-        ->get();
-
-        return $query;
+        });
     }
 
     /**

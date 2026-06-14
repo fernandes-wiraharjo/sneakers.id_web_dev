@@ -78,6 +78,7 @@ class TransactionController extends Controller
                 $email = $transaction->destination->email;
                 $data = [
                     'transaction_details' => route('customer.transaction.detail', $transaction->token),
+                    'review_url' => route('customer.transaction.review', $transaction->token),
                     'customer_name' => $transaction->destination->first_name . " " . $transaction->destination->last_name,
                     'order_id' => $transaction->token
                 ];

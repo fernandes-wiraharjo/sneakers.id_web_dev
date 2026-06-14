@@ -385,6 +385,19 @@ class ProductList extends Component
             }
         }
 
+        $isNewReleasePage = $this->keyword === 'new-release';
+        if ($isNewReleasePage) {
+            $this->page_title = 'New Release';
+            $this->category = [];
+
+            if (empty($this->tag)) {
+                $newReleaseTag = $tagRepository->getTagByName('NEW RELEASE');
+                if ($newReleaseTag) {
+                    $this->tag = [intval($newReleaseTag->id)];
+                }
+            }
+        }
+
         $sale_category_id = $categoryRepository->getCategoryByName('sale')->id ?? null;
         $sale_tag_id = $tagRepository->getTagByName('sale')->id ?? null;
         $discount_id = $tagRepository->getTagByName('discount')->id ?? null;
@@ -441,7 +454,7 @@ class ProductList extends Component
                                     }
                                 });
                         })
-                        ->when(is_array($this->tag) && count($this->tag) > 0 && !$isBestSellerPage, function ($query, $tags) {
+                        ->when(is_array($this->tag) && count($this->tag) > 0 && ! $isBestSellerPage && ! $isNewReleasePage, function ($query, $tags) {
                             return $query->whereHas('tags', function ($q) use ($tags){
                                 // rsort($tags);
 
@@ -517,13 +530,8 @@ class ProductList extends Component
                                     // });
                             });
                         })
-                        ->when($this->keyword === 'new-release' || $sale_keyword === 'new release', function($query) {
-                            $date = date('Y-m-d H:i:s');
-
-                            return $query->whereHas('tags', function($q) use ($date) {
-                                $q->where('tag_title', 'NEW RELEASE');
-                                $q->whereRaw('datediff(product_tags.created_at, ?) > -30', $date);
-                            });
+                        ->when($isNewReleasePage || $sale_keyword === 'new release', function ($query) use ($productRepository) {
+                            return $productRepository->applyNewReleaseScope($query);
                         })
                         // ->when($this->size_filter, function ($query, $sizes) {
                         //     return $query->whereHas('detail', function($q) use ($sizes) {
@@ -599,6 +607,8 @@ class ProductList extends Component
         if ($isBestSellerPage) {
             $products = $productRepository->applyBestSellerOrdering($products);
             $data['products'] = $products->paginate(40);
+        } elseif ($isNewReleasePage) {
+            $data['products'] = $products->orderByDesc('products.created_at')->paginate(40);
         } else {
             $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         }

@@ -2,111 +2,153 @@
 
 namespace App\Http\Livewire;
 
+use App\Facades\CekOngkir;
 use App\Models\Region as ModelRegion;
-use Illuminate\Database\Eloquent\Collection;
+use App\Support\ShippingLocation;
 use Livewire\Component;
 
 class Region extends Component
 {
-    public $district;
-    public $subdistrict;
-    public $area;
-    public $postalCode;
-    public $selectedProvince;
-    public $selectedDistrict;
-    public $selectedSubdistrict;
-    public $selectedArea;
-    public $selectedPostalCode;
-    public $userRegion;
+    public $cityList = [];
+    public $districtList = [];
+    public $subdistrictList = [];
+    public $subdistrictRows = [];
 
-    public function mount($user_region = null, $province = null) {
-        $this->district = [];
-        $this->subdistrict = [];
-        $this->area = [];
-        $this->postalCode = [];
-        $this->selectedDistrict = '';
-        $this->selectedSubdistrict = '';
-        $this->selectedArea = '';
-        $this->selectedPostalCode = '';
-        
-        // Use passed user_region or get from auth user
-        if ($user_region) {
-            $this->userRegion = $user_region;
-        } else {
-            $this->userRegion = ModelRegion::where('region_id', auth()->user()->user_address->region_id ?? '')->first();
-        }
-        
-        // Initialize with user's existing region data if available
-        if ($this->userRegion) {
-            $this->selectedProvince = $this->userRegion->province;
-            $this->selectedDistrict = $this->userRegion->district;
-            $this->selectedSubdistrict = $this->userRegion->subdistrict;
-            $this->selectedArea = $this->userRegion->region_id;
-            $this->selectedPostalCode = $this->userRegion->post_code;
-            
-            // Load initial data
-            $this->district = ModelRegion::selectRaw('DISTINCT(district)')->where('province', $this->selectedProvince)->where('subdistrict_ro', '<>', 'NULL')->get()->pluck('district');
-            $this->subdistrict = ModelRegion::selectRaw('DISTINCT(subdistrict)')->where('district', $this->selectedDistrict)->where('area', '<>','-')->get()->pluck('subdistrict');
-            $this->area = ModelRegion::where('subdistrict', $this->selectedSubdistrict)->get()->pluck('area','region_id');
-            $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $this->selectedSubdistrict)->orderBy('post_code')->get()->pluck('post_code');
+    public $selectedProvinceId = '';
+    public $selectedCityId = '';
+    public $selectedDistrictId = '';
+    public $selectedSubdistrictId = '';
+    public $selectedPostalCode = '';
+
+    public $selectedProvinceName = '';
+    public $selectedCityName = '';
+    public $selectedDistrictName = '';
+    public $selectedSubdistrictName = '';
+
+    public $savedLocation = [];
+
+    public function mount($user_address = null)
+    {
+        $address = $user_address ?: (auth()->user()->user_address ?? null);
+
+        if ($address) {
+            $this->savedLocation = ShippingLocation::resolve($address);
+
+            if ($address->subdistrict_ro_id) {
+                $this->selectedSubdistrictId = (string) $address->subdistrict_ro_id;
+            } elseif ($address->region_id) {
+                $this->selectedSubdistrictId = (string) $address->region_id;
+            }
+
+            $this->selectedProvinceName = $this->savedLocation['province'] ?? '';
+            $this->selectedCityName = $this->savedLocation['city'] ?? '';
+            $this->selectedDistrictName = $this->savedLocation['district'] ?? '';
+            $this->selectedSubdistrictName = $this->savedLocation['subdistrict'] ?? '';
+            $this->selectedPostalCode = $this->savedLocation['postal_code'] ?? '';
+            $this->restoreLocationCascade();
         }
     }
 
-    public function updateDistrict($value) {
-        $this->selectedProvince = $value;
-        $this->district = ModelRegion::selectRaw('DISTINCT(district)')->where('province', $value)->where('subdistrict_ro', '<>', 'NULL')->get()->pluck('district');
-        
-        // Reset dependent fields
-        $this->selectedDistrict = '';
-        $this->selectedSubdistrict = '';
-        $this->selectedArea = '';
-        $this->selectedPostalCode = '';
-        $this->subdistrict = [];
-        $this->area = [];
-        $this->postalCode = [];
-    }
-
-    public function updateSubdistrict($value) {
-        $this->selectedDistrict = $value;
-        $this->subdistrict = ModelRegion::selectRaw('DISTINCT(subdistrict)')->where('district', $value)->where('area', '<>','-')->get()->pluck('subdistrict');
-        
-        // Reset dependent fields
-        $this->selectedSubdistrict = '';
-        $this->selectedArea = '';
-        $this->selectedPostalCode = '';
-        $this->area = [];
-        $this->postalCode = [];
-    }
-
-    public function updateArea($value) {
-        $this->selectedSubdistrict = $value;
-        $this->area = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
-        $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
-        
-        // Reset dependent fields
-        $this->selectedArea = '';
-        $this->selectedPostalCode = '';
-    }
-
-    public function areaUpdate($value) {
-        $regionData = ModelRegion::where('region_id', $value)->first();
-        if ($regionData) {
-            $this->selectedArea = $value;
-            $this->selectedPostalCode = $regionData->post_code;
+    protected function restoreLocationCascade(): void
+    {
+        $provinceId = $this->findLocationId(CekOngkir::getProvinces(), $this->selectedProvinceName);
+        if (! $provinceId) {
+            return;
         }
+
+        $this->selectedProvinceId = $provinceId;
+        $this->cityList = CekOngkir::getCities($provinceId)->all();
+
+        $cityId = $this->findLocationId(collect($this->cityList), $this->selectedCityName);
+        if (! $cityId) {
+            return;
+        }
+
+        $this->selectedCityId = $cityId;
+        $this->districtList = CekOngkir::getDistricts($cityId)->all();
+
+        $districtId = $this->findLocationId(collect($this->districtList), $this->selectedDistrictName);
+        if (! $districtId) {
+            return;
+        }
+
+        $this->selectedDistrictId = $districtId;
+        $rows = CekOngkir::getSubdistricts($districtId);
+        $this->subdistrictRows = $rows->keyBy('id')->all();
+        $this->subdistrictList = $rows->pluck('name', 'id')->all();
     }
 
-    public function updateZipCode($value) {
-        $this->selectedPostalCode = $value;
-        $regionData = ModelRegion::where('post_code', $value)->first();
-        if ($regionData) {
-            $this->selectedArea = $regionData->region_id;
+    protected function findLocationId($items, ?string $name): ?string
+    {
+        if (! $name) {
+            return null;
         }
+
+        foreach ($items as $id => $label) {
+            if (strcasecmp((string) $label, (string) $name) === 0) {
+                return (string) $id;
+            }
+        }
+
+        return null;
+    }
+
+    public function loadCities($provinceId)
+    {
+        $this->selectedProvinceId = $provinceId;
+        $this->selectedProvinceName = CekOngkir::getProvinces()[$provinceId] ?? '';
+        $this->cityList = CekOngkir::getCities($provinceId)->all();
+        $this->selectedCityId = '';
+        $this->selectedDistrictId = '';
+        $this->selectedSubdistrictId = '';
+        $this->districtList = [];
+        $this->subdistrictList = [];
+        $this->subdistrictRows = [];
+        $this->selectedCityName = '';
+        $this->selectedDistrictName = '';
+        $this->selectedSubdistrictName = '';
+        $this->selectedPostalCode = '';
+    }
+
+    public function loadDistricts($cityId)
+    {
+        $this->selectedCityId = $cityId;
+        $this->selectedCityName = $this->cityList[$cityId] ?? '';
+        $this->districtList = CekOngkir::getDistricts($cityId)->all();
+        $this->selectedDistrictId = '';
+        $this->selectedSubdistrictId = '';
+        $this->subdistrictList = [];
+        $this->subdistrictRows = [];
+        $this->selectedDistrictName = '';
+        $this->selectedSubdistrictName = '';
+        $this->selectedPostalCode = '';
+    }
+
+    public function loadSubdistricts($districtId)
+    {
+        $this->selectedDistrictId = $districtId;
+        $this->selectedDistrictName = $this->districtList[$districtId] ?? '';
+        $rows = CekOngkir::getSubdistricts($districtId);
+        $this->subdistrictRows = $rows->keyBy('id')->all();
+        $this->subdistrictList = $rows->pluck('name', 'id')->all();
+        $this->selectedSubdistrictId = '';
+        $this->selectedSubdistrictName = '';
+        $this->selectedPostalCode = '';
+    }
+
+    public function selectSubdistrict($subdistrictId)
+    {
+        $subdistrictId = (string) $subdistrictId;
+        $this->selectedSubdistrictId = $subdistrictId;
+        $row = $this->subdistrictRows[$subdistrictId] ?? null;
+        $this->selectedSubdistrictName = $row['name'] ?? ($this->subdistrictList[$subdistrictId] ?? '');
+        $this->selectedPostalCode = $row['zip_code'] ?? $this->selectedPostalCode;
     }
 
     public function render()
     {
-        $province = ModelRegion::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
-        return view('bootstrap.livewire.region', compact('province'));
+        return view('bootstrap.livewire.region', [
+            'province' => CekOngkir::getProvinces()->all(),
+        ]);
     }
 }

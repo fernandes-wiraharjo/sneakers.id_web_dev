@@ -10,7 +10,6 @@ use App\Models\UserAddress;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserVerify;
 use App\Models\User;
-use App\Models\Region;
 use Illuminate\Support\Facades\Storage;
 use App\Facades\CekOngkir;
 use Modules\Transaction\Entities\Transaction;
@@ -41,8 +40,9 @@ class DashboardController extends Controller {
     $data['transaction'] = TransactionDestination::with('transaction')->where('email', auth()->user()->email)->orderBy('created_at', 'DESC')->get();
     $data['user_address'] = auth()->user()->user_address()->first();
     $data['user_info'] = auth()->user();
-    $data['region'] = Region::where('region_id', $data['user_address']->region_id ?? 18090)->first();
-    $data['province'] = Region::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
+    $data['saved_location'] = $data['user_address']
+        ? \App\Support\ShippingLocation::resolve($data['user_address'])
+        : [];
 
     if (!auth()->user()->is_email_verified) {
         $verifyUser = UserVerify::where('user_id', Auth::user()->id)->first();
@@ -80,7 +80,7 @@ class DashboardController extends Controller {
             'user' => auth()->user() ?? null,
             'transaction' => $transaction,
             'destination' => $transactionDestination,
-            'region' => $transactionDestination->region()->first(),
+            'location' => \App\Support\ShippingLocation::resolve($transactionDestination),
             'items' => $transaction->items()->with('detail.product')->get(),
             'shipping' => $transaction->shipping()->first(),
             'shipping_waybill' => CekOngkir::CheckWaybill($transaction->shipping()->first()->shipping_waybill, $transaction->shipping()->first()->courier_code, $lastFiveDigitPhoneNumber) ?? null,
@@ -96,28 +96,38 @@ class DashboardController extends Controller {
         'phone_number' => 'required',
         'address' => 'required',
         'province' => 'required',
+        'city' => 'required',
         'district' => 'required',
         'subdistrict' => 'required',
-        'area' => 'required',
-        'post_code' => 'required'
+        'post_code' => 'required',
+        'subdistrict_ro_id' => 'required',
     ],[
         'first_name.required' => 'First Name is required',
         'last_name.required' => 'Last Name is required',
-        'phone_number.reqired' => 'Phone Number is required',
+        'phone_number.required' => 'Phone Number is required',
         'address.required' => 'Address is required',
         'province.required' => 'Province is required',
+        'city.required' => 'City is required',
         'district.required' => 'District is required',
         'subdistrict.required' => 'Subdistrict is required',
-        'area.required' => 'Area is required',
-        'post_code.required' => 'Post Code is required'
+        'post_code.required' => 'Post Code is required',
+        'subdistrict_ro_id.required' => 'Subdistrict is required',
     ]);
 
-    UserAddress::create([
-        'user_id' => auth()->user()->id,
-        'phone_number' => $request->phone_number,
-        'address' => $request->address,
-        'region_id' => $request->area,
-    ]);
+    UserAddress::updateOrCreate(
+        ['user_id' => auth()->user()->id],
+        [
+            'region_id' => null,
+            'province' => $request->province,
+            'city' => $request->city,
+            'district' => $request->district,
+            'subdistrict' => $request->subdistrict,
+            'postal_code' => $request->post_code,
+            'subdistrict_ro_id' => $request->subdistrict_ro_id,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+        ]
+    );
 
     User::where('id', auth()->user()->id)->update([
         'first_name' => $request->first_name,

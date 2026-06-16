@@ -90,10 +90,10 @@ class DashboardController extends Controller
             transaction_destinations.first_name,
             transaction_destinations.last_name,
             transaction_destinations.email,
-            regions.province,
-            regions.district,
-            regions.subdistrict,
-            regions.post_code
+            COALESCE(transaction_destinations.province, regions.province) as province,
+            COALESCE(transaction_destinations.city, regions.district) as district,
+            COALESCE(transaction_destinations.district, regions.subdistrict) as subdistrict,
+            COALESCE(transaction_destinations.postal_code, regions.post_code) as post_code
             ')
                 ->leftJoin('transaction_destinations', 'transactions.id', '=', 'transaction_destinations.transaction_id')
                 ->leftJoin('regions', 'regions.region_id', '=', 'transaction_destinations.region_id')

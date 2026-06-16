@@ -127,15 +127,16 @@
                         <strong>Name:</strong> {{ $user_info->name ?? '-' }}
                     </div>
                     @if($user_address != null)
+                    @php $loc = $saved_location ?? shipping_location($user_address); @endphp
                     <div class="mb-2">
                         <strong>Address:</strong><br>
                         {{ $user_address->address ?? '-' }}
                     </div>
                     <div class="mb-2">
                         <strong>Region:</strong><br>
-                        {{ $region->area ?? '-' }}, {{ $region->subdistrict ?? '-' }}<br>
-                        {{ $region->district ?? '-' }}, {{ $region->province ?? '-' }}<br>
-                        {{ $region->post_code ?? '-' }}
+                        {{ $loc['subdistrict'] ?? '-' }}, {{ $loc['district'] ?? '-' }}<br>
+                        {{ $loc['city'] ?? '-' }}, {{ $loc['province'] ?? '-' }}<br>
+                        {{ $loc['postal_code'] ?? '-' }}
                     </div>
                     @if($user_address->phone_number)
                     <div class="mb-2">
@@ -210,7 +211,7 @@
                                   placeholder="Address">{{ old('address', $user_address->address ?? '') }}</textarea>
                     </div>
 
-                    @livewire('region', ['user_region' => $region, 'province' => $province])
+                    @livewire('region', ['user_address' => $user_address])
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

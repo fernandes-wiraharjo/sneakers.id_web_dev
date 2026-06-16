@@ -6,13 +6,9 @@ use Livewire\Component;
 use App\Facades\Cart;
 use App\Facades\CekOngkir;
 use App\Facades\CheckoutMidtrans;
-use App\Facades\CheckoutXendit;
 use App\Models\Region as ModelRegion;
-use App\Services\MidtransService;
 use App\Models\ShippingCourier;
 use App\Models\UserAddress;
-use Ramsey\Uuid\Uuid;
-use Xendit\Transaction;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -20,11 +16,11 @@ class CheckoutProcess extends Component
 {
     public $currentStep = 1;
     public $successMessage = '';
-    public $selectedCourier = []; //default jne
-    public $selectedSubdistrict = 0;
-    public $selectedDistrict = '';
-    public $selectedProvince = '';
-    public $selectedArea = 0;
+    public $selectedCourier = [];
+    public $selectedProvinceId = '';
+    public $selectedCityId = '';
+    public $selectedDistrictId = '';
+    public $selectedSubdistrictId = 0;
     public $selectedPaymentGateway = null;
 
     public $shippingEmail = '';
@@ -32,22 +28,19 @@ class CheckoutProcess extends Component
     public $shippingLastName = '';
     public $shippingAddress = '';
     public $shippingPhoneNumber = '';
-    public $shippingCity = '';
-    public $shippingZipCode = '';
     public $shippingProvince = '';
+    public $shippingCity = '';
     public $shippingDistrict = '';
-    public $shippingSubDistrict = '';
-    public $shippingArea = '';
+    public $shippingSubdistrict = '';
+    public $shippingZipCode = '';
     public $shippingCost = 0;
     public $shippingCourier = [];
     public $shippingWeight;
-    public $originSubdistrict;
 
-    public $userRegion;
+    public $cityList = [];
     public $districtList = [];
     public $subdistrictList = [];
-    public $areaList = [];
-    public $postalCode;
+    public $subdistrictRows = [];
     public $invoiceUrl;
     public $grandTotal = 0;
     public $currentUrl = '';
@@ -74,10 +67,6 @@ class CheckoutProcess extends Component
         $this->useBootstrapView = request()->routeIs('customer.checkout.order') 
             || str_contains(url()->current(), '/checkout/order')
             || str_contains(url()->current(), 'bootstrap');
-        
-        // init origin
-        $originRegionId = config('irfa.rajaongkir.origin_region_id');
-        $this->originSubdistrict = ModelRegion::where('region_id', $originRegionId)->first()->subdistrict_ro;
 
         $this->total = Cart::total();
         $this->content = Cart::content();
@@ -86,21 +75,13 @@ class CheckoutProcess extends Component
         $this->voucherData = Cart::getVoucher();
         $this->voucherDiscount = $this->calculateVoucherDiscount();
 
-        // Initialize region only if user is authenticated and has an address
-        if (auth()->check() && auth()->user()->user_address) {
-            $regionId = auth()->user()->user_address->region_id;
-            $this->userRegion = ModelRegion::where('region_id', $regionId)->where('subdistrict_ro', '<>', 'NULL')->first();
-        } else {
-            // For guests or users without address, no default region - they must select
-            $this->userRegion = null;
-        }
-        $this->updateCart();
+        $this->cityList = [];
         $this->districtList = [];
         $this->subdistrictList = [];
-        $this->areaList = [];
-        $this->postalCode = [];
+        $this->subdistrictRows = [];
         $this->currentUrl = url()->current();
         $this->note = Cart::getNotes();
+        $this->shippingWeight = Cart::totalWeight();
 
         // Populate user data if authenticated
         if(auth()->check()){
@@ -108,28 +89,51 @@ class CheckoutProcess extends Component
             $this->shippingEmail = $user->email;
             $this->shippingFirstName = $user->first_name;
             $this->shippingLastName = $user->last_name;
-            if($user->user_address && $this->userRegion) {
-                $this->selectedProvince = $this->userRegion->province;
-                $this->selectedDistrict = $this->userRegion->district;
-                $this->selectedSubdistrict = $this->userRegion->subdistrict_ro; //unused but safety for not updating data
-                $this->shippingAddress = $user->user_address->address;
-                $this->shippingPhoneNumber = $user->user_address->phone_number;
-                $this->updateDistrict($this->userRegion->province);
-                $this->updateSubdistrict($this->userRegion->district);
-                $this->updateArea($this->userRegion->subdistrict);
-                $this->selectedArea = $this->userRegion->region_id;
-                $this->shippingZipCode = $this->userRegion->post_code;
+
+            if ($user->user_address) {
+                $this->loadSavedAddress($user->user_address);
             }
-        } else {
-            // For guests, populate email from voucher data if available
-            if ($this->voucherData && isset($this->voucherData['email'])) {
-                $this->shippingEmail = $this->voucherData['email'];
-            }
+        } elseif ($this->voucherData && isset($this->voucherData['email'])) {
+            $this->shippingEmail = $this->voucherData['email'];
         }
-        
-        // Set shipping weight for both guest and authenticated users
-        $this->shippingWeight = Cart::totalWeight();
-        
+
+        $this->updateCart();
+        $this->filterCourierService();
+    }
+
+    protected function loadSavedAddress(UserAddress $address): void
+    {
+        $this->shippingAddress = $address->address;
+        $this->shippingPhoneNumber = $address->phone_number;
+
+        if ($address->province || $address->subdistrict_ro_id) {
+            $this->shippingProvince = $address->province ?? '';
+            $this->shippingCity = $address->city ?? '';
+            $this->shippingDistrict = $address->district ?? '';
+            $this->shippingSubdistrict = $address->subdistrict ?? '';
+            $this->shippingZipCode = $address->postal_code ?? '';
+            $this->selectedSubdistrictId = (int) ($address->subdistrict_ro_id ?? 0);
+            $this->restoreLocationCascade();
+            $this->filterCourierService();
+
+            return;
+        }
+
+        if (! $address->region_id) {
+            return;
+        }
+
+        $region = ModelRegion::where('region_id', $address->region_id)->first();
+        if (! $region) {
+            return;
+        }
+
+        $this->shippingProvince = $region->province;
+        $this->shippingCity = $region->district;
+        $this->shippingDistrict = $region->subdistrict;
+        $this->shippingSubdistrict = $region->area;
+        $this->shippingZipCode = $region->post_code;
+        $this->selectedSubdistrictId = (int) $region->region_id;
         $this->filterCourierService();
     }
 
@@ -140,12 +144,12 @@ class CheckoutProcess extends Component
             'shippingFirstName' => 'required|min:1',
             'shippingLastName' => 'required|min:1',
             'shippingAddress' => 'required',
-            'selectedProvince' => 'required',
-            'selectedDistrict' =>'required',
-            'selectedSubdistrict' => 'required|gt:0',
-            'selectedArea' => 'required|gt:0',
+            'selectedProvinceId' => 'required',
+            'selectedCityId' => 'required',
+            'selectedDistrictId' => 'required',
+            'selectedSubdistrictId' => 'required|gt:0',
             'shippingZipCode' => 'required',
-            'shippingPhoneNumber' => 'required'
+            'shippingPhoneNumber' => 'required',
         ];
     }
 
@@ -159,12 +163,11 @@ class CheckoutProcess extends Component
             'shippingLastName.required' => 'Nama belakang pengiriman harus diisi.',
             'shippingLastName.min' => 'Nama belakang pengiriman minimal harus memiliki satu karakter.',
             'shippingAddress.required' => 'Alamat pengiriman harus diisi.',
-            'selectedProvince.required' => 'Provinsi untuk pengiriman harus dipilih.',
-            'selectedDistrict.required' => 'Kabupaten/Kota untuk pengiriman harus dipilih.',
-            'selectedSubdistrict.required' => 'Kecamatan untuk pengiriman harus dipilih.',
-            'selectedSubdistrict.gt' => 'Kecamatan untuk pengiriman harus dipilih.',
-            'selectedArea.required' => 'Area untuk pengiriman harus dipilih.',
-            'selectedArea.gt' => 'Area untuk pengiriman harus dipilih.',
+            'selectedProvinceId.required' => 'Provinsi untuk pengiriman harus dipilih.',
+            'selectedCityId.required' => 'Kota/Kabupaten untuk pengiriman harus dipilih.',
+            'selectedDistrictId.required' => 'Kecamatan untuk pengiriman harus dipilih.',
+            'selectedSubdistrictId.required' => 'Kelurahan untuk pengiriman harus dipilih.',
+            'selectedSubdistrictId.gt' => 'Kelurahan untuk pengiriman harus dipilih.',
             'shippingZipCode.required' => 'Kode pos untuk pengiriman harus diisi.',
             'shippingPhoneNumber.required' => 'Nomor telepon untuk pengiriman harus diisi.',
         ];
@@ -176,26 +179,26 @@ class CheckoutProcess extends Component
         
         // Save or update user address if checkbox is checked and user is logged in
         if ($this->saveAddress && auth()->check()) {
-            $existingAddress = UserAddress::where('user_id', auth()->user()->id)->first();
-            
-            $addressData = [
-                'user_id' => auth()->user()->id,
-                'region_id' => $this->selectedArea,
-                'address' => $this->shippingAddress,
-                'phone_number' => $this->shippingPhoneNumber,
-            ];
-            
-            if ($existingAddress) {
-                // Update existing address
-                $existingAddress->update($addressData);
-            } else {
-                // Create new address
-                UserAddress::create($addressData);
-            }
+            UserAddress::updateOrCreate(
+                ['user_id' => auth()->user()->id],
+                [
+                    'region_id' => null,
+                    'province' => $this->shippingProvince,
+                    'city' => $this->shippingCity,
+                    'district' => $this->shippingDistrict,
+                    'subdistrict' => $this->shippingSubdistrict,
+                    'postal_code' => $this->shippingZipCode,
+                    'subdistrict_ro_id' => $this->selectedSubdistrictId,
+                    'address' => $this->shippingAddress,
+                    'phone_number' => $this->shippingPhoneNumber,
+                ]
+            );
         }
-        
+
+        $this->filterCourierService();
+
         $this->currentStep = 2;
-        if($this->shippingCourier->count() == 0){
+        if (collect($this->shippingCourier)->count() === 0) {
             $this->back(1);
             $this->emit('modalMessage', ['message' => 'Mohon coba lagi, Ongkir gagal dibaca dari pihak ke-3']);
         }
@@ -218,11 +221,9 @@ class CheckoutProcess extends Component
         $orderID = Str::upper('SNK-'.time().'-'.Str::random(4));
         $items = [];
         $totalQuantity = 0;
-        foreach(Cart::content() as $item) {
-            $price = $item['retail_price'];
-            if($item['discount_price'] != 0){
-                $price = $item['discount_price'];
-            }
+
+        foreach (Cart::content() as $item) {
+            $price = $item['discount_price'] != 0 ? $item['discount_price'] : $item['retail_price'];
 
             $items[] = [
                 'id' => $item['id'],
@@ -267,14 +268,6 @@ class CheckoutProcess extends Component
          *
          */
         $shipping_etd = $this->selectedCourier['etd'] ? '('.$this->selectedCourier['etd'].' Days)' : '(2-3 Days)';
-        //useremail (transaction -> email (as user id) )
-        //
-        //submit paymet data
-        //payment method
-        //destination ro_city
-        //shippingcost
-        //subtotal
-        //grandtotal
 
         $params = [
             'transaction_details' => [
@@ -295,7 +288,7 @@ class CheckoutProcess extends Component
                     'first_name'   => $this->shippingFirstName,
                     'last_name'    => $this->shippingLastName,
                     'address'      => $this->shippingAddress,
-                    'city'         => $this->shippingDistrict,
+                    'city'         => $this->shippingCity,
                     'postal_code'  => $this->shippingZipCode,
                     'phone'        => $this->shippingPhoneNumber,
                     'country_code' => 'IDN',
@@ -304,7 +297,7 @@ class CheckoutProcess extends Component
                     'first_name'   => $this->shippingFirstName,
                     'last_name'    => $this->shippingLastName,
                     'address'      => $this->shippingAddress,
-                    'city'         => $this->shippingDistrict,
+                    'city'         => $this->shippingCity,
                     'postal_code'  => $this->shippingZipCode,
                     'phone'        => $this->shippingPhoneNumber,
                     'country_code' => 'IDN',
@@ -336,9 +329,13 @@ class CheckoutProcess extends Component
                 'voucher_code'    => $voucherData['code'] ?? null,
                 'voucher_discount' => $voucherData ? $this->calculateVoucherDiscount($voucherData, Cart::total()) : null,
             ],
-
             'transaction_destinations' => [
-                'region_id'    => $this->selectedArea,
+                'region_id'    => null,
+                'province'     => $this->shippingProvince,
+                'city'         => $this->shippingCity,
+                'district'     => $this->shippingDistrict,
+                'subdistrict'  => $this->shippingSubdistrict,
+                'postal_code'  => $this->shippingZipCode,
                 'email'        => $this->shippingEmail,
                 'first_name'   => $this->shippingFirstName,
                 'last_name'    => $this->shippingLastName,
@@ -358,15 +355,22 @@ class CheckoutProcess extends Component
                 'shipping_cost'      => $this->selectedCourier['cost'],
                 'shipping_weight'    => $this->shippingWeight,
                 'origin_ro_id'       => config('irfa.rajaongkir.origin_region_id'),
-                'destination_ro_id'  => $this->selectedSubdistrict,
+                'destination_ro_id'  => $this->selectedSubdistrictId,
             ],
         ];
 
-        $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params,$transactions);
-        
-        // Clear cart after order is created (for both guests and registered users)
+        $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params, $transactions);
+
+        if (empty($paymentUrl)) {
+            $this->emit('modalMessage', [
+                'message' => 'Pembayaran gagal dimulai. Periksa konfigurasi Midtrans atau coba lagi.',
+            ]);
+
+            return;
+        }
+
         Cart::clear();
-        
+
         return redirect()->away($paymentUrl);
     }
 
@@ -405,72 +409,129 @@ class CheckoutProcess extends Component
         ];
     }
 
-    public function updateDistrict($value) {
-        $this->selectedProvince = $value;
-        $this->districtList = ModelRegion::selectRaw('DISTINCT(district)')->where('province', $value)->where('subdistrict_ro', '<>', 'NULL')->get()->pluck('district');
-        // dd($this->district);
-        $this->shippingProvince = $value;
-        $this->selectedDistrict = '';
-        $this->selectedSubdistrict = 0;
-        $this->selectedArea = 0;
+    public function loadCities($provinceId)
+    {
+        $this->selectedProvinceId = $provinceId;
+        $this->shippingProvince = CekOngkir::getProvinces()[$provinceId] ?? '';
+        $this->cityList = CekOngkir::getCities($provinceId)->all();
+        $this->selectedCityId = '';
+        $this->selectedDistrictId = '';
+        $this->selectedSubdistrictId = 0;
+        $this->districtList = [];
+        $this->subdistrictList = [];
+        $this->subdistrictRows = [];
+        $this->shippingCity = '';
+        $this->shippingDistrict = '';
+        $this->shippingSubdistrict = '';
         $this->shippingZipCode = '';
+        $this->shippingCourier = collect();
     }
 
-    public function updateSubdistrict($value) {
-        $this->shippingDistrict = $value;
-        $this->selectedDistrict = $value;
-
-        $this->subdistrictList = ModelRegion::selectRaw('DISTINCT(subdistrict)')->where('district', $value)->where('area', '<>','-')->get()->pluck('subdistrict');
-        $this->selectedSubdistrict = 0;
-        $this->selectedArea = 0;
+    public function loadDistricts($cityId)
+    {
+        $this->selectedCityId = $cityId;
+        $this->shippingCity = $this->cityList[$cityId] ?? '';
+        $this->districtList = CekOngkir::getDistricts($cityId)->all();
+        $this->selectedDistrictId = '';
+        $this->selectedSubdistrictId = 0;
+        $this->subdistrictList = [];
+        $this->subdistrictRows = [];
+        $this->shippingDistrict = '';
+        $this->shippingSubdistrict = '';
         $this->shippingZipCode = '';
+        $this->shippingCourier = collect();
     }
 
-    public function updateZipCode($value) {
-        $this->shippingZipCode = $value;
-        $regionData = ModelRegion::where('post_code', $value)->first();
-        $this->selectedArea = $regionData->region_id;
+    public function loadSubdistricts($districtId)
+    {
+        $this->selectedDistrictId = $districtId;
+        $this->shippingDistrict = $this->districtList[$districtId] ?? '';
+        $rows = CekOngkir::getSubdistricts($districtId);
+        $this->subdistrictRows = $rows->keyBy('id')->all();
+        $this->subdistrictList = $rows->pluck('name', 'id')->all();
+        $this->selectedSubdistrictId = 0;
+        $this->shippingSubdistrict = '';
+        $this->shippingZipCode = '';
+        $this->shippingCourier = collect();
     }
 
-    public function updateArea($value) {
-        $this->shippingSubDistrict = $value;
-        $getDistrict = ModelRegion::where(['district' => $this->selectedDistrict, 'subdistrict' => $value])->first();
-        if($getDistrict) {
-            // V1 uses subdistrict / city RO
-            // if($getDistrict->subdistrict_ro){
-            //     $this->selectedSubdistrict = $getDistrict->subdistrict_ro;
-            //     $destinationType = 'subdistrict';
-            // } else {
-            //     $this->selectedSubdistrict = $getDistrict->city_ro;
-            //     $destinationType = 'city';
-            // }
+    public function selectSubdistrict($subdistrictId)
+    {
+        $subdistrictId = (string) $subdistrictId;
+        $this->selectedSubdistrictId = (int) $subdistrictId;
+        $row = $this->subdistrictRows[$subdistrictId] ?? null;
+        $this->shippingSubdistrict = $row['name'] ?? ($this->subdistrictList[$subdistrictId] ?? '');
+        $this->shippingZipCode = $row['zip_code'] ?? $this->shippingZipCode;
+        $this->filterCourierService();
+    }
 
-            // V2 uses region_id
-            $this->selectedSubdistrict = $getDistrict->region_id;
-            $this->filterCourierService();
+    protected function restoreLocationCascade(): void
+    {
+        $provinceId = $this->findLocationId(CekOngkir::getProvinces(), $this->shippingProvince);
+        if (! $provinceId) {
+            return;
+        }
 
-            $this->areaList = ModelRegion::where('subdistrict', $value)->get()->pluck('area','region_id');
-            $this->postalCode = ModelRegion::selectRaw('DISTINCT(post_code)')->where('subdistrict', $value)->orderBy('post_code')->get()->pluck('post_code');
-            $this->selectedArea = 0;
-            $this->shippingZipCode = '';
+        $this->selectedProvinceId = $provinceId;
+        $this->cityList = CekOngkir::getCities($provinceId)->all();
+
+        $cityId = $this->findLocationId(collect($this->cityList), $this->shippingCity);
+        if (! $cityId) {
+            return;
+        }
+
+        $this->selectedCityId = $cityId;
+        $this->districtList = CekOngkir::getDistricts($cityId)->all();
+
+        $districtId = $this->findLocationId(collect($this->districtList), $this->shippingDistrict);
+        if (! $districtId) {
+            return;
+        }
+
+        $this->selectedDistrictId = $districtId;
+        $rows = CekOngkir::getSubdistricts($districtId);
+        $this->subdistrictRows = $rows->keyBy('id')->all();
+        $this->subdistrictList = $rows->pluck('name', 'id')->all();
+
+        if ($this->selectedSubdistrictId) {
+            return;
+        }
+
+        $subdistrictId = $this->findLocationId(collect($this->subdistrictList), $this->shippingSubdistrict);
+        if ($subdistrictId) {
+            $this->selectSubdistrict($subdistrictId);
         }
     }
 
-    public function areaUpdate($value) {
-        $regionData = ModelRegion::where('region_id', $value)->first();
-        $this->selectedArea = $value;
-        $this->shippingZipCode = $regionData->post_code;
-        $this->shippingArea = $regionData->area;
+    protected function findLocationId($items, ?string $name): ?string
+    {
+        if (! $name) {
+            return null;
+        }
+
+        foreach ($items as $id => $label) {
+            if (strcasecmp((string) $label, (string) $name) === 0) {
+                return (string) $id;
+            }
+        }
+
+        return null;
     }
 
     public function filterCourierService()
     {
-        // Get enabled couriers and their services from database
-        if($this->selectedSubdistrict) {
+        if ($this->selectedSubdistrictId) {
             $enabledCouriers = ShippingCourier::where('is_active', true)
                 ->pluck('code')
                 ->implode(':');
-            $courier = CekOngkir::CostCourier($this->selectedSubdistrict, '', Cart::totalWeight(), $enabledCouriers);
+
+            if ($enabledCouriers === '') {
+                $this->shippingCourier = collect();
+
+                return;
+            }
+
+            $courier = CekOngkir::CostCourier($this->selectedSubdistrictId, '', Cart::totalWeight(), $enabledCouriers);
             $courierResponse = CekOngkir::CostRangeCourier($courier);
 
             // Filter services based on what's configured for each courier
@@ -486,14 +547,14 @@ class CheckoutProcess extends Component
                 // Get active service codes for this courier
                 $activeServiceCodes = $courier->activeServices()->pluck('code')->toArray();
 
-                // Filter services that are configured and active
                 if (in_array($courierData['service'], $activeServiceCodes)) {
                     return $courierData;
                 }
+
                 return null;
             })->filter()->values();
         } else {
-            $this->selectedSubdistrict = 0;
+            $this->shippingCourier = collect();
         }
     }
 
@@ -512,7 +573,7 @@ class CheckoutProcess extends Component
         if (!$voucher) {
             return 0;
         }
-        
+
         if ($voucher['discount_type'] === 'percent') {
             $discount = ($amount * $voucher['discount_rate']) / 100;
             
@@ -529,12 +590,9 @@ class CheckoutProcess extends Component
 
     public function render()
     {
-        $province = ModelRegion::selectRaw('DISTINCT(province)')->orderBy('province')->get()->pluck('province');
-
-        // Use the persisted property to determine which view to use
-        // This ensures the view stays consistent during Livewire updates
-        $viewName = $this->useBootstrapView 
-            ? 'bootstrap.livewire.checkout-process' 
+        $province = CekOngkir::getProvinces()->all();
+        $viewName = $this->useBootstrapView
+            ? 'bootstrap.livewire.checkout-process'
             : 'livewire.checkout-process';
 
         return view($viewName, [

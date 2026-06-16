@@ -18,6 +18,12 @@ class TransactionDestination extends Model
     protected $fillable = [
         'transaction_id',
         'region_id',
+        'province',
+        'city',
+        'district',
+        'subdistrict',
+        'postal_code',
+        'subdistrict_ro_id',
         'email',
         'first_name',
         'last_name',

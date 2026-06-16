@@ -160,11 +160,12 @@
                                     <tr>
                                         <td>Customer Region</td>
                                         <td>
-                                            {{ $destination->region->province ?? '-'}} <br>
-                                            {{ $destination->region->district ?? '-'}} <br>
-                                            {{ $destination->region->subdistrict ?? '-'}} <br>
-                                            {{ $destination->region->area ?? '-'}} <br>
-                                            {{ $destination->region->post_code ?? '-'}} <br>
+                                            @php $loc = shipping_location($destination); @endphp
+                                            {{ $loc['province'] ?? '-'}} <br>
+                                            {{ $loc['city'] ?? '-'}} <br>
+                                            {{ $loc['district'] ?? '-'}} <br>
+                                            {{ $loc['subdistrict'] ?? '-'}} <br>
+                                            {{ $loc['postal_code'] ?? '-'}} <br>
 
                                         </td>
                                     </tr>
@@ -518,9 +519,10 @@
                                     <td>Shipping Address</td>
                                     <td>
                                         {{ $destination->address ?? '-' }}<br>
-                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
-                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
-                                        {{ $destination->region->post_code ?? '-' }}
+                                        @php $loc = shipping_location($destination); @endphp
+                                        {{ $loc['subdistrict'] ?? '-' }}, {{ $loc['district'] ?? '-' }}<br>
+                                        {{ $loc['city'] ?? '-' }}, {{ $loc['province'] ?? '-' }}<br>
+                                        {{ $loc['postal_code'] ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -560,9 +562,10 @@
                                     <td>Shipping Address</td>
                                     <td>
                                         {{ $destination->address ?? '-' }}<br>
-                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
-                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
-                                        {{ $destination->region->post_code ?? '-' }}
+                                        @php $loc = shipping_location($destination); @endphp
+                                        {{ $loc['subdistrict'] ?? '-' }}, {{ $loc['district'] ?? '-' }}<br>
+                                        {{ $loc['city'] ?? '-' }}, {{ $loc['province'] ?? '-' }}<br>
+                                        {{ $loc['postal_code'] ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -610,9 +613,10 @@
                                     <td>Shipping Address</td>
                                     <td>
                                         {{ $destination->address ?? '-' }}<br>
-                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
-                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
-                                        {{ $destination->region->post_code ?? '-' }}
+                                        @php $loc = shipping_location($destination); @endphp
+                                        {{ $loc['subdistrict'] ?? '-' }}, {{ $loc['district'] ?? '-' }}<br>
+                                        {{ $loc['city'] ?? '-' }}, {{ $loc['province'] ?? '-' }}<br>
+                                        {{ $loc['postal_code'] ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -656,9 +660,10 @@
                                     <td>Shipping Address</td>
                                     <td>
                                         {{ $destination->address ?? '-' }}<br>
-                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
-                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
-                                        {{ $destination->region->post_code ?? '-' }}
+                                        @php $loc = shipping_location($destination); @endphp
+                                        {{ $loc['subdistrict'] ?? '-' }}, {{ $loc['district'] ?? '-' }}<br>
+                                        {{ $loc['city'] ?? '-' }}, {{ $loc['province'] ?? '-' }}<br>
+                                        {{ $loc['postal_code'] ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -698,9 +703,10 @@
                                     <td>Shipping Address</td>
                                     <td>
                                         {{ $destination->address ?? '-' }}<br>
-                                        {{ $destination->region->area ?? '-' }}, {{ $destination->region->subdistrict ?? '-' }}<br>
-                                        {{ $destination->region->district ?? '-' }}, {{ $destination->region->province ?? '-' }}<br>
-                                        {{ $destination->region->post_code ?? '-' }}
+                                        @php $loc = shipping_location($destination); @endphp
+                                        {{ $loc['subdistrict'] ?? '-' }}, {{ $loc['district'] ?? '-' }}<br>
+                                        {{ $loc['city'] ?? '-' }}, {{ $loc['province'] ?? '-' }}<br>
+                                        {{ $loc['postal_code'] ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>

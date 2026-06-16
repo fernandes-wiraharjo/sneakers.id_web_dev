@@ -52,6 +52,8 @@ class CheckoutService {
             $response['message'] = $e->getMessage();
             \Log::error('Error creating invoice midtrans: ' . $e->getMessage());
             logger($response);
+
+            return null;
         }
     }
 

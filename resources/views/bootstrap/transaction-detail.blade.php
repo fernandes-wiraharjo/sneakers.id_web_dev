@@ -151,11 +151,11 @@
                         {{ $destination->address ?? '-' }}
                     </p>
                     <p class="mb-2 text-muted small">
-                        {{ $region->area ?? '-' }}<br>
-                        {{ $region->subdistrict ?? '-' }}<br>
-                        {{ $region->district ?? '-' }}<br>
-                        {{ $region->province ?? '-' }}<br>
-                        {{ $region->post_code ?? '-' }}
+                        {{ $location['subdistrict'] ?? '-' }}<br>
+                        {{ $location['district'] ?? '-' }}<br>
+                        {{ $location['city'] ?? '-' }}<br>
+                        {{ $location['province'] ?? '-' }}<br>
+                        {{ $location['postal_code'] ?? '-' }}
                     </p>
                     <p class="mb-1 text-muted small">
                         <strong>Phone:</strong> {{ $destination->phone_number ?? '-' }}

@@ -59,8 +59,9 @@
                                 <p class="mb-1">{{ $destination->first_name }} {{ $destination->last_name }}</p>
                                 <p class="mb-1 text-muted">{{ $destination->phone_number }}</p>
                                 <p class="mb-1 text-muted">{{ $destination->address }}</p>
+                                @php $loc = shipping_location($destination); @endphp
                                 <p class="mb-1 text-muted">
-                                    {{ $destination->region->area }}, {{ $destination->region->subdistrict }}, {{ $destination->region->district }}, {{ $destination->region->province }} {{ $destination->region->post_code }}
+                                    {{ $loc['subdistrict'] }}, {{ $loc['district'] }}, {{ $loc['city'] }}, {{ $loc['province'] }} {{ $loc['postal_code'] }}
                                 </p>
                             </div>
 

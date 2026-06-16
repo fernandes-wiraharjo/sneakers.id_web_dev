@@ -19,3 +19,10 @@ if(!function_exists('split_name')) {
         return array($first_name, $last_name);
     }
 }
+
+if (! function_exists('shipping_location')) {
+    function shipping_location($model): array
+    {
+        return \App\Support\ShippingLocation::resolve($model);
+    }
+}

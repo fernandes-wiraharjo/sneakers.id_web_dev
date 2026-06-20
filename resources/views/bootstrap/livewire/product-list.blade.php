@@ -15,6 +15,26 @@
             position: sticky;
             top: 20px;
         }
+        .active-filter-badges {
+            gap: 0.5rem;
+        }
+        .active-filter-badge {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 999px;
+            color: #212529;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.35rem 0.75rem;
+        }
+        .active-filter-badge .btn-close {
+            font-size: 0.65rem;
+            margin-left: 0.35rem;
+            opacity: 0.65;
+        }
+        .active-filter-badge .btn-close:hover {
+            opacity: 1;
+        }
         @media (max-width: 991px) {
             .filter-sidebar {
                 display: none;
@@ -144,6 +164,28 @@
 
         <!-- Products Grid -->
         <div class="col-md-10">
+            @if(!empty($activeFilterBadges))
+                <div class="d-flex flex-wrap align-items-center active-filter-badges mb-3">
+                    @foreach($activeFilterBadges as $badge)
+                        <span class="active-filter-badge d-inline-flex align-items-center">
+                            {{ $badge['label'] }}
+                            <button
+                                type="button"
+                                class="btn-close"
+                                aria-label="Remove {{ $badge['label'] }}"
+                                wire:click="removeFilter({{ json_encode($badge['type']) }}, {{ json_encode($badge['value']) }})"
+                            ></button>
+                        </span>
+                    @endforeach
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm text-danger text-decoration-underline p-0 ms-1"
+                        wire:click="clearAllFilters"
+                    >
+                        Clear all
+                    </button>
+                </div>
+            @endif
             <div wire:loading class="text-center py-5">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>

@@ -97,19 +97,33 @@
     @foreach ($tag as $item)
         @php
             $isTagSelected = in_array($item->id, $selectedTags);
+            $isNewReleaseLink = $item->tag_code === 'NEW-RELEASE' && ($keyword ?? null) !== 'new-release';
         @endphp
-        <div class="form-check">
-            <input class="form-check-input" 
-                   wire:model="tag"
-                   @if(!$isTagLocked) wire:loading.attr="disabled" @endif
-                   type="checkbox" 
-                   value="{{ $item->id }}" 
-                   id="tag{{ $item->id }}"
-                   @if($isTagLocked) disabled @endif>
-            <label class="form-check-label @if($isTagLocked && !$isTagSelected) text-muted opacity-50 @endif" for="tag{{ $item->id }}">
-                {{ $item->tag_title }}
-            </label>
-        </div>
+        @if($isNewReleaseLink)
+            <div class="form-check">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="tag{{ $item->id }}"
+                       value="{{ $item->id }}"
+                       onclick="window.location.href='{{ route('collections', 'new-release') }}'">
+                <label class="form-check-label text-muted" for="tag{{ $item->id }}">
+                    {{ $item->tag_title }}
+                </label>
+            </div>
+        @else
+            <div class="form-check">
+                <input class="form-check-input" 
+                       wire:model="tag"
+                       @if(!$isTagLocked) wire:loading.attr="disabled" @endif
+                       type="checkbox" 
+                       value="{{ $item->id }}" 
+                       id="tag{{ $item->id }}"
+                       @if($isTagLocked) disabled @endif>
+                <label class="form-check-label @if($isTagLocked && !$isTagSelected) text-muted opacity-50 @endif" for="tag{{ $item->id }}">
+                    {{ $item->tag_title }}
+                </label>
+            </div>
+        @endif
     @endforeach
 @endif
 

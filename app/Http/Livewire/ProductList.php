@@ -12,6 +12,7 @@ use Modules\Brand\Repositories\BrandRepository;
 use Modules\Product\Repositories\ProductRepository;
 use Modules\Size\Repositories\SizeRepository;
 use Modules\Tag\Repositories\TagRepository;
+use Modules\Tag\Entities\Tag;
 use Modules\Category\Repositories\CategoryRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
 use Modules\SizeFilter\Entities\SizeFilter;
@@ -120,6 +121,12 @@ class ProductList extends Component
         $this->signature = $this->signature_string ? explode(',', $this->signature_string) : [];
         $this->size_filter = $this->size_filter_string ? explode(',', $this->size_filter_string) : [];
         $this->page_title = $this->keyword;
+
+        if ($this->keyword !== 'new-release' && $this->hasNewReleaseTagSelected()) {
+            $this->redirect(route('collections', 'new-release'));
+
+            return;
+        }
     }
 
     public function updatedBrand()
@@ -171,6 +178,21 @@ class ProductList extends Component
     public function updatedTagString()
     {
         $this->tag = array_filter(explode(',', $this->tag_string));
+
+        if ($this->keyword !== 'new-release' && $this->hasNewReleaseTagSelected()) {
+            $this->redirect(route('collections', 'new-release'));
+        }
+    }
+
+    private function hasNewReleaseTagSelected(): bool
+    {
+        $newReleaseTagId = (int) Tag::where('tag_code', 'NEW-RELEASE')->value('id');
+
+        if ($newReleaseTagId <= 0 || ! is_array($this->tag)) {
+            return false;
+        }
+
+        return in_array((string) $newReleaseTagId, array_map('strval', $this->tag), true);
     }
 
     public function updatedSignature()

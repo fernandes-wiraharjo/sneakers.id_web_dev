@@ -263,6 +263,216 @@ class ProductList extends Component
         $this->size_filter = array_filter(explode(',', $this->size_filter_string));
     }
 
+    public function removeFilter(string $type, ?string $value = null): void
+    {
+        $this->resetPage();
+
+        switch ($type) {
+            case 'search':
+                $this->search = '';
+                break;
+            case 'brand':
+                $this->brand = array_values(array_filter(
+                    (array) $this->brand,
+                    static fn ($id) => (string) $id !== (string) $value
+                ));
+                $this->brand_string = implode(',', $this->brand);
+                break;
+            case 'gender':
+                $this->gender = array_values(array_filter(
+                    (array) $this->gender,
+                    static fn ($code) => (string) $code !== (string) $value
+                ));
+                $this->gender_string = implode(',', $this->gender);
+                break;
+            case 'age_range':
+                $this->age_range = array_values(array_filter(
+                    (array) $this->age_range,
+                    static fn ($code) => (string) $code !== (string) $value
+                ));
+                $this->age_range_string = implode(',', $this->age_range);
+                break;
+            case 'category':
+                $this->category = array_values(array_filter(
+                    (array) $this->category,
+                    static fn ($id) => (string) $id !== (string) $value
+                ));
+                $this->category_string = implode(',', $this->category);
+                break;
+            case 'tag':
+                $this->tag = array_values(array_filter(
+                    (array) $this->tag,
+                    static fn ($id) => (string) $id !== (string) $value
+                ));
+                $this->tag_string = implode(',', $this->tag);
+                break;
+            case 'signature':
+                $this->signature = array_values(array_filter(
+                    (array) $this->signature,
+                    static fn ($id) => (string) $id !== (string) $value
+                ));
+                $this->signature_string = implode(',', $this->signature);
+                break;
+            case 'size_filter':
+                $this->size_filter = array_values(array_filter(
+                    (array) $this->size_filter,
+                    static fn ($label) => (string) $label !== (string) $value
+                ));
+                $this->size_filter_string = implode(',', $this->size_filter);
+                break;
+        }
+
+        if ($redirect = $this->redirectAfterFilterRemove($type)) {
+            $this->redirect($redirect);
+        }
+    }
+
+    public function clearAllFilters(): void
+    {
+        $this->resetPage();
+
+        $this->search = '';
+        $this->brand = [];
+        $this->brand_string = '';
+        $this->gender = [];
+        $this->gender_string = '';
+        $this->age_range = [];
+        $this->age_range_string = '';
+        $this->category = [];
+        $this->category_string = '';
+        $this->tag = [];
+        $this->tag_string = '';
+        $this->signature = [];
+        $this->signature_string = '';
+        $this->size_filter = [];
+        $this->size_filter_string = '';
+
+        if ($this->keyword !== 'all') {
+            $this->redirect(route('collections', 'all'));
+        }
+    }
+
+    private function redirectAfterFilterRemove(string $type): ?string
+    {
+        $curatedKeywords = ['new-release', 'best-seller', 'featured', 'sale'];
+
+        if ($type === 'tag' && in_array($this->keyword, $curatedKeywords, true)) {
+            return route('collections', 'all');
+        }
+
+        if ($type === 'category' && $this->keyword !== 'all') {
+            if (str_contains($this->keyword, '.')) {
+                return route('collections', explode('.', $this->keyword)[0] ?? 'all');
+            }
+
+            return route('collections', 'all');
+        }
+
+        return null;
+    }
+
+    private function genderLabels(): array
+    {
+        return [
+            'MENS' => "Men's",
+            'WOMENS' => "Women's",
+            'KIDS' => "Kid's",
+        ];
+    }
+
+    private function ageRangeLabels(): array
+    {
+        return [
+            'GRADE_SCHOOL' => 'Grade School',
+            'PRESCHOOL' => 'Preschool',
+            'TODDLER' => 'Toddler',
+            'INFANT' => 'Infant',
+        ];
+    }
+
+    private function buildActiveFilterBadges(array $filters): array
+    {
+        $badges = [];
+
+        if ($this->search) {
+            $badges[] = [
+                'type' => 'search',
+                'value' => $this->search,
+                'label' => $this->search,
+            ];
+        }
+
+        $brandMap = collect($filters['brand'] ?? [])->keyBy('id');
+        foreach ((array) $this->brand as $id) {
+            if ($brand = $brandMap->get($id)) {
+                $badges[] = [
+                    'type' => 'brand',
+                    'value' => (string) $id,
+                    'label' => $brand->brand_title,
+                ];
+            }
+        }
+
+        foreach ((array) $this->gender as $code) {
+            $badges[] = [
+                'type' => 'gender',
+                'value' => (string) $code,
+                'label' => $this->genderLabels()[$code] ?? $code,
+            ];
+        }
+
+        foreach ((array) $this->age_range as $code) {
+            $badges[] = [
+                'type' => 'age_range',
+                'value' => (string) $code,
+                'label' => $this->ageRangeLabels()[$code] ?? $code,
+            ];
+        }
+
+        $categoryMap = collect($filters['category'] ?? [])->keyBy('id');
+        foreach ((array) $this->category as $id) {
+            if ($category = $categoryMap->get($id)) {
+                $badges[] = [
+                    'type' => 'category',
+                    'value' => (string) $id,
+                    'label' => $category->category_title,
+                ];
+            }
+        }
+
+        $tagMap = collect($filters['tag'] ?? [])->keyBy('id');
+        foreach ((array) $this->tag as $id) {
+            if ($tag = $tagMap->get($id)) {
+                $badges[] = [
+                    'type' => 'tag',
+                    'value' => (string) $id,
+                    'label' => $tag->tag_title,
+                ];
+            }
+        }
+
+        $signatureMap = collect($filters['signature_player'] ?? [])->keyBy('id');
+        foreach ((array) $this->signature as $id) {
+            if ($signature = $signatureMap->get($id)) {
+                $badges[] = [
+                    'type' => 'signature',
+                    'value' => (string) $id,
+                    'label' => $signature->signature_title,
+                ];
+            }
+        }
+
+        foreach ((array) $this->size_filter as $label) {
+            $badges[] = [
+                'type' => 'size_filter',
+                'value' => (string) $label,
+                'label' => (string) $label,
+            ];
+        }
+
+        return $badges;
+    }
+
     public function render(
         ProductRepository $productRepository,
         BrandRepository $brandRepository,
@@ -635,6 +845,7 @@ class ProductList extends Component
             $data['products'] = $products->orderBy($this->sort_column, $this->sort_by)->paginate(40);
         }
         $this->total_product = $data['products']->total();
+        $data['activeFilterBadges'] = $this->buildActiveFilterBadges($data['filters']);
         // dd($products->toSql());
         return view('bootstrap.livewire.product-list', $data);
     }

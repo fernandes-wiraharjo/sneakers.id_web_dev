@@ -91,11 +91,12 @@ class CheckoutController extends BaseController {
             switch ($status) {
                 case 'settlement':
                 case 'capture':
+                    $paid_time = $payload['transaction_time'] ?? $payload['settlement_time'];
                     $transaction->update([
                         'type'   => strtoupper($payload['payment_type']),
                         'method' => strtoupper($payload['bank'] ?? ''),
                         'status' => 'SUCCESS',
-                        'paid_at' => $payload['settlement_time']
+                        'paid_at' => $paid_time
                     ]);
                     
                     Mail::send('email.success-email', [

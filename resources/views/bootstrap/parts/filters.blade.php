@@ -1,13 +1,3 @@
-@php
-    // Lock tag filter on curated collection pages (same as sale)
-    $lockedCategories = ['best-seller', 'new-release', 'sale', 'featured'];
-    $currentUrl = request()->url();
-    $segmentUrl = explode('/', $currentUrl);
-    $lastSegment = end($segmentUrl);
-    $isTagLocked = (isset($keyword) && in_array($keyword, $lockedCategories, true))
-        || in_array($lastSegment, $lockedCategories, true);
-@endphp
-
 <p class="fs-5 fw-bold mb-4">Filter</p>
 
 <!-- Brand Section -->
@@ -81,49 +71,6 @@
                 <span class="text-muted">{{ $item->category_title }}</span>
             </label>
         </div>
-    @endforeach
-@endif
-
-<!-- Tag Section -->
-@if(isset($tag) && count($tag) > 0)
-    @php
-        // Get selected tags from Livewire component if available
-        $selectedTags = [];
-        if (isset($this) && property_exists($this, 'tag') && is_array($this->tag)) {
-            $selectedTags = $this->tag;
-        }
-    @endphp
-    <p class="fw-bold mt-4 mb-2">Tag</p>
-    @foreach ($tag as $item)
-        @php
-            $isTagSelected = in_array($item->id, $selectedTags);
-            $isNewReleaseLink = $item->tag_code === 'NEW-RELEASE' && ($keyword ?? null) !== 'new-release';
-        @endphp
-        @if($isNewReleaseLink)
-            <div class="form-check">
-                <input class="form-check-input"
-                       type="checkbox"
-                       id="tag{{ $item->id }}"
-                       value="{{ $item->id }}"
-                       onclick="window.location.href='{{ route('collections', 'new-release') }}'">
-                <label class="form-check-label text-muted" for="tag{{ $item->id }}">
-                    {{ $item->tag_title }}
-                </label>
-            </div>
-        @else
-            <div class="form-check">
-                <input class="form-check-input" 
-                       wire:model="tag"
-                       @if(!$isTagLocked) wire:loading.attr="disabled" @endif
-                       type="checkbox" 
-                       value="{{ $item->id }}" 
-                       id="tag{{ $item->id }}"
-                       @if($isTagLocked) disabled @endif>
-                <label class="form-check-label @if($isTagLocked && !$isTagSelected) text-muted opacity-50 @endif" for="tag{{ $item->id }}">
-                    {{ $item->tag_title }}
-                </label>
-            </div>
-        @endif
     @endforeach
 @endif
 

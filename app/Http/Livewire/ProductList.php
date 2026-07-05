@@ -53,7 +53,6 @@ class ProductList extends Component
         'category_string'    => ['as' => 'category', 'except' => ''],
         'signature_string'   => ['as' => 'signature', 'except' => ''],
         'size_filter_string' => ['as' => 'size_filter', 'except' => ''],
-        'tag_string'         => ['as' => 'tag', 'except' => ''],
     ];
 
     public function updatingSearch()
@@ -116,17 +115,50 @@ class ProductList extends Component
         $this->brand = $this->brand_string ? explode(',', $this->brand_string) : [];
         $this->gender = $this->gender_string ? explode(',', $this->gender_string) : [];
         $this->category = $this->category_string ? explode(',', $this->category_string) : [];
-        $this->tag = $this->tag_string ? explode(',', $this->tag_string) : [];
         $this->age_range = $this->age_range_string ? explode(',', $this->age_range_string) : [];
         $this->signature = $this->signature_string ? explode(',', $this->signature_string) : [];
         $this->size_filter = $this->size_filter_string ? explode(',', $this->size_filter_string) : [];
+        $this->tag = [];
+        $this->tag_string = '';
         $this->page_title = $this->keyword;
 
-        if ($this->keyword !== 'new-release' && $this->hasNewReleaseTagSelected()) {
-            $this->redirect(route('collections', 'new-release'));
+        if (request()->has('tag')) {
+            $tagIds = array_filter(explode(',', (string) request()->query('tag')));
+            $collectionRoute = $this->collectionRouteForTagIds($tagIds);
+
+            if ($collectionRoute !== null) {
+                $this->redirect(route('collections', $collectionRoute));
+
+                return;
+            }
+
+            $this->redirect(route('collections', $this->keyword));
 
             return;
         }
+    }
+
+    private function collectionRouteForTagIds(array $tagIds): ?string
+    {
+        if (empty($tagIds)) {
+            return null;
+        }
+
+        $tagCodes = Tag::whereIn('id', $tagIds)->pluck('tag_code')->filter()->all();
+        $routes = [
+            'NEW-RELEASE' => 'new-release',
+            'BEST-SELLER' => 'best-seller',
+            'FEATURED' => 'featured',
+            'DISCOUNT' => 'sale',
+        ];
+
+        foreach ($routes as $code => $route) {
+            if (in_array($code, $tagCodes, true)) {
+                return $route;
+            }
+        }
+
+        return null;
     }
 
     public function updatedBrand()
@@ -178,21 +210,6 @@ class ProductList extends Component
     public function updatedTagString()
     {
         $this->tag = array_filter(explode(',', $this->tag_string));
-
-        if ($this->keyword !== 'new-release' && $this->hasNewReleaseTagSelected()) {
-            $this->redirect(route('collections', 'new-release'));
-        }
-    }
-
-    private function hasNewReleaseTagSelected(): bool
-    {
-        $newReleaseTagId = (int) Tag::where('tag_code', 'NEW-RELEASE')->value('id');
-
-        if ($newReleaseTagId <= 0 || ! is_array($this->tag)) {
-            return false;
-        }
-
-        return in_array((string) $newReleaseTagId, array_map('strval', $this->tag), true);
     }
 
     public function updatedSignature()
@@ -299,13 +316,6 @@ class ProductList extends Component
                 ));
                 $this->category_string = implode(',', $this->category);
                 break;
-            case 'tag':
-                $this->tag = array_values(array_filter(
-                    (array) $this->tag,
-                    static fn ($id) => (string) $id !== (string) $value
-                ));
-                $this->tag_string = implode(',', $this->tag);
-                break;
             case 'signature':
                 $this->signature = array_values(array_filter(
                     (array) $this->signature,
@@ -320,10 +330,6 @@ class ProductList extends Component
                 ));
                 $this->size_filter_string = implode(',', $this->size_filter);
                 break;
-        }
-
-        if ($redirect = $this->redirectAfterFilterRemove($type)) {
-            $this->redirect($redirect);
         }
     }
 
@@ -346,29 +352,6 @@ class ProductList extends Component
         $this->signature_string = '';
         $this->size_filter = [];
         $this->size_filter_string = '';
-
-        if ($this->keyword !== 'all') {
-            $this->redirect(route('collections', 'all'));
-        }
-    }
-
-    private function redirectAfterFilterRemove(string $type): ?string
-    {
-        $curatedKeywords = ['new-release', 'best-seller', 'featured', 'sale'];
-
-        if ($type === 'tag' && in_array($this->keyword, $curatedKeywords, true)) {
-            return route('collections', 'all');
-        }
-
-        if ($type === 'category' && $this->keyword !== 'all') {
-            if (str_contains($this->keyword, '.')) {
-                return route('collections', explode('.', $this->keyword)[0] ?? 'all');
-            }
-
-            return route('collections', 'all');
-        }
-
-        return null;
     }
 
     private function genderLabels(): array
@@ -440,17 +423,6 @@ class ProductList extends Component
             }
         }
 
-        $tagMap = collect($filters['tag'] ?? [])->keyBy('id');
-        foreach ((array) $this->tag as $id) {
-            if ($tag = $tagMap->get($id)) {
-                $badges[] = [
-                    'type' => 'tag',
-                    'value' => (string) $id,
-                    'label' => $tag->tag_title,
-                ];
-            }
-        }
-
         $signatureMap = collect($filters['signature_player'] ?? [])->keyBy('id');
         foreach ((array) $this->signature as $id) {
             if ($signature = $signatureMap->get($id)) {
@@ -493,14 +465,12 @@ class ProductList extends Component
         $data['filters'] = Cache::remember('product_filters', 3600, function () use (
             $brandRepository,
             $sizeRepository,
-            $tagRepository,
             $categoryRepository,
             $signaturePlayerRepository,
         ) {
             return [
                 'brand' => $brandRepository->getAllBrand(),
                 'size' => $sizeRepository->getAllSizes(),
-                'tag' => $tagRepository->getAllTags(),
                 'category' => $categoryRepository->getAllCategoriesExceptGender(),
                 'signature_player' => $signaturePlayerRepository->getAllSignatures(),
             ];

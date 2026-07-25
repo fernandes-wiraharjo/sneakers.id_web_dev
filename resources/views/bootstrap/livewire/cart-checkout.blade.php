@@ -243,7 +243,7 @@
                                 </div>
                             @endif
 
-                            <p class="text-muted small mb-4">Ongkir &amp; PPN dihitung saat checkout</p>
+                            <p class="text-muted small mb-4">Ongkir dihitung saat checkout</p>
                             
                             <button type="submit" name="checkout" class="btn btn-dark w-100 btn-lg" @if($hasUnavailableItems) disabled @endif>
                                 Checkout

@@ -146,7 +146,7 @@
             
             <!-- Shipping Info -->
             <p class="text-muted small text-center mb-3">
-                Ongkir &amp; PPN dihitung saat checkout
+                Ongkir dihitung saat checkout
             </p>
             
             <!-- Continue Shopping -->

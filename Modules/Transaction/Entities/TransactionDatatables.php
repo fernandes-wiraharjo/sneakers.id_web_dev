@@ -29,6 +29,7 @@ class TransactionDatatables extends DataTable
             ->editColumn('status', function ($item) {
                 $status = $item->status ?? '-';
                 $badgeClass = match($status) {
+                    'CREATED' => 'badge-warning',
                     'PENDING' => 'badge-warning',
                     'SUCCESS' => 'badge-success',
                     'COMPLETED' => 'badge-primary',
@@ -36,6 +37,7 @@ class TransactionDatatables extends DataTable
                     'CANCELLED' => 'badge-danger',
                     'FAILED' => 'badge-danger',
                     'EXPIRED' => 'badge-danger',
+                    'DENIED' => 'badge-danger',
                     default => 'badge-light',
                 };
                 return '<span class="badge ' . $badgeClass . ' fs-7">' . $status . '</span>';
@@ -119,13 +121,25 @@ class TransactionDatatables extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->with('destination', 'destination.user', 'refund', 'shipping')
+        $query = $model->with('destination', 'destination.user', 'refund', 'shipping')
             ->select('transactions.*', 
                 'transaction_destinations.email', 
                 'transaction_destinations.transaction_id',
                 'transaction_destinations.phone_number')
-            ->leftJoin('transaction_destinations','transactions.id','=', 'transaction_destinations.transaction_id')
-            ->newQuery();
+            ->leftJoin('transaction_destinations','transactions.id','=', 'transaction_destinations.transaction_id');
+
+        return $this->applyStatusFilter($query);
+    }
+
+    protected function applyStatusFilter($query)
+    {
+        return match (request('status', 'all')) {
+            'pending' => $query->whereIn('transactions.status', ['CREATED', 'PENDING']),
+            'success' => $query->where('transactions.status', 'SUCCESS'),
+            'completed' => $query->where('transactions.status', 'COMPLETED'),
+            'failed' => $query->whereIn('transactions.status', ['FAILED', 'CANCELLED', 'EXPIRED', 'DENIED', 'REFUNDED']),
+            default => $query,
+        };
     }
 
     /**
@@ -138,7 +152,9 @@ class TransactionDatatables extends DataTable
         return $this->builder()
                     ->setTableId('transaction-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax()
+                    ->minifiedAjax(route('administrator.transaction.index', array_filter([
+                        'status' => request('status'),
+                    ])))
                     ->dom('frtip')
                     ->orderBy(1)
                     ->responsive(true)

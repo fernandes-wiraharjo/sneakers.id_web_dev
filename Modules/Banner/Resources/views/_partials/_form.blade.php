@@ -15,7 +15,7 @@
 	<input type="file" class="form-control" name="image" id="image" value="{{ old('banner_image', $banner->banner_image) }}">
     <div class="col-sm-12">
         <span class="text-muted fw-bold fs-6">
-            recommended banner resolution is 720p or 1080p. make sure the image not below this resolution.
+            Aspect ratio 2:1
         </span>
     </div>
 </x-ladmin-form-group>

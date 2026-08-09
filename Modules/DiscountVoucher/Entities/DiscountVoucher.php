@@ -10,11 +10,16 @@ class DiscountVoucher extends Model
 {
     use HasFactory, LadminLogable;
 
+    public const APPLY_TO_SHIPPING = 'shipping';
+    public const APPLY_TO_PRODUCT = 'product';
+    public const APPLY_TO_CART = 'cart';
+
     protected $fillable = [
         'voucher_code',
         'valid_from',
         'valid_until',
         'min_purchase',
+        'apply_to',
         'discount_type',
         'discount_rate',
         'discount_amount',
@@ -39,6 +44,64 @@ class DiscountVoucher extends Model
     protected static function newFactory()
     {
         return \Modules\DiscountVoucher\Database\factories\DiscountVoucherFactory::new();
+    }
+
+    public static function applyToOptions(): array
+    {
+        return [
+            self::APPLY_TO_SHIPPING => 'Shipping cost only',
+            self::APPLY_TO_PRODUCT => 'Total product only',
+            self::APPLY_TO_CART => 'Entire cart',
+        ];
+    }
+
+    public function applyToLabel(): string
+    {
+        return self::applyToOptions()[$this->apply_to ?? self::APPLY_TO_CART] ?? 'Entire cart';
+    }
+
+    public function minPurchaseLabel(): string
+    {
+        return match ($this->apply_to ?? self::APPLY_TO_CART) {
+            self::APPLY_TO_SHIPPING => 'Minimum shipping cost',
+            self::APPLY_TO_PRODUCT => 'Minimum total product price',
+            default => 'Minimum total purchase (incl. shipping)',
+        };
+    }
+
+    public function appliesToShipping(): bool
+    {
+        return ($this->apply_to ?? self::APPLY_TO_CART) === self::APPLY_TO_SHIPPING;
+    }
+
+    public function appliesToProduct(): bool
+    {
+        return ($this->apply_to ?? self::APPLY_TO_CART) === self::APPLY_TO_PRODUCT;
+    }
+
+    public function appliesToCart(): bool
+    {
+        return ($this->apply_to ?? self::APPLY_TO_CART) === self::APPLY_TO_CART;
+    }
+
+    /**
+     * Base amount used to calculate this voucher's discount.
+     */
+    public function discountBaseAmount($productTotal, $shippingCost = 0)
+    {
+        return match ($this->apply_to ?? self::APPLY_TO_CART) {
+            self::APPLY_TO_SHIPPING => (float) $shippingCost,
+            self::APPLY_TO_PRODUCT => (float) $productTotal,
+            default => (float) $productTotal + (float) $shippingCost,
+        };
+    }
+
+    /**
+     * Amount used to check the minimum threshold.
+     */
+    public function minimumBaseAmount($productTotal, $shippingCost = 0)
+    {
+        return $this->discountBaseAmount($productTotal, $shippingCost);
     }
 
     /**
@@ -88,26 +151,31 @@ class DiscountVoucher extends Model
     }
 
     /**
-     * Calculate discount amount for a given subtotal
+     * Calculate discount amount for a given base amount.
+     * $baseAmount should already match apply_to (shipping / product / cart).
      */
-    public function calculateDiscount($subtotal)
+    public function calculateDiscount($baseAmount, $shippingCost = null)
     {
-        if ($subtotal < $this->min_purchase) {
+        $amount = $shippingCost === null
+            ? (float) $baseAmount
+            : $this->discountBaseAmount($baseAmount, $shippingCost);
+
+        if ($amount < (float) $this->min_purchase) {
             return 0;
         }
 
         if ($this->discount_type === 'percent') {
-            $discount = ($subtotal * $this->discount_rate) / 100;
+            $discount = ($amount * $this->discount_rate) / 100;
             
             // Apply max discount cap if set
             if ($this->discount_amount && $this->discount_amount > 0 && $discount > $this->discount_amount) {
                 $discount = $this->discount_amount;
             }
-            
-            return $discount;
+
+            return min($discount, $amount);
         }
 
-        return $this->discount_amount;
+        return min((float) $this->discount_amount, $amount);
     }
 
     /**

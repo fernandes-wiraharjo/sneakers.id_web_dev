@@ -1,3 +1,8 @@
+@php
+    $applyTo = old('apply_to', $voucher->apply_to ?? \Modules\DiscountVoucher\Entities\DiscountVoucher::APPLY_TO_CART);
+    $applyToOptions = \Modules\DiscountVoucher\Entities\DiscountVoucher::applyToOptions();
+@endphp
+
 {{-- General Information Section --}}
 <h3>General Information</h3>
 <br>
@@ -26,20 +31,39 @@
     </div>
 </div>
 
+<hr>
+<h3>Discount Parameters</h3>
+<br>
+
+{{-- Apply To --}}
 <div class="row mb-10">
-    <label class="col-lg-3 col-form-label fw-bold fs-6">Minimum Purchase *</label>
+    <label class="col-lg-3 col-form-label fw-bold fs-6">Apply Discount To *</label>
+    <div class="col-lg-9">
+        @foreach ($applyToOptions as $value => $label)
+            <div class="form-check form-check-custom form-check-solid mb-5">
+                <input class="form-check-input" type="radio" name="apply_to" id="apply_to_{{ $value }}" value="{{ $value }}"
+                    {{ $applyTo === $value ? 'checked' : '' }} onchange="updateMinPurchaseLabel()">
+                <label class="form-check-label" for="apply_to_{{ $value }}">
+                    {{ $label }}
+                </label>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+<div class="row mb-10">
+    <label class="col-lg-3 col-form-label fw-bold fs-6" id="min_purchase_label">Minimum Total Purchase (incl. shipping) *</label>
     <div class="col-lg-9">
         <div class="input-group">
             <span class="input-group-text">Rp</span>
             <input type="number" class="form-control" name="min_purchase" id="min_purchase" required min="0" step="1000"
                 value="{{ old('min_purchase', $voucher->min_purchase ?? 0) }}" placeholder="0">
         </div>
+        <div class="form-text text-muted" id="min_purchase_help">
+            Customer cart total including shipping must reach this amount.
+        </div>
     </div>
 </div>
-
-<hr>
-<h3>Discount Parameters</h3>
-<br>
 
 {{-- Discount Parameters Section --}}
 <div class="row mb-10">
@@ -109,6 +133,7 @@
     <div class="col-lg-9">
         <input type="number" class="form-control" name="quota_total" id="quota_total" required min="0"
             value="{{ old('quota_total', $voucher->quota_total ?? 0) }}" placeholder="0">
+        <div class="form-text text-muted">0 = unlimited</div>
     </div>
 </div>
 
@@ -151,6 +176,23 @@
 
 @push('scripts')
 <script>
+function updateMinPurchaseLabel() {
+    const applyTo = document.querySelector('input[name="apply_to"]:checked')?.value || 'cart';
+    const label = document.getElementById('min_purchase_label');
+    const help = document.getElementById('min_purchase_help');
+
+    if (applyTo === 'shipping') {
+        label.textContent = 'Minimum Shipping Cost *';
+        help.textContent = 'Shipping cost must reach this amount before the voucher can be used.';
+    } else if (applyTo === 'product') {
+        label.textContent = 'Minimum Total Product Price *';
+        help.textContent = 'Product subtotal (before shipping) must reach this amount.';
+    } else {
+        label.textContent = 'Minimum Total Purchase (incl. shipping) *';
+        help.textContent = 'Product subtotal + shipping must reach this amount.';
+    }
+}
+
 function toggleDiscountFields() {
     const discountType = document.querySelector('input[name="discount_type"]:checked').value;
     const rateGroup = document.getElementById('discount_rate_group');
@@ -198,7 +240,7 @@ function toggleDiscountFields() {
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     toggleDiscountFields();
+    updateMinPurchaseLabel();
 });
 </script>
 @endpush
-

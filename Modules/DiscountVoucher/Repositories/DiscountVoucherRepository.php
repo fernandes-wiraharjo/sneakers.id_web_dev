@@ -134,7 +134,7 @@ class DiscountVoucherRepository
         if ($subtotal < $voucher->min_purchase) {
             return [
                 'valid' => false, 
-                'message' => 'Minimum purchase of Rp ' . number_format($voucher->min_purchase, 0, ',', '.') . ' required.'
+                'message' => $voucher->minPurchaseLabel() . ' of Rp ' . number_format($voucher->min_purchase, 0, ',', '.') . ' required.'
             ];
         }
 

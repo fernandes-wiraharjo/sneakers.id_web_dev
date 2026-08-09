@@ -112,43 +112,145 @@ class DiscountVoucherRepository
     }
 
     /**
-     * Validate voucher for user
+     * Evaluate a voucher against product total and optional shipping cost.
+     *
+     * @param  float|null  $shippingCost  null = shipping not selected yet
      */
-    public function validateVoucherForUser($voucherCode, $subtotal, $email)
+    public function evaluateForCheckout($voucherCode, $email, $productTotal, $shippingCost = null): array
     {
-        // Email is required in application logic
         if (empty($email)) {
-            return ['valid' => false, 'message' => 'Email address is required to apply voucher.'];
+            return $this->evaluationFail('Email address is required to apply voucher.');
         }
 
         $voucher = $this->getByCode($voucherCode);
 
-        if (!$voucher) {
-            return ['valid' => false, 'message' => 'Voucher not found.'];
+        if (! $voucher) {
+            return $this->evaluationFail('Voucher not found.');
         }
 
-        if (!$voucher->isValid()) {
-            return ['valid' => false, 'message' => 'Voucher is not valid.'];
+        if (! $voucher->isValid()) {
+            return $this->evaluationFail('Voucher is not valid.');
         }
 
-        if ($subtotal < $voucher->min_purchase) {
+        if (! $voucher->canBeUsedByUser($email)) {
+            return $this->evaluationFail('You have reached the usage limit for this voucher.');
+        }
+
+        $applyTo = $voucher->apply_to ?? DiscountVoucher::APPLY_TO_CART;
+        $min = (float) $voucher->min_purchase;
+        $productTotal = (float) $productTotal;
+        $shippingKnown = $shippingCost !== null;
+
+        if ($applyTo === DiscountVoucher::APPLY_TO_PRODUCT) {
+            if ($productTotal < $min) {
+                return $this->evaluationMinFail($voucher);
+            }
+
+            return $this->evaluationOk($voucher, $voucher->calculateDiscount($productTotal));
+        }
+
+        if ($applyTo === DiscountVoucher::APPLY_TO_SHIPPING) {
+            if (! $shippingKnown) {
+                return $this->evaluationPending(
+                    $voucher,
+                    'Voucher applied. Discount will be calculated after shipping is selected.'
+                );
+            }
+
+            if ((float) $shippingCost < $min) {
+                return $this->evaluationMinFail($voucher);
+            }
+
+            return $this->evaluationOk($voucher, $voucher->calculateDiscount((float) $shippingCost));
+        }
+
+        if (! $shippingKnown) {
+            if ($productTotal >= $min) {
+                return $this->evaluationOk($voucher, $voucher->calculateDiscount($productTotal));
+            }
+
+            return $this->evaluationPending(
+                $voucher,
+                'Voucher applied. Minimum total including shipping will be checked at checkout.'
+            );
+        }
+
+        $cartTotal = $productTotal + (float) $shippingCost;
+        if ($cartTotal < $min) {
+            return $this->evaluationMinFail($voucher);
+        }
+
+        return $this->evaluationOk($voucher, $voucher->calculateDiscount($cartTotal));
+    }
+
+    /**
+     * Validate voucher for user (cart page; shipping usually unknown).
+     */
+    public function validateVoucherForUser($voucherCode, $subtotal, $email, $shippingCost = null)
+    {
+        $result = $this->evaluateForCheckout($voucherCode, $email, $subtotal, $shippingCost);
+
+        if ($result['valid'] && ($result['eligible'] || $result['pending'])) {
             return [
-                'valid' => false, 
-                'message' => $voucher->minPurchaseLabel() . ' of Rp ' . number_format($voucher->min_purchase, 0, ',', '.') . ' required.'
+                'valid' => true,
+                'voucher' => $result['voucher'],
+                'discount' => $result['discount'],
+                'pending' => $result['pending'],
+                'message' => $result['message'],
             ];
         }
 
-        if (!$voucher->canBeUsedByUser($email)) {
-            return ['valid' => false, 'message' => 'You have reached the usage limit for this voucher.'];
-        }
-
-        $discount = $voucher->calculateDiscount($subtotal);
-
         return [
-            'valid' => true, 
-            'voucher' => $voucher,
+            'valid' => false,
+            'message' => $result['message'],
+        ];
+    }
+
+    protected function evaluationOk(DiscountVoucher $voucher, $discount, string $message = 'Voucher applied successfully!'): array
+    {
+        return [
+            'valid' => true,
+            'eligible' => true,
+            'pending' => false,
             'discount' => $discount,
-            'message' => 'Voucher applied successfully!'
+            'voucher' => $voucher,
+            'message' => $message,
+        ];
+    }
+
+    protected function evaluationPending(DiscountVoucher $voucher, string $message): array
+    {
+        return [
+            'valid' => true,
+            'eligible' => true,
+            'pending' => true,
+            'discount' => 0,
+            'voucher' => $voucher,
+            'message' => $message,
+        ];
+    }
+
+    protected function evaluationMinFail(DiscountVoucher $voucher): array
+    {
+        return [
+            'valid' => true,
+            'eligible' => false,
+            'pending' => false,
+            'discount' => 0,
+            'voucher' => $voucher,
+            'message' => $voucher->minPurchaseLabel() . ' of Rp ' . number_format($voucher->min_purchase, 0, ',', '.') . ' required.',
+        ];
+    }
+
+    protected function evaluationFail(string $message): array
+    {
+        return [
+            'valid' => false,
+            'eligible' => false,
+            'pending' => false,
+            'discount' => 0,
+            'voucher' => null,
+            'message' => $message,
         ];
     }
 

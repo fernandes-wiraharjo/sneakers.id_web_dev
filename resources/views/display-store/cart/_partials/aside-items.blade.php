@@ -129,7 +129,12 @@
                                         class="_19gi7yt0 _19gi7yte _1fragem1j _19gi7yt1 notranslate">Rp {{ rupiah_format($total) }}</span>
                                 </div>
                             </div>
-                            @if($voucherData && $voucherDiscount > 0)
+                            @if($voucherData && empty($voucherEligible))
+                            <div role="row" class="_1qy6ue61 _1fragem1b _1qy6ue68">
+                                <div role="cell" class="_1qy6ue69"><span class="_19gi7yt0 _19gi7yte _1fragem1j">Voucher {{ $voucherData['code'] }}</span></div>
+                                <div role="cell" class="_1qy6ue6a"><span class="_19gi7yt0 _19gi7yte _1fragem1j">Not applicable</span></div>
+                            </div>
+                            @elseif($voucherData && $voucherDiscount > 0)
                             <div role="row" class="_1qy6ue61 _1fragem1b _1qy6ue68">
                                 <div role="cell" class="_1qy6ue69">
                                     <div class="_1fragem17 _1fragemaf _1fragem38">

@@ -102,6 +102,14 @@
                                                             All transactions are secure and
                                                             encrypted.</p>
                                                     </div>
+                                                    @if($voucherData && empty($voucherEligible))
+                                                        <div class="alert alert-warning mb-3">
+                                                            <strong>Voucher {{ $voucherData['code'] }} cannot be used</strong>
+                                                            <p class="mb-2">{{ $voucherIneligibleMessage }}</p>
+                                                            <p class="small mb-2">Remove this voucher to continue with payment.</p>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="removeVoucher">Remove voucher</button>
+                                                        </div>
+                                                    @endif
                                                     <fieldset id="basic">
                                                         <div class="_1fragem15 _1fragemah _1fragemaf">
                                                             <legend>
@@ -113,7 +121,7 @@
                                                                 <label for="basic-Payments via Midtrans" class="yL8c2 D1RJr">
                                                                     <div class="hEGyz">
                                                                         <div class="_1fragemaf">
-                                                                            <input type="radio" id="basic-Payments via Midtrans" wire:click="setSelectedPaymentGateway('midtrans')" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe">
+                                                                            <input type="radio" id="basic-Payments via Midtrans" wire:click="setSelectedPaymentGateway('midtrans')" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe" @if(empty($voucherEligible)) disabled @endif>
                                                                         </div>
                                                                         <div class="f5aCe">
                                                                             <div>
@@ -235,7 +243,11 @@
                                         </div>
                                         <div class="oQEAZ WD4IV">
                                             <div>
-                                                @if($selectedPaymentGateway)
+                                                @if(empty($voucherEligible))
+                                                <div class="alert alert-warning text-center py-4">
+                                                    <span>Remove the voucher to select a payment method</span>
+                                                </div>
+                                                @elseif($selectedPaymentGateway)
                                                 <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy"  wire:click="paymentStepSubmit">
                                                     <span class="AjwsM">Pay now</span>
                                                 </a>

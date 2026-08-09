@@ -58,17 +58,29 @@
                 <form action="" method="POST" novalidate="" id="Form13">
                     <h5 class="mb-2">Payment</h5>
                     <p class="text-muted small mb-4">All transactions are secure and encrypted.</p>
+
+                    @if($voucherData && empty($voucherEligible))
+                        <div class="alert alert-warning">
+                            <div class="fw-semibold mb-1">Voucher {{ $voucherData['code'] }} cannot be used</div>
+                            <p class="mb-3 small mb-0">{{ $voucherIneligibleMessage }}</p>
+                            <p class="small text-muted mt-2 mb-3">Remove this voucher to continue with payment.</p>
+                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="removeVoucher">
+                                Remove voucher
+                            </button>
+                        </div>
+                    @endif
                     
                     <fieldset>
                         <legend class="visually-hidden">Choose a payment method</legend>
-                        <div class="form-check mb-3 border rounded" style="padding: 1rem 1rem 1rem 2.5rem;">
+                        <div class="form-check mb-3 border rounded {{ empty($voucherEligible) ? 'bg-light text-muted' : '' }}" style="padding: 1rem 1rem 1rem 2.5rem;">
                             <input 
                                 type="radio" 
                                 id="payment-midtrans" 
                                 name="payment_method"
                                 class="form-check-input" 
-                                wire:click="setSelectedPaymentGateway('midtrans')">
-                            <label class="form-check-label w-100" for="payment-midtrans">
+                                wire:click="setSelectedPaymentGateway('midtrans')"
+                                @if(empty($voucherEligible)) disabled @endif>
+                            <label class="form-check-label w-100 {{ empty($voucherEligible) ? 'opacity-50' : '' }}" for="payment-midtrans">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <strong>Payments via Midtrans</strong>
@@ -94,7 +106,11 @@
                             </a>
                         </div>
                         <div>
-                            @if($selectedPaymentGateway)
+                            @if(empty($voucherEligible))
+                                <div class="alert alert-warning mb-0">
+                                    <small>Remove the voucher to select a payment method</small>
+                                </div>
+                            @elseif($selectedPaymentGateway)
                                 <button 
                                     type="button"
                                     class="btn btn-dark"

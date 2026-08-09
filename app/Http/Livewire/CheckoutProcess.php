@@ -11,6 +11,7 @@ use App\Models\ShippingCourier;
 use App\Models\UserAddress;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Modules\DiscountVoucher\Repositories\DiscountVoucherRepository;
 
 class CheckoutProcess extends Component
 {
@@ -52,6 +53,8 @@ class CheckoutProcess extends Component
     // Voucher properties
     public $voucherData = null;
     public $voucherDiscount = 0;
+    public $voucherEligible = true;
+    public $voucherIneligibleMessage = '';
     
     // View type property to persist across Livewire updates
     public $useBootstrapView = false;
@@ -72,8 +75,7 @@ class CheckoutProcess extends Component
         $this->content = Cart::content();
         
         // Load voucher from cart
-        $this->voucherData = Cart::getVoucher();
-        $this->voucherDiscount = $this->calculateVoucherDiscount();
+        $this->refreshVoucherState();
 
         $this->cityList = [];
         $this->districtList = [];
@@ -206,17 +208,40 @@ class CheckoutProcess extends Component
 
     public function shippingStepSubmit()
     {
+        $this->refreshVoucherState();
         $this->currentStep = 3;
-        //submit shipping information into session TransactionSession
     }
 
     public function setSelectedPaymentGateway($value)
     {
+        if (! $this->voucherEligible) {
+            return;
+        }
+
         $this->selectedPaymentGateway = $value;
+    }
+
+    public function removeVoucher(): void
+    {
+        Cart::removeVoucher();
+        $this->voucherData = null;
+        $this->voucherDiscount = 0;
+        $this->voucherEligible = true;
+        $this->voucherIneligibleMessage = '';
+        $this->selectedPaymentGateway = null;
+        $this->recalculateGrandTotal();
     }
 
     public function paymentStepSubmit()
     {
+        $this->refreshVoucherState();
+
+        if (! $this->voucherEligible) {
+            $this->selectedPaymentGateway = null;
+
+            return;
+        }
+
         // updated orderID to prevent race condition on same seconds
         $orderID = Str::upper('SNK-'.time().'-'.Str::random(4));
         $items = [];
@@ -325,9 +350,9 @@ class CheckoutProcess extends Component
                 'sub_total'       => Cart::total(),
                 'description'     => Cart::getNotes(),
                 'grand_total'     => $this->grandTotal,
-                'discount_voucher_id' => $voucherData['id'] ?? null,
-                'voucher_code'    => $voucherData['code'] ?? null,
-                'voucher_discount' => $voucherData ? $this->calculateVoucherDiscount($voucherData, Cart::total()) : null,
+                'discount_voucher_id' => ($voucherData && $this->voucherEligible) ? ($voucherData['id'] ?? null) : null,
+                'voucher_code'    => ($voucherData && $this->voucherEligible) ? ($voucherData['code'] ?? null) : null,
+                'voucher_discount' => ($voucherData && $this->voucherEligible) ? $this->voucherDiscount : null,
             ],
             'transaction_destinations' => [
                 'region_id'    => null,
@@ -396,10 +421,6 @@ class CheckoutProcess extends Component
 
     public function updateShippingCost($value, $courier, $service, $etd, $cartTotal)
     {
-        // Calculate grand total: cart total - voucher discount + shipping
-        $subtotal = intval($cartTotal);
-        $this->grandTotal = $subtotal - $this->voucherDiscount + intval($value);
-        
         $this->shippingCost = $value;
         $this->selectedCourier = [
             'courier'   => $courier,
@@ -407,6 +428,7 @@ class CheckoutProcess extends Component
             'cost'      => $value,
             'etd'       => $etd
         ];
+        $this->refreshVoucherState();
     }
 
     public function loadCities($provinceId)
@@ -558,34 +580,98 @@ class CheckoutProcess extends Component
         }
     }
 
+    protected function refreshVoucherState(): void
+    {
+        $this->voucherData = Cart::getVoucher();
+        $this->voucherEligible = true;
+        $this->voucherIneligibleMessage = '';
+        $this->voucherDiscount = 0;
+
+        if (! $this->voucherData) {
+            $this->recalculateGrandTotal();
+
+            return;
+        }
+
+        $email = $this->shippingEmail
+            ?: ($this->voucherData['email'] ?? (auth()->user()->email ?? ''));
+        $shippingCost = ($this->shippingCost > 0 || ! empty($this->selectedCourier))
+            ? (float) $this->shippingCost
+            : null;
+
+        $result = app(DiscountVoucherRepository::class)->evaluateForCheckout(
+            $this->voucherData['code'] ?? '',
+            $email,
+            (float) Cart::total(),
+            $shippingCost
+        );
+
+        if (! $result['valid'] || (! $result['eligible'] && ! $result['pending'])) {
+            $this->voucherEligible = false;
+            $this->voucherIneligibleMessage = $result['message'];
+            $this->selectedPaymentGateway = null;
+            $this->recalculateGrandTotal();
+
+            return;
+        }
+
+        if (! empty($result['pending'])) {
+            $this->voucherDiscount = 0;
+            $this->recalculateGrandTotal();
+
+            return;
+        }
+
+        $this->voucherDiscount = $result['discount'];
+        $this->recalculateGrandTotal();
+    }
+
+    protected function recalculateGrandTotal(): void
+    {
+        $this->grandTotal = max(
+            0,
+            intval(Cart::total()) - intval($this->voucherDiscount) + intval($this->shippingCost)
+        );
+    }
+
     /**
      * Calculate voucher discount amount
-     * 
-     * @param array|null $voucherData Voucher data (uses $this->voucherData if null)
-     * @param int|null $subtotal Subtotal amount (uses $this->total if null)
-     * @return int The discount amount
      */
     protected function calculateVoucherDiscount($voucherData = null, $subtotal = null)
     {
         $voucher = $voucherData ?? $this->voucherData;
         $amount = $subtotal ?? $this->total;
-        
-        if (!$voucher) {
+
+        if (! $voucher) {
+            return 0;
+        }
+
+        $applyTo = $voucher['apply_to'] ?? 'cart';
+        $shippingCost = ($this->shippingCost > 0 || ! empty($this->selectedCourier))
+            ? (float) $this->shippingCost
+            : 0;
+
+        if ($applyTo === 'shipping') {
+            $amount = $shippingCost;
+        } elseif ($applyTo === 'cart') {
+            $amount = (float) $amount + $shippingCost;
+        }
+
+        if ($amount < (float) ($voucher['min_purchase'] ?? 0)) {
             return 0;
         }
 
         if ($voucher['discount_type'] === 'percent') {
             $discount = ($amount * $voucher['discount_rate']) / 100;
-            
-            // Apply max discount cap if set
+
             if (isset($voucher['discount_amount']) && $voucher['discount_amount'] > 0 && $discount > $voucher['discount_amount']) {
                 $discount = $voucher['discount_amount'];
             }
-            
-            return $discount;
-        } else {
-            return $voucher['discount_amount'];
+
+            return min($discount, $amount);
         }
+
+        return min((float) $voucher['discount_amount'], $amount);
     }
 
     public function render()

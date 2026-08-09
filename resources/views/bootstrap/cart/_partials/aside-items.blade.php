@@ -51,7 +51,12 @@
             <span class="small fw-semibold">{{ rupiah_format($total, true) }}</span>
         </div>
         
-        @if(isset($voucherData) && isset($voucherDiscount) && $voucherDiscount > 0)
+        @if(isset($voucherData) && !empty($voucherData) && empty($voucherEligible))
+            <div class="d-flex justify-content-between mb-2 text-warning">
+                <span class="small">Voucher {{ $voucherData['code'] }}</span>
+                <span class="small">Not applicable</span>
+            </div>
+        @elseif(isset($voucherData) && isset($voucherDiscount) && $voucherDiscount > 0)
             <div class="d-flex justify-content-between mb-2 text-danger">
                 <span class="small">Discount ({{ $voucherData['code'] }})</span>
                 <span class="small fw-bold">- {{ rupiah_format($voucherDiscount, true) }}</span>

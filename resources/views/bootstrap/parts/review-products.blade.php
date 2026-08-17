@@ -19,19 +19,24 @@
                             @endif
                             <div class="flex-grow-1">
                                 <p class="mb-0 fw-bold">{{ $review->reviewer_name }}</p>
-                                <p class="mb-0 text-secondary">sneakers.id</p>
+                                <!-- <p class="mb-0 text-secondary">sneakers.id</p> -->
+                                 
+                                @for($i = 0; $i < $review->rating; $i++)
+                                    <span class="iconify text-warning" data-icon="material-symbols:star"></span>
+                                @endfor
+                                @for($i = $review->rating; $i < 5; $i++)
+                                    <span class="iconify text-secondary" data-icon="material-symbols:star"></span>
+                                @endfor
+
+                                <p class="mb-0 text-secondary">{{ $review->created_at->format('Y-m-d') }}</p>
                             </div>
                             <img src="{{ asset('stores-info/logo-white-new.png') }}" alt="Rating" class="img-fluid" style="max-height: 60px;">
                         </div>
-                        <p class="fw-bold fs-4 d-flex align-items-center mb-0">
+                        <!-- <p class="fw-bold fs-4 d-flex align-items-center mb-0">
                             <span class="me-2">{{ number_format($review->rating, 1) }}</span>
-                            @for($i = 0; $i < $review->rating; $i++)
-                                <span class="iconify text-warning" data-icon="material-symbols:star"></span>
-                            @endfor
-                            @for($i = $review->rating; $i < 5; $i++)
-                                <span class="iconify text-secondary" data-icon="material-symbols:star"></span>
-                            @endfor
-                        </p>
+                        </p> -->
+                        <p class="fw-bold mb-1 text-uppercase">{{ $review->product->product_name }}</p>
+
                         <p class="mb-0">
                             {{ Str::limit($review->review, 180) }}
                         </p>

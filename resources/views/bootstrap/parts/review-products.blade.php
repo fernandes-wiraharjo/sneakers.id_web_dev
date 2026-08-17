@@ -80,6 +80,14 @@
         </div>
     </div>
     @endif
+
+    <div class="row">
+        <div class="col-12 text-center pb-2">
+            <a href="{{ route('reviews.all') }}" class="btn btn-outline-light px-4 text-uppercase fw-bold">
+                Show All Reviews
+            </a>
+        </div>
+    </div>
 </div>
 @endif
 

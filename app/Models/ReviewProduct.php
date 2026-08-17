@@ -16,6 +16,7 @@ class ReviewProduct extends Model
     protected $fillable = [
         'user_id',
         'transaction_token',
+        'reviewer_name',
         'product_id',
         'product_size',
         'rating',
@@ -43,6 +44,10 @@ class ReviewProduct extends Model
 
     public function getReviewerNameAttribute(): string
     {
+        if (! empty($this->attributes['reviewer_name'])) {
+            return $this->attributes['reviewer_name'];
+        }
+
         $destination = $this->transaction?->destination;
 
         if ($destination) {

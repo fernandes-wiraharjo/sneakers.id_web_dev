@@ -212,6 +212,13 @@ class CheckoutProcess extends Component
         $this->currentStep = 3;
     }
 
+    public function updatedCurrentStep($value)
+    {
+        if ((int) $value === 3) {
+            $this->refreshVoucherState();
+        }
+    }
+
     public function setSelectedPaymentGateway($value)
     {
         if (! $this->voucherEligible) {

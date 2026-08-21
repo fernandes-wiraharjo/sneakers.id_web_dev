@@ -102,12 +102,18 @@
                                                             All transactions are secure and
                                                             encrypted.</p>
                                                     </div>
-                                                    @if($voucherData && empty($voucherEligible))
-                                                        <div class="alert alert-warning mb-3">
-                                                            <strong>Voucher {{ $voucherData['code'] }} cannot be used</strong>
-                                                            <p class="mb-2">{{ $voucherIneligibleMessage }}</p>
-                                                            <p class="small mb-2">Remove this voucher to continue with payment.</p>
-                                                            <button type="button" class="btn btn-sm btn-outline-danger" wire:click="removeVoucher">Remove voucher</button>
+                                                    @if(!empty($voucherData) && !$voucherEligible)
+                                                        <div class="card border-danger bg-danger bg-opacity-10 mb-3">
+                                                            <div class="card-body">
+                                                                <div class="fw-semibold text-danger mb-1">
+                                                                    Promo {{ $voucherData['code'] ?? '' }} cannot be used
+                                                                </div>
+                                                                <p class="mb-2 small text-danger">{{ $voucherIneligibleMessage }}</p>
+                                                                <p class="small text-muted mb-3">Remove this promo to continue and choose a payment method.</p>
+                                                                <button type="button" class="btn btn-sm btn-danger" wire:click="removeVoucher">
+                                                                    Remove promo
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     @endif
                                                     <fieldset id="basic">
@@ -121,7 +127,7 @@
                                                                 <label for="basic-Payments via Midtrans" class="yL8c2 D1RJr">
                                                                     <div class="hEGyz">
                                                                         <div class="_1fragemaf">
-                                                                            <input type="radio" id="basic-Payments via Midtrans" wire:click="setSelectedPaymentGateway('midtrans')" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe" @if(empty($voucherEligible)) disabled @endif>
+                                                                            <input type="radio" id="basic-Payments via Midtrans" wire:click="setSelectedPaymentGateway('midtrans')" name="basic" class="_6hzjvo5 _1fragem13 _1fragem15 _1fragemat _1fragemao _1fragemaz _6hzjvoi _6hzjvo8 _6hzjvoc _6hzjvoh _6hzjvoe" @if(!$voucherEligible) disabled @endif>
                                                                         </div>
                                                                         <div class="f5aCe">
                                                                             <div>
@@ -243,9 +249,9 @@
                                         </div>
                                         <div class="oQEAZ WD4IV">
                                             <div>
-                                                @if(empty($voucherEligible))
-                                                <div class="alert alert-warning text-center py-4">
-                                                    <span>Remove the voucher to select a payment method</span>
+                                                @if(!$voucherEligible)
+                                                <div class="alert alert-danger text-center py-4">
+                                                    <span>Remove the promo to select a payment method</span>
                                                 </div>
                                                 @elseif($selectedPaymentGateway)
                                                 <a href="#" class="QT4by rqC98 hodFu VDIfJ j6D1f janiy"  wire:click="paymentStepSubmit">

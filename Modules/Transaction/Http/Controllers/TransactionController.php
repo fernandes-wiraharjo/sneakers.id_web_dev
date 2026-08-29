@@ -31,7 +31,26 @@ class TransactionController extends Controller
     public function index(TransactionDatatables $dataTable)
     {
         ladmin()->allow('administrator.transaction.index');
-        return $dataTable->render('transaction::index');
+
+        $counts = Transaction::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return $dataTable->render('transaction::index', [
+            'statusTab' => request('status', 'all'),
+            'tabCounts' => [
+                'all' => $counts->sum(),
+                'pending' => (int) ($counts['CREATED'] ?? 0) + (int) ($counts['PENDING'] ?? 0),
+                'success' => (int) ($counts['SUCCESS'] ?? 0),
+                'completed' => (int) ($counts['COMPLETED'] ?? 0),
+                'failed' => (int) ($counts['FAILED'] ?? 0)
+                    + (int) ($counts['CANCELLED'] ?? 0)
+                    + (int) ($counts['EXPIRED'] ?? 0)
+                    + (int) ($counts['DENIED'] ?? 0)
+                    + (int) ($counts['REFUNDED'] ?? 0),
+            ],
+        ]);
     }
 
     public function updateResi(Request $request) {

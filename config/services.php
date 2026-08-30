@@ -36,4 +36,10 @@ return [
         'snapURL' => env('MIDTRANS_SNAP_URL'),
         'environment' => env('APP_ENV'),
     ],
+
+    'instagram' => [
+        'client_id' => env('INSTAGRAM_APP_ID'),
+        'client_secret' => env('INSTAGRAM_APP_SECRET'),
+        'redirect' => env('INSTAGRAM_REDIRECT_URI', env('APP_URL').'/administrator/instagram/callback'),
+    ],
 ];

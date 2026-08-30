@@ -45,6 +45,8 @@ Route::get('/size-chart', [StoreController::class, 'sizeChart'])->name('size-cha
 
 Route::get('/faq', [StoreController::class, 'faq'])->name('faq');
 
+Route::get('/reviews', [\App\Http\Controllers\ReviewController::class, 'all'])->name('reviews.all');
+
 Route::get('/about-us', [StoreController::class, 'aboutUs'])->name('about-us');
 Route::get('/email', [StoreController::class, 'email'])->name('email');
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleWebhook']);

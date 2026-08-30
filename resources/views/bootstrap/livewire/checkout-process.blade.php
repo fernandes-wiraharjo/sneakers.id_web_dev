@@ -82,7 +82,8 @@
                 'total' => $total, 
                 'shippingCost' => $shippingCost ?? 0, 
                 'voucherData' => $voucherData ?? null, 
-                'voucherDiscount' => $voucherDiscount ?? 0
+                'voucherDiscount' => $voucherDiscount ?? 0,
+                'voucherEligible' => $voucherEligible ?? true,
             ])
         </div>
     </div>

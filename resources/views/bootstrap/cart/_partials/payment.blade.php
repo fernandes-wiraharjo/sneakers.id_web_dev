@@ -58,17 +58,39 @@
                 <form action="" method="POST" novalidate="" id="Form13">
                     <h5 class="mb-2">Payment</h5>
                     <p class="text-muted small mb-4">All transactions are secure and encrypted.</p>
-                    
+
+                    @if(!empty($voucherData) && !$voucherEligible)
+                        <div class="card border-danger bg-danger bg-opacity-10 mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start gap-2">
+                                    <span class="iconify text-danger fs-3 flex-shrink-0" data-icon="material-symbols:error-outline"></span>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold text-danger mb-1">
+                                            Promo {{ $voucherData['code'] ?? '' }} cannot be used
+                                        </div>
+                                        <p class="mb-2 small text-danger">{{ $voucherIneligibleMessage }}</p>
+                                        <p class="small text-muted mb-3">Remove this promo to continue and choose a payment method.</p>
+                                        <button type="button" class="btn btn-sm btn-danger" wire:click="removeVoucher">
+                                            Remove promo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <fieldset>
-                        <legend class="visually-hidden">Choose a payment method</legend>
-                        <div class="form-check mb-3 border rounded" style="padding: 1rem 1rem 1rem 2.5rem;">
-                            <input 
-                                type="radio" 
-                                id="payment-midtrans" 
+                        <legend class="fs-6 fw-semibold mb-3">Choose a payment method</legend>
+                        <div class="form-check mb-3 border rounded {{ !$voucherEligible ? 'bg-light text-muted' : '' }}" style="padding: 1rem 1rem 1rem 2.5rem;">
+                            <input
+                                type="radio"
+                                id="payment-midtrans"
                                 name="payment_method"
-                                class="form-check-input" 
-                                wire:click="setSelectedPaymentGateway('midtrans')">
-                            <label class="form-check-label w-100" for="payment-midtrans">
+                                class="form-check-input"
+                                wire:click="setSelectedPaymentGateway('midtrans')"
+                                @if(!$voucherEligible) disabled @endif
+                                @if($selectedPaymentGateway === 'midtrans' && $voucherEligible) checked @endif>
+                            <label class="form-check-label w-100 {{ !$voucherEligible ? 'opacity-50' : '' }}" for="payment-midtrans">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <strong>Payments via Midtrans</strong>
@@ -94,15 +116,19 @@
                             </a>
                         </div>
                         <div>
-                            @if($selectedPaymentGateway)
-                                <button 
+                            @if(!$voucherEligible)
+                                <div class="alert alert-danger mb-0 py-2 px-3">
+                                    <small>Remove the promo to select a payment method</small>
+                                </div>
+                            @elseif($selectedPaymentGateway)
+                                <button
                                     type="button"
                                     class="btn btn-dark"
                                     wire:click="paymentStepSubmit">
                                     Pay now
                                 </button>
                             @else
-                                <div class="alert alert-warning mb-0">
+                                <div class="alert alert-warning mb-0 py-2 px-3">
                                     <small>Select payment method</small>
                                 </div>
                             @endif

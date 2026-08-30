@@ -35,7 +35,7 @@
                                 
                                 <!-- Price -->
                                 <div class="mb-2">
-                                    @if($item->get('discount_price') != 0)
+                                    @if($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
                                         <div>
                                             <del class="text-muted small">{{ rupiah_format($item->get('retail_price'), true) }}</del>
                                         </div>

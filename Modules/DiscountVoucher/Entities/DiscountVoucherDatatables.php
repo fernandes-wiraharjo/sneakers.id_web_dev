@@ -21,7 +21,20 @@ class DiscountVoucherDatatables extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->rawColumns(['action', 'voucher_code', 'discount', 'status', 'validity', 'quota'])
+            ->rawColumns(['action', 'voucher_code', 'apply_to', 'discount', 'status', 'validity', 'quota', 'minimum'])
+            ->editColumn('voucher_code', function ($item) {
+                return "<span class='fw-bold font-monospace'>{$item->voucher_code}</span>";
+            })
+            ->addColumn('apply_to', function ($item) {
+                $applyTo = $item->apply_to ?? DiscountVoucher::APPLY_TO_CART;
+                $badges = [
+                    DiscountVoucher::APPLY_TO_SHIPPING => "<span class='badge badge-light-info'>Shipping only</span>",
+                    DiscountVoucher::APPLY_TO_PRODUCT => "<span class='badge badge-light-warning'>Product only</span>",
+                    DiscountVoucher::APPLY_TO_CART => "<span class='badge badge-light-primary'>Entire cart</span>",
+                ];
+
+                return $badges[$applyTo] ?? $badges[DiscountVoucher::APPLY_TO_CART];
+            })
             ->addColumn('status', function ($item) {
                 if (!$item->is_active) {
                     return "<span class='badge badge-light-dark'>Inactive</span>";
@@ -37,37 +50,37 @@ class DiscountVoucherDatatables extends DataTable
                 }
             })
             ->addColumn('validity', function ($item) {
-                return $item->valid_from->format('d M Y') . '<br/><small>to</small><br/>' . $item->valid_until->format('d M Y');
+                return $item->valid_from->format('d M Y') . ' – ' . $item->valid_until->format('d M Y');
             })
             ->addColumn('discount', function ($item) {
                 if ($item->discount_type === 'percent') {
-                    $discount = "<span class='badge badge-info'>{$item->discount_rate}%</span>";
+                    $rate = rtrim(rtrim(number_format((float) $item->discount_rate, 2, '.', ''), '0'), '.');
+                    $html = "<span class='badge badge-info'>{$rate}%</span>";
                     if ($item->discount_amount && $item->discount_amount > 0) {
-                        $discount .= "<br/><small class='text-muted'>max Rp " . number_format($item->discount_amount, 0, ',', '.') . "</small>";
+                        $html .= "<br/><small class='text-muted'>max Rp " . number_format($item->discount_amount, 0, ',', '.') . "</small>";
                     }
-                    return $discount;
-                } else {
-                    return "<span class='badge badge-primary'>Rp " . number_format($item->discount_amount, 0, ',', '.') . "</span>";
+                    return $html;
                 }
+
+                return "<span class='badge badge-primary'>Rp " . number_format($item->discount_amount, 0, ',', '.') . "</span>";
+            })
+            ->addColumn('minimum', function ($item) {
+                if ((float) $item->min_purchase <= 0) {
+                    return "<span class='text-muted'>No minimum</span>";
+                }
+
+                return 'Rp ' . number_format($item->min_purchase, 0, ',', '.');
             })
             ->addColumn('quota', function ($item) {
                 if ($item->quota_total == 0) {
-                    return "<span class='badge badge-light-success'>Unlimited</span>";
+                    return "<div>{$item->usage_count} used</div><small class='text-muted'>Unlimited quota</small>";
                 }
                 
                 $remaining = $item->quota_total - $item->usage_count;
                 $percentage = ($item->usage_count / $item->quota_total) * 100;
-                
-                if ($percentage >= 100) {
-                    return "<span class='badge badge-danger'>{$item->usage_count}/{$item->quota_total}</span>";
-                } elseif ($percentage >= 80) {
-                    return "<span class='badge badge-warning'>{$item->usage_count}/{$item->quota_total}</span>";
-                } else {
-                    return "<span class='badge badge-success'>{$item->usage_count}/{$item->quota_total}</span>";
-                }
-            })
-            ->editColumn('min_purchase', function ($item) {
-                return 'Rp ' . number_format($item->min_purchase, 0, ',', '.');
+                $badgeClass = $percentage >= 100 ? 'badge-danger' : ($percentage >= 80 ? 'badge-warning' : 'badge-success');
+
+                return "<span class='badge {$badgeClass}'>{$item->usage_count} / {$item->quota_total}</span><br/><small class='text-muted'>{$remaining} left · {$item->quota_per_user}/user</small>";
             })
             ->editColumn('created_at', function (DiscountVoucher $model) {
                 return $model->created_at->format('d-m-Y H:i');
@@ -135,33 +148,36 @@ class DiscountVoucherDatatables extends DataTable
                 ->printable(false)
                 ->sortable(false)
                 ->searchable(false)
-                ->width(100)
+                ->width(80)
                 ->addClass('text-center'),
             Column::make('voucher_code')
-                ->title(__('Voucher Code'))
-                ->width(150),
+                ->title(__('Code'))
+                ->width(140),
+            Column::make('apply_to')
+                ->title(__('Applies To'))
+                ->width(130)
+                ->searchable(false)
+                ->addClass('text-center'),
             Column::make('discount')
                 ->title(__('Discount'))
-                ->width(120)
+                ->width(160)
                 ->searchable(false)
                 ->sortable(false),
-            Column::make('min_purchase')
-                ->title(__('Min Purchase'))
-                ->width(130),
-            Column::make('validity')
-                ->title(__('Validity Period'))
+            Column::make('minimum')
+                ->title(__('Minimum'))
                 ->width(150)
                 ->searchable(false)
                 ->sortable(false),
-            Column::make('quota')
-                ->title(__('Usage/Quota'))
-                ->width(120)
+            Column::make('validity')
+                ->title(__('Valid Period'))
+                ->width(180)
                 ->searchable(false)
                 ->sortable(false),
-            Column::make('quota_per_user')
-                ->title(__('Per User'))
-                ->width(80)
-                ->addClass('text-center'),
+            Column::make('quota')
+                ->title(__('Usage'))
+                ->width(140)
+                ->searchable(false)
+                ->sortable(false),
             Column::make('status')
                 ->title(__('Status'))
                 ->width(100)
@@ -181,4 +197,3 @@ class DiscountVoucherDatatables extends DataTable
         return 'DiscountVoucher_' . date('YmdHis');
     }
 }
-

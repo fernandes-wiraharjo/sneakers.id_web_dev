@@ -293,6 +293,8 @@ class CartCheckout extends Component
                 'discount_type' => $validation['voucher']->discount_type,
                 'discount_rate' => $validation['voucher']->discount_rate,
                 'discount_amount' => $validation['voucher']->discount_amount,
+                'apply_to' => $validation['voucher']->apply_to ?? 'cart',
+                'min_purchase' => $validation['voucher']->min_purchase,
                 'message' => $validation['message'],
                 'email' => !auth()->check() ? $this->guestEmail : null
             ];
@@ -336,25 +338,38 @@ class CartCheckout extends Component
         }
         
         $voucher = $this->appliedVoucher;
-        
+        $applyTo = $voucher['apply_to'] ?? 'cart';
+        $productTotal = (float) $this->total;
+        $minPurchase = (float) ($voucher['min_purchase'] ?? 0);
+
+        // Shipping-only discount is unknown until checkout selects a courier.
+        if ($applyTo === 'shipping') {
+            $this->discountAmount = 0;
+            $this->finalTotal = $this->total;
+            return;
+        }
+
+        // Entire-cart min may depend on shipping; preview discount only if product total already qualifies.
+        if ($applyTo === 'cart' && $productTotal < $minPurchase) {
+            $this->discountAmount = 0;
+            $this->finalTotal = $this->total;
+            return;
+        }
+
+        $baseAmount = $productTotal;
+
         if ($voucher['discount_type'] === 'percent') {
-            $discount = ($this->total * $voucher['discount_rate']) / 100;
-            
-            // Apply max discount cap if set
+            $discount = ($baseAmount * $voucher['discount_rate']) / 100;
+
             if (isset($voucher['discount_amount']) && $voucher['discount_amount'] > 0 && $discount > $voucher['discount_amount']) {
                 $discount = $voucher['discount_amount'];
             }
-            
-            $this->discountAmount = $discount;
+
+            $this->discountAmount = min($discount, $baseAmount);
         } else {
-            $this->discountAmount = $voucher['discount_amount'];
+            $this->discountAmount = min((float) $voucher['discount_amount'], $baseAmount);
         }
-        
-        $this->finalTotal = $this->total - $this->discountAmount;
-        
-        // Ensure final total is not negative
-        if ($this->finalTotal < 0) {
-            $this->finalTotal = 0;
-        }
+
+        $this->finalTotal = max(0, $this->total - $this->discountAmount);
     }
 }

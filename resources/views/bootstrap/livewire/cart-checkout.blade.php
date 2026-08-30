@@ -47,7 +47,7 @@
                                         <a href="{{ $item->get('url') }}" class="text-dark text-decoration-none">{{ $item->get('name') }}</a>
                                     </h5>
                                     <div class="mb-2">
-                                        @if($item->get('discount_price') != 0)
+                                        @if($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
                                             <span class="text-muted text-decoration-line-through me-2">{{ rupiah_format($item->get('retail_price'), true) }}</span>
                                             <span class="fw-bold text-danger">{{ rupiah_format($item->get('discount_price'), true) }}</span>
                                         @else
@@ -119,7 +119,7 @@
 
                         {{-- Unit Price --}}
                         <div class="col-6 col-md-2 text-end mb-3 mb-md-0 d-md-block d-none">
-                            @if($item->get('discount_price') != 0)
+                            @if($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
                                 <span class="text-muted text-decoration-line-through d-block small">{{ rupiah_format($item->get('retail_price'), true) }}</span>
                                 <span class="fw-semibold text-danger">{{ rupiah_format($item->get('discount_price'), true) }}</span>
                             @else
@@ -130,7 +130,7 @@
                         {{-- Total Price --}}
                         <div class="col-6 col-md-2 text-end">
                             <span class="fw-bold">
-                                @if($item->get('discount_price') != 0)
+                                @if($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
                                     {{ rupiah_format($item->get('quantity') * $item->get('discount_price'), true) }}
                                 @else
                                     {{ rupiah_format($item->get('quantity') * $item->get('retail_price'), true) }}

@@ -116,7 +116,7 @@ License: {{ theme()->getOption('product', 'license') }}
 @include('sweetalert::alert')
 
 @auth
-@if (config('app.env') !== 'local')
+@if ((config('app.env') !== 'local') && (config('auth.autologout') === true))
 <script>
     $(document).ready(function() {
         setInterval(function() {

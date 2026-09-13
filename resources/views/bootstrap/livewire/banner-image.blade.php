@@ -12,7 +12,7 @@
                         }
                     }
                 @endphp
-                <div class="ratio ratio-21x9">
+                <div class="ratio" style="--bs-aspect-ratio: 50%">
                     <a href="{{ $banner_url }}" target="{{ $target }}">
                         <img class="px-1 px-md-3 img-fluid rounded-5 rounded-sm-3 object-fit-cover" src="{{ getImage($item->banner_image, 'banner') }}" alt="{{ $item->banner_description }}">
                     </a>

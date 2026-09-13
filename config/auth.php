@@ -108,4 +108,6 @@ return [
 
     'password_timeout' => 10800,
 
+    // Auto logout admin after 10 minutes of inactivity
+    'autologout' => env('AUTO_LOGOUT_ADMIN', false),
 ];

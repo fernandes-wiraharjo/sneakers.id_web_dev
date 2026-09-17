@@ -26,7 +26,7 @@
                             <td>
                                 <p class="mb-1 fw-semibold">{{ $item->get('name') }}</p>
                                 <div class="mb-1">
-                                    @if ($item->get('discount_price') != 0)
+                                    @if ($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
                                         <span class="text-danger fw-bold">{{ rupiah_format($item->get('discount_price'), true) }}</span>
                                     @else
                                         <span class="fw-semibold">{{ rupiah_format($item->get('retail_price'), true) }}</span>
@@ -38,7 +38,7 @@
                                 <span class="fw-semibold">{{ $item->get('quantity') }}</span>
                             </td>
                             <td class="text-end">
-                                @if ($item->get('discount_price') != 0)
+                                @if ($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
                                     <span class="fw-bold">{{ rupiah_format($item->get('quantity') * $item->get('discount_price'), true) }}</span>
                                 @else
                                     <span class="fw-bold">{{ rupiah_format($item->get('quantity') * $item->get('retail_price'), true) }}</span>

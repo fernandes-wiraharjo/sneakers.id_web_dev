@@ -18,5 +18,6 @@
     "DiscountVoucher": true,
     "SizeFilter": true,
     "Reporting": true,
-    "TopTextCarousel": true
+    "TopTextCarousel": true,
+    "ExternalReview": true
 }

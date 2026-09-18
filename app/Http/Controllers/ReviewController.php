@@ -3,10 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReviewProduct;
+use App\Repositories\ReviewRepository;
+use Illuminate\Http\Request;
 use Modules\Transaction\Entities\Transaction;
 
 class ReviewController extends Controller
 {
+    protected $reviewRepository;
+
+    public function __construct(ReviewRepository $reviewRepository)
+    {
+        $this->reviewRepository = $reviewRepository;
+    }
+
+    public function all(Request $request)
+    {
+        $rating = $request->query('rating');
+        $ratingFilter = null;
+
+        if ($rating !== null && $rating !== '' && $rating !== 'all') {
+            $ratingFilter = (int) $rating;
+            if ($ratingFilter < 1 || $ratingFilter > 5) {
+                $ratingFilter = null;
+            }
+        }
+
+        return view('bootstrap.reviews-all', [
+            'summary' => $this->reviewRepository->getGlobalSummary(),
+            'reviews' => $this->reviewRepository->getPaginatedReviews($ratingFilter),
+            'ratingFilter' => $ratingFilter,
+        ]);
+    }
+
     public function index($transaction_token)
     {
         $transaction = Transaction::where('token', $transaction_token)->first();

@@ -46,5 +46,37 @@ class ReviewRepository extends Repository
     {
         return $this->model->where('product_id', $id)->with('transaction.destination')->get();
     }
+
+    public function getGlobalSummary(): array
+    {
+        $breakdown = $this->model
+            ->selectRaw('rating, COUNT(*) as count')
+            ->groupBy('rating')
+            ->pluck('count', 'rating');
+
+        $distribution = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $distribution[$i] = (int) ($breakdown[$i] ?? 0);
+        }
+
+        return [
+            'total' => array_sum($distribution),
+            'average' => round((float) ($this->model->avg('rating') ?? 0), 1),
+            'distribution' => $distribution,
+        ];
+    }
+
+    public function getPaginatedReviews(?int $rating = null, int $perPage = 10)
+    {
+        $query = $this->model
+            ->with(['product', 'transaction.destination'])
+            ->latest();
+
+        if ($rating !== null) {
+            $query->where('rating', $rating);
+        }
+
+        return $query->paginate($perPage)->withQueryString();
+    }
 }
 

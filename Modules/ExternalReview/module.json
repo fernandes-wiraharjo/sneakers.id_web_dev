@@ -1,0 +1,13 @@
+{
+    "name": "ExternalReview",
+    "alias": "externalreview",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ExternalReview\\Providers\\ExternalReviewServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

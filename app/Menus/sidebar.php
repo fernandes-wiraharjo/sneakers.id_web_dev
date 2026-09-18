@@ -81,6 +81,26 @@ return [
         ],
     ],
     [
+        'gate' => 'administrator.external-review.index',
+        'name' => 'External Review',
+        'route' => ['administrator.external-review.index', []],
+        'isActive' => 'external-review*',
+        'icon' => 'star',
+        'id' => '',
+        'gates' => [
+            [
+                'gate' => 'administrator.external-review.create',
+                'title' => 'Generate Review Link',
+                'description' => 'User can generate one-time external review links'
+            ],
+            [
+                'gate' => 'administrator.external-review.destroy',
+                'title' => 'Delete Review Link',
+                'description' => 'User can delete unused external review links'
+            ]
+        ],
+    ],
+    [
         'gate' => 'administrator.discount-voucher.index',
         'name' => 'Discount Voucher',
         'route' => ['administrator.discount-voucher.index', []],

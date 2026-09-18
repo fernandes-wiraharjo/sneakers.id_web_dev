@@ -28,7 +28,7 @@
                                     <ul class="CartItem__PropertyList"></ul>
                                     <div class="CartItem__PriceList" style="margin-bottom: 0px;">
                                         <span class="CartItem__Price Price" data-money-convertible="">
-                                            @if($item->get('discount_price') != 0)
+                                            @if($item->get('discount_price') != 0 && $item->get('discount_price') < $item->get('retail_price'))
 
                                             <span class="money">Rp
                                                 <del>

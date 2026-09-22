@@ -31,10 +31,10 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             <p class="text-muted mb-2">{{ $product->product_code }}</p>
             <h1 class="fw-bold">{{ $product->product_name }}</h1>
             <div wire:ignore>
-                <div id="product-description" class="product-description-text" style="overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                <div id="product-description" class="product-description-text is-clamped">
                     {!! $product->description !!}
                 </div>
-                <button id="read-more-btn" class="btn btn-link p-0 text-danger text-decoration-none mt-2" style="display: none; font-size: 0.875rem;">
+                <button id="read-more-btn" class="btn btn-link p-0 text-danger text-decoration-none mt-1 mb-3" style="display: none; font-size: 0.875rem;">
                     <span id="read-more-text">Read more</span>
                 </button>
             </div>
@@ -181,6 +181,29 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
     </div>
 </div>
 
+@push('styles')
+<style>
+    #product-description.product-description-text.is-clamped {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+    }
+
+    #product-description.product-description-text.is-expanded {
+        display: block;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+        overflow: visible;
+        max-height: none;
+    }
+
+    #product-description.product-description-text p:last-child {
+        margin-bottom: 0;
+    }
+</style>
+@endpush
+
 @push('scripts')
 <script>
     $(document).ready(function() {
@@ -220,49 +243,45 @@ $selectedThumbStyle = 'border rounded-3 border-dark shadow'
             }
         });
         
-        // Read more/read less functionality for product description
+        // Read more/read less for product description
         function initReadMore() {
             var $description = $('#product-description');
             var $btn = $('#read-more-btn');
             var $btnText = $('#read-more-text');
-            var originalHeight = $description[0].scrollHeight;
-            var lineHeight = parseInt($description.css('line-height')) || 24;
-            var maxHeight = lineHeight * 3; // 3 lines
-            
-            // Check if content exceeds 3 lines
-            if (originalHeight > maxHeight) {
-                $btn.show();
-                $description.css({
-                    'max-height': maxHeight + 'px',
-                    'overflow': 'hidden'
-                });
+            if (!$description.length || !$btn.length) {
+                return;
             }
-            
+
+            var descriptionEl = $description[0];
             var isExpanded = false;
+
+            // Measure full height without clamp, then restore clamp to compare
+            $description.removeClass('is-clamped').addClass('is-expanded');
+            var fullHeight = descriptionEl.scrollHeight;
+            $description.removeClass('is-expanded').addClass('is-clamped');
+            var clampedHeight = descriptionEl.clientHeight;
+
+            if (fullHeight <= clampedHeight + 2) {
+                $btn.hide();
+                $description.removeClass('is-clamped').addClass('is-expanded');
+                return;
+            }
+
+            $btn.show();
+
             $btn.off('click.readMore').on('click.readMore', function() {
-                if (!isExpanded) {
-                    $description.css({
-                        'max-height': originalHeight + 'px',
-                        'display': 'block',
-                        '-webkit-line-clamp': 'unset',
-                        '-webkit-box-orient': 'unset'
-                    });
+                isExpanded = !isExpanded;
+
+                if (isExpanded) {
+                    $description.removeClass('is-clamped').addClass('is-expanded');
                     $btnText.text('Read less');
-                    isExpanded = true;
                 } else {
-                    $description.css({
-                        'max-height': maxHeight + 'px',
-                        'display': '-webkit-box',
-                        '-webkit-line-clamp': '3',
-                        '-webkit-box-orient': 'vertical'
-                    });
+                    $description.removeClass('is-expanded').addClass('is-clamped');
                     $btnText.text('Read more');
-                    isExpanded = false;
                 }
             });
         }
-        
-        // Initialize read more after content loads
+
         setTimeout(initReadMore, 100);
     });
 </script>

@@ -26,6 +26,9 @@ class TransactionDatatables extends DataTable
         return datatables()
             ->eloquent($query)
             ->rawColumns(['action', 'customer_info', 'status', 'shipping_status'])
+            ->filter(function ($query) {
+                $this->applySearchFilter($query);
+            }, true)
             ->editColumn('status', function ($item) {
                 $status = $item->status ?? '-';
                 $badgeClass = match($status) {
@@ -142,6 +145,43 @@ class TransactionDatatables extends DataTable
         };
     }
 
+    protected function applySearchFilter($query)
+    {
+        $search = trim((string) (
+            request('search_query')
+            ?? request()->input('search.value')
+            ?? ''
+        ));
+
+        if ($search === '') {
+            return $query;
+        }
+
+        $like = '%' . $search . '%';
+
+        return $query->where(function ($q) use ($search, $like) {
+            if (ctype_digit($search)) {
+                $q->where('transactions.id', (int) $search);
+            }
+
+            $q->orWhere('transactions.token', 'like', $like)
+                ->orWhere('transactions.doc_no', 'like', $like)
+                ->orWhere('transactions.uuid', 'like', $like)
+                ->orWhere('transaction_destinations.email', 'like', $like)
+                ->orWhere('transaction_destinations.phone_number', 'like', $like)
+                ->orWhere('transaction_destinations.first_name', 'like', $like)
+                ->orWhere('transaction_destinations.last_name', 'like', $like)
+                ->orWhereRaw(
+                    "CONCAT(COALESCE(transaction_destinations.first_name, ''), ' ', COALESCE(transaction_destinations.last_name, '')) LIKE ?",
+                    [$like]
+                )
+                ->orWhereHas('items.detail.product', function ($productQuery) use ($like) {
+                    $productQuery->where('product_name', 'like', $like)
+                        ->orWhere('product_code', 'like', $like);
+                });
+        });
+    }
+
     /**
      * Optional method if you want to use html builder.
      *
@@ -149,20 +189,22 @@ class TransactionDatatables extends DataTable
      */
     public function html()
     {
+        $ajaxUrl = route('administrator.transaction.index', array_filter([
+            'status' => request('status'),
+        ]));
+
         return $this->builder()
                     ->setTableId('transaction-table')
                     ->columns($this->getColumns())
-                    ->minifiedAjax(route('administrator.transaction.index', array_filter([
-                        'status' => request('status'),
-                    ])))
-                    ->dom('frtip')
+                    ->minifiedAjax($ajaxUrl, 'data.search_query = $("#transaction-search").val() || "";')
+                    ->dom('rtip')
                     ->orderBy(1)
                     ->responsive(true)
                     ->parameters([
                         'scrollX' => true,
                         'processing' => true,
-                        'serverSide' => true
-                        ])
+                        'serverSide' => true,
+                    ])
                     ->addTableClass('align-middle table-row-dashed fs-6 gy-5');
     }
 

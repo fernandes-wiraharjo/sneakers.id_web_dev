@@ -33,6 +33,29 @@
                     </li>
                 @endforeach
             </ul>
+
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-5">
+                <div class="position-relative flex-grow-1" style="max-width: 480px;">
+                    <span class="svg-icon svg-icon-2 position-absolute top-50 translate-middle-y ms-4">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input
+                        type="search"
+                        id="transaction-search"
+                        class="form-control form-control-solid ps-12"
+                        placeholder="Search transaction ID, name, product, SKU, phone, email..."
+                        value="{{ request('search_query') }}"
+                        autocomplete="off"
+                    >
+                </div>
+                <button type="button" id="transaction-search-btn" class="btn btn-primary">
+                    Search
+                </button>
+                <button type="button" id="transaction-search-clear" class="btn btn-light">
+                    Clear
+                </button>
+            </div>
+
             {{ $dataTable->table() }}
         </div>
         <!--end::Card body-->
@@ -42,5 +65,31 @@
         {{ $dataTable->scripts() }}
 
         <script src="{{ asset('js/check-resi.js') }}" defer></script>
+        <script>
+            $(document).ready(function () {
+                var $input = $('#transaction-search');
+                var table = $('#transaction-table').DataTable();
+
+                function reloadTransactions() {
+                    table.ajax.reload(null, true);
+                }
+
+                $('#transaction-search-btn').on('click', function () {
+                    reloadTransactions();
+                });
+
+                $('#transaction-search-clear').on('click', function () {
+                    $input.val('');
+                    reloadTransactions();
+                });
+
+                $input.on('keydown', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        reloadTransactions();
+                    }
+                });
+            });
+        </script>
     @endpush
 </x-base-layout>

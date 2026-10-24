@@ -29,6 +29,17 @@
 {!! $viewMenu($menu->sidebar) !!}
 
 <div class="menu-item">
+    <a class="menu-link {{ request()->is(config('ladmin.prefix', 'administrator') . '/instagram*') ? 'active' : null }}"
+        href="{{ route('administrator.instagram.index') }}">
+        <span class="menu-icon">
+            <i class="fab fa-instagram"></i>
+        </span>
+        <span class="menu-title">Instagram
+        </span>
+    </a>
+</div>
+
+<div class="menu-item">
     <a class="menu-link" target="_blank" href="/">
         <span class="menu-icon">
             <i class="fas fa-eye"></i>

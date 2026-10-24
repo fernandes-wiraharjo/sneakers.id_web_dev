@@ -17,6 +17,7 @@ use Modules\Tag\Repositories\TagRepository;
 use Modules\SignaturePlayer\Repositories\SignaturePlayerRepository;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 use App\Repositories\ReviewRepository;
+use App\Services\InstagramService;
 
 class StoreController extends Controller
 {
@@ -29,7 +30,8 @@ class StoreController extends Controller
         CategoryRepository $categoryRepository,
         TagRepository $tagRepository,
         SignaturePlayerRepository $signaturePlayerRepository,
-        ReviewRepository $reviewRepository) {
+        ReviewRepository $reviewRepository,
+        InstagramService $instagramService) {
             $this->brandRepository = $brandRepository;
             $this->productRepository = $productRepository;
             $this->lookBookRepository = $lookBookRepository;
@@ -39,6 +41,7 @@ class StoreController extends Controller
             $this->tagRepository = $tagRepository;
             $this->signaturePlayerRepository = $signaturePlayerRepository;
             $this->reviewRepository = $reviewRepository;
+            $this->instagramService = $instagramService;
     }
 
     public function index() {
@@ -54,6 +57,9 @@ class StoreController extends Controller
         $reviewsData = $this->reviewRepository->getReviewsForHomepage(20);
         $data['reviews_line1'] = $reviewsData['reviews_line1'];
         $data['reviews_line2'] = $reviewsData['reviews_line2'];
+        $instagramConnection = $this->instagramService->getConnection();
+        $data['instagram_posts'] = $this->instagramService->getPosts();
+        $data['instagram_username'] = $instagramConnection ? $instagramConnection->instagram_username : null;
         
         activity()->log('Someone Accessing my website');
         // return view('display-store.landing', $data);

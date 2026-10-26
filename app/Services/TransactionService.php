@@ -34,6 +34,13 @@ class TransactionService {
          * parsing parsing dan insert via modules Transaction models
          */
         // dd($response, $transaction);
+        $email = $data['args']['customer_details']['email'];
+        $mailData = [
+            'invoice_url' => $data['invoice_url'],
+            'customer_name' => $data['args']['customer_details']['first_name']." ".$data['args']['customer_details']['last_name'],
+            'order_id' => $data['args']['transaction_details']['order_id']
+        ];
+
         try {
             DB::beginTransaction();
 
@@ -81,14 +88,14 @@ class TransactionService {
 
             // Record voucher usage if voucher was used
             if (isset($transaction['transactions']['discount_voucher_id']) && $transaction['transactions']['discount_voucher_id']) {
-                $email = $transaction['transaction_destinations']['email'] ?? null;
+                $voucherEmail = $transaction['transaction_destinations']['email'] ?? null;
                 
                 // Record usage by email
-                if ($email) {
+                if ($voucherEmail) {
                     $voucherRepo = app(\Modules\DiscountVoucher\Repositories\DiscountVoucherRepository::class);
                     $voucherRepo->recordUsage(
                         $transaction['transactions']['discount_voucher_id'], 
-                        $email,
+                        $voucherEmail,
                         $creteTransaction->id
                     );
                 }
@@ -112,23 +119,18 @@ class TransactionService {
                 'response_message' => '',
             ]);
 
-            $email = $data['args']['customer_details']['email'];
-            $data = [
-                'invoice_url' => $data['invoice_url'],
-                'customer_name' => $data['args']['customer_details']['first_name']." ".$data['args']['customer_details']['last_name'],
-                'order_id' => $data['args']['transaction_details']['order_id']
-            ];
-            // send email create invoices
-            $sendMail = Mail::send('email.invoice', $data , function($message) use($email){
-                $message->to($email);
-                $message->subject('SNEAKERS.ID Invoice Payment');
-            });
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Error creating transaction: '.$e->getMessage());
             throw $e;
         }
+
+        // send email create invoices
+        Mail::send('email.invoice', $mailData, function($message) use($email){
+            $message->to($email);
+            $message->subject('SNEAKERS.ID Invoice Payment');
+        });
     }
 
     public function insertHistories($data){

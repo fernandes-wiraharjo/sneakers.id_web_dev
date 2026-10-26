@@ -68,14 +68,17 @@ class CheckoutController extends BaseController {
 
             $transaction = Transaction::where('token', $orderId)->first();
             if (!$transaction) {
+                DB::rollBack();
                 return response()->json(['message' => 'Transaction not found'], 404);
             }
             if ($transaction->status == 'SUCCESS') {
+                DB::rollBack();
                 return response()->json(['message' => 'Transaction already processed'], 200);
             }
 
             $transactionDestination = TransactionDestination::where('transaction_id', $transaction->id)->first();
             if (!$transactionDestination) {
+                DB::rollBack();
                 return response()->json(['message' => 'Transaction destination not found'], 404);
             }
             
@@ -172,11 +175,13 @@ class CheckoutController extends BaseController {
             $transaction = Transaction::where('token', $orderId)->first();
 
             if (!$transaction) {
+                DB::rollBack();
                 return redirect()->route('customer.cart')
                     ->with('error', 'Transaction not found.');
             }
 
             if (in_array($transaction->status, ['CANCELLED', 'SUCCESS'])) {
+                DB::rollBack();
                 return redirect()->route('customer.cart')
                     ->with('error', 'Transaction cannot be cancelled.');
             }

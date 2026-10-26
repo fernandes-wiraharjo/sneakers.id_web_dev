@@ -10,7 +10,7 @@
                 enctype="multipart/form-data">
                 @csrf
 
-                @include('headerimage::_partials._form', ['header_image' => $header_image, 'brands' => $brands, 'categories' => $categories, 'edit' => false])
+                @include('headerimage::_partials._form', ['header_image' => $header_image, 'brands' => $brands, 'categories' => $categories, 'signatures' => $signatures, 'edit' => false])
 
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary" id="form-submit">

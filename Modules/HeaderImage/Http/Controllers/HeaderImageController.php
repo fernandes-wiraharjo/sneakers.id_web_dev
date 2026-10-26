@@ -57,23 +57,33 @@ class HeaderImageController extends Controller
    public function store(Request $request)
 {
     try {
-        $validator = $request->validate([
+        $request->validate([
             'menu_parent_name' => 'required|string',
             'menu_name' => 'required|string',
             'image' => 'required|image|max:2048',
         ]);
 
+        $existing = $this->repository->getHeaderImageByParentAndName(
+            $request->menu_parent_name,
+            $request->menu_name
+        );
+
         $stored = $this->repository->createHeaderImage($request);
 
         if ($stored) {
-            Alert::success('Header Image Created Successfully!');
+            Alert::success($existing
+                ? 'Header Image Updated Successfully!'
+                : 'Header Image Created Successfully!');
             return redirect(route('administrator.master-data.header-image.index'));
-        } else {
-            Alert::error('Failed to create header image, check your info!');
-            return redirect()->back();
         }
+
+        Alert::error('Failed to create header image, check your info!');
+        return redirect()->back();
     } catch (LadminException $e) {
         Alert::error($e->getMessage());
+        return redirect()->back()->withErrors([$e->getMessage()]);
+    } catch (\Illuminate\Database\QueryException $e) {
+        Alert::error('Failed to save header image. This menu parent and name may already exist.');
         return redirect()->back()->withErrors([$e->getMessage()]);
     }
 }

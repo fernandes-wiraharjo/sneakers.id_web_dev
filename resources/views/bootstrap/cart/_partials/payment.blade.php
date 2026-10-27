@@ -124,8 +124,15 @@
                                 <button
                                     type="button"
                                     class="btn btn-dark"
-                                    wire:click="paymentStepSubmit">
-                                    Pay now
+                                    wire:click="paymentStepSubmit"
+                                    wire:loading.attr="disabled"
+                                    wire:target="paymentStepSubmit"
+                                    @if(!empty($isProcessingPayment)) disabled @endif>
+                                    <span wire:loading.remove wire:target="paymentStepSubmit">Pay now</span>
+                                    <span wire:loading wire:target="paymentStepSubmit">
+                                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                        Processing...
+                                    </span>
                                 </button>
                             @else
                                 <div class="alert alert-warning mb-0 py-2 px-3">

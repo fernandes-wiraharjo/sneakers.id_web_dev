@@ -8,17 +8,23 @@ use Modules\HeaderImage\Entities\HeaderImage;
 
 class HeaderImageService {
 	public function insertHeaderImage($request){
-		$data = $request->all();
         $path = 'images/header-image';
         $saveAsFilename = Str::slug($request->menu_parent_name.' '.$request->menu_name);
-        $data['image_url'] = uploadAsWebp($data['image'], $path, 'public', 1280, 500, $saveAsFilename);
 
-        foreach ($data as $key => $value){ $header_image[$key] = $value; }
-        return $header_image;
+        return [
+            'menu_parent_name' => $request->menu_parent_name,
+            'menu_name' => $request->menu_name,
+            'is_active' => $request->boolean('is_active'),
+            'image_url' => uploadAsWebp($request->file('image'), $path, 'public', 1280, 500, $saveAsFilename),
+        ];
 	}
 
     public function updateHeaderImage($request, $currentId = null){
-        $data = $request->all();
+        $header_image = [
+            'menu_parent_name' => $request->menu_parent_name,
+            'menu_name' => $request->menu_name,
+            'is_active' => $request->boolean('is_active'),
+        ];
 
         // Only update image_url if a new image is uploaded
         if($request->hasFile('image')) {
@@ -36,14 +42,10 @@ class HeaderImageService {
 
             $path = 'images/header-image';
             $saveAsFilename = Str::slug($request->menu_parent_name.' '.$request->menu_name.' '.time());
-            
-            $data['image_url'] = uploadAsWebp($data['image'], $path, 'public', 1280, 500, $saveAsFilename);
-        } else {
-            // Remove image from data array if no new image is uploaded
-            unset($data['image']);
+
+            $header_image['image_url'] = uploadAsWebp($request->file('image'), $path, 'public', 1280, 500, $saveAsFilename);
         }
 
-        foreach ($data as $key => $value) { $header_image[$key] = $value; }
         return $header_image;
     }
 }

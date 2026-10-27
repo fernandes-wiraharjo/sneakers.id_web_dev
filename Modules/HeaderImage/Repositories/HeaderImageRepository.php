@@ -26,11 +26,23 @@ class HeaderImageRepository extends Repository implements MasterRepositoryInterf
     $headerImage = $this->headerImageService->updateHeaderImage($request, $id);
 
     $get_header_image = $this->model->findOrFail($id);
+    $get_header_image->fill($headerImage);
+    $get_header_image->save();
 
-    return $get_header_image->update($headerImage);
+    return true;
   }
 
   public function createHeaderImage(Request $request) {
+    $existing = $this->model
+      ->where('menu_parent_name', $request->menu_parent_name)
+      ->where('menu_name', $request->menu_name)
+      ->first();
+
+    // Unique (menu_parent_name, menu_name) — update existing instead of duplicate insert
+    if ($existing) {
+      return $this->updateHeaderImage($request, $existing->id);
+    }
+
     $headerImage = $this->headerImageService->insertHeaderImage($request);
 
     return $this->model->create($headerImage);
@@ -49,6 +61,13 @@ class HeaderImageRepository extends Repository implements MasterRepositoryInterf
     return $this->model
       ->where('menu_name', 'LIKE', '%'.$keyword.'%')
       ->orWhere('menu_parent_name', 'LIKE', '%'.$keyword.'%')
+      ->first();
+  }
+
+  public function getHeaderImageByParentAndName($menuParentName, $menuName){
+    return $this->model
+      ->where('menu_parent_name', $menuParentName)
+      ->where('menu_name', $menuName)
       ->first();
   }
 }

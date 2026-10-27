@@ -264,20 +264,16 @@ class DiscountVoucherRepository
             throw new \InvalidArgumentException('Email address is required to record voucher usage.');
         }
 
-        return DB::transaction(function () use ($voucherId, $email, $transactionId) {
-            // Create usage record
-            DiscountVoucherUsage::create([
-                'discount_voucher_id' => $voucherId,
-                'email' => $email,
-                'transaction_id' => $transactionId
-            ]);
+        DiscountVoucherUsage::create([
+            'discount_voucher_id' => $voucherId,
+            'email' => $email,
+            'transaction_id' => $transactionId
+        ]);
 
-            // Increment usage count
-            $voucher = $this->getById($voucherId);
-            $voucher->increment('usage_count');
+        $voucher = $this->getById($voucherId);
+        $voucher->increment('usage_count');
 
-            return true;
-        });
+        return true;
     }
 
     /**

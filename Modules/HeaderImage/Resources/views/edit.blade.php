@@ -10,7 +10,13 @@
 		@csrf
         @method('PUT')
 
-		@include('headerimage::_partials._form', ['header_image' => $header_image, 'edit' => true])
+		@include('headerimage::_partials._form', [
+            'header_image' => $header_image,
+            'brands' => $brands,
+            'categories' => $categories,
+            'signatures' => $signatures,
+            'edit' => true,
+        ])
 
 		<div class="text-right">
             <button type="submit" class="btn btn-primary" id="form-submit">

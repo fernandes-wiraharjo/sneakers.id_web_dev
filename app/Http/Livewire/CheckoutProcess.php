@@ -55,6 +55,7 @@ class CheckoutProcess extends Component
     public $voucherDiscount = 0;
     public $voucherEligible = true;
     public $voucherIneligibleMessage = '';
+    public $isProcessingPayment = false;
     
     // View type property to persist across Livewire updates
     public $useBootstrapView = false;
@@ -241,10 +242,17 @@ class CheckoutProcess extends Component
 
     public function paymentStepSubmit()
     {
+        if ($this->isProcessingPayment) {
+            return;
+        }
+
+        $this->isProcessingPayment = true;
+
         $this->refreshVoucherState();
 
         if (! $this->voucherEligible) {
             $this->selectedPaymentGateway = null;
+            $this->isProcessingPayment = false;
 
             return;
         }
@@ -394,6 +402,7 @@ class CheckoutProcess extends Component
         $paymentUrl = CheckoutMidtrans::createInvoiceMidtrans($params, $transactions);
 
         if (empty($paymentUrl)) {
+            $this->isProcessingPayment = false;
             $this->emit('modalMessage', [
                 'message' => 'Pembayaran gagal dimulai. Periksa konfigurasi Midtrans atau coba lagi.',
             ]);

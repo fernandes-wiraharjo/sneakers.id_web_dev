@@ -1,30 +1,16 @@
-{{-- Rebuild window: Laravel UrlWindow shows ALL pages when lastPage < onEachSide*2+8 --}}
+{{-- Compact window only (no first/last) so mobile stays on one line --}}
 @php
     $side = max(0, (int) ($paginator->onEachSide ?? 2));
     $current = $paginator->currentPage();
     $last = $paginator->lastPage();
     $start = max(1, $current - $side);
     $end = min($last, $current + $side);
-
-    $elements = [];
-    if ($start > 1) {
-        $elements[] = $paginator->getUrlRange(1, 1);
-        if ($start > 2) {
-            $elements[] = '...';
-        }
-    }
-    $elements[] = $paginator->getUrlRange($start, $end);
-    if ($end < $last) {
-        if ($end < $last - 1) {
-            $elements[] = '...';
-        }
-        $elements[] = $paginator->getUrlRange($last, $last);
-    }
+    $elements = [$paginator->getUrlRange($start, $end)];
 @endphp
 
 @if ($paginator->hasPages())
     <nav>
-        <ul class="pagination flex-wrap justify-content-center mb-0">
+        <ul class="pagination flex-nowrap justify-content-center mb-0">
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
                     <span class="page-link" aria-hidden="true">&lsaquo;</span>

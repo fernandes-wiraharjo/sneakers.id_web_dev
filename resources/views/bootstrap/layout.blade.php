@@ -101,7 +101,7 @@
         }
         /* Pagination Styles */
         .pagination .page-item {
-            margin: 0 0.25rem;
+            margin: 0 0.15rem;
         }
         .pagination .page-link {
             border: 1px solid #dee2e6;
@@ -135,6 +135,14 @@
             }
             .product-list-container {
                 margin-top: -7px;
+            }
+            .pagination .page-item {
+                margin: 0 0.1rem;
+            }
+            .pagination .page-link {
+                padding: 0.2rem 0.5rem;
+                min-width: 2rem;
+                text-align: center;
             }
         }
         /* Search Bar Styles */

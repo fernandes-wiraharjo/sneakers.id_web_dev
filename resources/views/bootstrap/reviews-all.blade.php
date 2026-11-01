@@ -69,7 +69,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-5">
-            {{ $reviews->appends(request()->except('page'))->onEachSide(2)->links('pagination::bootstrap-4') }}
+            {{ $reviews->appends(request()->except('page'))->onEachSide(2)->links('bootstrap.pagination.default') }}
         </div>
     @endif
 </div>

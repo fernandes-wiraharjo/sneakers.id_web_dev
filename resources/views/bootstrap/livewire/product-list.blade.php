@@ -208,7 +208,7 @@
                 
                 <!-- Pagination -->
                 <div class="mt-4 d-flex justify-content-center">
-                    {{ $products->onEachSide(3)->links('vendor.livewire.bootstrap') }}
+                    {{ $products->onEachSide(2)->links('vendor.livewire.bootstrap') }}
                 </div>
             </div>
         </div>

@@ -1,9 +1,33 @@
+{{-- Rebuild window: Laravel UrlWindow shows ALL pages when lastPage < onEachSide*2+8 --}}
+@php
+    $side = max(0, (int) ($paginator->onEachSide ?? 2));
+    $current = $paginator->currentPage();
+    $last = $paginator->lastPage();
+    $start = max(1, $current - $side);
+    $end = min($last, $current + $side);
+
+    $elements = [];
+    if ($start > 1) {
+        $elements[] = $paginator->getUrlRange(1, 1);
+        if ($start > 2) {
+            $elements[] = '...';
+        }
+    }
+    $elements[] = $paginator->getUrlRange($start, $end);
+    if ($end < $last) {
+        if ($end < $last - 1) {
+            $elements[] = '...';
+        }
+        $elements[] = $paginator->getUrlRange($last, $last);
+    }
+@endphp
+
 <div>
     @if ($paginator->hasPages())
         @php(isset($this->numberOfPaginatorsRendered[$paginator->getPageName()]) ? $this->numberOfPaginatorsRendered[$paginator->getPageName()]++ : $this->numberOfPaginatorsRendered[$paginator->getPageName()] = 1)
 
         <nav>
-            <ul class="pagination">
+            <ul class="pagination flex-wrap justify-content-center mb-0">
                 {{-- Previous Page Link --}}
                 @if ($paginator->onFirstPage())
                     <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
@@ -16,7 +40,7 @@
                 @endif
 
                 {{-- Pagination Elements --}}
-                @foreach ($elements ?? '' as $element)
+                @foreach ($elements as $element)
                     {{-- "Three Dots" Separator --}}
                     @if (is_string($element))
                         <li class="page-item disabled" aria-disabled="true"><span class="page-link">{{ $element }}</span></li>

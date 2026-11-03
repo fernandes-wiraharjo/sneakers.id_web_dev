@@ -31,21 +31,51 @@ class CheckoutController extends BaseController {
         Xendit::setApiKey(env('API_KEY'));
     }
 
-    public function successPayments($external_id)
+    public function successPayments(Request $request, $external_id)
     {
-        // Allow both authenticated and guest users to view payment success
-        // update 2025-10-17: callback handled by webhook, this function is purely for view purpose
+        // Midtrans Snap "finish" redirect is used for success AND failure/cancel.
+        // Always verify status before showing the order-confirmed page.
         $transaction = Transaction::where('token', $external_id)->first();
-        
+
         if (!$transaction) {
             return redirect()->route('store')->with('error', 'Transaction not found.');
         }
-        
+
+        $transactionStatus = strtolower((string) $request->query('transaction_status', ''));
+        $statusCode = (string) $request->query('status_code', '');
+
+        try {
+            $midtransStatus = MidtransTransaction::status($external_id);
+            $transactionStatus = strtolower((string) ($midtransStatus->transaction_status ?? $transactionStatus));
+            $statusCode = (string) ($midtransStatus->status_code ?? $statusCode);
+        } catch (\Throwable $e) {
+            Log::warning('Order ID: ' . $external_id . ' Failed to fetch Midtrans status on finish redirect: ' . $e->getMessage());
+            $midtransStatus = null;
+        }
+
+        $failedStatuses = ['cancel', 'deny', 'expire', 'failure', 'failed'];
+        if (in_array($transactionStatus, $failedStatuses, true) || in_array($statusCode, ['202'], true)) {
+            return redirect()->route('customer.payment.error');
+        }
+
+        // Only treat capture/settlement as paid success. Pending (e.g. VA) may still land here.
+        $paidStatuses = ['capture', 'settlement'];
+        $localPaid = strtoupper((string) $transaction->status) === 'SUCCESS';
+        if (! in_array($transactionStatus, $paidStatuses, true) && ! $localPaid && $transactionStatus !== 'pending') {
+            return redirect()->route('customer.payment.error');
+        }
+
         $data['transaction'] = $transaction;
         $data['items'] = $transaction->items()->with('detail', 'detail.product')->get();
         $data['shipping'] = $transaction->shipping()->first();
         $data['destination'] = $transaction->destination()->with('region')->first();
-        $data['response'] = MidtransTransaction::status($external_id);
+        $data['response'] = $midtransStatus ?: (object) [
+            'order_id' => $external_id,
+            'payment_type' => $transaction->type ?? '',
+            'gross_amount' => $transaction->grand_total ?? 0,
+            'transaction_status' => $transactionStatus ?: strtolower((string) $transaction->status),
+        ];
+
         return view('bootstrap.customer.payment.success', $data);
     }
 

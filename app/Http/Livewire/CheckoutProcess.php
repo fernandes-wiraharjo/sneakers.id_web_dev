@@ -345,9 +345,9 @@ class CheckoutProcess extends Component
             ],
             'item_details' => $items,
             'callbacks' => [
-                'error'  => route('customer.payment.error'),
                 'finish' => route('customer.payment.success', $orderID),
-                'sucess' => route('customer.payment.success', $orderID),
+                'unfinish' => route('customer.payment.error'),
+                'error'  => route('customer.payment.error'),
             ],
             'custom_field1' => 'Gateway: Midtrans', // optional metadata
             'custom_field2' => Cart::getNotes() ?? '',

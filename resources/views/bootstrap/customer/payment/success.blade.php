@@ -14,6 +14,9 @@
         justify-content: center;
         margin: 0 auto 1.5rem;
     }
+    .success-icon.pending {
+        background-color: #fff3cd;
+    }
     .success-icon svg {
         width: 50px;
         height: 50px;
@@ -26,14 +29,30 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
+            @php
+                $paymentStatus = strtolower((string) ($response->transaction_status ?? $transaction->status ?? ''));
+                $isPendingPayment = in_array($paymentStatus, ['pending', 'created'], true);
+            @endphp
             {{-- Success Message --}}
             <div class="text-center mb-5">
-                <div class="success-icon">
-                    <span class="iconify" data-icon="material-symbols:check-circle" style="font-size: 50px; color: #0f5132;"></span>
+                <div class="success-icon {{ $isPendingPayment ? 'pending' : '' }}">
+                    @if($isPendingPayment)
+                        <span class="iconify" data-icon="material-symbols:hourglass-top" style="font-size: 50px; color: #b45309;"></span>
+                    @else
+                        <span class="iconify" data-icon="material-symbols:check-circle" style="font-size: 50px; color: #0f5132;"></span>
+                    @endif
                 </div>
-                <h1 class="fw-bold mb-3">Your Order is Confirmed</h1>
+                <h1 class="fw-bold mb-3">
+                    {{ $isPendingPayment ? 'Awaiting Payment' : 'Your Order is Confirmed' }}
+                </h1>
                 <p class="text-muted fs-5 mb-2">Thank you, {{ $destination->first_name }} {{ $destination->last_name }}!</p>
-                <p class="text-muted">We'll process your order soon. You'll receive an email when your order is completed.</p>
+                <p class="text-muted">
+                    @if($isPendingPayment)
+                        Complete your payment to confirm the order. You'll receive an email once payment is received.
+                    @else
+                        We'll process your order soon. You'll receive an email when your order is completed.
+                    @endif
+                </p>
                 <div class="mt-4">
                     <h3 class="fw-bold">Order #{{ strtoupper($response->order_id) }}</h3>
                 </div>

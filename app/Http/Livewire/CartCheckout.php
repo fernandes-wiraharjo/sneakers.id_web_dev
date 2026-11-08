@@ -247,6 +247,13 @@ class CartCheckout extends Component
      */
     public function applyVoucher()
     {
+        if (config('app.voucher_users_only') && ! auth()->check()) {
+            $this->voucherMessage = 'Please login to use a voucher.';
+            $this->voucherApplied = false;
+
+            return;
+        }
+
         if ($this->hasUnavailableItems) {
             $this->voucherMessage = 'Remove unavailable items from your cart before using a voucher.';
             return;

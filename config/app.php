@@ -41,6 +41,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Voucher Users Only
+    |--------------------------------------------------------------------------
+    |
+    | When true, vouchers can only be applied by logged-in users.
+    | Guests will not see the voucher form.
+    |
+    */
+
+    'voucher_users_only' => env('VOUCHER_USERS_ONLY', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

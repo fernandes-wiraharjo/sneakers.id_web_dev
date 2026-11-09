@@ -164,6 +164,7 @@
                         </div>
                     </div>
                 </div>
+                @if(!config('app.voucher_users_only') || auth()->check())
                 <div class="col-12 col-lg-4 mb-4 mb-lg-0">
                     {{-- Voucher Code Section --}}
                     <div class="card h-100">
@@ -219,6 +220,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 {{-- Order Summary --}}
                 <div class="col-12 col-lg-4">

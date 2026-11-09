@@ -112,6 +112,26 @@ class AppServiceProvider extends ServiceProvider
             return $this;
         });
 
+        // Match every word (AND), any order; case-insensitive; punctuation normalized via helpers.
+        Builder::macro('whereAllWordsLike', function (string $column, string $searchTerm) {
+            $words = preg_split('/\s+/', trim($searchTerm), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+            if ($words === []) {
+                return $this;
+            }
+
+            $normalizedColumn = sql_normalized_search_column($column);
+
+            return $this->where(function (Builder $query) use ($normalizedColumn, $words) {
+                foreach ($words as $word) {
+                    $query->whereRaw(
+                        $normalizedColumn . ' LIKE ?',
+                        ['%' . normalize_search_term($word) . '%']
+                    );
+                }
+            });
+        });
+
         Validator::extend('brandmenu', function($attribute, $value, $parameters) use ($brandRepository) {
             $brand_is_menu =  $brandRepository->checkActiveMenuBrand();
 

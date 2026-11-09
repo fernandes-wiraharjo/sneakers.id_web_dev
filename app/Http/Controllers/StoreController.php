@@ -150,13 +150,8 @@ class StoreController extends Controller
         $discount_id = $this->tagRepository->getTagByName('discount')->id ?? [];
 
         $result_item = $this->productRepository->getProductWhere()
-            ->when($keywords, function ($query, $search) use ($keyword_array) {
-                $query->where(function ($query) use ($keyword_array) {
-                    foreach ($keyword_array as $keyword) {
-                        $query->orWhere('product_name', 'LIKE', '%' . $keyword . '%');
-                            // ->orWhere('description', 'LIKE', '%' . $keyword . '%');
-                    }
-                });
+            ->when($keywords, function ($query, $search) {
+                return $query->whereAllWordsLike('product_name', $search);
             })
             ->when($this->brand, function ($query, $brands) {
                 return $query->whereHas('detail', function ($q) use ($brands) {

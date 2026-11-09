@@ -366,52 +366,35 @@ class GlobalSearch extends Component
         $discount_id = $tagRepository->getTagByName('discount')->id ?? [];
 
         $products = $productRepository->getProductWhere()
-            ->when($keyword, function ($query, $search) use ($keyword_array) {
-                $query->where(function ($query) use ($keyword_array) {
-                    foreach ($keyword_array as $keyword) {
-                        $query->orWhere('product_name', 'LIKE', '%' . $keyword . '%');
-                            // ->orWhere('description', 'LIKE', '%' . $keyword . '%');
-                    }
-                });
+            ->when($this->search, function ($query, $search) {
+                return $query->whereAllWordsLike('product_name', $search);
             })
             ->when($this->brand, function ($query, $brands){
                 return $query->whereHas('detail', function ($q) use ($brands){
                     rsort($brands);
 
-                    return $q->whereIn('brand_id', array_unique($brands))
-                        ->when($this->search, function ($query, $search){
-                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                        });
+                    return $q->whereIn('brand_id', array_unique($brands));
                     });
             })
             ->when($this->tag, function ($query, $tags) {
                 return $query->whereHas('tags', function ($q) use ($tags){
                     rsort($tags);
 
-                    return $q->whereIn('tag_id', array_unique($tags))
-                        ->when($this->search, function ($query, $search){
-                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                        });
+                    return $q->whereIn('tag_id', array_unique($tags));
                     });
                 })
             ->when($this->category, function ($query, $categories){
                 return $query->whereHas('categories', function ($q) use ($categories){
                     rsort($categories);
 
-                    return $q->whereIn('category_id', array_unique($categories))
-                        ->when($this->search, function ($query, $search){
-                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                        });
+                    return $q->whereIn('category_id', array_unique($categories));
                     });
             })
             ->when($this->signature, function ($query, $signatures){
                 return $query->whereHas('signatures', function ($q) use ($signatures){
                     rsort($signatures);
 
-                    return $q->whereIn('signature_player_id', array_unique($signatures))
-                        ->when($this->search, function ($query, $search){
-                            return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                        });
+                    return $q->whereIn('signature_player_id', array_unique($signatures));
                     });
                 })
                 ->when($this->keyword === 'sale' || $this->keyword === 'discount' || in_array($sale_category_id, $this->category) || in_array($sale_tag_id, $this->tag) || in_array($discount_id, $this->tag), function ($query) {
@@ -421,20 +404,14 @@ class GlobalSearch extends Component
                     return $query->whereHas('categories', function ($q) use ($gender){
                         rsort($gender);
 
-                        return $q->whereIn('categories.category_code', array_unique($gender))
-                            ->when($this->search, function ($query, $search){
-                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                            });
+                        return $q->whereIn('categories.category_code', array_unique($gender));
                     });
                 })
                 ->when($this->age_range, function ($query, $age_range){
                     return $query->whereHas('categories', function ($q) use ($age_range){
                         rsort($age_range);
 
-                        return $q->whereIn('categories.category_code', array_unique($age_range))
-                            ->when($this->search, function ($query, $search){
-                                return $query->where('product_name', 'LIKE', '%'.$search.'%');
-                            });
+                        return $q->whereIn('categories.category_code', array_unique($age_range));
                     });
                 })
                 ->when($this->keyword === 'new-release' || $sale_keyword === 'new release', function($query) {
@@ -494,9 +471,6 @@ class GlobalSearch extends Component
                         
                         return $q->where('pd.qty', '>', 0);
                     }
-                })
-                ->when(count($keyword_array) >= 2, function($query) {
-                    return $query->where('product_name', 'LIKE', '%'.$this->keyword.'%');
                 });
 
 
